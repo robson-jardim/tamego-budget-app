@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
     AngularFireAuthModule,
     AngularFirestoreModule,
   ],
-  providers:[AuthService],
+  providers: [AuthService],
   declarations: []
 })
 export class CoreModule { }
