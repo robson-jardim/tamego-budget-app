@@ -1,6 +1,8 @@
-<p>
-  login-signup works!
-</p>
+<ul>
+  <li class="text" *ngFor="let item of items | async">
+    {{item.name}}
+  </li>
+</ul>
 
 <button (click)="login()">Login</button>
 <button (click)="logout()">Logout</button>

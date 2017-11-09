@@ -1,28 +1,28 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
+import { CoreModule } from './core/core.module';
+
+import { AngularFireModule } from "angularfire2";
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { LoginSignupComponent } from './login-signup/login-signup.component';
+import { AppRoutingModule } from "./app-routing.module";
 
-// Firebase
-import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-
-import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginSignupComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
-    AngularFirestoreModule
+    CoreModule,
+      AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
