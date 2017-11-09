@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../core/auth.service';
-import { FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../core/auth.service';
 
 @Component({
     selector: 'app-user-profile',
@@ -9,40 +8,14 @@ import { FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 })
 export class UserProfileComponent implements OnInit {
 
-    signUpForm: FormGroup;
-
-    public formErrors = {
-        name: '',
-        email: '',
-        password: '',
-    };
-
-    constructor(public auth: AuthService, private formBuilder: FormBuilder) {
-
-
+    constructor (public auth: AuthService) {
     }
 
-    ngOnInit() {
-        this.buildForm();
+    ngOnInit () {
     }
 
-    private buildForm() {
-        this.signUpForm = this.formBuilder.group({
-            email: ['', Validators.required, Validators.email],
-            password:  ['', Validators.required],
-        });
+    test () {
+        this.auth.createUserWithEmailAndPassword("ecl150030", "asdfasdfasd");
     }
-
-    public signup() {
-        if(this.signUpForm.valid) {
-
-        }
-        else {
-            
-        }
-    }
-
-
-
 
 }

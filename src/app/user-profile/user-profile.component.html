@@ -10,21 +10,9 @@
     </div>
 </ng-template>
 
-<!--<ng-template #guest>-->
-    <!--<button (click)="auth.googleLogin()">Login to Google</button>-->
-<!--</ng-template>-->
+<ng-template #guest>
+    <button (click)="auth.googleLogin()">Login to Google</button>
+</ng-template>
 
+<button (click)="test()">test</button>
 
-<!--<form [formgroup]="signUpForm" (ngSubmit)="auth.createUserWithEmailAndPassword(email.value,password.value)">-->
-    <!--<label>Email</label>-->
-    <!--<input #email type="text">-->
-    <!--<label>Password</label>-->
-    <!--<input #password type="text">-->
-    <!--<button type="submit">Sign up</button>-->
-<!--</form>-->
-
-<form [formGroup]="signUpForm" (ngSubmit)="onSubmit(f.value)" >
-    <input formControlName="email">
-    <input formControlName="password">
-    <button type="submit">Sign up</button>
-</form>

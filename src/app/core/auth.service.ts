@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import * as firebase from 'firebase/app';
-import {AngularFireAuth} from 'angularfire2/auth';
-import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
-import {Observable} from 'rxjs/Observable';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
 
 interface User {
     uid: string;
@@ -17,9 +17,9 @@ export class AuthService {
 
     user: Observable<User>;
 
-    constructor(private afAuth: AngularFireAuth,
-                private afs: AngularFirestore,
-                private router: Router) {
+    constructor (private afAuth: AngularFireAuth,
+                 private afs: AngularFirestore,
+                 private router: Router) {
 
         this.user = this.afAuth.authState
             .switchMap(user => {
@@ -30,22 +30,40 @@ export class AuthService {
                 }
             });
 
-
     }
 
-    googleLogin() {
+    public createUserWithEmailAndPassword (email: string, password: string) {
+        this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+            .catch(error => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+
+                if (errorCode == 'auth/email-already-in-use') {
+
+                }
+                else if (errorCode == 'auth/invalid-email') {
+
+                }
+                else if (errorCode == 'auth/weak-password') {
+
+                }
+            });
+    }
+
+
+    googleLogin () {
         const provider = new firebase.auth.GoogleAuthProvider();
         return this.oAuthLogin(provider);
     }
 
-    private oAuthLogin(provider) {
+    private oAuthLogin (provider) {
         return this.afAuth.auth.signInWithPopup(provider)
             .then((credential) => {
                 this.updateUserData(credential.user)
             })
     }
 
-    private updateUserData(user) {
+    private updateUserData (user) {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
         const data: User = {
@@ -57,22 +75,10 @@ export class AuthService {
         return userRef.set(data)
     }
 
-    signOut() {
+    signOut () {
         this.afAuth.auth.signOut().then(() => {
             this.router.navigate(['/']);
         });
-    }
-
-    public createUserWithEmailAndPassword(email: string, password: string) {
-
-        this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                console.log('success');
-            })
-            .catch(error => {
-                console.error(error.code);
-                console.error(error.message);
-            })
     }
 
 }
