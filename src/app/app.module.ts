@@ -11,6 +11,7 @@ import {UserProfileComponent} from './user-profile/user-profile.component';
 import {LoginSignupComponent} from './login-signup/login-signup.component';
 import {AppRoutingModule} from './app-routing.module';
 import {RouterModule} from "@angular/router";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -23,7 +24,10 @@ import {RouterModule} from "@angular/router";
         AngularFireModule.initializeApp(environment.firebase),
         CoreModule,
         AppRoutingModule,
-        RouterModule
+        RouterModule,
+
+        FormsModule,
+        ReactiveFormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

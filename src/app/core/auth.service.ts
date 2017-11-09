@@ -30,14 +30,6 @@ export class AuthService {
                 }
             });
 
-        // this.afAuth.auth.onAuthStateChanged(user => {
-        //     if(user) {
-        //         this.user = this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-        //     }
-        //     else {
-        //         return Observable.of(null);
-        //     }
-        // })
 
     }
 
@@ -69,6 +61,18 @@ export class AuthService {
         this.afAuth.auth.signOut().then(() => {
             this.router.navigate(['/']);
         });
+    }
+
+    public createUserWithEmailAndPassword(email: string, password: string) {
+
+        this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log('success');
+            })
+            .catch(error => {
+                console.error(error.code);
+                console.error(error.message);
+            })
     }
 
 }
