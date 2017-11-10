@@ -1,18 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { CoreModule } from './core/core.module';
+import { AppFirebaseModule } from './app-firebase.module';
 
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 
-import { AppComponent } from './app.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
-import { LoginSignupComponent } from './login-signup/login-signup.component';
+import { AppComponent } from './components/app/app.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AppMaterialModule } from "./app-material.module";
+import { AuthGuard } from "./core/auth.guard";
 
 @NgModule({
     declarations: [
@@ -22,15 +25,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ],
     imports: [
         BrowserModule,
-        AngularFireModule.initializeApp(environment.firebase),
-        CoreModule,
-        AppRoutingModule,
-        RouterModule,
+        BrowserAnimationsModule,
+        AppMaterialModule,
 
-        FormsModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AppFirebaseModule,
+
+        RouterModule,
+        AppRoutingModule,
+
         ReactiveFormsModule
     ],
-    providers: [],
+    providers: [AuthGuard],
     bootstrap: [AppComponent]
 })
 export class AppModule {

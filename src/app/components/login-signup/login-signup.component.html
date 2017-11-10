@@ -1,0 +1,33 @@
+<h1>Login</h1>
+<form [formGroup]="loginForm" (ngSubmit)="loginUserWithEmail(loginForm.value)">
+
+    <div>
+        <label>Email</label>
+        <input formControlName="email">
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input formControlName="password">
+    </div>
+
+    <button mat-button type="submit" [disabled]="!loginForm.valid">Submit</button>
+
+</form>
+
+<h1>Signup</h1>
+<form [formGroup]="signUpForm" (ngSubmit)="signUpUserWithEmail(signUpForm.value)">
+
+    <div>
+        <label>Email</label>
+        <input formControlName="email">
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input formControlName="password">
+    </div>
+
+    <button type="submit" [disabled]="!signUpForm.valid">Submit</button>
+
+</form>

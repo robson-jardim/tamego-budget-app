@@ -7,15 +7,15 @@ import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firesto
 import { Observable } from 'rxjs/Observable';
 
 interface User {
-    uid: string;
     email: string;
-    displayName?: string;
+    uid: string;
 }
 
 @Injectable()
 export class AuthService {
 
     user: Observable<User>;
+    isAuthenticated: boolean = false;
 
     constructor (private afAuth: AngularFireAuth,
                  private afs: AngularFirestore,
@@ -24,61 +24,66 @@ export class AuthService {
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {
+                    this.isAuthenticated = true;
                     return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
                 } else {
+                    this.isAuthenticated = false;
                     return Observable.of(null);
                 }
             });
+    }
 
+    public isAuthenticated(): boolean {
+        return this.isAuthenticated;
     }
 
     public createUserWithEmailAndPassword (email: string, password: string) {
-        this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+        return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+            .then(user => {
+                console.log('Successful account creation');
+                this.updateUserData(user);
+            })
             .catch(error => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
-                if (errorCode == 'auth/email-already-in-use') {
+                console.error(errorMessage);
+                console.error(errorCode);
+            })
 
-                }
-                else if (errorCode == 'auth/invalid-email') {
+    }
 
-                }
-                else if (errorCode == 'auth/weak-password') {
+    public loginUserWithEmailAndPassword (email: string, password: string) {
+        return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+            .then(user => {
+                console.log('Successful login');
+                this.updateUserData(user);
+            })
+            .catch(error => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
 
-                }
+                console.error(errorMessage);
+                console.error(errorCode);
             });
     }
 
-
-    googleLogin () {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        return this.oAuthLogin(provider);
-    }
-
-    private oAuthLogin (provider) {
-        return this.afAuth.auth.signInWithPopup(provider)
-            .then((credential) => {
-                this.updateUserData(credential.user)
-            })
-    }
-
-    private updateUserData (user) {
-        // Sets user data to firestore on login
-        const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-        const data: User = {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-        };
-
-        return userRef.set(data)
-    }
-
-    signOut () {
+    public signOutUser () {
         this.afAuth.auth.signOut().then(() => {
             this.router.navigate(['/']);
         });
+    }
+
+    private updateUserData (user) {
+
+        const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+
+        const data: User = {
+            uid: user.uid,
+            email: user.email
+        };
+
+        return userRef.set(data)
     }
 
 }
