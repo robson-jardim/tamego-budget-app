@@ -15,7 +15,6 @@ interface User {
 export class AuthService {
 
     user: Observable<User>;
-    isAuthenticated: boolean = false;
 
     constructor (private afAuth: AngularFireAuth,
                  private afs: AngularFirestore,
@@ -24,17 +23,15 @@ export class AuthService {
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {
-                    this.isAuthenticated = true;
                     return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
                 } else {
-                    this.isAuthenticated = false;
                     return Observable.of(null);
                 }
             });
     }
 
     public isAuthenticated(): boolean {
-        return this.isAuthenticated;
+        return true;
     }
 
     public createUserWithEmailAndPassword (email: string, password: string) {
@@ -43,14 +40,6 @@ export class AuthService {
                 console.log('Successful account creation');
                 this.updateUserData(user);
             })
-            .catch(error => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-
-                console.error(errorMessage);
-                console.error(errorCode);
-            })
-
     }
 
     public loginUserWithEmailAndPassword (email: string, password: string) {
@@ -59,13 +48,6 @@ export class AuthService {
                 console.log('Successful login');
                 this.updateUserData(user);
             })
-            .catch(error => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-
-                console.error(errorMessage);
-                console.error(errorCode);
-            });
     }
 
     public signOutUser () {

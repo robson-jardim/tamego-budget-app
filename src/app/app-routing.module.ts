@@ -22,8 +22,7 @@ const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: '',
-        pathMath: 'full'
+        component: LoginSignupComponent
     }
 ];
 

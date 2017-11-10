@@ -37,17 +37,32 @@ export class LoginSignupComponent implements OnInit {
 
     public loginUserWithEmail (form) {
         if (this.loginForm.valid) {
-            this.auth.loginUserWithEmailAndPassword(form.email, form.password).then(() => {
-                this.router.navigateByUrl('/budgets');
-            })
+            this.auth.loginUserWithEmailAndPassword(form.email, form.password)
+                .then(() => {
+                    this.router.navigateByUrl('/budgets');
+                })
+                .catch(error => {
+                    let errorMessage = error.message;
+                    let errorCode = error.code;
+
+                    console.error(errorMessage, errorCode);
+                })
+
         }
     }
 
     public signUpUserWithEmail (form) {
         if (this.signUpForm.valid) {
-            this.auth.createUserWithEmailAndPassword(form.email, form.password).then(() => {
-                this.router.navigateByUrl('/budgets');
-            })
+            this.auth.createUserWithEmailAndPassword(form.email, form.password)
+                .then(() => {
+                    this.router.navigateByUrl('/budgets');
+                })
+                .catch(error => {
+                    let errorMessage = error.message;
+                    let errorCode = error.code;
+
+                    console.error(errorMessage, errorCode);
+                })
         }
     }
 }
