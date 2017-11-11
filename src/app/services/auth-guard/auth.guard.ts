@@ -7,7 +7,7 @@ import { CanActivate, Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 import { Observable } from "rxjs/Observable";
-import { AuthService } from "./auth-service/auth.service";
+import { AuthService } from "../auth-service/auth.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
