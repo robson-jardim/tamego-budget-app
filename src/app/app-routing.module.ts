@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginSignupComponent } from "./components/login-signup/login-signup.component";
 import { UserProfileComponent } from "./components/user-profile/user-profile.component";
-import { AuthGuard } from "./core/auth.guard";
+import { AuthGuard } from "./services/auth.guard";
 
 const routes: Routes = [
     {
@@ -10,20 +10,16 @@ const routes: Routes = [
         component: LoginSignupComponent,
     },
     {
-        path:'budgets',
-        component: UserProfileComponent,
-        canActivate: [AuthGuard]
-
-    },
-    {
-        path:'budgets/:budgetId',
+        path: 'dashboard',
         component: UserProfileComponent,
         canActivate: [AuthGuard]
     },
     {
         path: '**',
-        component: LoginSignupComponent
+        redirectTo: '',
+        pathMatch: 'full'
     }
+
 ];
 
 @NgModule({

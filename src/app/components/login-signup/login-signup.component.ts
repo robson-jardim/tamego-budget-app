@@ -18,20 +18,21 @@ export class LoginSignupComponent implements OnInit {
 
     ngOnInit () {
         this.buildLoginForm();
-        this.buildSignupForm();
-    }
-
-    private buildSignupForm () {
-        this.signUpForm = this.formBuilder.group({
-            email: ['', Validators.email],
-            password: ['', Validators.required]
-        });
+        this.buildSignUpForm();
     }
 
     private buildLoginForm () {
         this.loginForm = this.formBuilder.group({
             email: ['', Validators.email],
+            //Don't check for min length on password because all identity providers have different requirements
             password: ['', Validators.required]
+        });
+    }
+
+    private buildSignUpForm () {
+        this.signUpForm = this.formBuilder.group({
+            email: ['', Validators.email],
+            password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
         });
     }
 
@@ -39,7 +40,7 @@ export class LoginSignupComponent implements OnInit {
         if (this.loginForm.valid) {
             this.auth.loginUserWithEmailAndPassword(form.email, form.password)
                 .then(() => {
-                    this.router.navigateByUrl('/budgets');
+                    this.router.navigate(['/budgets']);
                 })
                 .catch(error => {
                     let errorMessage = error.message;
@@ -55,7 +56,7 @@ export class LoginSignupComponent implements OnInit {
         if (this.signUpForm.valid) {
             this.auth.createUserWithEmailAndPassword(form.email, form.password)
                 .then(() => {
-                    this.router.navigateByUrl('/budgets');
+                    this.router.navigate(['/budgets']);
                 })
                 .catch(error => {
                     let errorMessage = error.message;

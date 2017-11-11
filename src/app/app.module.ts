@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppFirebaseModule } from './app-firebase.module';
+import { AppFirebaseModule } from './modules/app-firebase.module';
 
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
@@ -14,8 +14,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppMaterialModule } from "./app-material.module";
-import { AuthGuard } from "./core/auth.guard";
+import { AppMaterialModule } from "./modules/app-material.module";
+import { AuthGuard } from "./services/auth.guard";
 
 @NgModule({
     declarations: [

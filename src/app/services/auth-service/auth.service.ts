@@ -30,10 +30,6 @@ export class AuthService {
             });
     }
 
-    public isAuthenticated(): boolean {
-        return true;
-    }
-
     public createUserWithEmailAndPassword (email: string, password: string) {
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
             .then(user => {
