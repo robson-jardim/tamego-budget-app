@@ -7,8 +7,8 @@ import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firesto
 import { Observable } from 'rxjs/Observable';
 
 interface User {
+    userId: string;
     email: string;
-    uid: string;
 }
 
 @Injectable()
@@ -55,7 +55,7 @@ export class AuthService {
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 
         const data: User = {
-            uid: user.uid,
+            userId: user.uid,
             email: user.email
         };
 

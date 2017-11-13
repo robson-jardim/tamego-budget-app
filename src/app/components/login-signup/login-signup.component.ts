@@ -10,8 +10,8 @@ import { Router } from "@angular/router";
 })
 export class LoginSignupComponent implements OnInit {
 
-    signUpForm: FormGroup;
-    loginForm: FormGroup;
+    public signUpForm: FormGroup;
+    public loginForm: FormGroup;
 
     constructor (private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
     }
@@ -46,7 +46,7 @@ export class LoginSignupComponent implements OnInit {
                     let errorMessage = error.message;
                     let errorCode = error.code;
 
-                    console.error(errorMessage, errorCode);
+                    console.error(errorCode, errorMessage);
                 })
 
         }
@@ -62,7 +62,7 @@ export class LoginSignupComponent implements OnInit {
                     let errorMessage = error.message;
                     let errorCode = error.code;
 
-                    console.error(errorMessage, errorCode);
+                    console.error(errorCode, errorMessage);
                 })
         }
     }

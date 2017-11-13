@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppMaterialModule } from "./modules/app-material.module";
 import { AuthGuard } from "./services/auth-guard/auth.guard";
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { BudgetComponent } from './components/budget/budget.component';
 
@@ -23,7 +23,7 @@ import { BudgetComponent } from './components/budget/budget.component';
     declarations: [
         AppComponent,
         LoginSignupComponent,
-        DashboardComponent,
+        BudgetSelectionComponent,
         ToolbarComponent,
         BudgetComponent,
     ],

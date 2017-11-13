@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
         // Code from: https://github.com/erikhaddad/firechat/blob/master/src/app/auth/auth.guard.ts
         return this.afAuth.authState
             .take(1)
-            .map(authState => !!authState)
+            .map(authState => !!authState) //ensures the resulting type is a boolean (true or false)
             .do(authenticated => {
                 if (!authenticated) {
                     this.router.navigate(['/']);
