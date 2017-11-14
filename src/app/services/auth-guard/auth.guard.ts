@@ -12,17 +12,16 @@ import { AuthService } from "../auth-service/auth.service";
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    constructor (private afAuth: AngularFireAuth, private router: Router) {
+    constructor (private auth: AuthService, private router: Router) {
     }
 
     canActivate (): Observable<boolean> {
 
-        // Code from: https://github.com/erikhaddad/firechat/blob/master/src/app/auth/auth.guard.ts
-        return this.afAuth.authState
+        return this.auth.user
             .take(1)
-            .map(authState => !!authState) //ensures the resulting type is a boolean (true or false)
-            .do(authenticated => {
-                if (!authenticated) {
+            .map(user => !!user) //ensures the resulting type is a boolean (true or false)
+            .do(loggedIn => {
+                if (!loggedIn) {
                     this.router.navigate(['/']);
                 }
             });

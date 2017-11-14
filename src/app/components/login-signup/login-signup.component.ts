@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from "../../services/auth-service/auth.service";
 import { Router } from "@angular/router";
+import { AuthNotificationService } from "../../services/auth-notification/auth-notification.service";
 
 @Component({
     selector: 'app-login-signup',
@@ -10,59 +11,56 @@ import { Router } from "@angular/router";
 })
 export class LoginSignupComponent implements OnInit {
 
-    public signUpForm: FormGroup;
-    public loginForm: FormGroup;
+    public createAccountForm: FormGroup;
+    public signInForm: FormGroup;
 
-    constructor (private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
+    constructor (private auth: AuthService, private formBuilder: FormBuilder, private router: Router, private authNotification: AuthNotificationService) {
     }
 
     ngOnInit () {
-        this.buildLoginForm();
-        this.buildSignUpForm();
+        this.buildSignInForm();
+        this.buildCreateAccountForm();
     }
 
-    private buildLoginForm () {
-        this.loginForm = this.formBuilder.group({
-            email: ['', Validators.email],
+    private buildSignInForm () {
+        this.signInForm = this.formBuilder.group({
+            email: ['', [
+                Validators.email
+            ]],
             //Don't check for min length on password because all identity providers have different requirements
-            password: ['', Validators.required]
+            password: ['', [
+                Validators.required
+            ]]
         });
     }
 
-    private buildSignUpForm () {
-        this.signUpForm = this.formBuilder.group({
-            email: ['', Validators.email],
-            password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+    private buildCreateAccountForm () {
+        this.createAccountForm = this.formBuilder.group({
+            email: ['',
+                Validators.email
+            ],
+            password: ['', [
+                Validators.required,
+                Validators.minLength(6)
+            ]]
         });
+
     }
 
-    public loginUserWithEmail (formValues) {
-        if (this.loginForm.valid) {
-            this.auth.loginUserWithEmailAndPassword(formValues.email, formValues.password)
+    public signInWithEmailAndPassword (formValues) {
+        if (this.signInForm.valid) {
+            this.auth.signInWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
                 })
-                .catch(error => {
-                    let errorMessage = error.message;
-                    let errorCode = error.code;
-
-                    console.error(errorCode, errorMessage);
-                })
-
         }
     }
 
-    public signUpUserWithEmail (formValues) {
-        if (this.signUpForm.valid) {
+    public createUserWithEmailAndPassword (formValues) {
+        if (this.createAccountForm.valid) {
             this.auth.createUserWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
-                })
-                .catch(error => {
-                    let errorMessage = error.message;
-                    let errorCode = error.code;
-
-                    console.error(errorCode, errorMessage);
                 })
         }
     }
