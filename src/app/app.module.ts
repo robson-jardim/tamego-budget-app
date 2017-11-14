@@ -17,7 +17,9 @@ import { AppMaterialModule } from "./modules/app-material.module";
 import { AuthGuard } from "./services/auth-guard/auth.guard";
 import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { AccountsComponent } from "./components/accounts/accounts.component";
 import { BudgetComponent } from './components/budget/budget.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +27,9 @@ import { BudgetComponent } from './components/budget/budget.component';
         LoginSignupComponent,
         BudgetSelectionComponent,
         ToolbarComponent,
+        AccountsComponent,
         BudgetComponent,
+        SidenavComponent,
     ],
     imports: [
         BrowserModule,

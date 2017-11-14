@@ -6,7 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 
-interface User {
+export interface User {
     userId: string;
     email: string;
 }
@@ -51,7 +51,6 @@ export class AuthService {
     }
 
     private updateUserData (user) {
-
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 
         const data: User = {

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from "angularfire2/firestore";
-import { AuthService } from "../../services/auth-service/auth.service";
+import { AuthService, User } from "../../services/auth-service/auth.service";
 import { Observable } from "rxjs/Observable";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from "firebase";
 
 @Component({
     selector: 'app-dashboard',
@@ -17,7 +16,7 @@ export class BudgetSelectionComponent implements OnInit {
     private budgetCollection: AngularFirestoreCollection<Budget>;
     public budgets: Observable<BudgetId[]>;
 
-    private user: AngularFirestoreDocument<User>;
+    private user: User;
 
     constructor (private db: AngularFirestore, private auth: AuthService, private formBuilder: FormBuilder) {
     }
@@ -26,9 +25,10 @@ export class BudgetSelectionComponent implements OnInit {
         this.auth.user
             .take(1)
             .subscribe(x => {
-                this.user = this.db.doc<User>(`users/${x.userId}`);
+                this.user = x;
                 this.getBudgets();
             });
+
         this.buildNewBudgetForm();
     }
 
@@ -41,7 +41,7 @@ export class BudgetSelectionComponent implements OnInit {
 
 
     public getBudgets (): void {
-        this.budgetCollection = this.user.collection<Budget>('budgets');
+        this.budgetCollection = this.db.collection<Budget>('budgets', ref => ref.where('userId', '==', this.user.userId));
 
         this.budgets = this.budgetCollection.snapshotChanges().map(actions => {
             return actions.map(a => {
@@ -52,12 +52,13 @@ export class BudgetSelectionComponent implements OnInit {
         });
     }
 
-    public addBudget (form): void {
+    public addBudget (formValues): void {
 
         if (this.newBudget.valid) {
             const budget: Budget = {
-                budgetName: form.budgetName,
-                currencyType: form.currencyType
+                userId: this.user.userId,
+                budgetName: formValues.budgetName,
+                currencyType: formValues.currencyType
             };
 
             this.budgetCollection.add(budget);
@@ -72,6 +73,7 @@ export class BudgetSelectionComponent implements OnInit {
 }
 
 interface Budget {
+    userId: string,
     budgetName: string,
     currencyType: string
 }

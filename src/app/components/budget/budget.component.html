@@ -1,3 +1,17 @@
-<app-toolbar></app-toolbar>
+<mat-sidenav-container class="sidenav-container">
 
-<p>Add transactions here</p>
+    <app-toolbar></app-toolbar>
+
+    <mat-sidenav #sidenav position="start" mode="side" opened="true" class="sidenav">
+        <app-sidenav></app-sidenav>
+    </mat-sidenav>
+
+    <ng-container *ngIf="true; then appContent">
+    </ng-container>
+
+</mat-sidenav-container>
+
+<ng-template #appContent>
+    <p>budget works!</p>
+    <button mat-button (click)="sidenav.toggle()">toggle</button>
+</ng-template>

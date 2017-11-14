@@ -1,7 +1,7 @@
 <app-toolbar></app-toolbar>
 
 <ng-container *ngIf="budgets | async as budgets; else loading">
-    <mat-card *ngFor="let b of budgets" class="budget-container" [routerLink]="['/budgets/', b.budgetId]">
+    <mat-card *ngFor="let b of budgets" class="budget-container" [routerLink]="[b.budgetId, 'accounts']">
         <p>Name: {{b.budgetName}}</p>
         <p>Type: {{b.currencyType}}</p>
         <button mat-button (click)="deleteBudget(b); $event.stopPropagation()">

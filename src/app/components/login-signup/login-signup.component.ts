@@ -36,9 +36,9 @@ export class LoginSignupComponent implements OnInit {
         });
     }
 
-    public loginUserWithEmail (form) {
+    public loginUserWithEmail (formValues) {
         if (this.loginForm.valid) {
-            this.auth.loginUserWithEmailAndPassword(form.email, form.password)
+            this.auth.loginUserWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
                 })
@@ -52,9 +52,9 @@ export class LoginSignupComponent implements OnInit {
         }
     }
 
-    public signUpUserWithEmail (form) {
+    public signUpUserWithEmail (formValues) {
         if (this.signUpForm.valid) {
-            this.auth.createUserWithEmailAndPassword(form.email, form.password)
+            this.auth.createUserWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
                 })
