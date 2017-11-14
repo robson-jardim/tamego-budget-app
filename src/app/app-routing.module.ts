@@ -13,7 +13,7 @@ const routes: Routes = [
     },
     {
         path: 'budgets',
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         children: [
             {
                 path: '',
@@ -30,11 +30,11 @@ const routes: Routes = [
 
         ]
     },
-    {
-        path: '**',
-        redirectTo: 'login',
-        pathMatch: 'full'
-    }
+    // {
+    //     path: '**',
+    //     redirectTo: 'login',
+    //     pathMatch: 'full'
+    // }
 
 ];
 

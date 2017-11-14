@@ -1,0 +1,24 @@
+<form [formGroup]="budget" (ngSubmit)="addBudget(budget.value)">
+
+    <h2 mat-dialog-title="">
+        Add budget
+    </h2>
+
+    <mat-dialog-content>
+
+        <mat-form-field>
+            <input matInput formControlName="budgetName" placeholder="Budget name" type="text">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput formControlName="currencyType" placeholder="Currency Type" type="text">
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button type="submit">Submit</button>
+
+        <button mat-button (click)="cancel()">Cancel</button>
+    </mat-dialog-actions>
+</form>
