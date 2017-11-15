@@ -56,7 +56,7 @@ export class AuthService {
 
                 this.authNotification.update(errorMessage, 'error');
 
-                throw errorCode;
+                throw error;
             })
     }
 
@@ -70,21 +70,21 @@ export class AuthService {
                 let errorMessage: string;
 
                 if (errorCode == 'auth/wrong-password') {
-                    errorMessage = 'Thrown if the password is invalid for the given email, or the account corresponding to the email does not have a password set.';
+                    errorMessage = 'Password is invalid for the given email';
                 }
                 else if (errorCode == 'auth/user-not-found') {
-                    errorMessage = 'Thrown if there is no user corresponding to the given email.';
+                    errorMessage = 'No account is found with the given email';
                 }
                 else if (errorCode == 'auth/invalid-email') {
-                    errorMessage = 'Thrown if the email address is not valid.';
+                    errorMessage = 'Email is not valid';
                 }
                 else if (errorCode == 'auth/user-disabled') {
-                    errorMessage = 'Thrown if the user corresponding to the given email has been disabled.';
+                    errorMessage = 'This account has been disabled';
                 }
 
                 this.authNotification.update(errorMessage, 'error');
 
-                throw errorCode;
+                throw error;
             })
     }
 

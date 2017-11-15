@@ -11,56 +11,60 @@ import { AuthNotificationService } from "../../services/auth-notification/auth-n
 })
 export class LoginSignupComponent implements OnInit {
 
-    public createAccountForm: FormGroup;
-    public signInForm: FormGroup;
+    public createAccount: FormGroup;
+    public signIn: FormGroup;
 
-    constructor (private auth: AuthService, private formBuilder: FormBuilder, private router: Router, private authNotification: AuthNotificationService) {
+    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router, private authNotification: AuthNotificationService) {
     }
 
-    ngOnInit () {
+    ngOnInit() {
         this.buildSignInForm();
         this.buildCreateAccountForm();
     }
 
-    private buildSignInForm () {
-        this.signInForm = this.formBuilder.group({
-            email: ['', [
-                Validators.email
-            ]],
+    private buildSignInForm() {
+        this.signIn = this.formBuilder.group({
+            email: ['', Validators.email],
             //Don't check for min length on password because all identity providers have different requirements
-            password: ['', [
-                Validators.required
-            ]]
+            password: ['', Validators.required]
         });
     }
 
-    private buildCreateAccountForm () {
-        this.createAccountForm = this.formBuilder.group({
-            email: ['',
-                Validators.email
-            ],
-            password: ['', [
-                Validators.required,
-                Validators.minLength(6)
-            ]]
+    private buildCreateAccountForm() {
+        this.createAccount = this.formBuilder.group({
+            email: ['', Validators.compose([Validators.required, Validators.email])],
+            password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
         });
-
     }
 
-    public signInWithEmailAndPassword (formValues) {
-        if (this.signInForm.valid) {
+    public get emailErrorMessage(): string {
+        if(this.createAccount.get('email').hasError('required')) {
+            return 'Email required';
+        }
+        else if(this.createAccount.get('email').hasError('email')) {
+            return 'Input a valid email'
+        }
+    }
+    public signInWithEmailAndPassword(formValues) {
+        if (this.signIn.valid) {
             this.auth.signInWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
                 })
+                .catch(error => {
+                    // Auth notification service broadcasts the error to template
+                })
         }
     }
 
-    public createUserWithEmailAndPassword (formValues) {
-        if (this.createAccountForm.valid) {
+    public createUserWithEmailAndPassword(formValues) {
+        if (this.createAccount.valid) {
             this.auth.createUserWithEmailAndPassword(formValues.email, formValues.password)
                 .then(() => {
                     this.router.navigate(['/budgets']);
+                })
+                .catch(error => {
+                    // Auth notification service broadcasts the error to template
                 })
         }
     }
