@@ -42,16 +42,13 @@ export class AuthService {
                 let errorMessage: string;
 
                 if (errorCode == 'auth/email-already-in-use') {
-                    errorMessage = 'Thrown if there already exists an account with the given email address.';
+                    errorMessage = 'Email already in use';
                 }
                 else if (errorCode == 'auth/weak-password') {
-                    errorMessage = 'Thrown if the password is not strong enough.';
+                    errorMessage = 'Weak password';
                 }
                 else if (errorCode == 'auth/invalid-email') {
-                    errorMessage = 'Thrown if the email address is not valid.';
-                }
-                else if ('auth/operation-not-allowed') {
-                    errorMessage = 'Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.';
+                    errorMessage = 'Invalid email';
                 }
 
                 this.authNotification.update(errorMessage, 'error');
@@ -70,13 +67,10 @@ export class AuthService {
                 let errorMessage: string;
 
                 if (errorCode == 'auth/wrong-password') {
-                    errorMessage = 'Password is invalid for the given email';
+                    errorMessage = 'Incorrect email or password';
                 }
                 else if (errorCode == 'auth/user-not-found') {
-                    errorMessage = 'No account is found with the given email';
-                }
-                else if (errorCode == 'auth/invalid-email') {
-                    errorMessage = 'Email is not valid';
+                    errorMessage = 'Incorrect email or password';
                 }
                 else if (errorCode == 'auth/user-disabled') {
                     errorMessage = 'This account has been disabled';
