@@ -1,17 +1,17 @@
-<form [formGroup]="budget" (ngSubmit)="addBudget(budget.value)">
+<form [formGroup]="account" (ngSubmit)="addAccountToBudget(account.value)">
 
     <h2 mat-dialog-title="">
-        Add budget
+        Add account
     </h2>
 
     <mat-dialog-content>
 
         <mat-form-field>
-            <input matInput formControlName="budgetName" placeholder="Budget name" type="text">
+            <input matInput formControlName="accountName" placeholder="Account name" type="text">
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput formControlName="currencyType" placeholder="Currency Type" type="text">
+            <input matInput formControlName="accountType" placeholder="Account type" type="text">
         </mat-form-field>
 
     </mat-dialog-content>

@@ -10,10 +10,6 @@ import { Observable } from "rxjs/Observable";
 })
 export class AccountsComponent implements OnInit {
 
-    id = 5;
-    id2 = 6;
-    id3 = 7;
-
     constructor (private route: ActivatedRoute) {
     }
 

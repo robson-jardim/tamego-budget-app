@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from "../../services/auth-service/auth.service";
 import { Router } from "@angular/router";
@@ -8,6 +8,7 @@ import { AuthNotificationService } from "../../services/auth-notification/auth-n
     selector: 'app-login-signup',
     templateUrl: './login-signup.component.html',
     styleUrls: ['./login-signup.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class LoginSignupComponent implements OnInit {
 

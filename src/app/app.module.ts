@@ -21,6 +21,8 @@ import { AccountsComponent } from './components/accounts/accounts.component';
 import { BudgetComponent } from './components/budget/budget.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-budget-dialog.component';
+import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
+import { DatabaseService } from "./services/database/database.service";
 
 @NgModule({
     declarations: [
@@ -31,7 +33,8 @@ import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-bud
         AccountsComponent,
         BudgetComponent,
         SidenavComponent,
-        AddBudgetDialogComponent
+        AddBudgetDialogComponent,
+        AddAccountToBudgetDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -48,8 +51,9 @@ import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-bud
     ],
     entryComponents: [
         AddBudgetDialogComponent,
+        AddAccountToBudgetDialogComponent
     ],
-    providers: [AuthGuard],
+    providers: [AuthGuard, DatabaseService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
