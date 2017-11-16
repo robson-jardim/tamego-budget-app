@@ -4,7 +4,7 @@
 
     <button mat-button (click)="openAddNewBudgetDialog()">Add New Budget</button>
 
-    <mat-card *ngFor="let b of budgets" class="budget-container" [routerLink]="[b.budgetId, 'accounts']">
+    <mat-card *ngFor="let b of budgets" class="budget-container" [routerLink]="[b.budgetId]">
         <p>Name: {{b.budgetName}}</p>
         <p>Type: {{b.currencyType}}</p>
         <button mat-button (click)="deleteBudget(b); $event.stopPropagation()">

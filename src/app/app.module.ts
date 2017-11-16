@@ -18,11 +18,12 @@ import { AuthGuard } from './services/auth-guard/auth.guard';
 import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AccountsComponent } from './components/accounts/accounts.component';
-import { BudgetComponent } from './components/budget/budget.component';
+import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-budget-dialog.component';
 import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { DatabaseService } from "./services/database/database.service";
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
     declarations: [
@@ -31,10 +32,11 @@ import { DatabaseService } from "./services/database/database.service";
         BudgetSelectionComponent,
         ToolbarComponent,
         AccountsComponent,
-        BudgetComponent,
+        EditBudgetComponent,
         SidenavComponent,
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
+        DashboardComponent,
     ],
     imports: [
         BrowserModule,

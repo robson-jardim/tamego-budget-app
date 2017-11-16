@@ -2,11 +2,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-budget',
-    templateUrl: './budget.component.html',
-    styleUrls: ['./budget.component.scss'],
+    templateUrl: './edit-budget.component.html',
+    styleUrls: ['./edit-budget.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class BudgetComponent implements OnInit {
+export class EditBudgetComponent implements OnInit {
 
     constructor () {
     }

@@ -4,7 +4,8 @@ import { LoginSignupComponent } from "./components/login-signup/login-signup.com
 import { AuthGuard } from "./services/auth-guard/auth.guard";
 import { BudgetSelectionComponent } from "./components/budget-selection/budget-selection.component";
 import { AccountsComponent } from "./components/accounts/accounts.component";
-import { BudgetComponent } from "./components/budget/budget.component";
+import { EditBudgetComponent } from "./components/edit-budget/edit-budget.component";
+import { DashboardComponent } from "./components/dashboard/dashboard.component";
 
 const routes: Routes = [
     {
@@ -13,28 +14,34 @@ const routes: Routes = [
     },
     {
         path: 'budgets',
+        component: BudgetSelectionComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'budgets/:budgetId',
+        component: DashboardComponent,
         canActivate: [AuthGuard],
         children: [
             {
                 path: '',
-                component: BudgetSelectionComponent
+                redirectTo: 'budget',
+                pathMatch: 'full'
             },
             {
-                path: ':budgetId/accounts',
+                path: 'accounts',
                 component: AccountsComponent,
             },
             {
-                path: ':budgetId/budget',
-                component: BudgetComponent,
+                path: 'budget',
+                component: EditBudgetComponent,
             }
-
         ]
     },
-    {
-        path: '**',
-        redirectTo: 'login',
-        pathMatch: 'full'
-    }
+    // {
+    //     path: '**',
+    //     redirectTo: 'login',
+    //     pathMatch: 'full'
+    // }
 
 ];
 

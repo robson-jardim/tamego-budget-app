@@ -6,12 +6,6 @@
         <app-sidenav></app-sidenav>
     </mat-sidenav>
 
-    <ng-container *ngIf="true; then appContent">
-    </ng-container>
+    <router-outlet></router-outlet>
 
 </mat-sidenav-container>
-
-<ng-template #appContent>
-    <p>budget works!</p>
-    <button mat-button (click)="sidenav.toggle()">toggle</button>
-</ng-template>
