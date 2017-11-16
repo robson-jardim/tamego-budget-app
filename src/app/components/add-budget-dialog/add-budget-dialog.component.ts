@@ -16,15 +16,14 @@ export class AddBudgetDialogComponent implements OnInit {
 
     constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: any,
-                private db: DatabaseService) {
+                @Inject(MAT_DIALOG_DATA) private data: any) {
     }
 
     ngOnInit() {
         this.buildBudgetForm();
     }
 
-    private buildBudgetForm() : void {
+    private buildBudgetForm(): void {
         this.budget = this.formBuilder.group({
             budgetName: ['', Validators.required],
             currencyType: ['', Validators.required]
@@ -35,7 +34,7 @@ export class AddBudgetDialogComponent implements OnInit {
         this.dialogRef.close(newBudgetId);
     }
 
-    public cancel() : void {
+    public cancel(): void {
         this.dialogRef.close(null);
     }
 

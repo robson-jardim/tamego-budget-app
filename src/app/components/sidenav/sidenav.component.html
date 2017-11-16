@@ -10,5 +10,12 @@
     <mat-list-item>
         <button mat-button (click)="openAddBudgetToAccountDialog()">Add account</button>
     </mat-list-item>
-</mat-list>
 
+    <mat-divider></mat-divider>
+
+    <mat-list-item *ngFor="let a of budgetAccounts | async as accounts">
+        <p>Name: {{a.accountName}}</p>
+        <p>Type: {{a.accountType}}</p>
+    </mat-list-item>
+
+</mat-list>

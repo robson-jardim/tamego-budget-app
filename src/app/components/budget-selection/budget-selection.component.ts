@@ -28,6 +28,8 @@ export class BudgetSelectionComponent implements OnInit {
     ngOnInit() {
         this.budgetCollection = this.db.getBudgetCollection();
         this.budgets = this.db.getBudgetsWithIds(this.budgetCollection);
+
+        this.db.getBudgetsWithIds(this.budgetCollection).subscribe(x => console.log);
     }
 
     public openAddNewBudgetDialog(): void {

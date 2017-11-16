@@ -15,8 +15,7 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
 
     constructor (private dialogRef: MatDialogRef<AddAccountToBudgetDialogComponent>,
                  private formBuilder: FormBuilder,
-                 @Inject(MAT_DIALOG_DATA) private data: any,
-                 private db: DatabaseService) {
+                 @Inject(MAT_DIALOG_DATA) private data: any) {
     }
 
     ngOnInit () {
@@ -32,12 +31,14 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
 
     public addAccountToBudget (form) {
         if (this.account.valid) {
-            const budget: BudgetAccount = {
+            const budgetAccount: BudgetAccount = {
+                userId: this.data.userId,
+                budgetId: this.data.budgetId,
                 accountName: form.accountName,
                 accountType: form.accountType
             };
 
-            this.data.budgetCollection.add(budget);
+            this.data.budgetCollection.add(budgetAccount);
         }
     }
 
