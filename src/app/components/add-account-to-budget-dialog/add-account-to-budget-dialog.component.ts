@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { BudgetAccount, DatabaseService } from "../../services/database/database.service";
+import { BudgetAccount } from "../../services/database/database.service";
 
 @Component({
     selector: 'app-add-account-to-budget-dialog',
@@ -38,11 +38,12 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
                 accountType: form.accountType
             };
 
-            this.data.budgetCollection.add(budgetAccount);
+            this.data.budgetAccountCollection.add(budgetAccount)
+            this.close();
         }
     }
 
-    public cancel () {
+    public close () {
         this.dialogRef.close();
     }
 }

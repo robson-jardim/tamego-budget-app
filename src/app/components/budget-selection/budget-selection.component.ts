@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Budget, BudgetId, DatabaseService } from "../../services/database/database.service";
 
 @Component({

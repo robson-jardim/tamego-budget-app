@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from "@angular/material";
-import { Budget, DatabaseService } from "../../services/database/database.service";
+import { Budget } from "../../services/database/database.service";
 
 @Component({
     selector: 'app-add-budget-dialog',
@@ -34,7 +34,7 @@ export class AddBudgetDialogComponent implements OnInit {
         this.dialogRef.close(newBudgetId);
     }
 
-    public cancel(): void {
+    public close(): void {
         this.dialogRef.close(null);
     }
 

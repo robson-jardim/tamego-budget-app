@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Params } from "@angular/router";
-import { Observable } from "rxjs/Observable";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'app-budget',
