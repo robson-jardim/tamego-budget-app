@@ -13,23 +13,23 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
 
     public account: FormGroup;
 
-    constructor (private dialogRef: MatDialogRef<AddAccountToBudgetDialogComponent>,
-                 private formBuilder: FormBuilder,
-                 @Inject(MAT_DIALOG_DATA) private data: any) {
+    constructor(private dialogRef: MatDialogRef<AddAccountToBudgetDialogComponent>,
+                private formBuilder: FormBuilder,
+                @Inject(MAT_DIALOG_DATA) private data: any) {
     }
 
-    ngOnInit () {
+    ngOnInit() {
         this.buildAccountForm();
     }
 
-    private buildAccountForm () {
+    private buildAccountForm() {
         this.account = this.formBuilder.group({
             accountName: ['', Validators.required],
             accountType: ['', Validators.required]
         });
     }
 
-    public addAccountToBudget (form) {
+    public addAccountToBudget(form) {
         if (this.account.valid) {
             const budgetAccount: BudgetAccount = {
                 userId: this.data.userId,
@@ -45,7 +45,7 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
         }
     }
 
-    public close () {
+    public close() {
         this.dialogRef.close();
     }
 }

@@ -17,10 +17,10 @@ export class AuthService {
 
     user: Observable<User>;
 
-    constructor (private afAuth: AngularFireAuth,
-                 private afs: AngularFirestore,
-                 private authNotification: AuthNotificationService,
-                 private router: Router) {
+    constructor(private afAuth: AngularFireAuth,
+                private afs: AngularFirestore,
+                private authNotification: AuthNotificationService,
+                private router: Router) {
 
         this.user = this.afAuth.authState
             .switchMap(user => {
@@ -32,7 +32,7 @@ export class AuthService {
             });
     }
 
-    public createUserWithEmailAndPassword (email: string, password: string) {
+    public createUserWithEmailAndPassword(email: string, password: string) {
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
             .then(user => {
                 this.updateUserData(user);
@@ -57,7 +57,7 @@ export class AuthService {
             })
     }
 
-    public signInWithEmailAndPassword (email: string, password: string) {
+    public signInWithEmailAndPassword(email: string, password: string) {
         return this.afAuth.auth.signInWithEmailAndPassword(email, password)
             .then(user => {
                 this.updateUserData(user);
@@ -82,13 +82,13 @@ export class AuthService {
             })
     }
 
-    public signOut () {
+    public signOut() {
         this.afAuth.auth.signOut().then(() => {
             this.router.navigate(['/']);
         });
     }
 
-    private updateUserData (user) {
+    private updateUserData(user) {
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 
         const data: User = {

@@ -39,13 +39,14 @@ export class LoginSignupComponent implements OnInit {
     }
 
     public get emailErrorMessage(): string {
-        if(this.createAccount.get('email').hasError('required')) {
+        if (this.createAccount.get('email').hasError('required')) {
             return 'Email required';
         }
-        else if(this.createAccount.get('email').hasError('email')) {
+        else if (this.createAccount.get('email').hasError('email')) {
             return 'Input a valid email'
         }
     }
+
     public signInWithEmailAndPassword(formValues) {
         if (this.signIn.valid) {
             this.auth.signInWithEmailAndPassword(formValues.email, formValues.password)

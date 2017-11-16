@@ -13,10 +13,10 @@ export class AuthGuard implements CanActivate {
     //Should only be used in the constructor of the database service
     public userId: string;
 
-    constructor (private auth: AuthService, private router: Router) {
+    constructor(private auth: AuthService, private router: Router) {
     }
 
-    canActivate (): Observable<boolean> {
+    canActivate(): Observable<boolean> {
 
         return this.auth.user
             .take(1)

@@ -8,10 +8,10 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class EditBudgetComponent implements OnInit {
 
-    constructor () {
+    constructor() {
     }
 
-    ngOnInit () {
+    ngOnInit() {
     }
 
 }
