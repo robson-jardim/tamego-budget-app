@@ -13,7 +13,7 @@
 
     <mat-divider></mat-divider>
 
-    <mat-list-item *ngFor="let a of budgetAccounts | async as accounts">
+    <mat-list-item *ngFor="let a of budgetAccounts | async as accounts" [routerLink]="['./accounts', a.budgetAccountId]" routerLinkActive="active">
         <p>Name: {{a.accountName}}</p>
         <p>Type: {{a.accountType}}</p>
     </mat-list-item>

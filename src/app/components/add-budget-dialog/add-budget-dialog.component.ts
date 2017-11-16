@@ -30,14 +30,6 @@ export class AddBudgetDialogComponent implements OnInit {
         });
     }
 
-    private onBudgetAdded(newBudgetId: string): void {
-        this.dialogRef.close(newBudgetId);
-    }
-
-    public close(): void {
-        this.dialogRef.close(null);
-    }
-
     public addBudget(formValues): void {
 
         if (this.budget.valid) {
@@ -54,4 +46,11 @@ export class AddBudgetDialogComponent implements OnInit {
         }
     }
 
+    private onBudgetAdded(newBudgetId: string): void {
+        this.dialogRef.close(newBudgetId);
+    }
+
+    public close(): void {
+        this.dialogRef.close();
+    }
 }

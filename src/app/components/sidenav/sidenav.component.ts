@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from "@angular/material";
 import { AddAccountToBudgetDialogComponent } from "../add-account-to-budget-dialog/add-account-to-budget-dialog.component";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { BudgetAccount, DatabaseService } from "../../services/database/database.service";
 import { Observable } from "rxjs/Observable";
 import { AngularFirestoreCollection } from "angularfire2/firestore";
@@ -14,13 +14,14 @@ import { AngularFirestoreCollection } from "angularfire2/firestore";
 })
 export class SidenavComponent implements OnInit {
 
-    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>
-        public budgetAccounts: Observable<BudgetAccount[]>;
+    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
+    public budgetAccounts: Observable<BudgetAccount[]>;
     private budgetId: string;
 
     constructor(private dialog: MatDialog,
+                private db: DatabaseService,
                 private route: ActivatedRoute,
-                private db: DatabaseService) {
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -34,7 +35,7 @@ export class SidenavComponent implements OnInit {
 
     public openAddBudgetToAccountDialog() {
 
-        const addBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
+        const addAccountToBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
             data: {
                 budgetAccountCollection: this.budgetAccountCollection,
                 budgetId: this.budgetId,
@@ -42,8 +43,9 @@ export class SidenavComponent implements OnInit {
             }
         });
 
-        addBudgetDialogRef.afterClosed().subscribe(newAccountId => {
+        addAccountToBudgetDialogRef.beforeClose().subscribe(newAccountId => {
             if (newAccountId) {
+                this.router.navigate(['./accounts', newAccountId], {relativeTo: this.route});
             }
         });
     }

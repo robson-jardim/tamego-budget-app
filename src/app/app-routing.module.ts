@@ -9,7 +9,7 @@ import { DashboardComponent } from "./components/dashboard/dashboard.component";
 
 const routes: Routes = [
     {
-        path: 'login',
+        path: '',
         component: LoginSignupComponent,
     },
     {
@@ -28,12 +28,16 @@ const routes: Routes = [
                 pathMatch: 'full'
             },
             {
+                path: 'budget',
+                component: EditBudgetComponent,
+            },
+            {
                 path: 'accounts',
                 component: AccountsComponent,
             },
             {
-                path: 'budget',
-                component: EditBudgetComponent,
+                path: 'accounts/:accountId',
+                component: AccountsComponent
             }
         ]
     },

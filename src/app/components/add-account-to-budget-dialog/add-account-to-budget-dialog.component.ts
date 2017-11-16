@@ -38,8 +38,10 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
                 accountType: form.accountType
             };
 
-            this.data.budgetAccountCollection.add(budgetAccount)
-            this.close();
+            this.data.budgetAccountCollection.add(budgetAccount).then(newAccount => {
+                const newAccountId = newAccount.id;
+                this.dialogRef.close(newAccountId);
+            });
         }
     }
 

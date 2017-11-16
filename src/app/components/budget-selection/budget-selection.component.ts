@@ -40,9 +40,9 @@ export class BudgetSelectionComponent implements OnInit {
             }
         });
 
-        addBudgetDialogRef.afterClosed().subscribe(newBudgetId => {
+        addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
             if (newBudgetId) {
-                this.router.navigate([newBudgetId, 'accounts'], { relativeTo: this.route });
+                this.router.navigate([newBudgetId], { relativeTo: this.route });
             }
         });
     }

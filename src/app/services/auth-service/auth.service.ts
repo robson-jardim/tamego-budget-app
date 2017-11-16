@@ -67,10 +67,10 @@ export class AuthService {
                 let errorMessage: string;
 
                 if (errorCode == 'auth/wrong-password') {
-                    errorMessage = 'Incorrect email or password';
+                    errorMessage = 'Incorrect password';
                 }
                 else if (errorCode == 'auth/user-not-found') {
-                    errorMessage = 'Incorrect email or password';
+                    errorMessage = 'No account found with the given email';
                 }
                 else if (errorCode == 'auth/user-disabled') {
                     errorMessage = 'This account has been disabled';
