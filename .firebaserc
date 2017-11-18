@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "budget-dev-1",
+    "prod": "budget-prod",
+    "dev": "budget-dev-1"
+  }
+}

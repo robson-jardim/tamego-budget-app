@@ -24,6 +24,7 @@ import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-bud
 import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { DatabaseService } from "./services/database/database.service";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TestingComponent } from './components/testing/testing.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
         DashboardComponent,
+        TestingComponent,
     ],
     imports: [
         BrowserModule,
