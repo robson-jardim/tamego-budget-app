@@ -1,6 +1,5 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-.idea
-.code
+
 
 # compiled output
 /dist
@@ -20,6 +19,8 @@
 *.sublime-workspace
 
 # IDE - VSCode
+.idea
+.code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

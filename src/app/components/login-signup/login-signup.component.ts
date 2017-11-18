@@ -15,7 +15,7 @@ export class LoginSignupComponent implements OnInit {
     public createAccount: FormGroup;
     public signIn: FormGroup;
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router, private authNotification: AuthNotificationService) {
+    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router, public authNotification: AuthNotificationService) {
     }
 
     ngOnInit() {
