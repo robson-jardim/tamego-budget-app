@@ -1,0 +1,55 @@
+service cloud.firestore {
+    match /databases/{database}/documents {
+
+        match /users/{userId} {
+            allow create: if request.auth.uid == userId
+                && request.resource.data.userId == userId
+                && validateUserSchema();
+
+            allow get: if request.auth.uid == userId;
+
+            allow update: if request.auth.uid == userId
+                && request.resource.data.userId == resource.data.userId
+                && validateUserSchema();
+        }
+
+        function validateUserSchema() {
+            return request.resource.data.keys().hasAll(['userId', 'email'])
+                && request.resource.data.size() == 2
+        }
+
+        match /budgets/{budgetId} {
+            allow read: if request.auth.uid == resource.data.userId;
+
+            allow create: if requestUserIdsMatch();
+
+            //Don't allow delete for now.
+
+            allow update: if isUserAccessingResourcesTheyOwn() && !isUpdatingUserId();
+        }
+
+        match /budgetAccounts/{account} {
+
+            allow read: if request.auth.uid == resource.data.userId;
+
+            allow create: if requestUserIdsMatch();
+
+            //Don't allow delete for now.
+
+            allow update: if isUserAccessingResourcesTheyOwn() && !isUpdatingUserId();
+        }
+
+        function requestUserIdsMatch() {
+            return request.auth.uid == request.resource.data.userId;
+        }
+
+        function isUserAccessingResourcesTheyOwn() {
+            return request.auth.uid == resource.data.userId;
+        }
+
+        function isUpdatingUserId() {
+            return request.resource.data.userId == resource.data.userId;
+        }
+
+    }
+}
