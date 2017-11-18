@@ -12,19 +12,11 @@ before_script:
     - npm install -g @angular/cli
 
 script:
-    - if [ "$TRAVIS_BRANCH" = "dev" ]; then
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then
         ng build --dev;
       fi
 
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then
-        ng build --prod;
-      fi
-
 after_success:
-    - if [ "$TRAVIS_BRANCH" = "dev" ]; then
-        firebase deploy --project dev --token $FIREBASE_TOKEN;
-      fi
-
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
-        firebase deploy --project prod --token $FIREBASE_TOKEN;
+        firebase deploy --project dev --token $FIREBASE_TOKEN;
       fi
