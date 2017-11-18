@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-    - "6"
+    - "stable"
 
 branches:
     only:
@@ -11,8 +11,8 @@ before_script:
     - npm install -g @angular/cli
 
 script:
-    - ng build --dev
+    - if [ "$BRANCH" == "master" ]; then ng build --dev; fi
 
 after_success:
-    - firebase deploy --project dev --token $FIREBASE_TOKEN
+    - if [ "$BRANCH" == "master" ]; then firebase deploy --project dev --token $FIREBASE_TOKEN; fi
 
