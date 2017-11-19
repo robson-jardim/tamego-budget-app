@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from "@angular/material";
 import { AddAccountToBudgetDialogComponent } from "../add-account-to-budget-dialog/add-account-to-budget-dialog.component";
 import { ActivatedRoute, Router } from "@angular/router";
-import { BudgetAccount, DatabaseService } from "../../services/database/database.service";
+import { Account, DatabaseService } from "../../services/database/database.service";
 import { Observable } from "rxjs/Observable";
 import { AngularFirestoreCollection } from "angularfire2/firestore";
 
@@ -14,8 +14,8 @@ import { AngularFirestoreCollection } from "angularfire2/firestore";
 })
 export class SidenavComponent implements OnInit {
 
-    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
-    public budgetAccounts: Observable<BudgetAccount[]>;
+    private budgetAccountCollection: AngularFirestoreCollection<Account>;
+    public budgetAccounts: Observable<Account[]>;
     private budgetId: string;
 
     constructor(private dialog: MatDialog,

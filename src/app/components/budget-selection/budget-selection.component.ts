@@ -25,6 +25,7 @@ export class BudgetSelectionComponent implements OnInit {
                 private db: DatabaseService) {
     }
 
+
     ngOnInit() {
         this.budgetCollection = this.db.getBudgetCollection();
         this.budgets = this.db.getBudgetsWithIds(this.budgetCollection);

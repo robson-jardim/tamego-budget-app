@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
     selector: 'app-budget',
@@ -9,11 +9,10 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class AccountsComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute) {
+    constructor() {
     }
 
     ngOnInit() {
-
     }
 
 }
