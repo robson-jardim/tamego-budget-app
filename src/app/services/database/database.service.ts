@@ -8,26 +8,9 @@ export class DatabaseService {
 
     public readonly userId: string;
 
-
-    private collect: AngularFirestoreCollection<CategoryGroup>;
-    private obs: Observable<CategoryGroupId[]>;
-
     constructor (private afs: AngularFirestore,
                  private authGuard: AuthGuard) {
         this.userId = this.authGuard.userId;
-
-
-    }
-
-    public getTestCollection(): Observable<CategoryGroupId[]> {
-
-        if(!this.obs) {
-            console.log('here');
-            this.collect = this.getCategoryGroupCollection('L6rXCcq3i1CnDqmb6kZu');
-            this.obs = this.getCategoryGroupsWithIds(this.collect);
-        }
-
-        return this.obs;
     }
 
     public getBudgetCollection (): AngularFirestoreCollection<Budget> {

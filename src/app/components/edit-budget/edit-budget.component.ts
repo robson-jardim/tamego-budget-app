@@ -7,6 +7,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { AngularFirestoreCollection } from "angularfire2/firestore";
 import { Observable } from "rxjs/Observable";
+import { combineLatest } from "rxjs/observable/combineLatest";
 
 @Component({
     selector: 'app-budget',
@@ -22,8 +23,6 @@ export class EditBudgetComponent implements OnInit {
     private groupCollection: AngularFirestoreCollection<CategoryGroup>;
     public groups: Observable<CategoryGroupId[]>;
 
-    public test;
-
     private categoryCollection: AngularFirestoreCollection<Category>;
     public categories: Observable<CategoryId[]>;
 
@@ -32,21 +31,11 @@ export class EditBudgetComponent implements OnInit {
 
     ngOnInit () {
 
-        console.log('here');
-
-        this.db.getTestCollection().subscribe(x => {
-            console.log(x);
-        })
-
         this.route.parent.params.subscribe(params => {
             let budgetId = params.budgetId;
 
             this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
             this.groups = this.db.getCategoryGroupsWithIds(this.groupCollection);
-
-            this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
-            this.test = this.groupCollection.valueChanges();
-
 
             this.categoryCollection = this.db.getCategoryCollection(budgetId);
             this.categories = this.db.getCategoriesWithIds(this.categoryCollection);
@@ -76,14 +65,20 @@ export class EditBudgetComponent implements OnInit {
         this.groupCollection.add(group);
     }
 
-    public addCategory(form) {
+    public addCategory(form, groupId) {
         const category: Category = {
             name: form.categoryName,
-            groupId: 'testId'
+            groupId: groupId
         };
 
         this.categoryCollection.add(category);
+    }
 
-        this.buildCategoryForm();
+    public deleteGroup (groupId: string) {
+        this.groupCollection.doc(groupId).delete();
+    }
+
+    public deleteCategory(categoryId: string) {
+        this.categoryCollection.doc(categoryId).delete();
     }
 }

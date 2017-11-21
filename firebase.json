@@ -1,14 +1,21 @@
 {
     "firestore": {
-        "rules": "firestore.rules",
-        "hosting": {
-            "public": "dist"
-        },
+        "rules": "firestore.rules"
+    },
+    "hosting": {
+        "public": "dist",
         "rewrites": [
             {
                 "source": "**",
                 "destination": "/index.html"
             }
         ]
+    },
+    "functions": {
+        "source": "functions",
+		"ignore": {
+			"**",
+			"!index.js"	
+		}
     }
 }

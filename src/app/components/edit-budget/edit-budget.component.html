@@ -4,25 +4,32 @@
         <input matInput formControlName="groupName" placeholder="Add category group" type="text">
     </mat-form-field>
 
-
     <button mat-button type="submit">Add group</button>
 </form>
 
-<form [formGroup]="categoryForm" (ngSubmit)="addCategory(categoryForm.value)">
+<mat-card *ngFor="let group of groups | async">
 
-    <mat-form-field>
-        <input matInput formControlName="categoryName" placeholder="Add category" type="text">
-    </mat-form-field>
+    <p>Group: {{group.name}}</p>
+    <button (click)="deleteGroup(group.groupId)">
+        <mat-icon>delete</mat-icon>
+    </button>
 
-    <button mat-button type="submit">Add category</button>
-</form>
+    <form [formGroup]="categoryForm" (ngSubmit)="addCategory(categoryForm.value, group.groupId)">
+        <mat-form-field>
+            <input matInput formControlName="categoryName" placeholder="Add category" type="text">
+        </mat-form-field>
 
-<h1>Groups</h1>
-<mat-card *ngFor="let group of test | async">
-    {{group | json}}
-</mat-card>
+        <button mat-button type="submit">Add category</button>
+    </form>
 
-<h1>Categories</h1>
-<mat-card *ngFor="let category of categories | async">
-    {{category | json}}
+    <div *ngFor="let category of categories | async as categories">
+        <div *ngIf="category.groupId == group.groupId">
+            <p>{{category.name}}</p>
+
+            <button (click)="deleteCategory(category.categoryId)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </div>
+
 </mat-card>

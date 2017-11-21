@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 
 import * as firebase from 'firebase/app';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
-import { AuthNotificationService } from "../auth-notification/auth-notification.service";
+import {AngularFireAuth} from 'angularfire2/auth';
+import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
+import {Observable} from 'rxjs/Observable';
+import {AuthNotificationService} from '../auth-notification/auth-notification.service';
 
 export interface User {
     userId: string;
@@ -34,52 +34,46 @@ export class AuthService {
 
     public createUserWithEmailAndPassword(email: string, password: string) {
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-            .then(user => {
-                this.updateUserData(user);
-            })
             .catch(error => {
                 const errorCode = error.code;
                 let errorMessage: string;
 
-                if (errorCode == 'auth/email-already-in-use') {
+                if (errorCode === 'auth/email-already-in-use') {
                     errorMessage = 'Email already in use';
                 }
-                else if (errorCode == 'auth/weak-password') {
+                else if (errorCode === 'auth/weak-password') {
                     errorMessage = 'Weak password';
                 }
-                else if (errorCode == 'auth/invalid-email') {
+                else if (errorCode === 'auth/invalid-email') {
                     errorMessage = 'Invalid email';
                 }
 
                 this.authNotification.update(errorMessage, 'error');
 
                 throw error;
-            })
+            });
     }
 
     public signInWithEmailAndPassword(email: string, password: string) {
         return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-            .then(user => {
-                this.updateUserData(user);
-            })
             .catch(error => {
                 const errorCode = error.code;
                 let errorMessage: string;
 
-                if (errorCode == 'auth/wrong-password') {
+                if (errorCode === 'auth/wrong-password') {
                     errorMessage = 'Incorrect password';
                 }
-                else if (errorCode == 'auth/user-not-found') {
+                else if (errorCode === 'auth/user-not-found') {
                     errorMessage = 'No account found with the given email';
                 }
-                else if (errorCode == 'auth/user-disabled') {
+                else if (errorCode === 'auth/user-disabled') {
                     errorMessage = 'This account has been disabled';
                 }
 
                 this.authNotification.update(errorMessage, 'error');
 
                 throw error;
-            })
+            });
     }
 
     public signOut() {
@@ -87,16 +81,4 @@ export class AuthService {
             this.router.navigate(['/']);
         });
     }
-
-    private updateUserData(user) {
-        const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
-        const data: User = {
-            userId: user.uid,
-            email: user.email
-        };
-
-        return userRef.set(data)
-    }
-
 }
