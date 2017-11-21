@@ -16,4 +16,3 @@ export const createUserAccount = functions.auth.user().onCreate((event: any) => 
         console.log('User record added: ' + JSON.stringify(newUser));
     });
 });
-

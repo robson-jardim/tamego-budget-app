@@ -38,9 +38,7 @@ export class SidenavComponent implements OnInit {
 
         const addAccountToBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
             data: {
-                budgetAccountCollection: this.budgetAccountCollection,
-                budgetId: this.budgetId,
-                userId: this.db.userId
+                budgetAccountCollection: this.budgetAccountCollection
             }
         });
 

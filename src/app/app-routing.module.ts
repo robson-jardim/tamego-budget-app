@@ -6,7 +6,6 @@ import { BudgetSelectionComponent } from './components/budget-selection/budget-s
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TestingComponent } from './components/testing/testing.component';
 
 const routes: Routes = [
     {
@@ -41,10 +40,6 @@ const routes: Routes = [
                 component: AccountsComponent
             }
         ]
-    },
-    {
-        path: 'testing',
-        component: TestingComponent,
     },
     {
         path: '**',

@@ -32,11 +32,8 @@ export class EditBudgetComponent implements OnInit {
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
-            this.groups = this.db.getCategoryGroupsWithIds(this.groupCollection);
+            const groupings: Observable<BudgetGroup[]> = this.db.getBudgetGroups(budgetId);
 
-            this.categoryCollection = this.db.getCategoryCollection(budgetId);
-            this.categories = this.db.getCategoriesWithIds(this.categoryCollection);
         });
 
         this.buildCategoryGroupForm();
@@ -79,4 +76,11 @@ export class EditBudgetComponent implements OnInit {
     public deleteCategory(categoryId: string) {
         this.categoryCollection.doc(categoryId).delete();
     }
+
+
 }
+
+export interface BudgetGroup {
+    groupName: string;
+    categories: Array<Category>;
+};

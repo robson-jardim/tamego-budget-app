@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
 import { User } from '../../../../models/user.model';
@@ -35,13 +35,16 @@ export class AuthService {
                 let errorMessage: string;
 
                 if (errorCode === 'auth/email-already-in-use') {
-                    errorMessage = 'Email already in use';
-                }
-                else if (errorCode === 'auth/weak-password') {
-                    errorMessage = 'Weak password';
+                    errorMessage = 'Email is already registered with another account';
                 }
                 else if (errorCode === 'auth/invalid-email') {
                     errorMessage = 'Invalid email';
+                }
+                else if (errorCode === 'auth/operation-not-allowed') {
+                    errorMessage = 'Error';
+                }
+                else if (errorCode === 'auth/weak-password') {
+                    errorMessage = 'Please choose a more secure password';
                 }
 
                 this.authNotification.update(errorMessage, 'error');
@@ -56,14 +59,17 @@ export class AuthService {
                 const errorCode = error.code;
                 let errorMessage: string;
 
-                if (errorCode === 'auth/wrong-password') {
-                    errorMessage = 'Incorrect password';
-                }
-                else if (errorCode === 'auth/user-not-found') {
-                    errorMessage = 'No account found with the given email';
+                if (errorCode === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email';
                 }
                 else if (errorCode === 'auth/user-disabled') {
                     errorMessage = 'This account has been disabled';
+                }
+                else if (errorCode === 'auth/user-not-found') {
+                    errorMessage = 'No account exists with the given email';
+                }
+                else if (errorCode === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password';
                 }
 
                 this.authNotification.update(errorMessage, 'error');

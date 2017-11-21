@@ -22,9 +22,8 @@ import { EditBudgetComponent } from './components/edit-budget/edit-budget.compon
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-budget-dialog.component';
 import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
-import { DatabaseService } from "./services/database/database.service";
+import { DatabaseService } from './services/database/database.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TestingComponent } from './components/testing/testing.component';
 
 @NgModule({
     declarations: [
@@ -38,7 +37,6 @@ import { TestingComponent } from './components/testing/testing.component';
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
         DashboardComponent,
-        TestingComponent,
     ],
     imports: [
         BrowserModule,

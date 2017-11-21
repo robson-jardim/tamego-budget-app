@@ -32,8 +32,6 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
     public addAccountToBudget(form) {
         if (this.account.valid) {
             const budgetAccount: BudgetAccount = {
-                userId: this.data.userId,
-                budgetId: this.data.budgetId,
                 accountName: form.accountName,
                 accountType: form.accountType
             };

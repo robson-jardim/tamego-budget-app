@@ -6,6 +6,7 @@ import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
 import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
+import { BudgetGroup } from '../../components/edit-budget/edit-budget.component';
 
 @Injectable()
 export class DatabaseService {
@@ -35,10 +36,7 @@ export class DatabaseService {
     }
 
     public getBudgetAccountCollection(budgetId: string): AngularFirestoreCollection<Account> {
-        const budgetAccountCollection = this.afs.collection<Account>('budgetAccounts', ref =>
-            ref.where('userId', '==', this.userId)
-                .where('budgetId', '==', budgetId)
-        );
+        const budgetAccountCollection = this.afs.collection<Account>(`budgets/${budgetId}/accounts`);
 
         return budgetAccountCollection;
     }
@@ -56,7 +54,7 @@ export class DatabaseService {
     }
 
     public getCategoryCollection(budgetId: string): AngularFirestoreCollection<Category> {
-        return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
+        return this.afs.collection<Category>(`budgets/${budgetId}/categoryGroups/categories`);
     }
 
     public getCategoriesWithIds(categoryCollection: AngularFirestoreCollection<Category>) {
@@ -84,7 +82,11 @@ export class DatabaseService {
     }
 
     public getCategoryGroupCollection(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
-        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
+        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/groups`);
+    }
+
+    public getBudgetGroups(budgetId: string): Observable<BudgetGroup[]> {
+        return Observable.of(null);
     }
 }
 

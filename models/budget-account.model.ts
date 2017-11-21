@@ -1,6 +1,4 @@
 export interface BudgetAccount {
-    userId: string;
-    budgetId: string;
     accountName: string;
     accountType: string;
 }
