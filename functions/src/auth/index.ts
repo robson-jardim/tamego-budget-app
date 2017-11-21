@@ -13,7 +13,7 @@ export const createUserAccount = functions.auth.user().onCreate((event: any) => 
     const docRef = admin.firestore().collection('users').doc(newUser.userId);
 
     return docRef.set(newUser).then((user: User) => {
-        console.log('User record added: ' + user);
+        console.log('User record added: ' + JSON.stringify(newUser));
     });
 });
 
