@@ -14,7 +14,6 @@ describe('EditAccountsComponent', () => {
     }));
 
 
-
     beforeEach(() => {
         fixture = TestBed.createComponent(AccountsComponent);
         component = fixture.componentInstance;

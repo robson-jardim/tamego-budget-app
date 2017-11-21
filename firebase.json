@@ -12,10 +12,6 @@
         ]
     },
     "functions": {
-        "source": "functions",
-		"ignore": {
-			"**",
-			"!index.js"	
-		}
+        "source": "functions"
     }
 }

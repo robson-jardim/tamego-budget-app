@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from "@angular/material";
-import { Budget } from "../../services/database/database.service";
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { Budget } from '../../../../models/budget.model';
 
 @Component({
     selector: 'app-add-budget-dialog',

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { Account } from "../../services/database/database.service";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { BudgetAccount } from '../../../../models/budget-account.model';
 
 @Component({
     selector: 'app-add-account-to-budget-dialog',
@@ -31,7 +31,7 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
 
     public addAccountToBudget(form) {
         if (this.account.valid) {
-            const budgetAccount: Account = {
+            const budgetAccount: BudgetAccount = {
                 userId: this.data.userId,
                 budgetId: this.data.budgetId,
                 accountName: form.accountName,

@@ -1,16 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import * as firebase from 'firebase/app';
-import {AngularFireAuth} from 'angularfire2/auth';
-import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
-import {Observable} from 'rxjs/Observable';
-import {AuthNotificationService} from '../auth-notification/auth-notification.service';
-
-export interface User {
-    userId: string;
-    email: string;
-}
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import { AuthNotificationService } from '../auth-notification/auth-notification.service';
+import { User } from '../../../../models/user.model';
 
 @Injectable()
 export class AuthService {

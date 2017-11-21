@@ -1,24 +1,28 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from "angularfire2/firestore";
-import { Observable } from "rxjs/Observable";
-import { AuthGuard } from "../auth-guard/auth.guard";
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import { AuthGuard } from '../auth-guard/auth.guard';
+import { CategoryGroup } from '../../../../models/category-group.model';
+import { Category } from '../../../../models/category.model';
+import { Budget, BudgetId } from '../../../../models/budget.model';
+import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
 
 @Injectable()
 export class DatabaseService {
 
     public readonly userId: string;
 
-    constructor (private afs: AngularFirestore,
-                 private authGuard: AuthGuard) {
+    constructor(private afs: AngularFirestore,
+                private authGuard: AuthGuard) {
         this.userId = this.authGuard.userId;
     }
 
-    public getBudgetCollection (): AngularFirestoreCollection<Budget> {
+    public getBudgetCollection(): AngularFirestoreCollection<Budget> {
         const budgetCollection = this.afs.collection<Budget>('budgets', ref => ref.where('userId', '==', this.userId));
         return budgetCollection;
     }
 
-    public getBudgetsWithIds (budgetCollection: AngularFirestoreCollection<Budget>): Observable<BudgetId[]> {
+    public getBudgetsWithIds(budgetCollection: AngularFirestoreCollection<Budget>): Observable<BudgetId[]> {
         const budgets = budgetCollection.snapshotChanges().map(actions => {
             return actions.map(a => {
                 const data = a.payload.doc.data() as Budget;
@@ -30,7 +34,7 @@ export class DatabaseService {
         return budgets;
     }
 
-    public getBudgetAccountCollection (budgetId: string): AngularFirestoreCollection<Account> {
+    public getBudgetAccountCollection(budgetId: string): AngularFirestoreCollection<Account> {
         const budgetAccountCollection = this.afs.collection<Account>('budgetAccounts', ref =>
             ref.where('userId', '==', this.userId)
                 .where('budgetId', '==', budgetId)
@@ -39,10 +43,10 @@ export class DatabaseService {
         return budgetAccountCollection;
     }
 
-    public getBudgetAccountsWithIds (budgetAccountCollection: AngularFirestoreCollection<Account>): Observable<AccountId[]> {
+    public getBudgetAccountsWithIds(budgetAccountCollection: AngularFirestoreCollection<Account>): Observable<BudgetAccountId[]> {
         const budgetAccounts = budgetAccountCollection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const data = a.payload.doc.data() as Account;
+                const data = a.payload.doc.data() as BudgetAccount;
                 const budgetAccountId = a.payload.doc.id;
                 return {budgetAccountId, ...data};
             });
@@ -51,74 +55,38 @@ export class DatabaseService {
         return budgetAccounts;
     }
 
-    public getCategoryCollection (budgetId: string): AngularFirestoreCollection<Category> {
+    public getCategoryCollection(budgetId: string): AngularFirestoreCollection<Category> {
         return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
     }
 
-    public getCategoriesWithIds (categoryCollection: AngularFirestoreCollection<Category>) {
+    public getCategoriesWithIds(categoryCollection: AngularFirestoreCollection<Category>) {
         const categories = categoryCollection.snapshotChanges().map(actions => {
             return actions.map(a => {
                 const data = a.payload.doc.data() as Category;
                 const categoryId = a.payload.doc.id;
                 return {categoryId, ...data};
-            })
+            });
         });
 
         return categories;
     }
 
-    public getCategoryGroupsWithIds (categoryGroupCollection: AngularFirestoreCollection<CategoryGroup>) {
+    public getCategoryGroupsWithIds(categoryGroupCollection: AngularFirestoreCollection<CategoryGroup>) {
         const groups = categoryGroupCollection.snapshotChanges().map(actions => {
             return actions.map(a => {
                 const data = a.payload.doc.data() as CategoryGroup;
                 const groupId = a.payload.doc.id;
                 return {groupId, ...data};
-            })
+            });
         });
 
         return groups;
     }
 
-    public getCategoryGroupCollection (budgetId: string): AngularFirestoreCollection<CategoryGroup> {
+    public getCategoryGroupCollection(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
         return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
     }
 }
 
-export interface CategoryGroup {
-    name: string;
-}
 
-export interface CategoryGroupId extends CategoryGroup {
-    groupId: string;
-}
-
-export interface Category {
-    name: string;
-    groupId: string;
-}
-
-export interface CategoryId extends Category {
-    categoryId: string;
-}
-
-export interface BudgetId extends Budget {
-    budgetId: string;
-}
-
-export interface Budget {
-    userId: string;
-    budgetName: string;
-    currencyType: string;
-}
-
-export interface AccountId extends Account {
-    budgetAccountId: string
-}
-
-export interface Account {
-    userId: string,
-    budgetId: string,
-    accountName: string,
-    accountType: string
-}
 

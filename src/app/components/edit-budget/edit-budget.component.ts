@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-    Category, CategoryGroup, CategoryGroupId, CategoryId,
-    DatabaseService
-} from "../../services/database/database.service";
-import { ActivatedRoute } from "@angular/router";
-import { AngularFirestoreCollection } from "angularfire2/firestore";
-import { Observable } from "rxjs/Observable";
-import { combineLatest } from "rxjs/observable/combineLatest";
+import { ActivatedRoute } from '@angular/router';
+import { AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import { DatabaseService } from '../../services/database/database.service';
+import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
+import { Category, CategoryId } from '../../../../models/category.model';
 
 @Component({
     selector: 'app-budget',
@@ -26,13 +24,13 @@ export class EditBudgetComponent implements OnInit {
     private categoryCollection: AngularFirestoreCollection<Category>;
     public categories: Observable<CategoryId[]>;
 
-    constructor (private db: DatabaseService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+    constructor(private db: DatabaseService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
     }
 
-    ngOnInit () {
+    ngOnInit() {
 
         this.route.parent.params.subscribe(params => {
-            let budgetId = params.budgetId;
+            const budgetId = params.budgetId;
 
             this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
             this.groups = this.db.getCategoryGroupsWithIds(this.groupCollection);
@@ -45,19 +43,19 @@ export class EditBudgetComponent implements OnInit {
         this.buildCategoryForm();
     }
 
-    private buildCategoryGroupForm () {
+    private buildCategoryGroupForm() {
         this.groupForm = this.formBuilder.group({
             groupName: ['', Validators.required]
         });
     }
 
-    private buildCategoryForm () {
+    private buildCategoryForm() {
         this.categoryForm = this.formBuilder.group({
             categoryName: ['', Validators.required]
         });
     }
 
-    public addCategoryGroup (form) {
+    public addCategoryGroup(form) {
         const group: CategoryGroup = {
             name: form.groupName
         };
@@ -74,7 +72,7 @@ export class EditBudgetComponent implements OnInit {
         this.categoryCollection.add(category);
     }
 
-    public deleteGroup (groupId: string) {
+    public deleteGroup(groupId: string) {
         this.groupCollection.doc(groupId).delete();
     }
 

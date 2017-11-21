@@ -1,18 +1,19 @@
+import { User } from '../../../models/user.model';
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 export const createUserAccount = functions.auth.user().onCreate((event: any) => {
 
-    const userId = event.data.uid;
-    const email = event.data.email;
-
-    const docRef = admin.firestore().collection('users').doc(userId);
-
-    const newUserData = {
-        userId: userId,
-        email: email
+    const newUser: User = {
+        userId: event.data.uid,
+        email: event.data.email
     };
 
-    return docRef.set(newUserData);
+    const docRef = admin.firestore().collection('users').doc(newUser.userId);
+
+    return docRef.set(newUser).then((user: User) => {
+        console.log('User record added: ' + user);
+    });
 });
 

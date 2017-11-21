@@ -4,8 +4,9 @@ import { AuthService } from '../../services/auth-service/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from "@angular/router";
-import { Budget, BudgetId, DatabaseService } from "../../services/database/database.service";
+import { ActivatedRoute, Router } from '@angular/router';
+import { DatabaseService } from '../../services/database/database.service';
+import { Budget, BudgetId } from '../../../../models/budget.model';
 
 @Component({
     selector: 'app-dashboard',
