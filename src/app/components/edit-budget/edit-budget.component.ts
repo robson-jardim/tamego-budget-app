@@ -19,10 +19,9 @@ export class EditBudgetComponent implements OnInit {
     public groupForm: FormGroup;
 
     private groupCollection: AngularFirestoreCollection<CategoryGroup>;
-    public groups: Observable<CategoryGroupId[]>;
-
     private categoryCollection: AngularFirestoreCollection<Category>;
-    public categories: Observable<CategoryId[]>;
+
+    public groupings: any;
 
     constructor(private db: DatabaseService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
     }
@@ -32,8 +31,8 @@ export class EditBudgetComponent implements OnInit {
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            const groupings: Observable<BudgetGroup[]> = this.db.getBudgetGroups(budgetId);
-
+            this.groupings = this.db.combineGroupAndCategories(budgetId);
+            this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
         });
 
         this.buildCategoryGroupForm();
