@@ -17,10 +17,10 @@ before_script:
 
 script:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
-        ng build --dev;
+        ng build --prod --env=dev;
       fi
     - if [ "$TRAVIS_BRANCH" = "dev" ]; then
-        ng build --dev;
+        ng build --prod --env=dev;
       fi
 
 after_success:
