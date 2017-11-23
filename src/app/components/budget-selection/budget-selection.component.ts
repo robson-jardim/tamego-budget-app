@@ -5,8 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DatabaseService } from '../../services/database/database.service';
-import { Budget, BudgetId } from '../../../../models/budget.model';
+import { Budget } from '../../../../models/budget.model';
+import { FirebaseReferenceService } from '../../services/firebase-reference/firebase-reference.service';
+import { FormatFirebaseDataService, FireStoreData } from '../../services/format-firebase-data/format-firebase-data.service';
+
+
 
 @Component({
     selector: 'app-dashboard',
@@ -16,38 +19,43 @@ import { Budget, BudgetId } from '../../../../models/budget.model';
 })
 export class BudgetSelectionComponent implements OnInit {
 
-    private budgetCollection: AngularFirestoreCollection<Budget>;
-    public budgets: Observable<BudgetId[]>;
+    budgets: FireStoreData<Budget>; 
 
     constructor(private auth: AuthService,
-                private dialog: MatDialog,
-                private router: Router,
-                private route: ActivatedRoute,
-                private db: DatabaseService) {
+        private dialog: MatDialog,
+        private router: Router,
+        private route: ActivatedRoute,
+        private db: FirebaseReferenceService,
+        private formatFirebaseData: FormatFirebaseDataService) {
     }
 
     ngOnInit() {
-        this.budgetCollection = this.db.getBudgetCollection();
-        this.budgets = this.db.getBudgetsWithIds(this.budgetCollection);
+        let budgetCollection = this.db.getBudgetCollection();
+        let budgetObservable = this.formatFirebaseData.assignIdsToDocumentsInCollection<Budget>(budgetCollection);
+
+        this.budgets = {
+            collection: budgetCollection,
+            observable: budgetObservable
+        }
     }
 
     public openAddNewBudgetDialog(): void {
         const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
             data: {
-                budgetCollection: this.budgetCollection,
+                budgetCollection: this.budgets.collection,
                 userId: this.db.userId
             }
         });
 
         addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
             if (newBudgetId) {
-                this.router.navigate([newBudgetId], {relativeTo: this.route});
+                this.router.navigate([newBudgetId], { relativeTo: this.route });
             }
         });
     }
 
     public deleteBudget(budget) {
-        this.budgetCollection.doc(budget.budgetId).delete();
+        this.budgets.collection.doc(budget.id).delete();
     }
 }
 

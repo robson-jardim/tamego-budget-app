@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
             .take(1)
             .do(user => {
                 if(user) {
-                    this.userId = user.userId;
+                    this.userId = user.id;
                 }
             })
             .map(user => !!user) // ensures the resulting type is a boolean (true or false)

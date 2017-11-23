@@ -10,7 +10,7 @@ service cloud.firestore {
       allow create: if request.auth.uid == request.resource.data.userId;
 
       match /accounts/{accountId} {
-          allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+        allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
       }
 
       match /groups/{groupId=**} {

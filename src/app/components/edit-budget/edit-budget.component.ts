@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, group } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-import { DatabaseService } from '../../services/database/database.service';
-import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
-import { Category, CategoryId } from '../../../../models/category.model';
+import { CategoryGroup } from '../../../../models/category-group.model';
+import { Category } from '../../../../models/category.model';
+import { FirebaseReferenceService } from '../../services/firebase-reference/firebase-reference.service';
+import { FormatFirebaseDataService, FireStoreData } from '../../services/format-firebase-data/format-firebase-data.service';
 
 @Component({
     selector: 'app-budget',
@@ -23,7 +24,10 @@ export class EditBudgetComponent implements OnInit {
 
     public groupings: any;
 
-    constructor(private db: DatabaseService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+    constructor(private db: FirebaseReferenceService,
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private formatFirebaseData: FormatFirebaseDataService) {
     }
 
     ngOnInit() {
@@ -31,8 +35,11 @@ export class EditBudgetComponent implements OnInit {
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            this.groupings = this.db.combineGroupAndCategories(budgetId);
-            this.groupCollection = this.db.getCategoryGroupCollection(budgetId);
+            let groupData: Observable<CategoryGroup[]> = this.formatFirebaseData.combineGroupAndCategories(budgetId);
+            groupData.subscribe(x => {
+                console.log(x);
+            })
+
         });
 
         this.buildCategoryGroupForm();

@@ -1,7 +1,4 @@
 export interface CategoryGroup {
+    id?: string,
     name: string;
-}
-
-export interface CategoryGroupId extends CategoryGroup {
-    groupId: string;
 }

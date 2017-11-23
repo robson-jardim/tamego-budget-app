@@ -22,8 +22,9 @@ import { EditBudgetComponent } from './components/edit-budget/edit-budget.compon
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-budget-dialog.component';
 import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
-import { DatabaseService } from './services/database/database.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FirebaseReferenceService } from './services/firebase-reference/firebase-reference.service';
+import { FormatFirebaseDataService } from './services/format-firebase-data/format-firebase-data.service';
 
 @NgModule({
     declarations: [
@@ -55,7 +56,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent
     ],
-    providers: [AuthGuard, DatabaseService],
+    providers: [
+        AuthGuard, 
+        FirebaseReferenceService, 
+        FormatFirebaseDataService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

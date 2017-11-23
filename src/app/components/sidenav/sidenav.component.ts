@@ -4,8 +4,9 @@ import { AddAccountToBudgetDialogComponent } from '../add-account-to-budget-dial
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { DatabaseService } from '../../services/database/database.service';
-import { BudgetAccountId } from '../../../../models/budget-account.model';
+import { BudgetAccount } from '../../../../models/budget-account.model';
+import { FirebaseReferenceService } from '../../services/firebase-reference/firebase-reference.service';
+import { FormatFirebaseDataService } from '../../services/format-firebase-data/format-firebase-data.service';
 
 @Component({
     selector: 'app-sidenav',
@@ -15,12 +16,13 @@ import { BudgetAccountId } from '../../../../models/budget-account.model';
 })
 export class SidenavComponent implements OnInit {
 
-    private budgetAccountCollection: AngularFirestoreCollection<Account>;
-    public budgetAccounts: Observable<BudgetAccountId[]>;
+    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
+    public budgetAccounts: Observable<BudgetAccount[]>;
     private budgetId: string;
 
     constructor(private dialog: MatDialog,
-                private db: DatabaseService,
+                private db: FirebaseReferenceService,
+                private formatFirebaseData: FormatFirebaseDataService,
                 private route: ActivatedRoute,
                 private router: Router) {
     }
@@ -30,7 +32,7 @@ export class SidenavComponent implements OnInit {
             .subscribe(params => {
                 this.budgetId = params.budgetId;
                 this.budgetAccountCollection = this.db.getBudgetAccountCollection(this.budgetId);
-                this.budgetAccounts = this.db.getBudgetAccountsWithIds(this.budgetAccountCollection);
+                this.budgetAccounts = this.formatFirebaseData.assignIdsToDocumentsInCollection(this.budgetAccountCollection);
             });
     }
 
