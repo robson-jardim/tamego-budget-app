@@ -6,8 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
 import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
-import { FormatFirestoreDataService } from '../../services/format-firestore-data/format-firestore-data.service';
-import { FirestoreResult } from '../../../../models/firestore-result.model';
+import { CollectionResult } from '../../../../models/collection-result.model';
+import { FirestoreService } from '../../services/firestore/firestore.service';
 
 @Component({
     selector: 'app-budget',
@@ -23,12 +23,11 @@ export class EditBudgetComponent implements OnInit {
     private groupCollection: AngularFirestoreCollection<CategoryGroup>;
     private categoryCollection: AngularFirestoreCollection<Category>;
 
-    public groupings: FirestoreResult<any>;
+    public groupings;
 
-    constructor(private firestoreRef: FirestoreReferenceService,
-        private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
-        private formatFirestoreData: FormatFirestoreDataService) {
+    constructor(private firestore: FirestoreService,
+                private formBuilder: FormBuilder,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -36,9 +35,9 @@ export class EditBudgetComponent implements OnInit {
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            this.groupings = this.formatFirestoreData.combineGroupAndCategories(budgetId);
+            this.groupings = this.firestore.combineGroupAndCategories(budgetId);
 
-            this.formatFirestoreData.combineGroupAndCategories(budgetId).observable.subscribe(x => {
+            this.firestore.combineGroupAndCategories(budgetId).observable.subscribe(x => {
                 console.log(x);
             });
         });
@@ -90,4 +89,4 @@ export class EditBudgetComponent implements OnInit {
 export interface BudgetGroup {
     groupName: string;
     categories: Array<Category>;
-};
+}

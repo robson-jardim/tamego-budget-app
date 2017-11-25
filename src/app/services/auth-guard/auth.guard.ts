@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
         return this.auth.user
             .take(1)
             .do(user => {
-                if(user) {
+                if (user) {
                     this.userId = user.userId;
                 }
             })

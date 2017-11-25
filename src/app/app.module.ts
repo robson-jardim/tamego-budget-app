@@ -24,7 +24,8 @@ import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-bud
 import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirestoreReferenceService } from './services/firestore-reference/firestore-reference.service';
-import { FormatFirestoreDataService } from './services/format-firestore-data/format-firestore-data.service';
+import { FirestoreService } from './services/firestore/firestore.service';
+import { MapFirestoreDocumentIdService } from './services/map-firestore-document-id/map-firestore-docoument-id.service';
 
 @NgModule({
     declarations: [
@@ -59,7 +60,8 @@ import { FormatFirestoreDataService } from './services/format-firestore-data/for
     providers: [
         AuthGuard,
         FirestoreReferenceService,
-        FormatFirestoreDataService
+        MapFirestoreDocumentIdService,
+        FirestoreService
     ],
     bootstrap: [AppComponent]
 })

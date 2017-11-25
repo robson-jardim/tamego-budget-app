@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Budget } from '../../../../models/budget.model';
 import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
-import { FormatFirestoreDataService } from '../../services/format-firestore-data/format-firestore-data.service';
-import { FirestoreResult } from '../../../../models/firestore-result.model';
+import { CollectionResult } from '../../../../models/collection-result.model';
+import { MapFirestoreDocumentIdService } from '../../services/map-firestore-document-id/map-firestore-docoument-id.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,19 +18,19 @@ import { FirestoreResult } from '../../../../models/firestore-result.model';
 })
 export class BudgetSelectionComponent implements OnInit {
 
-    budgets: FirestoreResult<Budget>;
+    budgets;
 
     constructor(private auth: AuthService,
-        private dialog: MatDialog,
-        private router: Router,
-        private route: ActivatedRoute,
-        private firestoreRef: FirestoreReferenceService,
-        private formatFirestoreData: FormatFirestoreDataService) {
+                private dialog: MatDialog,
+                private router: Router,
+                private route: ActivatedRoute,
+                private firestoreRef: FirestoreReferenceService,
+                private formatFirestoreData: MapFirestoreDocumentIdService) {
     }
 
     ngOnInit() {
         const budgetCollection = this.firestoreRef.getBudgetCollectionRef();
-        const budgetObservable = this.formatFirestoreData.setBudgetIds(budgetCollection);
+        const budgetObservable = this.formatFirestoreData.mapBudgetIds(budgetCollection);
 
         this.budgets = {
             collection: budgetCollection,
@@ -48,7 +48,7 @@ export class BudgetSelectionComponent implements OnInit {
 
         addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
             if (newBudgetId) {
-                this.router.navigate([newBudgetId], { relativeTo: this.route });
+                this.router.navigate([newBudgetId], {relativeTo: this.route});
             }
         });
     }

@@ -15,7 +15,7 @@ export class FirestoreReferenceService {
     public readonly userId: string;
 
     constructor(private firestore: AngularFirestore,
-        private authGuard: AuthGuard) {
+                private authGuard: AuthGuard) {
         this.userId = this.authGuard.userId;
     }
 
@@ -29,7 +29,7 @@ export class FirestoreReferenceService {
     }
 
     public getCategoryCollectionRef(budgetId: string, groupId: string): AngularFirestoreCollection<Category> {
-        return  this.firestore.collection<Category>(`budgets/${budgetId}/groups/${groupId}/categories`);
+        return this.firestore.collection<Category>(`budgets/${budgetId}/groups/${groupId}/categories`);
     }
 
     public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {

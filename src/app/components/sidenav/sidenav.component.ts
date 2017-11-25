@@ -6,7 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { BudgetAccount } from '../../../../models/budget-account.model';
 import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
-import { FormatFirestoreDataService } from '../../services/format-firestore-data/format-firestore-data.service';
+import { CollectionResult } from '../../../../models/collection-result.model';
+import { FirestoreService } from '../../services/firestore/firestore.service';
 
 @Component({
     selector: 'app-sidenav',
@@ -16,23 +17,22 @@ import { FormatFirestoreDataService } from '../../services/format-firestore-data
 })
 export class SidenavComponent implements OnInit {
 
-    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
-    public budgetAccounts: Observable<BudgetAccount[]>;
+    private budgets;
+
     private budgetId: string;
 
     constructor(private dialog: MatDialog,
                 private firestoreRef: FirestoreReferenceService,
-                private formatFirestoreData: FormatFirestoreDataService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private firestore: FirestoreService) {
     }
 
     ngOnInit() {
         this.route.params
             .subscribe(params => {
                 this.budgetId = params.budgetId;
-                this.budgetAccountCollection = this.firestoreRef.getBudgetAccountCollectionRef(this.budgetId);
-                this.budgetAccounts = this.formatFirestoreData.setBudgetAccountIds(this.budgetAccountCollection);
+                this.budgets = this.firestore.getBudgetAccounts(this.budgetId);
             });
     }
 
@@ -40,7 +40,7 @@ export class SidenavComponent implements OnInit {
 
         const addAccountToBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
             data: {
-                budgetAccountCollection: this.budgetAccountCollection
+                budgetAccountCollection: this.budgets
             }
         });
 
