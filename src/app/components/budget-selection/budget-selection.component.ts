@@ -6,10 +6,9 @@ import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Budget } from '../../../../models/budget.model';
-import { FirebaseReferenceService } from '../../services/firebase-reference/firebase-reference.service';
-import { FormatFirebaseDataService, FireStoreData } from '../../services/format-firebase-data/format-firebase-data.service';
-
-
+import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
+import { FormatFirestoreDataService } from '../../services/format-firestore-data/format-firestore-data.service';
+import { FirestoreResult } from '../../../../models/firestore-result.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -19,31 +18,31 @@ import { FormatFirebaseDataService, FireStoreData } from '../../services/format-
 })
 export class BudgetSelectionComponent implements OnInit {
 
-    budgets: FireStoreData<Budget>; 
+    budgets: FirestoreResult<Budget>;
 
     constructor(private auth: AuthService,
         private dialog: MatDialog,
         private router: Router,
         private route: ActivatedRoute,
-        private db: FirebaseReferenceService,
-        private formatFirebaseData: FormatFirebaseDataService) {
+        private firestoreRef: FirestoreReferenceService,
+        private formatFirestoreData: FormatFirestoreDataService) {
     }
 
     ngOnInit() {
-        let budgetCollection = this.db.getBudgetCollection();
-        let budgetObservable = this.formatFirebaseData.assignIdsToDocumentsInCollection<Budget>(budgetCollection);
+        const budgetCollection = this.firestoreRef.getBudgetCollectionRef();
+        const budgetObservable = this.formatFirestoreData.setBudgetIds(budgetCollection);
 
         this.budgets = {
             collection: budgetCollection,
             observable: budgetObservable
-        }
+        };
     }
 
     public openAddNewBudgetDialog(): void {
         const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
             data: {
                 budgetCollection: this.budgets.collection,
-                userId: this.db.userId
+                userId: this.firestoreRef.userId
             }
         });
 

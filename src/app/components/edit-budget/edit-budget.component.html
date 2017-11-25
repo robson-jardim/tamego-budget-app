@@ -32,12 +32,12 @@
         </div>
     </div>
 
-</mat-card>
+</mat-card>-->
 
-<mat-card *ngFor="let g of groupings | async">
-    <p>{{g.groupId}}</p>
-    <p>{{g.name}}</p>
-    <ng-container *ngFor="let c of g.categories | async">
-        {{c | json}}
+<mat-card *ngFor="let group of groupings.observable | async">
+    <p>{{group.groupId}}</p>
+    <p>{{group.name}}</p>
+    <ng-container *ngIf="group.categories.observable | async as categories">
+        <p>{{categories}}</p>
     </ng-container>
-</mat-card> -->
+</mat-card>

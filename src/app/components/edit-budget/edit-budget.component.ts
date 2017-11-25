@@ -5,8 +5,9 @@ import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
-import { FirebaseReferenceService } from '../../services/firebase-reference/firebase-reference.service';
-import { FormatFirebaseDataService, FireStoreData } from '../../services/format-firebase-data/format-firebase-data.service';
+import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
+import { FormatFirestoreDataService } from '../../services/format-firestore-data/format-firestore-data.service';
+import { FirestoreResult } from '../../../../models/firestore-result.model';
 
 @Component({
     selector: 'app-budget',
@@ -22,12 +23,12 @@ export class EditBudgetComponent implements OnInit {
     private groupCollection: AngularFirestoreCollection<CategoryGroup>;
     private categoryCollection: AngularFirestoreCollection<Category>;
 
-    public groupings: any;
+    public groupings: FirestoreResult<any>;
 
-    constructor(private db: FirebaseReferenceService,
+    constructor(private firestoreRef: FirestoreReferenceService,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
-        private formatFirebaseData: FormatFirebaseDataService) {
+        private formatFirestoreData: FormatFirestoreDataService) {
     }
 
     ngOnInit() {
@@ -35,11 +36,11 @@ export class EditBudgetComponent implements OnInit {
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            let groupData: Observable<CategoryGroup[]> = this.formatFirebaseData.combineGroupAndCategories(budgetId);
-            groupData.subscribe(x => {
-                console.log(x);
-            })
+            this.groupings = this.formatFirestoreData.combineGroupAndCategories(budgetId);
 
+            this.formatFirestoreData.combineGroupAndCategories(budgetId).observable.subscribe(x => {
+                console.log(x);
+            });
         });
 
         this.buildCategoryGroupForm();
@@ -58,30 +59,30 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    public addCategoryGroup(form) {
-        const group: CategoryGroup = {
-            name: form.groupName
-        };
+    // public addCategoryGroup(form) {
+    //     const g: CategoryGroup = {
+    //         groupName: form.groupName
+    //     };
 
-        this.groupCollection.add(group);
-    }
+    //     this.groupCollection.add(g);
+    // }
 
-    public addCategory(form, groupId) {
-        const category: Category = {
-            name: form.categoryName,
-            groupId: groupId
-        };
+    // public addCategory(form, groupId) {
+    //     const category: Category = {
+    //         categoryName: form.categoryName,
+    //         groupId: groupId
+    //     };
 
-        this.categoryCollection.add(category);
-    }
+    //     this.categoryCollection.add(category);
+    // }
 
-    public deleteGroup(groupId: string) {
-        this.groupCollection.doc(groupId).delete();
-    }
+    // public deleteGroup(groupId: string) {
+    //     this.groupCollection.doc(groupId).delete();
+    // }
 
-    public deleteCategory(categoryId: string) {
-        this.categoryCollection.doc(categoryId).delete();
-    }
+    // public deleteCategory(categoryId: string) {
+    //     this.categoryCollection.doc(categoryId).delete();
+    // }
 
 
 }

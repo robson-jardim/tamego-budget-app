@@ -16,7 +16,7 @@ service cloud.firestore {
       match /groups/{groupId=**} {
           allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
       }
-      
+
     }
   }
 }
