@@ -10,5 +10,5 @@ export interface CategoryGroupId {
 }
 
 export interface GroupAndCategories extends CategoryGroupId {
-    categories: CollectionResult<Category, CategoryId>;
+    categories: CollectionResult<Category, CategoryId[]>;
 }

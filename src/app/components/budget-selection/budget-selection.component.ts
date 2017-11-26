@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { AuthService } from '../../services/auth-service/auth.service';
-import { Observable } from 'rxjs/Observable';
-import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Budget } from '../../../../models/budget.model';
-import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
+import { MatDialog } from '@angular/material/dialog';
+
+import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
+import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
-import { MapFirestoreDocumentIdService } from '../../services/map-firestore-document-id/map-firestore-docoument-id.service';
+import { Budget, BudgetId } from '../../../../models/budget.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,31 +15,23 @@ import { MapFirestoreDocumentIdService } from '../../services/map-firestore-docu
 })
 export class BudgetSelectionComponent implements OnInit {
 
-    budgets;
+    public budgets: CollectionResult<Budget, BudgetId[]>;
 
-    constructor(private auth: AuthService,
+    constructor(private firestore: FirestoreService,
                 private dialog: MatDialog,
                 private router: Router,
-                private route: ActivatedRoute,
-                private firestoreRef: FirestoreReferenceService,
-                private formatFirestoreData: MapFirestoreDocumentIdService) {
+                private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        const budgetCollection = this.firestoreRef.getBudgetCollectionRef();
-        const budgetObservable = this.formatFirestoreData.mapBudgetIds(budgetCollection);
-
-        this.budgets = {
-            collection: budgetCollection,
-            observable: budgetObservable
-        };
+        this.budgets = this.firestore.getBudgets();
     }
 
     public openAddNewBudgetDialog(): void {
         const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
             data: {
                 budgetCollection: this.budgets.collection,
-                userId: this.firestoreRef.userId
+                userId: this.firestore.userId
             }
         });
 
@@ -53,8 +42,8 @@ export class BudgetSelectionComponent implements OnInit {
         });
     }
 
-    public deleteBudget(budget) {
-        this.budgets.collection.doc(budget.id).delete();
+    public deleteBudget(budget: BudgetId) {
+        this.budgets.collection.doc(budget.budgetId).delete();
     }
 }
 

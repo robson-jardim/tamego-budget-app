@@ -13,13 +13,10 @@
 
     <mat-divider></mat-divider>
 
-    <mat-list-item *ngFor="let a of budgetAccounts | async as accounts" [routerLink]="['./accounts', a.budgetAccountId]"
+    <mat-list-item *ngFor="let account of budgetAccounts.observable | async as accounts" [routerLink]="['./accounts', account.budgetAccountId]"
                    routerLinkActive="active">
-        <p>Name: {{a.accountName}}</p>
-        <p>Type: {{a.accountType}}</p>
+        <p>Name: {{account.accountName}}</p>
+        <p>Type: {{account.accountType}}</p>
     </mat-list-item>
 
-    <!--<mat-list-item>-->
-    <!--<button mat-button (click)="this.toggle()">Toggle</button>-->
-    <!--</mat-list-item>-->
 </mat-list>

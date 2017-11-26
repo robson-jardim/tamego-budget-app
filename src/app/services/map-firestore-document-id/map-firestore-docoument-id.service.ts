@@ -14,25 +14,12 @@ export class MapFirestoreDocumentIdService {
     constructor() {
     }
 
-    // public mapIds<CollType, IdType>(collection: AngularFirestoreCollection<CollType>) {
-    //     return collection.snapshotChanges().map(actions => {
-    //         return actions.map(a => {
-    //             const data: CollType = a.payload.doc.data() as CollType;
-    //             // set id property here
-    //             const id = a.payload.doc.id;
-    //             return { id, ...data } as IdType;
-
-    //             // return { //property name }
-    //         })
-    //     })
-    // }
-
     public mapBudgetIds(collection: AngularFirestoreCollection<Budget>): Observable<BudgetId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const data: any = a.payload.doc.data() as Budget;
-                const categoryId = a.payload.doc.id;
-                return {categoryId, ...data} as BudgetId;
+                const data: any = a.payload.doc.data();
+                const budgetId = a.payload.doc.id;
+                return {budgetId, ...data};
             });
         });
     }
@@ -40,9 +27,9 @@ export class MapFirestoreDocumentIdService {
     public mapBudgetAccountIds(collection: AngularFirestoreCollection<BudgetAccount>): Observable<BudgetAccountId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const data: any = a.payload.doc.data() as BudgetAccount;
-                const categoryId = a.payload.doc.id;
-                return {categoryId, ...data} as BudgetAccountId;
+                const data: any = a.payload.doc.data();
+                const budgetAccountId = a.payload.doc.id;
+                return {budgetAccountId, ...data};
             });
         });
     }
@@ -50,9 +37,9 @@ export class MapFirestoreDocumentIdService {
     public mapCategoryGroupIds(collection: AngularFirestoreCollection<CategoryGroup>): Observable<CategoryGroupId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const data: any = a.payload.doc.data() as CategoryGroup;
-                const categoryId = a.payload.doc.id;
-                return {categoryId, ...data} as CategoryGroupId;
+                const data: any = a.payload.doc.data();
+                const groupId = a.payload.doc.id;
+                return {groupId, ...data};
             });
         });
     }
@@ -60,9 +47,9 @@ export class MapFirestoreDocumentIdService {
     public mapCategoryIds(collection: AngularFirestoreCollection<Category>): Observable<CategoryId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const data: any = a.payload.doc.data() as Category;
+                const data: any = a.payload.doc.data();
                 const categoryId = a.payload.doc.id;
-                return {categoryId, ...data} as CategoryId;
+                return {categoryId, ...data};
             });
         });
     }

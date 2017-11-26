@@ -14,26 +14,26 @@ export class FirestoreReferenceService {
 
     public readonly userId: string;
 
-    constructor(private firestore: AngularFirestore,
+    constructor(private afs: AngularFirestore,
                 private authGuard: AuthGuard) {
         this.userId = this.authGuard.userId;
     }
 
     public getBudgetCollectionRef(): AngularFirestoreCollection<Budget> {
-        return this.firestore.collection<Budget>('budgets', ref =>
+        return this.afs.collection<Budget>('budgets', ref =>
             ref.where('userId', '==', this.userId));
     }
 
     public getBudgetAccountCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {
-        return this.firestore.collection<BudgetAccount>(`budgets/${budgetId}/accounts`);
+        return this.afs.collection<BudgetAccount>(`budgets/${budgetId}/accounts`);
     }
 
     public getCategoryCollectionRef(budgetId: string, groupId: string): AngularFirestoreCollection<Category> {
-        return this.firestore.collection<Category>(`budgets/${budgetId}/groups/${groupId}/categories`);
+        return this.afs.collection<Category>(`budgets/${budgetId}/groups/${groupId}/categories`);
     }
 
     public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
-        return this.firestore.collection<CategoryGroup>(`budgets/${budgetId}/groups`);
+        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/groups`);
     }
 }
 

@@ -46,6 +46,9 @@ export class AuthService {
                 else if (errorCode === 'auth/weak-password') {
                     errorMessage = 'Please choose a more secure password';
                 }
+                else {
+                    errorMessage = 'Error';
+                }
 
                 this.authNotification.update(errorMessage, 'error');
 
@@ -70,6 +73,9 @@ export class AuthService {
                 }
                 else if (errorCode === 'auth/wrong-password') {
                     errorMessage = 'Incorrect password';
+                }
+                else {
+                    errorMessage = 'Error';
                 }
 
                 this.authNotification.update(errorMessage, 'error');

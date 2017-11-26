@@ -4,7 +4,7 @@ import { AddAccountToBudgetDialogComponent } from '../add-account-to-budget-dial
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { BudgetAccount } from '../../../../models/budget-account.model';
+import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
 import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { FirestoreService } from '../../services/firestore/firestore.service';
@@ -17,9 +17,8 @@ import { FirestoreService } from '../../services/firestore/firestore.service';
 })
 export class SidenavComponent implements OnInit {
 
-    private budgets;
+    public budgetAccounts: CollectionResult<BudgetAccount, BudgetAccountId[]>;
 
-    private budgetId: string;
 
     constructor(private dialog: MatDialog,
                 private firestoreRef: FirestoreReferenceService,
@@ -31,16 +30,15 @@ export class SidenavComponent implements OnInit {
     ngOnInit() {
         this.route.params
             .subscribe(params => {
-                this.budgetId = params.budgetId;
-                this.budgets = this.firestore.getBudgetAccounts(this.budgetId);
+                const budgetId = params.budgetId;
+                this.budgetAccounts = this.firestore.getBudgetAccounts(budgetId);
             });
     }
 
     public openAddBudgetToAccountDialog() {
-
         const addAccountToBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
             data: {
-                budgetAccountCollection: this.budgets
+                budgetAccountCollection: this.budgetAccounts.collection
             }
         });
 

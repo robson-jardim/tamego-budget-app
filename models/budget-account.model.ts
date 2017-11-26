@@ -4,5 +4,5 @@ export interface BudgetAccount {
 }
 
 export interface BudgetAccountId extends BudgetAccount {
-    BudgetAccountId: string;
+    budgetAccountId: string;
 }

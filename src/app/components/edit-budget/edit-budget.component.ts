@@ -36,10 +36,6 @@ export class EditBudgetComponent implements OnInit {
             const budgetId = params.budgetId;
 
             this.groupings = this.firestore.combineGroupAndCategories(budgetId);
-
-            this.firestore.combineGroupAndCategories(budgetId).observable.subscribe(x => {
-                console.log(x);
-            });
         });
 
         this.buildCategoryGroupForm();
