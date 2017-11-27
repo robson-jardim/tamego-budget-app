@@ -26,6 +26,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirestoreReferenceService } from './services/firestore-reference/firestore-reference.service';
 import { FirestoreService } from './services/firestore/firestore.service';
 import { MapFirestoreDocumentIdService } from './services/map-firestore-document-id/map-firestore-docoument-id.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './token.interceptor';
 
 @NgModule({
     declarations: [
@@ -42,6 +44,7 @@ import { MapFirestoreDocumentIdService } from './services/map-firestore-document
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         AppMaterialModule,
 
@@ -59,6 +62,11 @@ import { MapFirestoreDocumentIdService } from './services/map-firestore-document
     ],
     providers: [
         AuthGuard,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
         FirestoreReferenceService,
         MapFirestoreDocumentIdService,
         FirestoreService

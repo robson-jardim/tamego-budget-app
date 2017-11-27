@@ -7,7 +7,6 @@ import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
 import { Budget } from '../../../../models/budget.model';
 import { BudgetAccount } from '../../../../models/budget-account.model';
-import { BudgetGroup } from '../../components/edit-budget/edit-budget.component';
 
 @Injectable()
 export class FirestoreReferenceService {

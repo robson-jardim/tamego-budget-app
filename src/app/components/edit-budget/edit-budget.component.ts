@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-import { CategoryGroup } from '../../../../models/category-group.model';
-import { Category } from '../../../../models/category.model';
+import { CategoryGroup, CategoryGroupId, GroupAndCategories } from '../../../../models/category-group.model';
+import { Category, CategoryId } from '../../../../models/category.model';
 import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { FirestoreService } from '../../services/firestore/firestore.service';
@@ -20,10 +20,7 @@ export class EditBudgetComponent implements OnInit {
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
 
-    private groupCollection: AngularFirestoreCollection<CategoryGroup>;
-    private categoryCollection: AngularFirestoreCollection<Category>;
-
-    public groupings;
+    public groupsAndCategories;
 
     constructor(private firestore: FirestoreService,
                 private formBuilder: FormBuilder,
@@ -34,8 +31,7 @@ export class EditBudgetComponent implements OnInit {
 
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
-
-            this.groupings = this.firestore.combineGroupAndCategories(budgetId);
+            this.groupsAndCategories = this.firestore.getGroupsAndCategories(budgetId);
         });
 
         this.buildCategoryGroupForm();
@@ -54,35 +50,30 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    // public addCategoryGroup(form) {
-    //     const g: CategoryGroup = {
-    //         groupName: form.groupName
-    //     };
+    public addCategoryGroup(form, groupCollection: AngularFirestoreCollection<CategoryGroup>) {
+        const newGroup: CategoryGroup = {
+            groupName: form.groupName
+        };
 
-    //     this.groupCollection.add(g);
-    // }
+        groupCollection.add(newGroup);
+    }
 
-    // public addCategory(form, groupId) {
-    //     const category: Category = {
-    //         categoryName: form.categoryName,
-    //         groupId: groupId
-    //     };
+    public deleteCategoryGroup(categoryGroup: CategoryGroupId) {
+        this.groupsAndCategories.collection.doc(categoryGroup.groupId).delete();
+    }
 
-    //     this.categoryCollection.add(category);
-    // }
+    public addCategoryToGroup(form, group: GroupAndCategories) {
+        const newCategory: Category = {
+            categoryName: form.categoryName,
+        };
 
-    // public deleteGroup(groupId: string) {
-    //     this.groupCollection.doc(groupId).delete();
-    // }
+        group.categories.collection.add(newCategory);
+    }
 
-    // public deleteCategory(categoryId: string) {
-    //     this.categoryCollection.doc(categoryId).delete();
-    // }
-
+    public deleteCategoryFromGroup(category: CategoryId, group: GroupAndCategories) {
+        group.categories.collection.doc(category.categoryId).delete();
+    }
 
 }
 
-export interface BudgetGroup {
-    groupName: string;
-    categories: Array<Category>;
-}
+

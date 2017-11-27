@@ -11,7 +11,7 @@ import { User } from '../../../../models/user.model';
 @Injectable()
 export class AuthService {
 
-    user: Observable<User>;
+    public user: Observable<User>;
 
     constructor(private afAuth: AngularFireAuth,
                 private afs: AngularFirestore,

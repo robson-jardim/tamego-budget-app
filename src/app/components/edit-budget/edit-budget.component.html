@@ -1,5 +1,4 @@
-<!-- <form [formGroup]="groupForm" (ngSubmit)="addCategoryGroup(groupForm.value)">
-
+<form [formGroup]="groupForm" (ngSubmit)="addCategoryGroup(groupForm.value, groupsAndCategories.collection)">
     <mat-form-field>
         <input matInput formControlName="groupName" placeholder="Add category group" type="text">
     </mat-form-field>
@@ -7,14 +6,15 @@
     <button mat-button type="submit">Add group</button>
 </form>
 
-<mat-card *ngFor="let group of groups | async">
+<mat-card *ngFor="let group of groupsAndCategories.observable | async">
+    <p>{{group.groupId}}</p>
+    <p>{{group.groupName}}</p>
 
-    <p>Group: {{group.name}}</p>
-    <button (click)="deleteGroup(group.groupId)">
+    <button (click)="deleteCategoryGroup(group)">
         <mat-icon>delete</mat-icon>
     </button>
 
-    <form [formGroup]="categoryForm" (ngSubmit)="addCategory(categoryForm.value, group.groupId)">
+    <form [formGroup]="categoryForm" (ngSubmit)="addCategoryToGroup(categoryForm.value, group)">
         <mat-form-field>
             <input matInput formControlName="categoryName" placeholder="Add category" type="text">
         </mat-form-field>
@@ -22,22 +22,15 @@
         <button mat-button type="submit">Add category</button>
     </form>
 
-    <div *ngFor="let category of categories | async as categories">
-        <div *ngIf="category.groupId == group.groupId">
-            <p>{{category.name}}</p>
+    <ng-container *ngIf="group.categories.observable | async as categories">
 
-            <button (click)="deleteCategory(category.categoryId)">
+        <ng-container *ngFor="let category of categories">
+            <p>{{category | json}}</p>
+
+            <button (click)="deleteCategoryFromGroup(category, group)">
                 <mat-icon>delete</mat-icon>
             </button>
-        </div>
-    </div>
+        </ng-container>
 
-</mat-card>-->
-
-<mat-card *ngFor="let group of groupings.observable | async">
-    <p>{{group.groupId}}</p>
-    <p>{{group.name}}</p>
-    <ng-container *ngIf="group.categories.observable | async as categories">
-        <p>{{categories}}</p>
     </ng-container>
 </mat-card>

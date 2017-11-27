@@ -7,5 +7,8 @@ export const environment = {
         projectId: 'budget-app-staging-1',
         storageBucket: 'budget-app-staging-1.appspot.com',
         messagingSenderId: '840315097873'
+    },
+    functions: {
+        api: 'stage'
     }
 };

@@ -19,19 +19,19 @@ export class FirestoreService {
                 private references: FirestoreReferenceService,
                 private authGuard: AuthGuard,
                 private afs: AngularFirestore) {
-                    this.userId = authGuard.userId;
+        this.userId = authGuard.userId;
     }
 
     public getBudgets(): CollectionResult<Budget, BudgetId[]> {
         const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef();
         const budgetObservable: Observable<BudgetId[]> = this.mapDocumentId.mapBudgetIds(budgetCollection);
 
-        const data: CollectionResult<Budget, BudgetId[]> = {
+        const result: CollectionResult<Budget, BudgetId[]> = {
             collection: budgetCollection,
             observable: budgetObservable
         };
 
-        return data;
+        return result;
     }
 
     public getBudgetAccounts(budgetId: string): CollectionResult<BudgetAccount, BudgetAccountId[]> {
@@ -39,15 +39,15 @@ export class FirestoreService {
         const accountCollection: AngularFirestoreCollection<BudgetAccount> = this.references.getBudgetAccountCollectionRef(budgetId);
         const accountObservable: Observable<BudgetAccountId[]> = this.mapDocumentId.mapBudgetAccountIds(accountCollection);
 
-        const data: CollectionResult<BudgetAccount, BudgetAccountId[]> = {
+        const result: CollectionResult<BudgetAccount, BudgetAccountId[]> = {
             collection: accountCollection,
             observable: accountObservable
         };
 
-        return data;
+        return result;
     }
 
-    public combineGroupAndCategories(budgetId: string): CollectionResult<CategoryGroup, GroupAndCategories[]> {
+    public getGroupsAndCategories(budgetId: string): CollectionResult<CategoryGroup, GroupAndCategories[]> {
 
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);

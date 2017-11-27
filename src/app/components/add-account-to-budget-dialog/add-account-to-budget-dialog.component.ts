@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { BudgetAccount } from '../../../../models/budget-account.model';
+import { AngularFirestoreCollection } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-add-account-to-budget-dialog',
@@ -12,10 +13,12 @@ import { BudgetAccount } from '../../../../models/budget-account.model';
 export class AddAccountToBudgetDialogComponent implements OnInit {
 
     public account: FormGroup;
+    private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
 
     constructor(private dialogRef: MatDialogRef<AddAccountToBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) private data: any) {
+        this.budgetAccountCollection = this.data.budgetAccountCollection;
     }
 
     ngOnInit() {
@@ -36,7 +39,7 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
                 accountType: form.accountType
             };
 
-            this.data.budgetAccountCollection.add(budgetAccount).then(newAccount => {
+            this.budgetAccountCollection.add(budgetAccount).then(newAccount => {
                 const newAccountId = newAccount.id;
                 this.dialogRef.close(newAccountId);
             });
