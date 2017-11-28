@@ -27,6 +27,7 @@ export class LoginSignupComponent implements OnInit {
                 this.http.post('https://us-central1-budget-app-dev.cloudfunctions.net/api/category', {}).subscribe(x => {
                     console.log(x);
                 });
+
     }
 
     ngOnInit() {
