@@ -2,11 +2,8 @@ import { Component, OnInit, ViewEncapsulation, group } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
 import { CategoryGroup, CategoryGroupId, GroupAndCategories } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
-import { FirestoreReferenceService } from '../../services/firestore-reference/firestore-reference.service';
-import { CollectionResult } from '../../../../models/collection-result.model';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 
 @Component({
@@ -64,6 +61,7 @@ export class EditBudgetComponent implements OnInit {
 
     public addCategoryToGroup(form, group: GroupAndCategories) {
         const newCategory: Category = {
+            groupId: group.groupId,
             categoryName: form.categoryName,
         };
 

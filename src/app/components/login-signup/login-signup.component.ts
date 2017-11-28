@@ -14,19 +14,15 @@ import { environment } from '../../../environments/environment';
 })
 export class LoginSignupComponent implements OnInit {
 
-    public createAccount: FormGroup;
-    public signIn: FormGroup;
+    public createUserForm: FormGroup;
+    public signInForm: FormGroup;
 
     constructor(private auth: AuthService,
                 private formBuilder: FormBuilder,
                 private router: Router,
                 public authNotification: AuthNotificationService,
-            private http: HttpClient) {
-                console.log(environment.functions.api);
+                private http: HttpClient) {
 
-                this.http.post('https://us-central1-budget-app-dev.cloudfunctions.net/api/category', {}).subscribe(x => {
-                    console.log(x);
-                });
     }
 
     ngOnInit() {
@@ -35,7 +31,7 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private buildSignInForm() {
-        this.signIn = this.formBuilder.group({
+        this.signInForm = this.formBuilder.group({
             email: ['', Validators.email],
             // Don't check for min length on password because all identity providers have different requirements
             password: ['', Validators.required]
@@ -43,43 +39,48 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private buildCreateAccountForm() {
-        this.createAccount = this.formBuilder.group({
+        this.createUserForm = this.formBuilder.group({
             email: ['', Validators.compose([Validators.required, Validators.email])],
             password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
         });
     }
 
     public get emailErrorMessage(): string {
-        if (this.createAccount.get('email').hasError('required')) {
+        if (this.createUserForm.get('email').hasError('required')) {
             return 'Email required';
         }
-        else if (this.createAccount.get('email').hasError('email')) {
+        else if (this.createUserForm.get('email').hasError('email')) {
             return 'Input a valid email';
         }
     }
 
     public signInWithEmailAndPassword(form) {
-        this.auth.signInWithEmailAndPassword(form.email, form.password)
-            .then(() => {
-                this.router.navigate(['/budgets']);
-            })
-            .catch(error => {
-                // Auth notification service broadcasts the error to template
-            });
+        if (this.signInForm.valid) {
+            this.auth.signInWithEmailAndPassword(form.email, form.password)
+                .then(() => {
+                    this.router.navigate(['/budgets']);
+                })
+                .catch(error => {
+                    // Auth notification service broadcasts the error to template
+                });
+        }
     }
 
     public createUserWithEmailAndPassword(form) {
-        this.auth.createUserWithEmailAndPassword(form.email, form.password)
-            .then(() => {
-                const observable = this.auth.user.subscribe(user => {
-                    if (user) {
-                        this.router.navigate(['budgets']);
-                        observable.unsubscribe();
-                    }
+
+        if (this.createUserForm.valid) {
+            this.auth.createUserWithEmailAndPassword(form.email, form.password)
+                .then(() => {
+                    const observable = this.auth.user.subscribe(user => {
+                        if (user) {
+                            this.router.navigate(['budgets']);
+                            observable.unsubscribe();
+                        }
+                    });
+                })
+                .catch(error => {
+                    // Auth notification service broadcasts the error to template
                 });
-            })
-            .catch(error => {
-                // Auth notification service broadcasts the error to template
-            });
+        }
     }
 }

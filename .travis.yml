@@ -6,7 +6,8 @@ branches:
     only:
     - master
     - dev
-
+    - staging
+    
 before_script:
     - npm install -g firebase-tools
     - npm install -g @angular/cli

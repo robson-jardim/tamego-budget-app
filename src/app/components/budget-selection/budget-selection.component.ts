@@ -6,6 +6,7 @@ import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
+import { HttpClient } from "@angular/common/http";
 
 @Component({
     selector: 'app-dashboard',
@@ -20,7 +21,11 @@ export class BudgetSelectionComponent implements OnInit {
     constructor(private firestore: FirestoreService,
                 private dialog: MatDialog,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private http: HttpClient) {
+        this.http.post('https://us-central1-budget-app-dev.cloudfunctions.net/api/category', {}).subscribe(x => {
+            console.log(x);
+        });
     }
 
     ngOnInit() {

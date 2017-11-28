@@ -5,7 +5,7 @@ export interface CategoryGroup {
     groupName: string;
 }
 
-export interface CategoryGroupId {
+export interface CategoryGroupId extends CategoryGroup {
     groupId: string;
 }
 

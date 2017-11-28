@@ -13,8 +13,12 @@ service cloud.firestore {
         allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
       }
 
-      match /groups/{groupId=**} {
+      match /categoryGroups/{groupId} {
           allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+      }
+
+      match /categories/{categoryId} {
+      	allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
       }
     }
   }

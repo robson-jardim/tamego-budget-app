@@ -6,7 +6,7 @@ const db = admin.firestore();
 exports.category = (request, response) => {
 
     const budgetRef = db.collection('budgets')
-        .where('key',  '==', 'testKey');
+        .where('key', '==', 'testKey');
 
     return budgetRef.get().then(snapshot => {
         const data = [];

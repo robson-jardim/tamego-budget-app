@@ -28,11 +28,13 @@ export class FirestoreReferenceService {
     }
 
     public getCategoryCollectionRef(budgetId: string, groupId: string): AngularFirestoreCollection<Category> {
-        return this.afs.collection<Category>(`budgets/${budgetId}/groups/${groupId}/categories`);
+        return this.afs.collection<Category>(`budgets/${budgetId}/categories`, ref =>
+            ref.where('groupId', '==', groupId)
+        );
     }
 
     public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
-        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/groups`);
+        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
     }
 }
 

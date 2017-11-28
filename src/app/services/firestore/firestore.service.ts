@@ -47,14 +47,40 @@ export class FirestoreService {
         return result;
     }
 
-    public getGroupsAndCategories(budgetId: string): CollectionResult<CategoryGroup, GroupAndCategories[]> {
+    // public getGroupsAndCategories(budgetId: string): CollectionResult<CategoryGroup, GroupAndCategories[]> {
+    //
+    //     const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
+    //     const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
+    //
+    //     const groupAndCategories: Observable<GroupAndCategories[]> = groupObservable.map(groups => {
+    //         return groups.map(group => {
+    //
+    //             const categoryCollection = this.references.getCategoryCollectionRef(budgetId, group.groupId);
+    //             const categoryObservable = this.mapDocumentId.mapCategoryIds(categoryCollection);
+    //
+    //             const categories: CollectionResult<Category, CategoryId[]> = {
+    //                 collection: categoryCollection,
+    //                 observable: categoryObservable
+    //             };
+    //
+    //             return {categories, ...group} as GroupAndCategories;
+    //         });
+    //     });
+    //
+    //     const result: CollectionResult<CategoryGroup, GroupAndCategories[]> = {
+    //         collection: groupCollection,
+    //         observable: groupAndCategories
+    //     };
+    //
+    //     return result;
+    // }
 
+    public getGroupsAndCategories(budgetId: string): CollectionResult<CategoryGroup, GroupAndCategories[]> {
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
         const groupAndCategories: Observable<GroupAndCategories[]> = groupObservable.map(groups => {
             return groups.map(group => {
-
                 const categoryCollection = this.references.getCategoryCollectionRef(budgetId, group.groupId);
                 const categoryObservable = this.mapDocumentId.mapCategoryIds(categoryCollection);
 
@@ -63,7 +89,7 @@ export class FirestoreService {
                     observable: categoryObservable
                 };
 
-                return {categories, ...group} as GroupAndCategories;
+                return {categories, ...group};
             });
         });
 
@@ -74,5 +100,4 @@ export class FirestoreService {
 
         return result;
     }
-
 }
