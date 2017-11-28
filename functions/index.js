@@ -15,6 +15,26 @@ app.use(bodyParser.json());
 app.use(cors({origin: true}));
 app.use(middleware.authenticate);
 
-app.post('/category', controllers.category);
+const { Validator, ValidationError } = require('express-json-validator-middleware');
+const validator = new Validator({allErrors: true});
+const validate = validator.validate;
+
+const categoryTransferSchema = {
+    type: 'object',
+    required: ['from', 'to', 'budgetId'],
+    properties: {
+        from: {
+            type: 'string'
+        },
+        to: {
+            type: 'string'
+        },
+        budgetId: {
+            type: 'string'
+        }
+    }
+};
+
+app.post('/category', validate({body: categoryTransferSchema}), controllers.category);
 
 exports.api = functions.https.onRequest(app);
