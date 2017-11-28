@@ -24,7 +24,7 @@ export class LoginSignupComponent implements OnInit {
             private http: HttpClient) {
                 console.log(environment.functions.api);
 
-                this.http.get(environment.functions.api + 'test').subscribe(x => {
+                this.http.post('https://us-central1-budget-app-dev.cloudfunctions.net/api/category', {}).subscribe(x => {
                     console.log(x);
                 });
     }

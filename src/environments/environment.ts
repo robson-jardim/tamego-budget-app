@@ -14,7 +14,7 @@ export const environment = {
         messagingSenderId: '428455197993'
     },
     functions: {
-        api: 'http://localhost:4949/'
+        api: 'http://localhost:5000/budget-app-dev/us-central1/api/'
     }
 };
 
