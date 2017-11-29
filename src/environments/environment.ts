@@ -13,8 +13,6 @@ export const environment = {
         storageBucket: 'budget-app-dev.appspot.com',
         messagingSenderId: '428455197993'
     },
-    functions: {
-        api: 'http://localhost:5000/budget-app-dev/us-central1/api/'
-    }
+    functions: 'http://localhost:5000/budget-app-dev/us-central1/'
 };
 

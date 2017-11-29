@@ -8,7 +8,5 @@ export const environment = {
         storageBucket: 'budget-app-prod.appspot.com',
         messagingSenderId: '412179105887'
     },
-    functions: {
-        api: 'prod'
-    }
+    functions: 'https://us-central1-budget-app-prod.cloudfunctions.net/'
 };

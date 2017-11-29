@@ -7,6 +7,7 @@ import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-dashboard',
@@ -25,16 +26,16 @@ export class BudgetSelectionComponent implements OnInit {
                 private http: HttpClient) {
 
 
+        console.log(environment.functions);
         const data = {
             origin: 'test',
             destination: 'test',
             budgetId: 'what'
         };
 
-        this.http.post('http://localhost:5000/budget-app-dev/us-central1/api/categoryGroups/transfer', data).subscribe(x => {
+        this.http.post(environment.functions + 'api/categoryGroups/transfer', data).subscribe(x => {
             console.log(x);
         });
-
 
     }
 
