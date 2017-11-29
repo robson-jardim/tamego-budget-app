@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { Router } from '@angular/router';
 import { AuthNotificationService } from '../../services/auth-notification/auth-notification.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-login-signup',
@@ -20,8 +18,7 @@ export class LoginSignupComponent implements OnInit {
     constructor(private auth: AuthService,
                 private formBuilder: FormBuilder,
                 private router: Router,
-                public authNotification: AuthNotificationService,
-                private http: HttpClient) {
+                public authNotification: AuthNotificationService) {
 
     }
 

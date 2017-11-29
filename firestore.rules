@@ -1,25 +1,34 @@
 service cloud.firestore {
-    match /databases/{database}/documents {
-    	match /users/{userId} {
-      	allow get: if request.auth.uid == userId;
-      }
+  match /databases/{database}/documents {
+
+		match /users/{userId} {
+      allow get: if request.auth.uid == userId;
+    }
 
     match /budgets/{budgetId} {
-      allow read: if request.auth.uid == resource.data.userId;
 
+      // Cannot use get() on current document when document already exists in resource?
+      allow read: if resource.data.userId == request.auth.uid;
       allow create: if request.auth.uid == request.resource.data.userId;
 
       match /accounts/{accountId} {
-        allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+        allow read, create, update: if userOwnsBudget();
+        //Don't allow direct delete, must delete dependencies first
       }
 
       match /categoryGroups/{groupId} {
-          allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+        allow read, create, update: if userOwnsBudget();
+        //Don't allow delete, categories are tied to group
       }
 
       match /categories/{categoryId} {
-      	allow read, write: if get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+        allow read, create, update: if userOwnsBudget();
+        //Don't allow delete, transactions are tied to category
       }
+
+      function userOwnsBudget() {
+      	return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+    	}
     }
-  }
+	}
 }

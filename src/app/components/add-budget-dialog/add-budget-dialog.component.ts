@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { Budget } from '../../../../models/budget.model';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { BudgetAccount } from '../../../../models/budget-account.model';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 
 @Component({
@@ -24,8 +23,8 @@ export class AddBudgetDialogComponent implements OnInit {
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
                 @Inject(MAT_DIALOG_DATA) private data: any) {
-                    this.budgetCollection = data.budgetCollection;
-                    this.userId = data.userId;
+        this.budgetCollection = data.budgetCollection;
+        this.userId = data.userId;
     }
 
     ngOnInit() {

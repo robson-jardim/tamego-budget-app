@@ -6,7 +6,7 @@ import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-dashboard',
