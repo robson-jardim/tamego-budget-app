@@ -23,9 +23,19 @@ export class BudgetSelectionComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private http: HttpClient) {
-        this.http.post('https://us-central1-budget-app-dev.cloudfunctions.net/api/category', {}).subscribe(x => {
+
+
+        const data = {
+            origin: 'test',
+            destination: 'test',
+            budgetId: 'what'
+        };
+
+        this.http.post('http://localhost:5000/budget-app-dev/us-central1/api/categoryGroups/transfer', data).subscribe(x => {
             console.log(x);
         });
+
+
     }
 
     ngOnInit() {
