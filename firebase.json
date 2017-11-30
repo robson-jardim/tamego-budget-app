@@ -7,11 +7,11 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "dest": "/index.html"
       }
     ]
   },
   "functions": {
-    "source": "functions"
+    "source": "functions/dist"
   }
 }

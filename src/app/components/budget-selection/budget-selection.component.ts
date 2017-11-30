@@ -29,7 +29,7 @@ export class BudgetSelectionComponent implements OnInit {
         console.log(environment.functions);
         const data = {
             origin: 'test',
-            destination: 'test',
+            dest: 'test',
             budgetId: 'what'
         };
 

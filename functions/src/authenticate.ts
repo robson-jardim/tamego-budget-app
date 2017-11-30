@@ -1,6 +1,6 @@
-const admin = require('firebase-admin');
+import * as admin from 'firebase-admin';
 
-exports.authenticate = (request, response, next) => {
+export const authenticate = (request, response, next) => {
     if (!request.headers.authorization || !request.headers.authorization.startsWith('Bearer ')) {
         response.status(403).send('No header');
         return;
