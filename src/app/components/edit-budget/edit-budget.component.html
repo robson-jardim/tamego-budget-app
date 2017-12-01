@@ -6,31 +6,62 @@
     <button mat-button type="submit">Add group</button>
 </form>
 
-<mat-card *ngFor="let group of groupsAndCategories.observable | async">
-    <p>{{group.groupId}}</p>
-    <p>{{group.groupName}}</p>
+<ng-container *ngFor="let group of groupsAndCategories.observable | async">
 
-    <button (click)="deleteCategoryGroup(group)">
-        <mat-icon>delete</mat-icon>
-    </button>
+    <mat-card class="budgetCard">
 
-    <form [formGroup]="categoryForm" (ngSubmit)="addCategoryToGroup(categoryForm.value, group)">
-        <mat-form-field>
-            <input matInput formControlName="categoryName" placeholder="Add category" type="text">
-        </mat-form-field>
+        <mat-card-title>
+            <p>Group id: {{group.groupId}}</p>
+            <p>Group name: {{group.groupName}}</p>
 
-        <button mat-button type="submit">Add category</button>
-    </form>
+            <!--<button (click)="deleteCategoryGroup(group)">-->
+                <!--<mat-icon>delete</mat-icon>-->
+            <!--</button>-->
 
-    <ng-container *ngIf="group.categories.observable | async as categories">
+            <span class="card-options"></span>
 
-        <ng-container *ngFor="let category of categories">
-            <p>{{category | json}}</p>
-
-            <button (click)="deleteCategoryFromGroup(category, group)">
-                <mat-icon>delete</mat-icon>
+            <button mat-button>
+                <mat-icon>add</mat-icon>
+                Add category
             </button>
-        </ng-container>
 
-    </ng-container>
-</mat-card>
+            <button mat-button [matMenuTriggerFor]="options">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #options>
+                <button mat-menu-item>Rename</button>
+                <button mat-menu-item>Delete</button>
+            </mat-menu>
+
+            <!--<form [formGroup]="categoryForm" (ngSubmit)="addCategoryToGroup(categoryForm.value, group)">-->
+                <!--<mat-form-field>-->
+                    <!--<input matInput formControlName="categoryName" placeholder="Add category" type="text">-->
+                <!--</mat-form-field>-->
+
+                <!--<button mat-button type="submit">Add category</button>-->
+            <!--</form>-->
+        </mat-card-title>
+
+        <mat-card-content *ngIf="group.categories.observable | async as categories">
+
+            <ng-container *ngIf="categories.length > 0; then showCategories else noCategories">
+            </ng-container>
+
+            <ng-template #showCategories>
+                <ul *ngFor="let category of categories">
+                    <li>Category name: {{category.categoryName}}</li>
+                    <!--<button (click)="deleteCategoryFromGroup(category, group)">-->
+                        <!--<mat-icon>delete</mat-icon>-->
+                    <!--</button>-->
+                </ul>
+            </ng-template>
+
+            <ng-template #noCategories>
+                <p>No categories</p>
+            </ng-template>
+
+        </mat-card-content>
+    </mat-card>
+
+</ng-container>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatToolbarModule
@@ -19,7 +20,8 @@ import {
         MatProgressSpinnerModule,
         MatSidenavModule,
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatMenuModule
     ],
     exports: [
         MatButtonModule,
@@ -31,7 +33,8 @@ import {
         MatProgressSpinnerModule,
         MatSidenavModule,
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatMenuModule
     ],
     declarations: []
 })
