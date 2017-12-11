@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-import { CategoryGroup, CategoryGroupId, GroupAndCategories } from '../../../../models/category-group.model';
+import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
 import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
 import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';

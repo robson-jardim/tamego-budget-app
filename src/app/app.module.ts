@@ -28,6 +28,7 @@ import { FirestoreService } from './services/firestore/firestore.service';
 import { MapFirestoreDocumentIdService } from './services/map-firestore-document-id/map-firestore-docoument-id.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
     declarations: [
@@ -40,14 +41,14 @@ import { TokenInterceptor } from './token.interceptor';
         SidenavComponent,
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
-        DashboardComponent,
+        DashboardComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
         AppMaterialModule,
-
+        HttpModule,
         AngularFireModule.initializeApp(environment.firebase),
         AppFirebaseModule,
 
@@ -58,7 +59,7 @@ import { TokenInterceptor } from './token.interceptor';
     ],
     entryComponents: [
         AddBudgetDialogComponent,
-        AddAccountToBudgetDialogComponent
+        AddAccountToBudgetDialogComponent,
     ],
     providers: [
         AuthGuard,

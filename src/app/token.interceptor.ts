@@ -13,7 +13,7 @@ export class TokenInterceptor implements TokenInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         return this.afAuth.idToken.flatMap<string, HttpEvent<any>>(idToken => {
-            console.log(idToken);
+            // console.log(idToken);
             if (!idToken) {
                 return next.handle(request);
             }

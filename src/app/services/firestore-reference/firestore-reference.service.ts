@@ -33,6 +33,10 @@ export class FirestoreReferenceService {
         );
     }
 
+    public getEntireCategoryColleciton(budgetId: string) {
+        return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
+    }
+
     public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
         return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
     }

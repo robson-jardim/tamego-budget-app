@@ -1,5 +1,6 @@
-import { Category, CategoryId } from './category.model';
 import { CollectionResult } from './collection-result.model';
+import { Category, CategoryId } from './category.model';
+import { AngularFirestoreCollection } from 'angularfire2/firestore';
 
 export interface CategoryGroup {
     groupName: string;
@@ -7,8 +8,4 @@ export interface CategoryGroup {
 
 export interface CategoryGroupId extends CategoryGroup {
     groupId: string;
-}
-
-export interface GroupAndCategories extends CategoryGroupId {
-    categories: CollectionResult<Category, CategoryId[]>;
 }

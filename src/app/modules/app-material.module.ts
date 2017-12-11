@@ -4,7 +4,7 @@ import {
     MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    MatSidenavModule,
+    MatSidenavModule, MatTableModule,
     MatToolbarModule
 } from "@angular/material";
 
@@ -21,7 +21,8 @@ import {
         MatSidenavModule,
         MatListModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTableModule
     ],
     exports: [
         MatButtonModule,
@@ -34,7 +35,8 @@ import {
         MatSidenavModule,
         MatListModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTableModule
     ],
     declarations: []
 })
