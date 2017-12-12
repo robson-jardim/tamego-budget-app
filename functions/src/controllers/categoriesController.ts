@@ -9,6 +9,9 @@ import * as express from 'express';
 const router = express.Router();
 
 import { Validator } from 'express-json-validator-middleware';
+import * as firebase from 'firebase';
+import Transaction = firebase.firestore.Transaction;
+
 const validator = new Validator({allErrors: true});
 const validate = validator.validate;
 
@@ -31,68 +34,59 @@ const categoryTransferSchema = {
 // POST: api/categories
 router.post('/', validate({body: categoryTransferSchema}), async (request: any, response) => {
 
-    const data = {
-        dest_group: request.body.dest_group,
-        categoryId: request.body.categoryId,
-        budgetId: request.body.budgetId
-    };
-
-    const budgetRef: DocumentReference = db.doc(`budgets/${data.budgetId}`);
-
     try {
-        const budgetDoc: DocumentSnapshot = await budgetRef.get();
+        await db.runTransaction(async t => {
 
-        if (!budgetDoc.exists) {
-            response.status(400).send('No such budget document');
-        }
+            const budgetRef: DocumentReference = db.doc(`budgets/${request.body.budgetId}`);
 
-        if (budgetDoc.data().userId != request.user.uid) {
-            response.status(401).send('Insufficient permissions');
-        }
+            try {
+                const budgetDoc: DocumentSnapshot = await t.get(budgetRef);
+
+                if (!budgetDoc.exists) {
+                    return response.status(400).send('No such budget document');
+                }
+
+                if (budgetDoc.data().userId != request.user.uid) {
+                    return response.status(401).send('Insufficient permissions');
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+
+            try {
+                const categoryGroupRef: DocumentReference = db.doc(budgetRef.path + '/categoryGroups/' + request.body.dest_group);
+                const categoryGroupDoc: DocumentSnapshot = await t.get(categoryGroupRef);
+
+                if (!categoryGroupDoc.exists) {
+                    return response.status(400).send('No such category group document');
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+
+            try {
+                const categoryRef: DocumentReference = db.doc(budgetRef.path + '/categories/' + request.body.categoryId);
+                const categoryDoc: DocumentSnapshot = await t.get(categoryRef);
+
+                if (!categoryDoc.exists) {
+                    return response.status(400).send('No such category document');
+                }
+
+                t.update(categoryRef, {
+                    groupId: request.body.categoryId
+                });
+
+                return response.status(200);
+            }
+            catch (error) {
+                throw error;
+            }
+        });
     }
     catch (error) {
-        sendServerError();
-    }
-
-    try {
-        const categoryGroupRef: DocumentReference = db.doc(budgetRef.path + '/categoryGroups/' + data.dest_group);
-        const categoryGroupDoc: DocumentSnapshot = await categoryGroupRef.get();
-
-        if(!categoryGroupDoc.exists) {
-            response.status(400).send('No such category group document');
-        }
-    }
-    catch(error) {
-        response.status(500).send('2');
-        sendServerError();
-    }
-
-    try {
-        const categoryRef: DocumentReference = db.doc(budgetRef.path + '/categories/' + data.categoryId);
-        const categoryDoc: DocumentSnapshot = await categoryRef.get();
-
-        if(!categoryDoc.exists) {
-            response.status(400).send('No such category document');
-        }
-
-        await categoryRef.update({
-            groupId: data.dest_group
-        });
-
-        sendSuccessResponse();
-    }
-    catch(error) {
-        response.status(500).send('3');
-        sendServerError();
-    }
-
-
-    function sendServerError() {
-        response.status(500).send('Unable to connect to database');
-    }
-
-    function sendSuccessResponse() {
-        response.status(200);
+        return response.status(500).send('Unable to connect to database');
     }
 });
 

@@ -21,7 +21,7 @@ app.use('/categories', categoriesController);
 
 // Error handler
 app.use((error, request, response, next) => {
-    if (error == 'JsonSchemaValidationError') {
+    if (error === 'JsonSchemaValidationError') {
         response.status(400).json(error.validationErrors);
     }
     else {

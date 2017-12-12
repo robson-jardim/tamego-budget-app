@@ -8,9 +8,8 @@ import * as express from 'express';
 
 const router = express.Router();
 
-import * as bluebird from 'bluebird';
-
 import { Validator } from 'express-json-validator-middleware';
+import * as firebase from 'firebase';
 
 const validator = new Validator({allErrors: true});
 const validate = validator.validate;
@@ -34,82 +33,71 @@ const deleteGroupSchema = {
 // DELETE: api/categoryGroups
 router.delete('/', validate({body: deleteGroupSchema}), async (request: any, response) => {
 
-    const data = {
-        origin: request.body.origin_group,
-        dest: request.body.dest_group,
-        budgetId: request.body.budgetId
-    };
-
-    const budgetRef: DocumentReference = db.doc(`budgets/${data.budgetId}`);
+    if (request.body.dest_group === request.body.origin_group) {
+        return response.status(400).send('Origin and destination groups must be different');
+    }
 
     try {
-        const budgetDoc: DocumentSnapshot = await budgetRef.get();
+        await db.runTransaction(async t => {
 
-        if (!budgetDoc.exists) {
-            response.status(400).send('No such budget document');
-        }
+            const budgetRef: DocumentReference = db.doc(`budgets/${request.body.budgetId}`);
 
-        if (budgetDoc.data().userId != request.user.uid) {
-            response.status(400).send('Insufficient permissions');
-        }
-    }
-    catch (error) {
-        sendServerError();
-    }
+            try {
+                const budgetDoc: DocumentSnapshot = await t.get(budgetRef);
 
-    const originGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${data.origin}`);
-    const destGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${data.dest}`);
+                if (!budgetDoc.exists) {
+                    response.status(400).send('No such budget document');
+                }
 
-    const results = await bluebird.props({
-        originDoc: originGroupRef.get(),
-        destDoc: destGroupRef.get()
-    });
+                if (budgetDoc.data().userId != request.user.uid) {
+                    response.status(400).send('Insufficient permissions');
+                }
+            }
+            catch (error) {
+                throw error;
+            }
 
-    if (!results.originDoc.exists) {
-        response.status(400).json('No such origin document');
-    }
+            const originGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.origin_group}`);
+            const destGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.dest_group}`);
 
-    if (!results.destDoc.exists) {
-        response.status(400).json('No such dest document');
-    }
+            try {
+                const originGroupDoc: DocumentSnapshot = await t.get(originGroupRef);
+                const destGroupDoc: DocumentSnapshot = await t.get(destGroupRef);
 
-    const originCategoriesRef = db.collection(`budgets/${data.budgetId}/categories`)
-        .where('groupId', '==', data.origin);
+                if (!originGroupDoc.exists) {
+                    return response.status(400).json('No such origin group document');
+                }
 
-    const batch = db.batch();
+                if (!destGroupDoc.exists) {
+                    return response.status(400).json('No such destination group document');
+                }
+            }
+            catch (error) {
+                throw error;
+            }
 
-    try {
-        const originCategoriesCollection = await originCategoriesRef.get();
+            try {
+                const originCategoriesRef = db.collection(`${budgetRef.path}/categories`)
+                    .where('groupId', '==', request.body.origin_group);
 
-        originCategoriesCollection.forEach(doc => {
-            batch.update(doc.ref, {groupId: data.dest});
+                const originCategoriesCollection = await t.get(originCategoriesRef);
+
+                originCategoriesCollection.forEach((category: DocumentSnapshot) => {
+                    t.update(category.ref, {groupId: request.body.dest_group})
+                });
+
+                t.delete(originGroupRef);
+                return response.status(200);
+            }
+            catch (error) {
+                throw error;
+            }
         });
-
-        batch.delete(originGroupRef);
     }
     catch (error) {
-        sendServerError();
+        return response.status(500).send('Unable to complete transaction');
     }
 
-    try {
-        await batch.commit();
-        sendSuccessResponse();
-    }
-    catch (error) {
-        sendBatchError();
-    }
-
-    function sendServerError() {
-        response.status(500).send('Unable to connect to database');
-    }
-
-    function sendBatchError() {
-        response.status(500).send('Batch commit unsuccessful');
-    }
-
-    function sendSuccessResponse() {
-        response.status(200);
-    }
 });
 
 

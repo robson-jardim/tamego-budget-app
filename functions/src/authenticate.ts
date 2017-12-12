@@ -6,6 +6,7 @@ export const authenticate = (request, response, next) => {
         return;
     }
     const idToken = request.headers.authorization.split('Bearer ')[1];
+
     admin.auth().verifyIdToken(idToken).then(decodedIdToken => {
         request.user = decodedIdToken;
         next();
