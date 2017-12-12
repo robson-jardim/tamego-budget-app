@@ -20,8 +20,8 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { AddBudgetDialogComponent } from './components/add-budget-dialog/add-budget-dialog.component';
-import { AddAccountToBudgetDialogComponent } from './components/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
+import { AddBudgetDialogComponent } from './components/dialogs/add-budget-dialog/add-budget-dialog.component';
+import { AddAccountToBudgetDialogComponent } from './components/dialogs/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirestoreReferenceService } from './services/firestore-reference/firestore-reference.service';
 import { FirestoreService } from './services/firestore/firestore.service';
@@ -29,6 +29,9 @@ import { MapFirestoreDocumentIdService } from './services/map-firestore-document
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
 import { HttpModule } from '@angular/http';
+import { EditCategoryDialogComponent } from './components/dialogs/category-dialog/category-dialog.component';
+import { GeneralNotificationsService } from './services/general-notifications/general-notifications.service';
+import { CategoryGroupDialogComponent } from './components/dialogs/category-group-dialog/category-group-dialog.component';
 
 @NgModule({
     declarations: [
@@ -41,14 +44,15 @@ import { HttpModule } from '@angular/http';
         SidenavComponent,
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
-        DashboardComponent
+        DashboardComponent,
+        EditCategoryDialogComponent,
+        CategoryGroupDialogComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
         AppMaterialModule,
-        HttpModule,
         AngularFireModule.initializeApp(environment.firebase),
         AppFirebaseModule,
 
@@ -60,6 +64,8 @@ import { HttpModule } from '@angular/http';
     entryComponents: [
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
+        EditCategoryDialogComponent,
+        CategoryGroupDialogComponent
     ],
     providers: [
         AuthGuard,
@@ -70,7 +76,8 @@ import { HttpModule } from '@angular/http';
         },
         FirestoreReferenceService,
         MapFirestoreDocumentIdService,
-        FirestoreService
+        FirestoreService,
+        GeneralNotificationsService
     ],
     bootstrap: [AppComponent]
 })

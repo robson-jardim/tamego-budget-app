@@ -8,6 +8,9 @@ import 'rxjs/add/operator/skip';
 import { CategoryId } from '../../../../models/category.model';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
+import { MatDialog } from '@angular/material';
+import { EditCategoryDialogComponent } from "../dialogs/category-dialog/category-dialog.component";
+import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
 
 @Component({
     selector: 'app-budget',
@@ -27,7 +30,8 @@ export class EditBudgetComponent implements OnInit {
 
     constructor(private firestore: FirestoreService,
                 private formBuilder: FormBuilder,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -40,7 +44,7 @@ export class EditBudgetComponent implements OnInit {
 
             // Updates all data if any categories change
             // Skip first emission to avoid setting the data twice on the initial load
-            this.groupsAndCategories.subObservable.skip(1).subscribe(()=> {
+            this.groupsAndCategories.subObservable.skip(1).subscribe(() => {
                 this.getData(budgetId);
             })
         });
@@ -58,11 +62,11 @@ export class EditBudgetComponent implements OnInit {
 
     selectedRowIndex: number = -1;
 
-    highlight(row){
+    public highlight(row) {
         this.selectedRowIndex = row.categoryId;
     }
 
-    unhighlight(row) {
+    public unhighlight(row) {
         this.selectedRowIndex = -1;
     }
 
@@ -70,7 +74,7 @@ export class EditBudgetComponent implements OnInit {
 
         const temp = [];
 
-        for(let ix = 0; ix < groups.length; ix++) {
+        for (let ix = 0; ix < groups.length; ix++) {
 
             let group = {
                 dataSource: new CategoryDataSource(groups[ix].categories),
@@ -106,6 +110,44 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
+    public openUpdateCategoryDialog(category: CategoryId) {
+        this.dialog.open(EditCategoryDialogComponent, {
+            data: {
+                category: category,
+                categoryCollection: this.groupsAndCategories.categoryCollection,
+                mode: 'UPDATE'
+            }
+        });
+    }
+
+    public openCreateCategoryDialog(group: CategoryGroupId) {
+        this.dialog.open(EditCategoryDialogComponent, {
+            data: {
+                categoryCollection: this.groupsAndCategories.categoryCollection,
+                group: group,
+                mode: 'CREATE',
+            }
+        });
+    }
+
+    public openCreateCategoryGroupDialog() {
+        this.dialog.open(CategoryGroupDialogComponent, {
+            data: {
+                groupCollection: this.groupsAndCategories.groupCollection,
+                mode: 'CREATE'
+            }
+        })
+    }
+
+    public openUpdateCategoryGroupDialog(group: CategoryGroupId) {
+        this.dialog.open(CategoryGroupDialogComponent, {
+            data: {
+                groupCollection: this.groupsAndCategories.groupCollection,
+                group: group,
+                mode: 'UPDATE'
+            }
+        })
+    }
 }
 
 export class CategoryDataSource extends DataSource<any> {
@@ -122,5 +164,6 @@ export class CategoryDataSource extends DataSource<any> {
         return Observable.of(this.categories);
     }
 
-    disconnect() {}
+    disconnect() {
+    }
 }

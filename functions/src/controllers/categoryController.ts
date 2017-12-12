@@ -17,12 +17,12 @@ const validate = validator.validate;
 
 const groupTransferSchema = {
     type: 'object',
-    required: ['origin', 'dest', 'budgetId'],
+    required: ['origin_group', 'dest_group', 'budgetId'],
     properties: {
-        origin: {
+        origin_group: {
             type: 'string'
         },
-        dest: {
+        dest_group: {
             type: 'string'
         },
         budgetId: {
@@ -31,11 +31,12 @@ const groupTransferSchema = {
     }
 };
 
-router.post('/transfer', validate({body: groupTransferSchema}), async (request: any, response) => {
+// DELETE: api/categoryGroups
+router.delete('/', validate({body: groupTransferSchema}), async (request: any, response) => {
 
     const data = {
-        origin: request.body.origin,
-        dest: request.body.dest,
+        origin: request.body.origin_group,
+        dest: request.body.dest_group,
         budgetId: request.body.budgetId
     };
 
@@ -56,15 +57,13 @@ router.post('/transfer', validate({body: groupTransferSchema}), async (request: 
         sendServerError();
     }
 
-    const originRef = db.doc(`${budgetRef.path}/categoryGroups/${data.origin}`);
-    const destRef = db.doc(`${budgetRef.path}/categoryGroups/${data.dest}`);
+    const originGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${data.origin}`);
+    const destGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${data.dest}`);
 
-    const groupDocs = {
-        originDoc: originRef.get(),
-        destDoc: destRef.get()
-    };
-
-    const results = await bluebird.props(groupDocs);
+    const results = await bluebird.props({
+        originDoc: originGroupRef.get(),
+        destDoc: destGroupRef.get()
+    });
 
     if (!results.originDoc.exists) {
         response.status(400).json('No such origin document');
@@ -85,6 +84,8 @@ router.post('/transfer', validate({body: groupTransferSchema}), async (request: 
         originCategoriesCollection.forEach(doc => {
             batch.update(doc.ref, {groupId: data.dest});
         });
+
+        batch.delete(originGroupRef);
     }
     catch (error) {
         sendServerError();
@@ -109,7 +110,6 @@ router.post('/transfer', validate({body: groupTransferSchema}), async (request: 
     function sendSuccessResponse() {
         response.send(200);
     }
-
 });
 
 

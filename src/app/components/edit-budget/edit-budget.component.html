@@ -1,26 +1,28 @@
 <div class="budget-container">
-    <button mat-raised-button color="primary">Add category group</button>
+<!--<div class="budget-container" *ngIf="groups; else loading">-->
+    <button mat-raised-button color="primary" (click)="openCreateCategoryGroupDialog()">Add category group</button>
 
-    <ng-container *ngIf="groups; else loading">
+    <ng-container>
         <mat-card *ngFor="let group of groups; trackBy: trackGroup" class="budgetCard">
 
-            <mat-card-header class="budget-card-grey">
+            <mat-card-header class="budget-card-grey" (click)="openUpdateCategoryGroupDialog(group)">
                 <h1>{{group.groupName}}</h1>
+                <h1>{{group.groupId}}</h1>
 
                 <span class="action-spacer"></span>
 
                 <div>
-                    <button mat-raised-button color="primary">Add category group</button>
+                    <button mat-raised-button color="primary" (click)="openCreateCategoryDialog(group); $event.stopPropagation()">Add category</button>
 
-                    <button mat-icon-button>
+                    <button mat-icon-button (click)="openUpdateCategoryGroupDialog(group); $event.stopPropagation()">
                         <mat-icon>create</mat-icon>
                     </button>
 
-                    <button mat-icon-button [matMenuTriggerFor]="options">
+                    <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #options>
-                        <button mat-menu-item>Edit</button>
+                        <button mat-menu-item (click)="openUpdateCategoryGroupDialog(group)">Edit</button>
                         <button mat-menu-item>Delete</button>
                         <button mat-menu-item>Order categories</button>
                         <button mat-menu-item>Hide</button>
@@ -32,14 +34,16 @@
 
             <mat-card-content>
 
-                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table [dataSource]="group.dataSource" [trackBy]="trackCategories">
+                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table [dataSource]="group.dataSource"
+                           [trackBy]="trackCategories">
 
                     <mat-header-row *matHeaderRowDef="categoryColumns" class="budget-card-grey"></mat-header-row>
 
                     <mat-row *matRowDef="let row; columns: categoryColumns;"
                              [ngClass]="{'highlight': selectedRowIndex == row.categoryId}"
                              (mouseenter)="highlight(row)"
-                             (mouseleave)="unhighlight(row)">
+                             (mouseleave)="unhighlight(row)"
+                             (click)="openUpdateCategoryDialog(row)">
                     </mat-row>
 
                     <ng-container matColumnDef="categoryId">
@@ -61,15 +65,15 @@
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element">
 
-                            <button mat-icon-button>
+                            <button mat-icon-button (click)="openUpdateCategoryDialog(element); $event.stopPropagation()">
                                 <mat-icon>create</mat-icon>
                             </button>
 
-                            <button mat-icon-button [matMenuTriggerFor]="options">
+                            <button mat-icon-button [matMenuTriggerFor]="options" (click)="$event.stopPropagation()">
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #options>
-                                <button mat-menu-item>Edit</button>
+                                <button mat-menu-item (click)="openUpdateCategoryDialog(element)">Edit</button>
                                 <button mat-menu-item>Delete</button>
                                 <button mat-menu-item>Transfer</button>
                                 <button mat-menu-item>Hide</button>
@@ -88,9 +92,9 @@
 
         </mat-card>
     </ng-container>
-
-    <ng-template #loading>
-        <mat-spinner></mat-spinner>
-    </ng-template>
 </div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
 

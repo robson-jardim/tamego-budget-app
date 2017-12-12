@@ -2,9 +2,9 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Budget } from '../../../../models/budget.model';
+import { Budget } from '../../../../../models/budget.model';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { FirestoreService } from '../../services/firestore/firestore.service';
+import { FirestoreService } from '../../../services/firestore/firestore.service';
 
 @Component({
     selector: 'app-add-budget-dialog',
@@ -21,7 +21,6 @@ export class AddBudgetDialogComponent implements OnInit {
 
     constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
-                private firestore: FirestoreService,
                 @Inject(MAT_DIALOG_DATA) private data: any) {
         this.budgetCollection = data.budgetCollection;
         this.userId = data.userId;
@@ -56,9 +55,5 @@ export class AddBudgetDialogComponent implements OnInit {
 
     private onBudgetAdded(newBudgetId: string): void {
         this.dialogRef.close(newBudgetId);
-    }
-
-    public close(): void {
-        this.dialogRef.close();
     }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { AddBudgetDialogComponent } from '../add-budget-dialog/add-budget-dialog.component';
+import { AddBudgetDialogComponent } from '../dialogs/add-budget-dialog/add-budget-dialog.component';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';

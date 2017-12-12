@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { AddAccountToBudgetDialogComponent } from '../add-account-to-budget-dialog/add-account-to-budget-dialog.component';
+import { AddAccountToBudgetDialogComponent } from '../dialogs/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
 import { CollectionResult } from '../../../../models/collection-result.model';

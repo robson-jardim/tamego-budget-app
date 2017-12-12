@@ -1,8 +1,6 @@
 <form [formGroup]="budget" (ngSubmit)="addBudget(budget.value)">
 
-    <h2 mat-dialog-title="">
-        Add budget
-    </h2>
+    <h1 mat-dialog-title>Add budget</h1>
 
     <mat-dialog-content>
 
@@ -19,6 +17,6 @@
     <mat-dialog-actions>
         <button mat-button type="submit">Submit</button>
 
-        <button mat-button type="button" (click)="close()">Cancel</button>
+        <button mat-button [mat-dialog-close]="true">Cancel</button>
     </mat-dialog-actions>
 </form>

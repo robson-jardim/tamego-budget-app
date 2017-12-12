@@ -1,0 +1,22 @@
+<form [formGroup]="categoryForm" (ngSubmit)="categoryForm.valid && saveChanges()">
+
+    <h1 *ngIf="mode === 'UPDATE'" mat-dialog-title>Edit category</h1>
+    <h1 *ngIf="mode === 'CREATE'" mat-dialog-title>Add category</h1>
+
+    <mat-dialog-content>
+
+        <mat-form-field>
+            <input matInput formControlName="categoryName" placeholder="Category name" type="text">
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+
+        <button mat-button type="button" (click)="close()">Cancel</button>
+
+        <button *ngIf="mode === 'UPDATE'" mat-raised-button color="primary" type="submit">Save</button>
+        <button *ngIf="mode === 'CREATE'" mat-raised-button color="primary" type="submit">Add</button>
+
+    </mat-dialog-actions>
+</form>

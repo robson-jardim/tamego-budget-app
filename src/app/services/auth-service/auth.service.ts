@@ -18,6 +18,8 @@ export class AuthService {
                 private authNotification: AuthNotificationService,
                 private router: Router) {
 
+        this.afAuth.idToken.subscribe(console.log);
+
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {
