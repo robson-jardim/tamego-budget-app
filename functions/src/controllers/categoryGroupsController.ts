@@ -15,7 +15,7 @@ import { Validator } from 'express-json-validator-middleware';
 const validator = new Validator({allErrors: true});
 const validate = validator.validate;
 
-const groupTransferSchema = {
+const deleteGroupSchema = {
     type: 'object',
     required: ['origin_group', 'dest_group', 'budgetId'],
     properties: {
@@ -32,7 +32,7 @@ const groupTransferSchema = {
 };
 
 // DELETE: api/categoryGroups
-router.delete('/', validate({body: groupTransferSchema}), async (request: any, response) => {
+router.delete('/', validate({body: deleteGroupSchema}), async (request: any, response) => {
 
     const data = {
         origin: request.body.origin_group,
@@ -46,11 +46,11 @@ router.delete('/', validate({body: groupTransferSchema}), async (request: any, r
         const budgetDoc: DocumentSnapshot = await budgetRef.get();
 
         if (!budgetDoc.exists) {
-            response.status(400).json('No such budget document');
+            response.status(400).send('No such budget document');
         }
 
         if (budgetDoc.data().userId != request.user.uid) {
-            return response.status(400).json('Insufficient permissions');
+            response.status(400).send('Insufficient permissions');
         }
     }
     catch (error) {
@@ -108,7 +108,7 @@ router.delete('/', validate({body: groupTransferSchema}), async (request: any, r
     }
 
     function sendSuccessResponse() {
-        response.send(200);
+        response.status(200);
     }
 });
 
