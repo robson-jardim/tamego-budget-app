@@ -53,17 +53,24 @@ export class FirestoreService {
         return result;
     }
 
-    public getCategories(group, budgetId) {
-        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId, group.groupId);
-        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection).first();
+    public getBudgetGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
+        const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
+        const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
-        return categoryObservable.map(categories => {
-            return {
-                groupName: group.groupName,
-                groupId: group.groupId,
-                categories: categories
-            };
-        });
+        return {
+            collection: groupCollection,
+            observable: groupObservable
+        }
+    }
+
+    public getBudgetCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
+        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getGeneralCategoryCollectionRef(budgetId);
+        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
+
+        return {
+            collection: categoryCollection,
+            observable: categoryObservable
+        }
     }
 
     public getGroupsAndCategories(budgetId: any) {

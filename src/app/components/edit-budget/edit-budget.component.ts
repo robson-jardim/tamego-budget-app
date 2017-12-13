@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import 'rxjs/add/operator/skip';
 import { CategoryId } from '../../../../models/category.model';
@@ -11,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import { MatDialog } from '@angular/material';
 import { EditCategoryDialogComponent } from "../dialogs/category-dialog/category-dialog.component";
 import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
+import { CategoryGroupId } from '../../../../models/category-group.model';
+import { TransferCategoryDialogComponent } from '../dialogs/transfer-category-dialog/transfer-category-dialog.component';
 
 @Component({
     selector: 'app-budget',
@@ -23,7 +23,7 @@ export class EditBudgetComponent implements OnInit {
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
 
-    public categoryColumns = ['categoryId', 'categoryName', 'groupId', 'actions'];
+    public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
     public groupsResult;
 
     selectedRowIndex: number = -1;
@@ -35,14 +35,13 @@ export class EditBudgetComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.route.parent.params.subscribe(params => {
-            const budgetId = params.budgetId;
+        this.getBudgetId().subscribe(budgetId => {
 
             this.groupsResult = this.firestore.getGroupsAndCategories(budgetId).map(groups => {
 
                 groups.data = groups.data.map((group: any) => {
                     const dataSource = new CategoryDataSource(group.categories);
-                    return {...group, dataSource };
+                    return {...group, dataSource};
                 });
 
                 return groups;
@@ -52,6 +51,12 @@ export class EditBudgetComponent implements OnInit {
 
         this.buildCategoryGroupForm();
         this.buildCategoryForm();
+    }
+
+    public getBudgetId(): Observable<string> {
+        return this.route.parent.params.map(params => {
+            return params.budgetId;
+        });
     }
 
     public highlight(row) {
@@ -122,7 +127,19 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
+    public openCategoryTransferDialog(category: CategoryId) {
 
+        this.getBudgetId().subscribe(budgetId => {
+
+            this.dialog.open(TransferCategoryDialogComponent, {
+                data: {
+                    category: category,
+                    budgetId: budgetId
+                }
+            });
+
+        })
+    }
 }
 
 export class CategoryDataSource extends DataSource<any> {

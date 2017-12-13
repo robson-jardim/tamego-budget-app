@@ -6,9 +6,8 @@
 
             <mat-card *ngFor="let group of groups.data; trackBy: trackGroup" class="budgetCard">
 
-                <mat-card-header class="budget-card-grey">
-                <!--<mat-card-header class="budget-card-grey" (click)="openUpdateCategoryGroupDialog(group, groups.groupCollection)">-->
-                    <h1>{{group.groupName}} &nbsp; {{group.groupId}}</h1>
+                <mat-card-header class="budget-card-grey" (click)="openUpdateCategoryGroupDialog(group, groups.groupCollection)">
+                    <h1>{{group.groupName}}</h1>
 
                     <span class="action-spacer"></span>
 
@@ -47,18 +46,18 @@
                              (click)="openUpdateCategoryDialog(row, groups.categoryCollection)">
                     </mat-row>
 
-                    <ng-container matColumnDef="categoryId">
-                        <mat-header-cell *matHeaderCellDef> categoryId</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.categoryId}}</mat-cell>
-                    </ng-container>
-
                     <ng-container matColumnDef="categoryName">
-                        <mat-header-cell *matHeaderCellDef> categoryName</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.categoryName}}</mat-cell>
                     </ng-container>
 
+                    <ng-container matColumnDef="categoryId">
+                        <mat-header-cell *matHeaderCellDef> Category ID </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.categoryId}}</mat-cell>
+                    </ng-container>
+
                     <ng-container matColumnDef="groupId">
-                        <mat-header-cell *matHeaderCellDef> groupId</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Group ID </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.groupId}}</mat-cell>
                     </ng-container>
 
@@ -76,7 +75,7 @@
                             <mat-menu #options>
                                 <button mat-menu-item (click)="openUpdateCategoryDialog(element, groups.categoryCollection)">Edit</button>
                                 <button mat-menu-item>Delete</button>
-                                <button mat-menu-item>Transfer</button>
+                                <button mat-menu-item (click)="openCategoryTransferDialog(element, groups)">Transfer</button>
                                 <button mat-menu-item>Hide</button>
                             </mat-menu>
 

@@ -12,6 +12,8 @@ import { AuthNotificationService } from '../../services/auth-notification/auth-n
 })
 export class LoginSignupComponent implements OnInit {
 
+    public hidePassword = true;
+
     public createUserForm: FormGroup;
     public signInForm: FormGroup;
 

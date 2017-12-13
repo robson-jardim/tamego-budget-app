@@ -28,10 +28,10 @@ import { FirestoreService } from './services/firestore/firestore.service';
 import { MapFirestoreDocumentIdService } from './services/map-firestore-document-id/map-firestore-docoument-id.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
-import { HttpModule } from '@angular/http';
 import { EditCategoryDialogComponent } from './components/dialogs/category-dialog/category-dialog.component';
 import { GeneralNotificationsService } from './services/general-notifications/general-notifications.service';
 import { CategoryGroupDialogComponent } from './components/dialogs/category-group-dialog/category-group-dialog.component';
+import { TransferCategoryDialogComponent } from './components/dialogs/transfer-category-dialog/transfer-category-dialog.component';
 
 @NgModule({
     declarations: [
@@ -46,26 +46,28 @@ import { CategoryGroupDialogComponent } from './components/dialogs/category-grou
         AddAccountToBudgetDialogComponent,
         DashboardComponent,
         EditCategoryDialogComponent,
-        CategoryGroupDialogComponent
+        CategoryGroupDialogComponent,
+        TransferCategoryDialogComponent,
     ],
     imports: [
         BrowserModule,
-        HttpClientModule,
         BrowserAnimationsModule,
         AppMaterialModule,
+
         AngularFireModule.initializeApp(environment.firebase),
         AppFirebaseModule,
 
         RouterModule,
         AppRoutingModule,
-
+        HttpClientModule,
         ReactiveFormsModule
     ],
     entryComponents: [
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,
         EditCategoryDialogComponent,
-        CategoryGroupDialogComponent
+        CategoryGroupDialogComponent,
+        TransferCategoryDialogComponent
     ],
     providers: [
         AuthGuard,
