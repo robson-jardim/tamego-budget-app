@@ -12,6 +12,7 @@ before_script:
     - npm install -g firebase-tools
     - npm install -g @angular/cli
     - npm install -g typescript
+    - cd functions && npm install && cd ..
 
 script:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
@@ -23,11 +24,7 @@ script:
     - if [ "$TRAVIS_BRANCH" = "dev" ]; then
         ng build --prod --env=dev;
       fi
-
-    - cd functions
-    - npm install
-    - tsc
-    - cd ..
+    - cd functions && tsc && cd ..
 
 after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
