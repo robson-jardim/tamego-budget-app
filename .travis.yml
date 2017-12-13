@@ -25,6 +25,7 @@ script:
       fi
 
     - cd functions
+    - npm install
     - tsc
     - cd ..
 
