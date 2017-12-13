@@ -23,10 +23,10 @@ export class EditBudgetComponent implements OnInit {
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
 
-    private groupsAndCategories;
-
     public categoryColumns = ['categoryId', 'categoryName', 'groupId', 'actions'];
-    public groups;
+    public groupsResult;
+
+    selectedRowIndex: number = -1;
 
     constructor(private firestore: FirestoreService,
                 private formBuilder: FormBuilder,
@@ -35,32 +35,24 @@ export class EditBudgetComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.route.parent.params.subscribe(params => {
             const budgetId = params.budgetId;
 
-            // Sets data on initial load and on any updates to group data
-            this.getData(budgetId);
+            this.groupsResult = this.firestore.getGroupsAndCategories(budgetId).map(groups => {
 
-            // Updates all data if any categories change
-            // Skip first emission to avoid setting the data twice on the initial load
-            this.groupsAndCategories.subObservable.skip(1).subscribe(() => {
-                this.getData(budgetId);
-            })
+                groups.data = groups.data.map((group: any) => {
+                    const dataSource = new CategoryDataSource(group.categories);
+                    return {...group, dataSource };
+                });
+
+                return groups;
+
+            });
         });
 
         this.buildCategoryGroupForm();
         this.buildCategoryForm();
     }
-
-    public getData(budgetId: string) {
-        this.groupsAndCategories = this.firestore.getGroupsAndCategories(budgetId);
-        this.groupsAndCategories.mainObservable.subscribe(data => {
-            this.buildBudgetTableDataSources(data);
-        });
-    }
-
-    selectedRowIndex: number = -1;
 
     public highlight(row) {
         this.selectedRowIndex = row.categoryId;
@@ -68,26 +60,6 @@ export class EditBudgetComponent implements OnInit {
 
     public unhighlight(row) {
         this.selectedRowIndex = -1;
-    }
-
-    private buildBudgetTableDataSources(groups: any) {
-
-        const temp = [];
-
-        for (let ix = 0; ix < groups.length; ix++) {
-
-            let group = {
-                dataSource: new CategoryDataSource(groups[ix].categories),
-                groupId: groups[ix].groupId,
-                groupName: groups[ix].groupName,
-                categories: groups[ix].categories
-            };
-
-            temp.push(group);
-        }
-
-        this.groups = temp;
-
     }
 
     public trackGroup(index, group: CategoryGroupId) {
@@ -110,44 +82,47 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    public openUpdateCategoryDialog(category: CategoryId) {
+    public openCreateCategoryGroupDialog(groupCollection) {
+
+        this.dialog.open(CategoryGroupDialogComponent, {
+            data: {
+                groupCollection: groupCollection,
+                mode: 'CREATE'
+            }
+        })
+    }
+
+    public openUpdateCategoryGroupDialog(group: CategoryGroupId, groupCollection) {
+        this.dialog.open(CategoryGroupDialogComponent, {
+            data: {
+                groupCollection: groupCollection,
+                group: group,
+                mode: 'UPDATE'
+            }
+        })
+    }
+
+    public openUpdateCategoryDialog(category: CategoryId, categoryCollection) {
         this.dialog.open(EditCategoryDialogComponent, {
             data: {
                 category: category,
-                categoryCollection: this.groupsAndCategories.categoryCollection,
+                categoryCollection: categoryCollection,
                 mode: 'UPDATE'
             }
         });
     }
 
-    public openCreateCategoryDialog(group: CategoryGroupId) {
+    public openCreateCategoryDialog(group: CategoryGroupId, categoryCollection) {
         this.dialog.open(EditCategoryDialogComponent, {
             data: {
-                categoryCollection: this.groupsAndCategories.categoryCollection,
+                categoryCollection: categoryCollection,
                 group: group,
                 mode: 'CREATE',
             }
         });
     }
 
-    public openCreateCategoryGroupDialog() {
-        this.dialog.open(CategoryGroupDialogComponent, {
-            data: {
-                groupCollection: this.groupsAndCategories.groupCollection,
-                mode: 'CREATE'
-            }
-        })
-    }
 
-    public openUpdateCategoryGroupDialog(group: CategoryGroupId) {
-        this.dialog.open(CategoryGroupDialogComponent, {
-            data: {
-                groupCollection: this.groupsAndCategories.groupCollection,
-                group: group,
-                mode: 'UPDATE'
-            }
-        })
-    }
 }
 
 export class CategoryDataSource extends DataSource<any> {

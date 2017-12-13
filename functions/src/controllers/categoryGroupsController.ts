@@ -16,12 +16,12 @@ const validate = validator.validate;
 
 const deleteGroupSchema = {
     type: 'object',
-    required: ['origin_group', 'dest_group', 'budgetId'],
+    required: ['originGroup', 'destinationGroup', 'budgetId'],
     properties: {
-        origin_group: {
+        originGroup: {
             type: 'string'
         },
-        dest_group: {
+        destinationGroup: {
             type: 'string'
         },
         budgetId: {
@@ -33,7 +33,7 @@ const deleteGroupSchema = {
 // DELETE: api/categoryGroups
 router.delete('/', validate({body: deleteGroupSchema}), async (request: any, response) => {
 
-    if (request.body.dest_group === request.body.origin_group) {
+    if (request.body.destinationGroup === request.body.originGroup) {
         return response.status(400).send('Origin and destination groups must be different');
     }
 
@@ -57,18 +57,18 @@ router.delete('/', validate({body: deleteGroupSchema}), async (request: any, res
                 throw error;
             }
 
-            const originGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.origin_group}`);
-            const destGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.dest_group}`);
+            const originGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.originGroup}`);
+            const destinationGroupRef = db.doc(`${budgetRef.path}/categoryGroups/${request.body.destinationGroup}`);
 
             try {
                 const originGroupDoc: DocumentSnapshot = await t.get(originGroupRef);
-                const destGroupDoc: DocumentSnapshot = await t.get(destGroupRef);
+                const destinationGroupDoc: DocumentSnapshot = await t.get(destinationGroupRef);
 
                 if (!originGroupDoc.exists) {
                     return response.status(400).json('No such origin group document');
                 }
 
-                if (!destGroupDoc.exists) {
+                if (!destinationGroupDoc.exists) {
                     return response.status(400).json('No such destination group document');
                 }
             }
@@ -78,12 +78,12 @@ router.delete('/', validate({body: deleteGroupSchema}), async (request: any, res
 
             try {
                 const originCategoriesRef = db.collection(`${budgetRef.path}/categories`)
-                    .where('groupId', '==', request.body.origin_group);
+                    .where('groupId', '==', request.body.originGroup);
 
                 const originCategoriesCollection = await t.get(originCategoriesRef);
 
                 originCategoriesCollection.forEach((category: DocumentSnapshot) => {
-                    t.update(category.ref, {groupId: request.body.dest_group})
+                    t.update(category.ref, {groupId: request.body.destinationGroup})
                 });
 
                 t.delete(originGroupRef);

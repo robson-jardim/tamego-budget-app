@@ -17,9 +17,9 @@ const validate = validator.validate;
 
 const categoryTransferSchema = {
     type: 'object',
-    required: ['dest_group', 'categoryId', 'budgetId'],
+    required: ['destinationGroup', 'categoryId', 'budgetId'],
     properties: {
-        dest_group: {
+        destinationGroup: {
             type: 'string'
         },
         categoryId: {
@@ -55,7 +55,7 @@ router.post('/', validate({body: categoryTransferSchema}), async (request: any, 
             }
 
             try {
-                const categoryGroupRef: DocumentReference = db.doc(budgetRef.path + '/categoryGroups/' + request.body.dest_group);
+                const categoryGroupRef: DocumentReference = db.doc(budgetRef.path + '/categoryGroups/' + request.body.destinationGroup);
                 const categoryGroupDoc: DocumentSnapshot = await t.get(categoryGroupRef);
 
                 if (!categoryGroupDoc.exists) {
