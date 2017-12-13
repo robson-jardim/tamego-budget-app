@@ -9,22 +9,21 @@ branches:
     - staging
 
 before_script:
+    - cd functions && npm install && cd ..
     - npm install -g firebase-tools
     - npm install -g @angular/cli
-    - npm install -g typescript
-    - cd functions && npm install && cd ..
 
 script:
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then
-        ng build --prod --env=prod;
+    - if [ "$TRAVIS_BRANCH" = "dev" ]; then
+        ng build --prod --env=dev;
       fi
     - if [ "$TRAVIS_BRANCH" = "staging" ]; then
         ng build --prod --env=staging;
       fi
-    - if [ "$TRAVIS_BRANCH" = "dev" ]; then
-        ng build --prod --env=dev;
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then
+        ng build --prod --env=prod;
       fi
-    - cd functions && tsc && cd ..
+    - cd functions && npm run build && cd ..;
 
 after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
