@@ -58,7 +58,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         }
     }
 
-    public close() {
+    private close() {
         this.dialogRef.close();
     }
 
