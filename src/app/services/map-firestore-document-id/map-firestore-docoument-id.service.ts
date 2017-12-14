@@ -3,10 +3,8 @@ import { AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/f
 import { Observable } from 'rxjs/Observable';
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
-import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
 import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
 import { BudgetId, Budget } from '../../../../models/budget.model';
-import { CollectionResult } from '../../../../models/collection-result.model';
 
 @Injectable()
 export class MapFirestoreDocumentIdService {

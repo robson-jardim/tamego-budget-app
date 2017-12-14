@@ -7,7 +7,6 @@ import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-accoun
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { AuthGuard } from '../auth-guard/auth.guard';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
@@ -19,17 +18,13 @@ import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class FirestoreService {
-    public readonly userId;
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
-                private references: FirestoreReferenceService,
-                private authGuard: AuthGuard,
-                private afs: AngularFirestore) {
-        this.userId = authGuard.userId;
+                private references: FirestoreReferenceService) {
     }
 
-    public getBudgets(): CollectionResult<Budget, BudgetId[]> {
-        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef();
+    public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
+        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef(userId);
         const budgetObservable: Observable<BudgetId[]> = this.mapDocumentId.mapBudgetIds(budgetCollection);
 
         const result: CollectionResult<Budget, BudgetId[]> = {
@@ -53,20 +48,27 @@ export class FirestoreService {
         return result;
     }
 
-    public getCategories(group, budgetId) {
-        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId, group.groupId);
-        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection).first();
+    public getBudgetGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
+        const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
+        const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
-        return categoryObservable.map(categories => {
-            return {
-                groupName: group.groupName,
-                groupId: group.groupId,
-                categories: categories
-            };
-        });
+        return {
+            collection: groupCollection,
+            observable: groupObservable
+        }
     }
 
-    public getGroupsAndCategories(budgetId: any) {
+    public getBudgetCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
+        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getGeneralCategoryCollectionRef(budgetId);
+        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
+
+        return {
+            collection: categoryCollection,
+            observable: categoryObservable
+        }
+    }
+
+    public getGroupsAndCategories(budgetId: string) {
         const group: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
         const category: Observable<Category[]> = this.references.getGeneralCategoryCollectionRef(budgetId).valueChanges();
 
