@@ -14,10 +14,12 @@ import { FirestoreService } from '../../../services/firestore/firestore.service'
 })
 export class AddBudgetDialogComponent implements OnInit {
 
-    public budget: FormGroup;
+    public budgetForm: FormGroup;
 
     private budgetCollection: AngularFirestoreCollection<Budget>;
     private userId: string;
+
+    public saving = false;
 
     constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
@@ -31,25 +33,29 @@ export class AddBudgetDialogComponent implements OnInit {
     }
 
     private buildBudgetForm(): void {
-        this.budget = this.formBuilder.group({
+        this.budgetForm = this.formBuilder.group({
             budgetName: ['', Validators.required],
             currencyType: ['', Validators.required]
         });
     }
 
-    public addBudget(formValues): void {
+    public async addBudget() {
 
-        if (this.budget.valid) {
+        this.saving = true;
 
-            const budget: Budget = {
-                userId: this.data.userId,
-                budgetName: formValues.budgetName,
-                currencyType: formValues.currencyType
-            };
+        const data: Budget = {
+            userId: this.data.userId,
+            budgetName: this.budgetForm.value.budgetName,
+            currencyType: this.budgetForm.value.currencyType
+        };
 
-            this.budgetCollection.add(budget).then(newBudget => {
-                this.onBudgetAdded(newBudget.id);
-            });
+        try {
+            const newBudget = await this.budgetCollection.add(data);
+            this.onBudgetAdded(newBudget.id);
+            this.saving = false;
+        }
+        catch (error) {
+            console.error(error);
         }
     }
 
