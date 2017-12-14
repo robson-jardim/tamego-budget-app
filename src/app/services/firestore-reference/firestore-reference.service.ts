@@ -11,16 +11,12 @@ import { BudgetAccount } from '../../../../models/budget-account.model';
 @Injectable()
 export class FirestoreReferenceService {
 
-    public readonly userId: string;
-
-    constructor(private afs: AngularFirestore,
-                private authGuard: AuthGuard) {
-        this.userId = this.authGuard.userId;
+    constructor(private afs: AngularFirestore) {
     }
 
-    public getBudgetCollectionRef(): AngularFirestoreCollection<Budget> {
+    public getBudgetCollectionRef(userId): AngularFirestoreCollection<Budget> {
         return this.afs.collection<Budget>('budgets', ref =>
-            ref.where('userId', '==', this.userId));
+            ref.where('userId', '==', userId));
     }
 
     public getBudgetAccountCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {

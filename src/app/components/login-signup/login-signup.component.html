@@ -6,7 +6,7 @@
 
     <mat-card-title>Sign in</mat-card-title>
 
-    <form [formGroup]="signInForm" (ngSubmit)="signInWithEmailAndPassword(signInForm.value)" class="formContainer">
+    <form [formGroup]="signInForm" (ngSubmit)="signInForm.valid && signInWithEmailAndPassword()" class="formContainer">
 
         <mat-form-field [floatPlaceholder]="'never'">
             <input matInput formControlName="email" placeholder="Email" type="email">
@@ -25,7 +25,7 @@
 <mat-card class="cardContainer">
     <mat-card-title>Create account</mat-card-title>
 
-    <form [formGroup]="createUserForm" (ngSubmit)="createUserWithEmailAndPassword(createUserForm.value)"
+    <form [formGroup]="createUserForm" (ngSubmit)="createUserForm.valid && createUserWithEmailAndPassword()"
           class="formContainer">
         <mat-form-field [floatPlaceholder]="'never'">
             <input matInput formControlName="email" placeholder="Email" type="email">

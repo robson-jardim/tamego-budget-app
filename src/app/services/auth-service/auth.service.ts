@@ -18,8 +18,6 @@ export class AuthService {
                 private authNotification: AuthNotificationService,
                 private router: Router) {
 
-        // this.afAuth.idToken.subscribe(console.log);
-
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {
@@ -30,65 +28,71 @@ export class AuthService {
             });
     }
 
-    public createUserWithEmailAndPassword(email: string, password: string) {
-        return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-            .catch(error => {
-                const errorCode = error.code;
-                let errorMessage: string;
+    public async createUserWithEmailAndPassword(email: string, password: string) {
 
-                if (errorCode === 'auth/email-already-in-use') {
-                    errorMessage = 'Email is already registered with another account';
-                }
-                else if (errorCode === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email';
-                }
-                else if (errorCode === 'auth/operation-not-allowed') {
-                    errorMessage = 'Error';
-                }
-                else if (errorCode === 'auth/weak-password') {
-                    errorMessage = 'Please choose a more secure password';
-                }
-                else {
-                    errorMessage = 'Error';
-                }
+        try {
+            return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+        }
+        catch (error) {
+            const errorCode = error.code;
+            let errorMessage: string;
 
-                this.authNotification.update(errorMessage, 'error');
+            if (errorCode === 'auth/email-already-in-use') {
+                errorMessage = 'Email is already registered with another account';
+            }
+            else if (errorCode === 'auth/invalid-email') {
+                errorMessage = 'Invalid email';
+            }
+            else if (errorCode === 'auth/operation-not-allowed') {
+                errorMessage = 'Error';
+            }
+            else if (errorCode === 'auth/weak-password') {
+                errorMessage = 'Please choose a more secure password';
+            }
+            else {
+                errorMessage = 'Error';
+            }
 
-                throw error;
-            });
+            this.authNotification.update(errorMessage, 'error');
+
+            throw error;
+        }
     }
 
-    public signInWithEmailAndPassword(email: string, password: string) {
-        return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-            .catch(error => {
-                const errorCode = error.code;
-                let errorMessage: string;
+    public async signInWithEmailAndPassword(email: string, password: string) {
 
-                if (errorCode === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email';
-                }
-                else if (errorCode === 'auth/user-disabled') {
-                    errorMessage = 'This account has been disabled';
-                }
-                else if (errorCode === 'auth/user-not-found') {
-                    errorMessage = 'No account exists with the given email';
-                }
-                else if (errorCode === 'auth/wrong-password') {
-                    errorMessage = 'Incorrect password';
-                }
-                else {
-                    errorMessage = 'Error';
-                }
+        try {
+            return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+        }
+        catch (error) {
+            const errorCode = error.code;
+            let errorMessage: string;
 
-                this.authNotification.update(errorMessage, 'error');
+            if (errorCode === 'auth/invalid-email') {
+                errorMessage = 'Invalid email';
+            }
+            else if (errorCode === 'auth/user-disabled') {
+                errorMessage = 'This account has been disabled';
+            }
+            else if (errorCode === 'auth/user-not-found') {
+                errorMessage = 'No account exists with the given email';
+            }
+            else if (errorCode === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password';
+            }
+            else {
+                errorMessage = 'Error';
+            }
 
-                throw error;
-            });
+            this.authNotification.update(errorMessage, 'error');
+
+            throw error;
+        }
     }
 
-    public signOut() {
-        this.afAuth.auth.signOut().then(() => {
-            this.router.navigate(['/']);
-        });
+    public async signOut() {
+        await this.afAuth.auth.signOut();
+        await this.router.navigate(['/']);
     }
+
 }

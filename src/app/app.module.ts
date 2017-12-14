@@ -10,6 +10,7 @@ import { AppComponent } from './components/app/app.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -55,6 +56,7 @@ import { TransferCategoryDialogComponent } from './components/dialogs/transfer-c
         AppMaterialModule,
 
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule.enablePersistence(),
         AppFirebaseModule,
 
         RouterModule,

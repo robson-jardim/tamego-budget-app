@@ -19,17 +19,13 @@ import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class FirestoreService {
-    public readonly userId;
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
-                private references: FirestoreReferenceService,
-                private authGuard: AuthGuard,
-                private afs: AngularFirestore) {
-        this.userId = authGuard.userId;
+                private references: FirestoreReferenceService) {
     }
 
-    public getBudgets(): CollectionResult<Budget, BudgetId[]> {
-        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef();
+    public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
+        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef(userId);
         const budgetObservable: Observable<BudgetId[]> = this.mapDocumentId.mapBudgetIds(budgetCollection);
 
         const result: CollectionResult<Budget, BudgetId[]> = {
