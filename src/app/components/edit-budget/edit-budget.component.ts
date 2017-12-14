@@ -35,6 +35,8 @@ export class EditBudgetComponent implements OnInit {
     }
 
     ngOnInit() {
+
+
         this.getBudgetId().subscribe(budgetId => {
 
             this.groupsResult = this.firestore.getGroupsAndCategories(budgetId).map(groups => {
@@ -45,7 +47,6 @@ export class EditBudgetComponent implements OnInit {
                 });
 
                 return groups;
-
             });
         });
 

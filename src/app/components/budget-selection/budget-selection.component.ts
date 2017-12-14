@@ -35,22 +35,22 @@ export class BudgetSelectionComponent implements OnInit {
     }
 
     public openAddNewBudgetDialog(): void {
-        const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
-            data: {
-                budgetCollection: this.budgets.collection,
-                // userId: this.firestore.userId
-            }
-        });
 
-        addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
-            if (newBudgetId) {
-                this.router.navigate([newBudgetId], {relativeTo: this.route});
-            }
+        this.auth.user.first().subscribe((user: User) => {
+            const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
+                data: {
+                    budgetCollection: this.budgets.collection,
+                    userId: user.userId
+                }
+            });
+
+            addBudgetDialogRef.beforeClose().subscribe(async newBudgetId => {
+                if (newBudgetId) {
+                    await this.router.navigate([newBudgetId], {relativeTo: this.route});
+                }
+            });
         });
     }
 
-    public deleteBudget(budget: BudgetId) {
-        this.budgets.collection.doc(budget.budgetId).delete();
-    }
 }
 

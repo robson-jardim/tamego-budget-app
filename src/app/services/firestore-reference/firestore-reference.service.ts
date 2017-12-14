@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
-import { AuthGuard } from '../auth-guard/auth.guard';
 
 import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
@@ -33,14 +31,11 @@ export class FirestoreReferenceService {
         return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
     }
 
-    public getGeneralCategoryCollectionRef(budgetId: string) {
+    public getGeneralCategoryCollectionRef(budgetId: string): AngularFirestoreCollection<Category> {
         //We need a generalized version of category collection because we want to be able to see
         //if any changes occur in the entire collection
         return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
     }
-
-
-
 
 }
 

@@ -7,7 +7,6 @@ import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-accoun
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { AuthGuard } from '../auth-guard/auth.guard';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
@@ -69,7 +68,7 @@ export class FirestoreService {
         }
     }
 
-    public getGroupsAndCategories(budgetId: any) {
+    public getGroupsAndCategories(budgetId: string) {
         const group: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
         const category: Observable<Category[]> = this.references.getGeneralCategoryCollectionRef(budgetId).valueChanges();
 
