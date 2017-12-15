@@ -1,6 +1,10 @@
-<mat-card class="cardContainer" *ngIf="authNotification.messageBroadcast | async as notification">
-    <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
-</mat-card>
+<mat-spinner *ngIf="loading"></mat-spinner>
+
+<ng-container *ngIf="authNotification.messageBroadcast | async as notification">
+    <mat-card class="cardContainer" *ngIf="showAuthError">
+        <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+    </mat-card>
+</ng-container>
 
 <mat-card class="cardContainer">
 

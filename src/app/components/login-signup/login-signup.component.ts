@@ -13,6 +13,9 @@ import { AngularFirestore } from 'angularfire2/firestore';
 })
 export class LoginSignupComponent implements OnInit {
 
+    public loading = false;
+    public showAuthError = false;
+
     public hidePassword = true;
     public createUserForm: FormGroup;
     public signInForm: FormGroup;
@@ -54,6 +57,9 @@ export class LoginSignupComponent implements OnInit {
     }
 
     public async signInWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
+
         try {
             const email = this.signInForm.value.email;
             const password = this.signInForm.value.password;
@@ -62,19 +68,31 @@ export class LoginSignupComponent implements OnInit {
             await this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
             console.error(error);
         }
     }
 
     public async createUserWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
+
         try {
             const email = this.createUserForm.value.email;
             const password = this.createUserForm.value.password;
 
             const user = await this.auth.createUserWithEmailAndPassword(email, password);
-            await this.routeToBudgetSelection(user);
+
+            const doc = this.afs.doc('users/' + user.uid);
+            doc.valueChanges().take(1).subscribe(async () => {
+                console.log('document added');
+                await this.routeToBudgetSelection(user);
+            });
         } catch (error) {
             // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
             console.error(error);
         }
     }

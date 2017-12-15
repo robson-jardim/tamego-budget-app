@@ -8,7 +8,7 @@ import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { User } from '../../../../models/user.model';
-import "rxjs/add/operator/first";
+import 'rxjs/add/operator/first';
 
 @Component({
     selector: 'app-dashboard',

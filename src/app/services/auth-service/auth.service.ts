@@ -91,8 +91,11 @@ export class AuthService {
     }
 
     public async signOut() {
-        await this.afAuth.auth.signOut();
-        await this.router.navigate(['/']);
+        try {
+            await this.afAuth.auth.signOut();
+            await this.router.navigate(['/']);
+        } catch (error) {
+            console.error(error);
+        }
     }
-
 }

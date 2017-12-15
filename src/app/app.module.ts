@@ -15,7 +15,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppMaterialModule } from './modules/app-material.module';
-import { AuthGuard } from './services/auth-guard/auth.guard';
+import { AuthGuard } from './guards/auth/auth.guard';
 import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { AccountsComponent } from './components/accounts/accounts.component';
@@ -33,6 +33,7 @@ import { EditCategoryDialogComponent } from './components/dialogs/category-dialo
 import { GeneralNotificationsService } from './services/general-notifications/general-notifications.service';
 import { CategoryGroupDialogComponent } from './components/dialogs/category-group-dialog/category-group-dialog.component';
 import { TransferCategoryDialogComponent } from './components/dialogs/transfer-category-dialog/transfer-category-dialog.component';
+import { SignedInGuard } from "./guards/signed-in/signed-in.guard";
 
 @NgModule({
     declarations: [
@@ -73,6 +74,7 @@ import { TransferCategoryDialogComponent } from './components/dialogs/transfer-c
     ],
     providers: [
         AuthGuard,
+        SignedInGuard,
         // {
         //     provide: HTTP_INTERCEPTORS,
         //     useClass: TokenInterceptor,
