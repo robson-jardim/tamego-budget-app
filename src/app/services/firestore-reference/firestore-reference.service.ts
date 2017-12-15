@@ -21,19 +21,11 @@ export class FirestoreReferenceService {
         return this.afs.collection<BudgetAccount>(`budgets/${budgetId}/accounts`);
     }
 
-    public getCategoryCollectionRef(budgetId: string, groupId: string): AngularFirestoreCollection<Category> {
-        return this.afs.collection<Category>(`budgets/${budgetId}/categories`, ref =>
-            ref.where('groupId', '==', groupId)
-        );
-    }
-
     public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
         return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
     }
 
-    public getGeneralCategoryCollectionRef(budgetId: string): AngularFirestoreCollection<Category> {
-        //We need a generalized version of category collection because we want to be able to see
-        //if any changes occur in the entire collection
+    public getCategoryCollectionRef(budgetId: string): AngularFirestoreCollection<Category> {
         return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
     }
 

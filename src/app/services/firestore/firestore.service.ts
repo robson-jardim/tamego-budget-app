@@ -54,7 +54,7 @@ export class FirestoreService {
     }
 
     public getBudgetCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
-        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getGeneralCategoryCollectionRef(budgetId);
+        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId);
         const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
 
         return {
@@ -67,7 +67,7 @@ export class FirestoreService {
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
-        const categoryCollection = this.references.getGeneralCategoryCollectionRef(budgetId);
+        const categoryCollection = this.references.getCategoryCollectionRef(budgetId);
         const categoriesObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
 
         return Observable.combineLatest(groupObservable, categoriesObservable, (groups, categories) => {
