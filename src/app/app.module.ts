@@ -73,11 +73,11 @@ import { TransferCategoryDialogComponent } from './components/dialogs/transfer-c
     ],
     providers: [
         AuthGuard,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: TokenInterceptor,
-            multi: true
-        },
+        // {
+        //     provide: HTTP_INTERCEPTORS,
+        //     useClass: TokenInterceptor,
+        //     multi: true
+        // },
         FirestoreReferenceService,
         MapFirestoreDocumentIdService,
         FirestoreService,

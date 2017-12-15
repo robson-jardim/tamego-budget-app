@@ -6,10 +6,9 @@ import { AddBudgetDialogComponent } from '../dialogs/add-budget-dialog/add-budge
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { User } from '../../../../models/user.model';
+import "rxjs/add/operator/first";
 
 @Component({
     selector: 'app-dashboard',
@@ -31,7 +30,7 @@ export class BudgetSelectionComponent implements OnInit {
     ngOnInit() {
         this.auth.user.first().subscribe((user: User) => {
             this.budgets = this.firestore.getBudgets(user.userId);
-        })
+        });
     }
 
     public openAddNewBudgetDialog(): void {

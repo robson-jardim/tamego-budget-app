@@ -53,8 +53,7 @@ export class AddBudgetDialogComponent implements OnInit {
             const newBudget = await this.budgetCollection.add(data);
             this.onBudgetAdded(newBudget.id);
             this.saving = false;
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
         }
     }

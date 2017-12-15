@@ -9,12 +9,7 @@ import { Category, CategoryId } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/skip';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class FirestoreService {
@@ -55,7 +50,7 @@ export class FirestoreService {
         return {
             collection: groupCollection,
             observable: groupObservable
-        }
+        };
     }
 
     public getBudgetCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
@@ -65,57 +60,34 @@ export class FirestoreService {
         return {
             collection: categoryCollection,
             observable: categoryObservable
-        }
+        };
     }
 
     public getGroupsAndCategories(budgetId: string) {
-        const group: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
-        const category: Observable<Category[]> = this.references.getGeneralCategoryCollectionRef(budgetId).valueChanges();
-
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
+        const categoryCollection = this.references.getGeneralCategoryCollectionRef(budgetId);
+        const categoriesObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
 
-        return Observable.merge(group, category.skip(1)).switchMap(res => {
+        return Observable.combineLatest(groupObservable, categoriesObservable, (groups, categories) => {
 
-            const groups: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
+            const formattedData = groups.map((group: CategoryGroupId) => {
 
-            const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
-            const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
-
-            return groups.flatMap(groups => {
-                if (groups.length == 0) {
-                    return Observable.of({
-                        groupCollection: groupCollection,
-                        categoryCollection: this.references.getGeneralCategoryCollectionRef(budgetId),
-                        data: groups
+                const getCategories = () => {
+                    return categories.filter((category: CategoryId) => {
+                        return category.groupId === group.groupId;
                     });
-                }
-                else {
-                    const getCategories = (group) => {
-                        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId, group.groupId);
-                        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection).first();
+                };
 
-                        return categoryObservable.map(categories => {
-                            return {
-                                groupName: group.groupName,
-                                groupId: group.groupId,
-                                categories: categories
-                            };
-                        });
-                    };
+                return { ...group, categories: getCategories() };
+            });
 
-                    return groupObservable.flatMap(groups => {
-                        return Observable.forkJoin(groups.map(group => getCategories(group))).map(groups => {
-                            return {
-                                groupCollection: groupCollection,
-                                categoryCollection: this.references.getGeneralCategoryCollectionRef(budgetId),
-                                data: groups
-                            }
-                        })
-                    });
-                }
-            })
+            return {
+                groupCollection: groupCollection,
+                categoryCollection: categoryCollection,
+                data: formattedData
+            };
         });
     }
 }
