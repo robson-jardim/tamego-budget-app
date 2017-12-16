@@ -8,15 +8,18 @@
     },
     "devDependencies": {
         "@types/express": "^4.0.39",
+        "@types/node": "^8.5.1",
+        "concurrently": "^3.5.1",
+        "copyfiles": "^1.2.0",
         "nodemon": "^1.13.3",
-        "typescript": "^2.6.2",
-        "concurrently": "^3.5.1"
+        "typescript": "^2.6.2"
     },
     "scripts": {
-        "build": "tsc",
-        "watch": "tsc --watch",
+        "build": "npm run copy && tsc",
+        "watch": "npm run copy && tsc --watch",
         "serve": "nodemon ./dist/index.js",
-        "dev": "concurrently --kill-others \"npm run serve\" \"npm run watch\""
+        "copy": "copyfiles src/**/*.json dist/ -f",
+        "dev": "concurrently --kill-others \"npm run watch\" \"npm run serve\""
     },
     "main": "dist/index.js",
     "private": true

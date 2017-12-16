@@ -4,15 +4,12 @@ import { User } from '../../../models/user.model';
 
 const db = admin.firestore();
 
-export const onUserCreate = functions.auth.user().onCreate(async event => {
-    try {
-        const user: User = {
-            userId: event.data.uid,
-            email: event.data.email
-        };
+export const onUserCreate = functions.auth.user().onCreate(event => {
 
-        await db.doc(`users/${user.userId}`).set(user, {merge: true});
-    } catch (error) {
-        throw error;
-    }
+    const user: User = {
+        userId: event.data.uid,
+        email: event.data.email
+    };
+
+    return db.doc(`users/${user.userId}`).set(user, {merge: true});
 });
