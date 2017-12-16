@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 
-<ng-container *ngIf="budgets.observable | async  as budgets; else loading">
+<ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
     <button mat-button (click)="openAddNewBudgetDialog()">Add new budget</button>
 
     <mat-card *ngFor="let budget of budgets" class="budget-container" [routerLink]="[budget.budgetId]">

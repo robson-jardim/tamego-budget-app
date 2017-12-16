@@ -5,13 +5,10 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from '../auth-service/auth.service';
+import { AuthService } from '../../services/auth-service/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-
-    // Should only be used in the constructor of the database service
-    public userId: string;
 
     constructor(private auth: AuthService, private router: Router) {
     }
@@ -20,13 +17,9 @@ export class AuthGuard implements CanActivate {
 
         return this.auth.user
             .take(1)
-            .do(user => {
-                if (user) {
-                    this.userId = user.userId;
-                }
-            })
-            .map(user => !!user) // ensures the resulting type is a boolean (true or false)
+            .map(user => !!user) // ensures the resulting type is a boolean
             .do(loggedIn => {
+                console.log('User logged in status: ' + loggedIn);
                 if (!loggedIn) {
                     this.router.navigate(['/']);
                 }

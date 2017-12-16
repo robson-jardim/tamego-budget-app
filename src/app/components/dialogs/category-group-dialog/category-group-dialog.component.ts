@@ -44,6 +44,7 @@ export class CategoryGroupDialogComponent implements OnInit {
                 groupName: ['', Validators.required]
             });
         }
+
     }
 
     public saveChanges() {
@@ -57,7 +58,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         }
     }
 
-    public close() {
+    private close() {
         this.dialogRef.close();
     }
 

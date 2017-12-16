@@ -46,7 +46,7 @@ export class AddAccountToBudgetDialogComponent implements OnInit {
         }
     }
 
-    public close() {
+    private close() {
         this.dialogRef.close();
     }
 }

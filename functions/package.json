@@ -1,23 +1,25 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "express-json-validator-middleware": "^1.2.0",
-    "firebase-admin": "^5.5.1",
-    "firebase-functions": "^0.7.3"
-  },
-  "devDependencies": {
-    "@types/express": "^4.0.39",
-    "typescript": "^2.6.2"
-  },
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "deploy": "tsc && firebase deploy --only functions"
-  },
-  "main": "dist/index.js",
-  "private": true
+    "name": "functions",
+    "description": "Cloud Functions for Firebase",
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "cors": "^2.8.4",
+        "express": "^4.16.2",
+        "express-json-validator-middleware": "^1.2.0",
+        "firebase-admin": "^5.5.1",
+        "firebase-functions": "^0.7.3"
+    },
+    "devDependencies": {
+        "@types/express": "^4.0.39",
+        "typescript": "^2.6.2",
+        "concurrently": "^3.5.1"
+    },
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "deploy": "tsc && firebase deploy --only functions",
+        "dev": "concurrently --kill-others \"npm run watch\" \"firebase serve --only functions\""
+    },
+    "main": "dist/functions/src/index.js",
+    "private": true
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule,
     MatMenuModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule, MatSelectModule,
     MatSidenavModule, MatSnackBarModule, MatTableModule,
     MatToolbarModule
 } from "@angular/material";
@@ -23,7 +23,8 @@ import {
         MatDialogModule,
         MatMenuModule,
         MatTableModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatSelectModule
     ],
     exports: [
         MatButtonModule,
@@ -38,7 +39,8 @@ import {
         MatDialogModule,
         MatMenuModule,
         MatTableModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatSelectModule
     ],
     declarations: []
 })

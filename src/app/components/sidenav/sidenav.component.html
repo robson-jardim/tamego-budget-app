@@ -3,7 +3,8 @@
         <mat-icon>trending_up</mat-icon>
         <p>Budget</p>
     </mat-list-item>
-    <mat-list-item [routerLink]="['./accounts']" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+    <mat-list-item [routerLink]="['./accounts']" [routerLinkActiveOptions]="{exact: true}"
+                   routerLinkActive="active">
         <mat-icon>attach_money</mat-icon>
         <p>All Accounts</p>
     </mat-list-item>
@@ -13,7 +14,7 @@
 
     <mat-divider></mat-divider>
 
-    <mat-list-item *ngFor="let account of budgetAccounts.observable | async as accounts"
+    <mat-list-item *ngFor="let account of budgetAccounts?.observable | async as accounts"
                    [routerLink]="['./accounts', account.budgetAccountId]"
                    routerLinkActive="active">
         <p>Name: {{account.accountName}}</p>

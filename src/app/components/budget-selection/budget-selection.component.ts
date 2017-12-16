@@ -6,8 +6,9 @@ import { AddBudgetDialogComponent } from '../dialogs/add-budget-dialog/add-budge
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { CollectionResult } from '../../../../models/collection-result.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth-service/auth.service';
+import { User } from '../../../../models/user.model';
+import 'rxjs/add/operator/first';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,43 +24,32 @@ export class BudgetSelectionComponent implements OnInit {
                 private dialog: MatDialog,
                 private router: Router,
                 private route: ActivatedRoute,
-                private http: HttpClient) {
-
-
-        console.log(environment.functions);
-        const data = {
-            origin: 'test',
-            dest: 'test',
-            budgetId: 'what'
-        };
-
-        this.http.post(environment.functions + 'api/categoryGroups/transfer', data).subscribe(x => {
-            console.log(x);
-        });
-
+                private auth: AuthService) {
     }
 
     ngOnInit() {
-        this.budgets = this.firestore.getBudgets();
+        this.auth.user.first().subscribe((user: User) => {
+            this.budgets = this.firestore.getBudgets(user.userId);
+        });
     }
 
     public openAddNewBudgetDialog(): void {
-        const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
-            data: {
-                budgetCollection: this.budgets.collection,
-                userId: this.firestore.userId
-            }
-        });
 
-        addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
-            if (newBudgetId) {
-                this.router.navigate([newBudgetId], {relativeTo: this.route});
-            }
+        this.auth.user.first().subscribe((user: User) => {
+            const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
+                data: {
+                    budgetCollection: this.budgets.collection,
+                    userId: user.userId
+                }
+            });
+
+            addBudgetDialogRef.beforeClose().subscribe(async newBudgetId => {
+                if (newBudgetId) {
+                    await this.router.navigate([newBudgetId], {relativeTo: this.route});
+                }
+            });
         });
     }
 
-    public deleteBudget(budget: BudgetId) {
-        this.budgets.collection.doc(budget.budgetId).delete();
-    }
 }
 

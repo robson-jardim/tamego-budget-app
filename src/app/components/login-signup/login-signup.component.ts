@@ -12,6 +12,10 @@ import { AuthNotificationService } from '../../services/auth-notification/auth-n
 })
 export class LoginSignupComponent implements OnInit {
 
+    public loading = false;
+    public showAuthError = false;
+
+    public hidePassword = true;
     public createUserForm: FormGroup;
     public signInForm: FormGroup;
 
@@ -19,7 +23,6 @@ export class LoginSignupComponent implements OnInit {
                 private formBuilder: FormBuilder,
                 private router: Router,
                 public authNotification: AuthNotificationService) {
-
     }
 
     ngOnInit() {
@@ -51,33 +54,53 @@ export class LoginSignupComponent implements OnInit {
         }
     }
 
-    public signInWithEmailAndPassword(form) {
-        if (this.signInForm.valid) {
-            this.auth.signInWithEmailAndPassword(form.email, form.password)
-                .then(() => {
-                    this.router.navigate(['/budgets']);
-                })
-                .catch(error => {
-                    // Auth notification service broadcasts the error to template
-                });
+    public async signInWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
+
+        try {
+            const email = this.signInForm.value.email;
+            const password = this.signInForm.value.password;
+
+            const user = await this.auth.signInWithEmailAndPassword(email, password);
+            this.routeToBudgetSelection(user);
+        } catch (error) {
+            // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
+            console.error(error);
         }
     }
 
-    public createUserWithEmailAndPassword(form) {
+    public async createUserWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
 
-        if (this.createUserForm.valid) {
-            this.auth.createUserWithEmailAndPassword(form.email, form.password)
-                .then(() => {
-                    const observable = this.auth.user.subscribe(user => {
-                        if (user) {
-                            this.router.navigate(['budgets']);
-                            observable.unsubscribe();
-                        }
-                    });
-                })
-                .catch(error => {
-                    // Auth notification service broadcasts the error to template
-                });
+        try {
+            const email = this.createUserForm.value.email;
+            const password = this.createUserForm.value.password;
+
+            const user = await this.auth.createUserWithEmailAndPassword(email, password);
+            this.routeToBudgetSelection(user);
+        } catch (error) {
+            // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
+            console.error(error);
         }
+    }
+
+    private routeToBudgetSelection(user) {
+        this.auth.user.first(x => x != null).subscribe(async x => {
+            try {
+                console.log(x);
+                console.log('About to navigate');
+                console.log(localStorage);
+                await this.router.navigate(['budgets']);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
 }

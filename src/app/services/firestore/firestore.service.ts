@@ -7,29 +7,19 @@ import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-accoun
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
-import { AuthGuard } from '../auth-guard/auth.guard';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/skip';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class FirestoreService {
-    public readonly userId;
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
-                private references: FirestoreReferenceService,
-                private authGuard: AuthGuard,
-                private afs: AngularFirestore) {
-        this.userId = authGuard.userId;
+                private references: FirestoreReferenceService) {
     }
 
-    public getBudgets(): CollectionResult<Budget, BudgetId[]> {
-        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef();
+    public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
+        const budgetCollection: AngularFirestoreCollection<Budget> = this.references.getBudgetCollectionRef(userId);
         const budgetObservable: Observable<BudgetId[]> = this.mapDocumentId.mapBudgetIds(budgetCollection);
 
         const result: CollectionResult<Budget, BudgetId[]> = {
@@ -53,67 +43,51 @@ export class FirestoreService {
         return result;
     }
 
-    public getCategories(group, budgetId) {
-        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId, group.groupId);
-        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection).first();
-
-        return categoryObservable.map(categories => {
-            return {
-                groupName: group.groupName,
-                groupId: group.groupId,
-                categories: categories
-            };
-        });
-    }
-
-    public getGroupsAndCategories(budgetId: any) {
-        const group: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
-        const category: Observable<Category[]> = this.references.getGeneralCategoryCollectionRef(budgetId).valueChanges();
-
+    public getBudgetGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
+        return {
+            collection: groupCollection,
+            observable: groupObservable
+        };
+    }
 
-        return Observable.merge(group, category.skip(1)).switchMap(res => {
+    public getBudgetCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
+        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId);
+        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
 
-            const groups: Observable<CategoryGroup[]> = this.references.getCategoryGroupCollectionRef(budgetId).valueChanges();
+        return {
+            collection: categoryCollection,
+            observable: categoryObservable
+        };
+    }
 
-            const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
-            const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
+    public getGroupsAndCategories(budgetId: string) {
+        const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
+        const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
-            return groups.flatMap(groups => {
-                if (groups.length == 0) {
-                    return Observable.of({
-                        groupCollection: groupCollection,
-                        categoryCollection: this.references.getGeneralCategoryCollectionRef(budgetId),
-                        data: groups
+        const categoryCollection = this.references.getCategoryCollectionRef(budgetId);
+        const categoriesObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection);
+
+        return Observable.combineLatest(groupObservable, categoriesObservable, (groups, categories) => {
+
+            const formattedData = groups.map((group: CategoryGroupId) => {
+
+                const getCategories = () => {
+                    return categories.filter((category: CategoryId) => {
+                        return category.groupId === group.groupId;
                     });
-                }
-                else {
-                    const getCategories = (group) => {
-                        const categoryCollection: AngularFirestoreCollection<Category> = this.references.getCategoryCollectionRef(budgetId, group.groupId);
-                        const categoryObservable: Observable<CategoryId[]> = this.mapDocumentId.mapCategoryIds(categoryCollection).first();
+                };
 
-                        return categoryObservable.map(categories => {
-                            return {
-                                groupName: group.groupName,
-                                groupId: group.groupId,
-                                categories: categories
-                            };
-                        });
-                    };
+                return { ...group, categories: getCategories() };
+            });
 
-                    return groupObservable.flatMap(groups => {
-                        return Observable.forkJoin(groups.map(group => getCategories(group))).map(groups => {
-                            return {
-                                groupCollection: groupCollection,
-                                categoryCollection: this.references.getGeneralCategoryCollectionRef(budgetId),
-                                data: groups
-                            }
-                        })
-                    });
-                }
-            })
+            return {
+                groupCollection: groupCollection,
+                categoryCollection: categoryCollection,
+                data: formattedData
+            };
         });
     }
 }

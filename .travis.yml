@@ -15,13 +15,13 @@ before_script:
 
 script:
     - if [ "$TRAVIS_BRANCH" = "dev" ]; then
-        ng build --prod --env=dev;
+        npm run build:dev;
       fi
     - if [ "$TRAVIS_BRANCH" = "staging" ]; then
-        ng build --prod --env=staging;
+        npm run build:staging;
       fi
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
-        ng build --prod --env=prod;
+        npm run build:prod;
       fi
     - cd functions && npm run build && cd ..;
 
