@@ -29,7 +29,6 @@ export class AuthService {
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {
-
         try {
             return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
         }
@@ -49,6 +48,9 @@ export class AuthService {
             else if (errorCode === 'auth/weak-password') {
                 errorMessage = 'Please choose a more secure password';
             }
+            else if (errorCode === 'auth/network-request-failed') {
+                errorMessage = 'Offline';
+            }
             else {
                 errorMessage = 'Error';
             }
@@ -60,7 +62,6 @@ export class AuthService {
     }
 
     public async signInWithEmailAndPassword(email: string, password: string) {
-
         try {
             return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
         }
@@ -80,6 +81,9 @@ export class AuthService {
             else if (errorCode === 'auth/wrong-password') {
                 errorMessage = 'Incorrect password';
             }
+            else if (errorCode === 'auth/network-request-failed') {
+                errorMessage = 'Offline';
+            }
             else {
                 errorMessage = 'Error';
             }
@@ -91,8 +95,11 @@ export class AuthService {
     }
 
     public async signOut() {
-        await this.afAuth.auth.signOut();
-        await this.router.navigate(['/']);
+        try {
+            await this.afAuth.auth.signOut();
+            await this.router.navigate(['/']);
+        } catch (error) {
+            console.error(error);
+        }
     }
-
 }

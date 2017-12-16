@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { Router } from '@angular/router';
 import { AuthNotificationService } from '../../services/auth-notification/auth-notification.service';
-import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-login-signup',
@@ -13,6 +12,9 @@ import { AngularFirestore } from 'angularfire2/firestore';
 })
 export class LoginSignupComponent implements OnInit {
 
+    public loading = false;
+    public showAuthError = false;
+
     public hidePassword = true;
     public createUserForm: FormGroup;
     public signInForm: FormGroup;
@@ -20,8 +22,7 @@ export class LoginSignupComponent implements OnInit {
     constructor(private auth: AuthService,
                 private formBuilder: FormBuilder,
                 private router: Router,
-                public authNotification: AuthNotificationService,
-                private afs: AngularFirestore) {
+                public authNotification: AuthNotificationService) {
     }
 
     ngOnInit() {
@@ -54,34 +55,52 @@ export class LoginSignupComponent implements OnInit {
     }
 
     public async signInWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
+
         try {
             const email = this.signInForm.value.email;
             const password = this.signInForm.value.password;
 
             const user = await this.auth.signInWithEmailAndPassword(email, password);
-            await this.routeToBudgetSelection(user);
+            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
             console.error(error);
         }
     }
 
     public async createUserWithEmailAndPassword() {
+        this.loading = true;
+        this.showAuthError = false;
+
         try {
             const email = this.createUserForm.value.email;
             const password = this.createUserForm.value.password;
 
             const user = await this.auth.createUserWithEmailAndPassword(email, password);
-            await this.routeToBudgetSelection(user);
+            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.showAuthError = true;
             console.error(error);
         }
     }
 
     private routeToBudgetSelection(user) {
-        return this.auth.user.first().subscribe(async user => {
-            await this.router.navigate(['budgets']);
+        this.auth.user.first(x => x != null).subscribe(async x => {
+            try {
+                console.log(x);
+                console.log('About to navigate');
+                console.log(localStorage);
+                await this.router.navigate(['budgets']);
+            }
+            catch (error) {
+                console.log(error);
+            }
         });
     }
 }

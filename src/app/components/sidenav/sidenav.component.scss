@@ -3,9 +3,14 @@
 }
 
 .sidenav {
+    background-color: #262F3D;
     width: 250px;
 }
 
 .active {
-    background-color: beige;
+    background-color: #3E4651;
+}
+
+mat-list-item * {
+    color: white;
 }

@@ -40,7 +40,7 @@ export class TransferCategoryDialogComponent implements OnInit {
         });
     }
 
-    public close() {
+    private close() {
         this.dialogRef.close();
     }
 

@@ -59,7 +59,7 @@ export class EditCategoryDialogComponent implements OnInit {
         }
     }
 
-    public close() {
+    private close() {
         this.dialogRef.close();
     }
 

@@ -1,6 +1,10 @@
-<mat-card class="cardContainer" *ngIf="authNotification.messageBroadcast | async as notification">
-    <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
-</mat-card>
+<mat-spinner *ngIf="loading"></mat-spinner>
+
+<ng-container *ngIf="authNotification.messageBroadcast | async as notification">
+    <mat-card class="cardContainer" *ngIf="showAuthError">
+        <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+    </mat-card>
+</ng-container>
 
 <mat-card class="cardContainer">
 
@@ -34,8 +38,11 @@
 
         <mat-form-field [floatPlaceholder]="'never'">
 
-            <input matInput formControlName="password" placeholder="Password" [type]="hidePassword ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <input matInput formControlName="password" placeholder="Password"
+                   [type]="hidePassword ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' :
+                'visibility'}}
+            </mat-icon>
 
             <mat-error *ngIf="createUserForm.get('password').hasError('required')">Password required</mat-error>
             <mat-error *ngIf="createUserForm.get('password').hasError('minlength')">Password must be at least 6

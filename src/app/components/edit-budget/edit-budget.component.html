@@ -1,4 +1,4 @@
-<div class="budget-container" *ngIf="groupsResult | async as groups; else loading">
+<div class="edit-budget-container" *ngIf="groupsResult | async as groups; else loading">
 
     <button mat-raised-button color="primary" (click)="openCreateCategoryGroupDialog(groups.groupCollection)">Add category group</button>
 

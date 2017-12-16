@@ -7,7 +7,7 @@ import { CategoryId } from '../../../../models/category.model';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { MatDialog } from '@angular/material';
-import { EditCategoryDialogComponent } from "../dialogs/category-dialog/category-dialog.component";
+import { EditCategoryDialogComponent } from '../dialogs/category-dialog/category-dialog.component';
 import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
 import { CategoryGroupId } from '../../../../models/category-group.model';
 import { TransferCategoryDialogComponent } from '../dialogs/transfer-category-dialog/transfer-category-dialog.component';
