@@ -11,7 +11,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
             email: event.data.email
         };
 
-        return await db.doc(`users/${user.userId}`).set(user, {merge: true});
+        await db.doc(`users/${user.userId}`).set(user, {merge: true});
     } catch (error) {
         throw error;
     }

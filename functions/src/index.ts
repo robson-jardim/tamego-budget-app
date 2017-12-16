@@ -5,5 +5,5 @@ admin.initializeApp(functions.config().firebase);
 import { expressApi } from './express-api/index';
 import * as firestoreTriggers from './firestore-triggers/index';
 
-export const api = functions.https.onRequest(expressApi);
+// export const api = functions.https.onRequest(expressApi);
 export const onUserCreate = firestoreTriggers.onUserCreate;
