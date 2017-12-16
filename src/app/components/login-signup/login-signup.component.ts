@@ -91,8 +91,9 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private routeToBudgetSelection(user) {
-        this.auth.user.first(x => x != null).subscribe(async () => {
+        this.auth.user.first(x => x != null).subscribe(async x => {
             try {
+                console.log(x);
                 console.log('About to navigate');
                 console.log(localStorage);
                 await this.router.navigate(['budgets']);
