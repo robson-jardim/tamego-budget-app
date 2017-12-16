@@ -29,7 +29,6 @@ export class AuthService {
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {
-
         try {
             return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
         }
@@ -60,7 +59,6 @@ export class AuthService {
     }
 
     public async signInWithEmailAndPassword(email: string, password: string) {
-
         try {
             return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
         }

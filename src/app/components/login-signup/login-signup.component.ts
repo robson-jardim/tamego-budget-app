@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { Router } from '@angular/router';
 import { AuthNotificationService } from '../../services/auth-notification/auth-notification.service';
-import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-login-signup',
@@ -23,8 +22,7 @@ export class LoginSignupComponent implements OnInit {
     constructor(private auth: AuthService,
                 private formBuilder: FormBuilder,
                 private router: Router,
-                public authNotification: AuthNotificationService,
-                private afs: AngularFirestore) {
+                public authNotification: AuthNotificationService) {
     }
 
     ngOnInit() {
@@ -65,7 +63,7 @@ export class LoginSignupComponent implements OnInit {
             const password = this.signInForm.value.password;
 
             const user = await this.auth.signInWithEmailAndPassword(email, password);
-            await this.routeToBudgetSelection(user);
+            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;
@@ -83,12 +81,7 @@ export class LoginSignupComponent implements OnInit {
             const password = this.createUserForm.value.password;
 
             const user = await this.auth.createUserWithEmailAndPassword(email, password);
-
-            const doc = this.afs.doc('users/' + user.uid);
-            doc.valueChanges().take(1).subscribe(async () => {
-                console.log('document added');
-                await this.routeToBudgetSelection(user);
-            });
+            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;
@@ -98,8 +91,15 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private routeToBudgetSelection(user) {
-        return this.auth.user.first().subscribe(async user => {
-            await this.router.navigate(['budgets']);
+        this.auth.user.first(x => x != null).subscribe(async () => {
+            try {
+                console.log('About to navigate');
+                console.log(localStorage);
+                await this.router.navigate(['budgets']);
+            }
+            catch (error) {
+                console.log(error);
+            }
         });
     }
 }
