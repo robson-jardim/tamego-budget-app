@@ -15,7 +15,12 @@ import 'rxjs/add/observable/combineLatest';
 export class FirestoreService {
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
-                private references: FirestoreReferenceService) {
+                private references: FirestoreReferenceService,
+                private afs: AngularFirestore) {
+    }
+
+    public createId(): string {
+        return this.afs.createId();
     }
 
     public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
@@ -80,7 +85,7 @@ export class FirestoreService {
                     });
                 };
 
-                return { ...group, categories: getCategories() };
+                return {...group, categories: getCategories()};
             });
 
             return {
