@@ -33,7 +33,7 @@ import { EditCategoryDialogComponent } from './components/dialogs/category-dialo
 import { GeneralNotificationsService } from './services/general-notifications/general-notifications.service';
 import { CategoryGroupDialogComponent } from './components/dialogs/category-group-dialog/category-group-dialog.component';
 import { TransferCategoryDialogComponent } from './components/dialogs/transfer-category-dialog/transfer-category-dialog.component';
-import { SignedInGuard } from "./guards/signed-in/signed-in.guard";
+import { SignedInGuard } from './guards/signed-in/signed-in.guard';
 
 @NgModule({
     declarations: [

@@ -23,7 +23,8 @@ export class AddBudgetDialogComponent implements OnInit {
 
     constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: any) {
+                @Inject(MAT_DIALOG_DATA) private data: any,
+                private firestore: FirestoreService) {
         this.budgetCollection = data.budgetCollection;
         this.userId = data.userId;
     }
@@ -50,8 +51,11 @@ export class AddBudgetDialogComponent implements OnInit {
         };
 
         try {
-            const newBudget = await this.budgetCollection.add(data);
-            this.onBudgetAdded(newBudget.id);
+            const budgetId = this.firestore.createId();
+
+            this.budgetCollection.doc(budgetId).set(data);
+            console.log('here');
+            this.onBudgetAdded(budgetId);
             this.saving = false;
         } catch (error) {
             console.error(error);
