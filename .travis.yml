@@ -23,7 +23,6 @@ script:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
         npm run build:prod;
       fi
-    - cd functions && npm run build && cd ..;
 
 after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
