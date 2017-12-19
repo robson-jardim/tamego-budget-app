@@ -17,6 +17,9 @@ export class FirestoreService {
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
                 private references: FirestoreReferenceService,
                 private afs: AngularFirestore) {
+        this.afs.persistenceEnabled$.subscribe(x => {
+            console.log('Persistence status', x);
+        });
     }
 
     public createId(): string {
