@@ -64,7 +64,7 @@ export class EditCategoryDialogComponent implements OnInit {
     }
 
     private updateCategory() {
-        if(this.categoryForm.pristine) {
+        if (this.categoryForm.pristine) {
             this.close();
             return;
         }
@@ -73,10 +73,8 @@ export class EditCategoryDialogComponent implements OnInit {
             categoryName: this.categoryForm.value.categoryName
         };
 
-        this.categoryCollection.doc(this.category.categoryId).update(data)
-            .then(() => {
-                this.notifications.sendUpdateNotification('category');
-            });
+        this.categoryCollection.doc(this.category.categoryId).update(data);
+        this.notifications.sendUpdateNotification('category');
 
         this.close();
     }
@@ -84,13 +82,12 @@ export class EditCategoryDialogComponent implements OnInit {
     private createCategory() {
         const data: Category = {
             groupId: this.group.groupId,
-            categoryName: this.categoryForm.value.categoryName
+            categoryName: this.categoryForm.value.categoryName,
+            position: 0
         };
 
-        this.categoryCollection.add(data).then(() => {
-            this.notifications.sendCreateNotification('category');
-        });
-
+        this.categoryCollection.add(data);
+        this.notifications.sendCreateNotification('category');
         this.close();
     }
 }

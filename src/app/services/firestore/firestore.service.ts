@@ -7,6 +7,7 @@ import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-accoun
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { Category, CategoryId } from '../../../../models/category.model';
 import { Budget, BudgetId } from '../../../../models/budget.model';
+import * as firebase from "firebase";
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -24,6 +25,10 @@ export class FirestoreService {
 
     public createId(): string {
         return this.afs.createId();
+    }
+
+    public getTimestamp() {
+        return new Date();
     }
 
     public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
@@ -71,7 +76,7 @@ export class FirestoreService {
         };
     }
 
-    public getGroupsAndCategories(budgetId: string) {
+    public getEditBudget(budgetId: string) {
         const groupCollection: AngularFirestoreCollection<CategoryGroup> = this.references.getCategoryGroupCollectionRef(budgetId);
         const groupObservable: Observable<CategoryGroupId[]> = this.mapDocumentId.mapCategoryGroupIds(groupCollection);
 
@@ -94,7 +99,7 @@ export class FirestoreService {
             return {
                 groupCollection: groupCollection,
                 categoryCollection: categoryCollection,
-                data: formattedData
+                groups: formattedData
             };
         });
     }

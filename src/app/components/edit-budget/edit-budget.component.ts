@@ -24,7 +24,7 @@ export class EditBudgetComponent implements OnInit {
     public groupForm: FormGroup;
 
     public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
-    public groupsResult;
+    public budget;
 
     selectedRowIndex: number = -1;
 
@@ -39,14 +39,13 @@ export class EditBudgetComponent implements OnInit {
 
         this.getBudgetId().subscribe(budgetId => {
 
-            this.groupsResult = this.firestore.getGroupsAndCategories(budgetId).map(groups => {
+            this.budget = this.firestore.getEditBudget(budgetId).map(budget => {
 
-                groups.data = groups.data.map((group: any) => {
-                    const dataSource = new CategoryDataSource(group.categories);
-                    return {...group, dataSource};
+                const dataSources = budget.groups.map((group: any) => {
+                    return new CategoryDataSource(group.categories);
                 });
 
-                return groups;
+                return {...budget, dataSources};
             });
         });
 

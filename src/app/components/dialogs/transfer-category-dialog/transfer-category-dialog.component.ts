@@ -50,7 +50,7 @@ export class TransferCategoryDialogComponent implements OnInit {
 
         const transferId = this.transferForm.value.transferTo;
 
-        if(this.category.groupId === transferId) {
+        if (this.category.groupId === transferId) {
             this.close();
             return;
         }

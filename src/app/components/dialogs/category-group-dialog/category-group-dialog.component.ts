@@ -65,19 +65,18 @@ export class CategoryGroupDialogComponent implements OnInit {
 
     private addCategoryGroup() {
         const data: CategoryGroup = {
-            groupName: this.groupForm.value.groupName
+            groupName: this.groupForm.value.groupName,
+            position: 0
         };
 
-        this.groupCollection.add(data).then(() => {
-            this.notifications.sendCreateNotification('Category group');
-        });
-
+        this.groupCollection.add(data);
+        this.notifications.sendCreateNotification('Category group');
         this.close();
     }
 
     private editCategoryGroup() {
 
-        if(this.groupForm.pristine) {
+        if (this.groupForm.pristine) {
             this.close();
             return;
         }

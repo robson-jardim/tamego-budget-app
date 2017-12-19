@@ -1,40 +1,49 @@
-<div class="edit-budget-container" *ngIf="groupsResult | async as groups; else loading">
+<div class="edit-budget-container" *ngIf="budget | async as budget; else loading">
 
-    <button mat-raised-button color="primary" (click)="openCreateCategoryGroupDialog(groups.groupCollection)">Add category group</button>
+    <button mat-raised-button color="primary" (click)="openCreateCategoryGroupDialog(budget.groupCollection)">Add
+        category group
+    </button>
 
     <ng-container>
 
-            <mat-card *ngFor="let group of groups.data; trackBy: trackGroup" class="budgetCard">
+        <mat-card *ngFor="let group of budget.groups; trackBy: trackGroup; let ix=index" class="budgetCard">
 
-                <mat-card-header class="budget-card-grey" (click)="openUpdateCategoryGroupDialog(group, groups.groupCollection)">
-                    <h1>{{group.groupName}}</h1>
+            <mat-card-header class="budget-card-grey"
+                             (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection)">
+                <h1>{{group.groupName}}</h1>
 
-                    <span class="action-spacer"></span>
+                <span class="action-spacer"></span>
 
-                    <div>
-                        <button mat-raised-button color="primary" (click)="openCreateCategoryDialog(group, groups.categoryCollection); $event.stopPropagation()">Add category</button>
+                <div>
+                    <button mat-raised-button color="primary"
+                            (click)="openCreateCategoryDialog(group, budget.categoryCollection); $event.stopPropagation()">
+                        Add category
+                    </button>
 
-                        <button mat-icon-button (click)="openUpdateCategoryGroupDialog(group, groups.groupCollection); $event.stopPropagation()">
-                            <mat-icon>create</mat-icon>
+                    <button mat-icon-button
+                            (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection); $event.stopPropagation()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+
+                    <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #options>
+                        <button mat-menu-item (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection)">
+                            Edit
                         </button>
+                        <button mat-menu-item>Delete</button>
+                        <button mat-menu-item>Order categories</button>
+                        <button mat-menu-item>Hide</button>
+                    </mat-menu>
+                </div>
 
-                        <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #options>
-                            <button mat-menu-item (click)="openUpdateCategoryGroupDialog(group, groups.groupCollection)">Edit</button>
-                            <button mat-menu-item>Delete</button>
-                            <button mat-menu-item>Order categories</button>
-                            <button mat-menu-item>Hide</button>
-                        </mat-menu>
-                    </div>
-
-                </mat-card-header>
+            </mat-card-header>
 
 
             <mat-card-content>
 
-                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table [dataSource]="group.dataSource"
+                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table [dataSource]="budget.dataSources[ix]"
                            [trackBy]="trackCategories">
 
                     <mat-header-row *matHeaderRowDef="categoryColumns" class="budget-card-grey"></mat-header-row>
@@ -43,21 +52,21 @@
                              [ngClass]="{'highlight': selectedRowIndex == row.categoryId}"
                              (mouseenter)="highlight(row)"
                              (mouseleave)="unhighlight(row)"
-                             (click)="openUpdateCategoryDialog(row, groups.categoryCollection)">
+                             (click)="openUpdateCategoryDialog(row, budget.categoryCollection)">
                     </mat-row>
 
                     <ng-container matColumnDef="categoryName">
-                        <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.categoryName}}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="categoryId">
-                        <mat-header-cell *matHeaderCellDef> Category ID </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Category ID</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.categoryId}}</mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="groupId">
-                        <mat-header-cell *matHeaderCellDef> Group ID </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Group ID</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.groupId}}</mat-cell>
                     </ng-container>
 
@@ -65,7 +74,8 @@
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element">
 
-                            <button mat-icon-button (click)="openUpdateCategoryDialog(element, groups.categoryCollection); $event.stopPropagation()">
+                            <button mat-icon-button
+                                    (click)="openUpdateCategoryDialog(element, budget.categoryCollection); $event.stopPropagation()">
                                 <mat-icon>create</mat-icon>
                             </button>
 
@@ -73,9 +83,12 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #options>
-                                <button mat-menu-item (click)="openUpdateCategoryDialog(element, groups.categoryCollection)">Edit</button>
+                                <button mat-menu-item
+                                        (click)="openUpdateCategoryDialog(element, budget.categoryCollection)">Edit
+                                </button>
                                 <button mat-menu-item>Delete</button>
-                                <button mat-menu-item (click)="openCategoryTransferDialog(element, groups)">Transfer</button>
+                                <button mat-menu-item (click)="openCategoryTransferDialog(element, budget)">Transfer
+                                </button>
                                 <button mat-menu-item>Hide</button>
                             </mat-menu>
 
