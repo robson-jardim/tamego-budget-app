@@ -9,8 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { MatDialog } from '@angular/material';
 import { EditCategoryDialogComponent } from '../dialogs/category-dialog/category-dialog.component';
 import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
-import { CategoryGroupId } from '../../../../models/category-group.model';
+import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { TransferCategoryDialogComponent } from '../dialogs/transfer-category-dialog/transfer-category-dialog.component';
+import { AngularFirestoreCollection } from "angularfire2/firestore";
 
 @Component({
     selector: 'app-budget',
@@ -26,7 +27,8 @@ export class EditBudgetComponent implements OnInit {
     public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
     public budget;
 
-    selectedRowIndex: number = -1;
+    private editDate: Date;
+    selectedRowIndex = -1;
 
     constructor(private firestore: FirestoreService,
                 private formBuilder: FormBuilder,
@@ -35,17 +37,17 @@ export class EditBudgetComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.setDate();
 
         this.getBudgetId().subscribe(budgetId => {
 
-            this.budget = this.firestore.getEditBudget(budgetId).map(budget => {
+            this.budget = this.firestore.getEditBudget(budgetId).map(data => {
 
-                const dataSources = budget.groups.map((group: any) => {
+                const dataSources = data.groups.map(group => {
                     return new CategoryDataSource(group.categories);
                 });
 
-                return {...budget, dataSources};
+                return {...data, dataSources};
             });
         });
 
@@ -87,50 +89,56 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    public openCreateCategoryGroupDialog(groupCollection) {
+    public createGroupDialog(budget) {
+
+        const nextGroupPosition = budget.groups.length;
 
         this.dialog.open(CategoryGroupDialogComponent, {
             data: {
-                groupCollection: groupCollection,
+                groupCollection: budget.collections.groups,
+                nextGroupPosition: nextGroupPosition,
                 mode: 'CREATE'
             }
-        })
+        });
     }
 
-    public openUpdateCategoryGroupDialog(group: CategoryGroupId, groupCollection) {
+    public updateGroupDialog(budget, group: CategoryGroupId) {
         this.dialog.open(CategoryGroupDialogComponent, {
             data: {
-                groupCollection: groupCollection,
+                groupCollection: budget.collections.groups,
                 group: group,
-                mode: 'UPDATE'
-            }
-        })
-    }
-
-    public openUpdateCategoryDialog(category: CategoryId, categoryCollection) {
-        this.dialog.open(EditCategoryDialogComponent, {
-            data: {
-                category: category,
-                categoryCollection: categoryCollection,
                 mode: 'UPDATE'
             }
         });
     }
 
-    public openCreateCategoryDialog(group: CategoryGroupId, categoryCollection) {
+    public updateCategoryDialog(budget, category: CategoryId) {
         this.dialog.open(EditCategoryDialogComponent, {
             data: {
-                categoryCollection: categoryCollection,
+                category: category,
+                categoryCollection: budget.collections.categories,
+                mode: 'UPDATE'
+            }
+        });
+    }
+
+    public createCategoryDialog(budget, group: CategoryGroupId, groupIndex) {
+
+        const nextCategoryPosition = budget.groups[groupIndex].categories.length;
+
+        this.dialog.open(EditCategoryDialogComponent, {
+            data: {
+                categoryCollection: budget.collections.categories,
                 group: group,
+                nextCategoryPosition: nextCategoryPosition,
                 mode: 'CREATE',
             }
         });
     }
 
-    public openCategoryTransferDialog(category: CategoryId) {
+    public transferCategoryDialog(category: CategoryId) {
 
         this.getBudgetId().subscribe(budgetId => {
-
             this.dialog.open(TransferCategoryDialogComponent, {
                 data: {
                     category: category,
@@ -138,8 +146,34 @@ export class EditBudgetComponent implements OnInit {
                 }
             });
 
-        })
+        });
     }
+
+    private setDate() {
+        const temp = new Date();
+        const currentMonth = temp.getMonth();
+        const currentYear = temp.getFullYear();
+        this.editDate = new Date(currentYear, currentMonth, 1);
+    }
+
+    public get editMonth() {
+        return this.editDate.toLocaleString('en-us', {month: 'long'});
+    }
+
+    public get editYear() {
+        return this.editDate.getFullYear();
+    }
+
+    public nextMonth() {
+        const currentMonth = this.editDate.getMonth();
+        this.editDate.setMonth(currentMonth + 1);
+    }
+
+    public previousMonth() {
+        const currentMonth = this.editDate.getMonth();
+        this.editDate.setMonth(currentMonth - 1);
+    }
+
 }
 
 export class CategoryDataSource extends DataSource<any> {
@@ -149,7 +183,6 @@ export class CategoryDataSource extends DataSource<any> {
     constructor(categories: CategoryId[]) {
         super();
         this.categories = categories;
-
     }
 
     connect(): Observable<CategoryId[]> {

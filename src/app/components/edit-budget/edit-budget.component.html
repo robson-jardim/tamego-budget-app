@@ -1,27 +1,36 @@
 <div class="edit-budget-container" *ngIf="budget | async as budget; else loading">
 
-    <button mat-raised-button color="primary" (click)="openCreateCategoryGroupDialog(budget.groupCollection)">Add
+    <h1 class="mat-headline">{{editMonth}} {{editYear}}</h1>
+
+    <button mat-raised-button color="primary" (click)="createGroupDialog(budget)">Add
         category group
+    </button>
+
+    <button mat-button (click)="previousMonth()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button mat-button (click)="nextMonth()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
 
     <ng-container>
 
-        <mat-card *ngFor="let group of budget.groups; trackBy: trackGroup; let ix=index" class="budgetCard">
+        <mat-card *ngFor="let group of budget.groups; trackBy: trackGroup; let groupIndex=index" class="budgetCard">
 
             <mat-card-header class="budget-card-grey"
-                             (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection)">
-                <h1>{{group.groupName}}</h1>
+                             (click)="updateGroupDialog(budget,group)">
+                <h1 class="mat-headline">{{group.groupName}}</h1>
 
                 <span class="action-spacer"></span>
 
                 <div>
                     <button mat-raised-button color="primary"
-                            (click)="openCreateCategoryDialog(group, budget.categoryCollection); $event.stopPropagation()">
+                            (click)="createCategoryDialog(budget, group, groupIndex); $event.stopPropagation()">
                         Add category
                     </button>
 
                     <button mat-icon-button
-                            (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection); $event.stopPropagation()">
+                            (click)="updateGroupDialog(budget,group); $event.stopPropagation()">
                         <mat-icon>create</mat-icon>
                     </button>
 
@@ -29,7 +38,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #options>
-                        <button mat-menu-item (click)="openUpdateCategoryGroupDialog(group, budget.groupCollection)">
+                        <button mat-menu-item (click)="updateGroupDialog(budget,group)">
                             Edit
                         </button>
                         <button mat-menu-item>Delete</button>
@@ -43,7 +52,8 @@
 
             <mat-card-content>
 
-                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table [dataSource]="budget.dataSources[ix]"
+                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table
+                           [dataSource]="budget.dataSources[groupIndex]"
                            [trackBy]="trackCategories">
 
                     <mat-header-row *matHeaderRowDef="categoryColumns" class="budget-card-grey"></mat-header-row>
@@ -52,7 +62,7 @@
                              [ngClass]="{'highlight': selectedRowIndex == row.categoryId}"
                              (mouseenter)="highlight(row)"
                              (mouseleave)="unhighlight(row)"
-                             (click)="openUpdateCategoryDialog(row, budget.categoryCollection)">
+                             (click)="updateCategoryDialog(budget,row)">
                     </mat-row>
 
                     <ng-container matColumnDef="categoryName">
@@ -75,7 +85,7 @@
                         <mat-cell *matCellDef="let element">
 
                             <button mat-icon-button
-                                    (click)="openUpdateCategoryDialog(element, budget.categoryCollection); $event.stopPropagation()">
+                                    (click)="updateCategoryDialog(budget,element); $event.stopPropagation()">
                                 <mat-icon>create</mat-icon>
                             </button>
 
@@ -84,10 +94,10 @@
                             </button>
                             <mat-menu #options>
                                 <button mat-menu-item
-                                        (click)="openUpdateCategoryDialog(element, budget.categoryCollection)">Edit
+                                        (click)="updateCategoryDialog(budget,element)">Edit
                                 </button>
                                 <button mat-menu-item>Delete</button>
-                                <button mat-menu-item (click)="openCategoryTransferDialog(element, budget)">Transfer
+                                <button mat-menu-item (click)="transferCategoryDialog(element, budget)">Transfer
                                 </button>
                                 <button mat-menu-item>Hide</button>
                             </mat-menu>

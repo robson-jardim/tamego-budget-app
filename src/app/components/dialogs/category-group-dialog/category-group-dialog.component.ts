@@ -15,9 +15,12 @@ export class CategoryGroupDialogComponent implements OnInit {
 
     public groupForm: FormGroup;
 
+    public saving = false;
+
     public readonly groupCollection: AngularFirestoreCollection<CategoryGroup>;
     public readonly group: CategoryGroupId;
     public readonly mode: string;
+    public readonly nextGroupPosition: number;
 
     constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: any,
@@ -25,6 +28,7 @@ export class CategoryGroupDialogComponent implements OnInit {
                 private notifications: GeneralNotificationsService) {
         this.groupCollection = this.data.groupCollection;
         this.group = this.data.group;
+        this.nextGroupPosition = this.data.nextGroupPosition;
         this.mode = this.data.mode;
     }
 
@@ -48,6 +52,7 @@ export class CategoryGroupDialogComponent implements OnInit {
     }
 
     public saveChanges() {
+        this.saving = true;
 
         if (this.mode === 'UPDATE') {
             this.editCategoryGroup();
@@ -66,7 +71,7 @@ export class CategoryGroupDialogComponent implements OnInit {
     private addCategoryGroup() {
         const data: CategoryGroup = {
             groupName: this.groupForm.value.groupName,
-            position: 0
+            position: this.nextGroupPosition
         };
 
         this.groupCollection.add(data);
@@ -85,10 +90,8 @@ export class CategoryGroupDialogComponent implements OnInit {
             groupName: this.groupForm.value.groupName
         };
 
-        this.groupCollection.doc(this.group.groupId).update(data).then(() => {
-            this.notifications.sendUpdateNotification('Category group');
-        });
-
+        this.groupCollection.doc(this.group.groupId).update(data);
+        this.notifications.sendUpdateNotification('Category group');
         this.close();
     }
 }

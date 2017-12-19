@@ -1,8 +1,8 @@
 {
-  "projects": {
-    "default": "budget-app-dev",
-    "dev": "budget-app-dev",
-    "staging": "budget-app-staging-1",
-    "prod": "budget-app-prod"
-  }
+    "projects": {
+        "default": "budget-app-dev",
+        "dev": "budget-app-dev",
+        "staging": "budget-app-staging-1",
+        "prod": "budget-app-prod"
+    }
 }

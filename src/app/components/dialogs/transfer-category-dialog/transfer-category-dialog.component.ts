@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class TransferCategoryDialogComponent implements OnInit {
 
     public transferForm: FormGroup;
+    public saving = false;
 
     public category: CategoryId;
     public budgetId: string;
@@ -32,8 +33,8 @@ export class TransferCategoryDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.groupResult = this.firestore.getBudgetGroups(this.budgetId);
-        this.categoryResult = this.firestore.getBudgetCategories(this.budgetId);
+        this.groupResult = this.firestore.getGroups(this.budgetId);
+        this.categoryResult = this.firestore.getCategories(this.budgetId);
 
         this.transferForm = this.formBuilder.group({
             transferTo: [null, Validators.required]
@@ -45,8 +46,7 @@ export class TransferCategoryDialogComponent implements OnInit {
     }
 
     public transferCategory() {
-
-        //TODO - Make into API endpoint for better data integrity
+        this.saving = true;
 
         const transferId = this.transferForm.value.transferTo;
 

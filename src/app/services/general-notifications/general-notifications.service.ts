@@ -12,7 +12,7 @@ export class GeneralNotificationsService {
 
     private notificationSource = new Subject<Notification>();
     public broadcast = this.notificationSource.asObservable();
-    private readonly messageDelay = 300;
+    private readonly messageDelay = 0;
 
     private readonly defaultDuration = 2000;
 

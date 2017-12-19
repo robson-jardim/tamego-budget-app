@@ -17,6 +17,6 @@
 
     <mat-dialog-actions>
         <button mat-button type="button" [mat-dialog-close]>Cancel</button>
-        <button mat-raised-button color="primary" type="submit">Transfer</button>
+        <button mat-raised-button color="primary" [disabled]="saving" type="submit">Transfer</button>
     </mat-dialog-actions>
 </form>
