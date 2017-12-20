@@ -26,7 +26,7 @@ export class EditBudgetComponent implements OnInit {
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
 
-    public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
+    public categoryColumns = ['categoryName', 'budgeted', 'budgetedTotal', 'offset', 'offsetTotal', 'activity', 'exists', 'actions'];
     public budget;
 
     private viewDate: Date;
@@ -58,37 +58,61 @@ export class EditBudgetComponent implements OnInit {
 
         this.dataSources = data.groups.map(group => {
 
-            const formattedGroup = group.categories.map(category => {
+            const formattedTableData = group.categories.map(category => {
 
-                const isOnOrBeforeViewDate = (value: CategoryValueId) => {
+                const isOnOrBeforeViewDate = (value) => {
                     return value.time <= this.viewDate;
+                };
+
+                const isOnViewDate = (value) => {
+                    return value.time <= this.viewDate && value.time >= this.viewDate;
                 };
 
                 const sum = (prev, next) => {
                     return prev + next;
                 };
 
-                const budgted = (value: CategoryValueId) => {
+                const budgted = (value) => {
                     return value.budgeted;
                 };
 
-                const offset = (value: CategoryValueId) => {
+                const offset = (value) => {
                     return value.offset;
+                };
+
+                const first = (element) => {
+                    return !!element;
                 };
 
                 const offsetTotal = category.values.filter(isOnOrBeforeViewDate).map(offset).reduce(sum, 0);
                 const budgetedTotal = category.values.filter(isOnOrBeforeViewDate).map(budgted).reduce(sum, 0);
-                const docExists = category.values.map(value => value.time.toISOString()).includes(this.viewDate.toISOString());
+
+                let desiredValue = category.values.filter(isOnViewDate).find(first);
+
+                if (!desiredValue) {
+                    desiredValue = {
+                        categoryId: category.categoryId,
+                        budgeted: 0,
+                        offset: 0,
+                        time: this.viewDate,
+                        exists: false
+                    };
+                }
+                else {
+                    desiredValue.exists = true;
+                }
 
                 return {
-                    ...category,
                     offsetTotal,
                     budgetedTotal,
-                    docExists
+                    desiredValue: {
+                        ...desiredValue,
+                    },
+                    ...category
                 };
             });
 
-            return new CategoryDataSource(formattedGroup);
+            return new CategoryDataSource(formattedTableData);
         });
     }
 
@@ -216,15 +240,16 @@ export class EditBudgetComponent implements OnInit {
 
 export class CategoryDataSource extends DataSource<any> {
 
-    private categories: CategoryId[];
+    private data;
 
-    constructor(categories: CategoryId[]) {
+    constructor(data) {
         super();
-        this.categories = categories;
+        console.log(data);
+        this.data = data;
     }
 
-    connect(): Observable<CategoryId[]> {
-        return Observable.of(this.categories);
+    connect(): Observable<any[]> {
+        return Observable.of(this.data);
     }
 
     disconnect() {
