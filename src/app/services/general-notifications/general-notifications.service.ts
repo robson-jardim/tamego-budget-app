@@ -12,6 +12,7 @@ export class GeneralNotificationsService {
 
     private notificationSource = new Subject<Notification>();
     public broadcast = this.notificationSource.asObservable();
+    private readonly messageDelay = 0;
 
     private readonly defaultDuration = 2000;
 
@@ -27,7 +28,9 @@ export class GeneralNotificationsService {
             duration: this.defaultDuration
         };
 
-        this.notificationSource.next(notification);
+        setTimeout(() => {
+            this.notificationSource.next(notification);
+        }, this.messageDelay);
     }
 
     public sendCreateNotification(entity: string) {
@@ -39,7 +42,9 @@ export class GeneralNotificationsService {
             duration: this.defaultDuration
         };
 
-        this.notificationSource.next(notification);
+        setTimeout(() => {
+            this.notificationSource.next(notification);
+        }, this.messageDelay);
     }
 
     public sendDeleteNotification(entity: string) {
@@ -51,7 +56,9 @@ export class GeneralNotificationsService {
             duration: this.defaultDuration
         };
 
-        this.notificationSource.next(notification);
+        setTimeout(() => {
+            this.notificationSource.next(notification);
+        }, this.messageDelay);
     }
 
     private capitalizeFirstLetter(s: string) {

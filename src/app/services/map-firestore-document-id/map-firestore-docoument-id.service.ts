@@ -5,6 +5,7 @@ import { CategoryGroup, CategoryGroupId } from '../../../../models/category-grou
 import { Category, CategoryId } from '../../../../models/category.model';
 import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
 import { BudgetId, Budget } from '../../../../models/budget.model';
+import { CategoryValue, CategoryValueId } from "../../../../models/category-value.model";
 
 @Injectable()
 export class MapFirestoreDocumentIdService {
@@ -58,5 +59,15 @@ export class MapFirestoreDocumentIdService {
 
     private getDocId(action: DocumentChangeAction) {
         return action.payload.doc.id;
+    }
+
+    public mapCategoryValueIds(categoryValuesCollection: AngularFirestoreCollection<CategoryValue>): Observable<CategoryValueId[]> {
+        return categoryValuesCollection.snapshotChanges().map(actions => {
+            return actions.map(a => {
+                const value: CategoryValueId = this.getDocData<CategoryValueId>(a);
+                value.categoryValueId = this.getDocId(a);
+                return value;
+            });
+        });
     }
 }

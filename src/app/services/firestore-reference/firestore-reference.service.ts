@@ -1,3 +1,4 @@
+///<reference path="../../../../models/category-value.model.ts"/>
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 
@@ -5,6 +6,7 @@ import { CategoryGroup } from '../../../../models/category-group.model';
 import { Category } from '../../../../models/category.model';
 import { Budget } from '../../../../models/budget.model';
 import { BudgetAccount } from '../../../../models/budget-account.model';
+import { CategoryValue } from '../../../../models/category-value.model';
 
 @Injectable()
 export class FirestoreReferenceService {
@@ -17,19 +19,27 @@ export class FirestoreReferenceService {
             ref.where('userId', '==', userId));
     }
 
-    public getBudgetAccountCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {
+    public getAccountCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {
         return this.afs.collection<BudgetAccount>(`budgets/${budgetId}/accounts`);
     }
 
-    public getCategoryGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
-        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`);
+    public getGroupCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {
+        return this.afs.collection<CategoryGroup>(`budgets/${budgetId}/categoryGroups`, ref =>
+            ref.orderBy('position', 'asc')
+        );
     }
 
     public getCategoryCollectionRef(budgetId: string): AngularFirestoreCollection<Category> {
-        return this.afs.collection<Category>(`budgets/${budgetId}/categories`);
+        return this.afs.collection<Category>(`budgets/${budgetId}/categories`, ref =>
+            ref.orderBy('position', 'asc')
+        );
     }
 
-
+    public getCategoryValuesCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryValue> {
+        return this.afs.collection<CategoryValue>(`budgets/${budgetId}/categoryValues`, ref =>
+                ref.orderBy('time', 'asc')
+        );
+    }
 }
 
 

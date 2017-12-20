@@ -9,8 +9,11 @@ import { Observable } from 'rxjs/Observable';
 import { MatDialog } from '@angular/material';
 import { EditCategoryDialogComponent } from '../dialogs/category-dialog/category-dialog.component';
 import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
-import { CategoryGroupId } from '../../../../models/category-group.model';
+import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { TransferCategoryDialogComponent } from '../dialogs/transfer-category-dialog/transfer-category-dialog.component';
+import { AngularFirestoreCollection } from 'angularfire2/firestore';
+import 'rxjs/add/operator/do';
+import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
 
 @Component({
     selector: 'app-budget',
@@ -23,10 +26,13 @@ export class EditBudgetComponent implements OnInit {
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
 
-    public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
-    public groupsResult;
+    public categoryColumns = ['categoryName', 'budgeted', 'budgetedTotal', 'offset', 'offsetTotal', 'activity', 'exists', 'actions'];
+    public budget;
 
-    selectedRowIndex: number = -1;
+    private viewDate: Date;
+    public dataSources: CategoryDataSource[];
+
+    selectedRowIndex = -1;
 
     constructor(private firestore: FirestoreService,
                 private formBuilder: FormBuilder,
@@ -35,23 +41,79 @@ export class EditBudgetComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.setDate();
 
         this.getBudgetId().subscribe(budgetId => {
 
-            this.groupsResult = this.firestore.getGroupsAndCategories(budgetId).map(groups => {
-
-                groups.data = groups.data.map((group: any) => {
-                    const dataSource = new CategoryDataSource(group.categories);
-                    return {...group, dataSource};
-                });
-
-                return groups;
+            this.budget = this.firestore.getEditBudget(budgetId).do(data => {
+                this.buildDataSources(data);
             });
         });
 
         this.buildCategoryGroupForm();
         this.buildCategoryForm();
+    }
+
+    public buildDataSources(data) {
+
+        this.dataSources = data.groups.map(group => {
+
+            const formattedTableData = group.categories.map(category => {
+
+                const isOnOrBeforeViewDate = (value) => {
+                    return value.time <= this.viewDate;
+                };
+
+                const isOnViewDate = (value) => {
+                    return value.time <= this.viewDate && value.time >= this.viewDate;
+                };
+
+                const sum = (prev, next) => {
+                    return prev + next;
+                };
+
+                const budgted = (value) => {
+                    return value.budgeted;
+                };
+
+                const offset = (value) => {
+                    return value.offset;
+                };
+
+                const first = (element) => {
+                    return !!element;
+                };
+
+                const offsetTotal = category.values.filter(isOnOrBeforeViewDate).map(offset).reduce(sum, 0);
+                const budgetedTotal = category.values.filter(isOnOrBeforeViewDate).map(budgted).reduce(sum, 0);
+
+                let desiredValue = category.values.filter(isOnViewDate).find(first);
+
+                if (!desiredValue) {
+                    desiredValue = {
+                        categoryId: category.categoryId,
+                        budgeted: 0,
+                        offset: 0,
+                        time: this.viewDate,
+                        exists: false
+                    };
+                }
+                else {
+                    desiredValue.exists = true;
+                }
+
+                return {
+                    offsetTotal,
+                    budgetedTotal,
+                    desiredValue: {
+                        ...desiredValue,
+                    },
+                    ...category
+                };
+            });
+
+            return new CategoryDataSource(formattedTableData);
+        });
     }
 
     public getBudgetId(): Observable<string> {
@@ -88,50 +150,56 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    public openCreateCategoryGroupDialog(groupCollection) {
+    public createGroupDialog(budget) {
+
+        const nextGroupPosition = budget.groups.length;
 
         this.dialog.open(CategoryGroupDialogComponent, {
             data: {
-                groupCollection: groupCollection,
+                groupCollection: budget.collections.groups,
+                nextGroupPosition: nextGroupPosition,
                 mode: 'CREATE'
             }
-        })
+        });
     }
 
-    public openUpdateCategoryGroupDialog(group: CategoryGroupId, groupCollection) {
+    public updateGroupDialog(budget, group: CategoryGroupId) {
         this.dialog.open(CategoryGroupDialogComponent, {
             data: {
-                groupCollection: groupCollection,
+                groupCollection: budget.collections.groups,
                 group: group,
-                mode: 'UPDATE'
-            }
-        })
-    }
-
-    public openUpdateCategoryDialog(category: CategoryId, categoryCollection) {
-        this.dialog.open(EditCategoryDialogComponent, {
-            data: {
-                category: category,
-                categoryCollection: categoryCollection,
                 mode: 'UPDATE'
             }
         });
     }
 
-    public openCreateCategoryDialog(group: CategoryGroupId, categoryCollection) {
+    public updateCategoryDialog(budget, category: CategoryId) {
         this.dialog.open(EditCategoryDialogComponent, {
             data: {
-                categoryCollection: categoryCollection,
+                category: category,
+                categoryCollection: budget.collections.categories,
+                mode: 'UPDATE'
+            }
+        });
+    }
+
+    public createCategoryDialog(budget, group: CategoryGroupId, groupIndex) {
+
+        const nextCategoryPosition = budget.groups[groupIndex].categories.length;
+
+        this.dialog.open(EditCategoryDialogComponent, {
+            data: {
+                categoryCollection: budget.collections.categories,
                 group: group,
+                nextCategoryPosition: nextCategoryPosition,
                 mode: 'CREATE',
             }
         });
     }
 
-    public openCategoryTransferDialog(category: CategoryId) {
+    public transferCategoryDialog(category: CategoryId) {
 
         this.getBudgetId().subscribe(budgetId => {
-
             this.dialog.open(TransferCategoryDialogComponent, {
                 data: {
                     category: category,
@@ -139,22 +207,49 @@ export class EditBudgetComponent implements OnInit {
                 }
             });
 
-        })
+        });
     }
+
+    private setDate() {
+        const temp = new Date();
+        // getMonth() is user over getUTCMonth() because the following should be based on local time
+        const currentMonth = temp.getMonth();
+        const currentYear = temp.getFullYear();
+        this.viewDate = new Date(currentYear, currentMonth, 1);
+    }
+
+    public get viewMonth() {
+        return this.viewDate.toLocaleString('en-us', {month: 'long'});
+    }
+
+    public get viewYear() {
+        return this.viewDate.getFullYear();
+    }
+
+    public nextMonth() {
+        const currentMonth = this.viewDate.getMonth();
+        this.viewDate.setMonth(currentMonth + 1);
+    }
+
+    public previousMonth() {
+        const currentMonth = this.viewDate.getMonth();
+        this.viewDate.setMonth(currentMonth - 1);
+    }
+
 }
 
 export class CategoryDataSource extends DataSource<any> {
 
-    private categories: CategoryId[];
+    private data;
 
-    constructor(categories: CategoryId[]) {
+    constructor(data) {
         super();
-        this.categories = categories;
-
+        console.log(data);
+        this.data = data;
     }
 
-    connect(): Observable<CategoryId[]> {
-        return Observable.of(this.categories);
+    connect(): Observable<any[]> {
+        return Observable.of(this.data);
     }
 
     disconnect() {
