@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { GeneralNotificationsService, Notification } from '../../services/general-notifications/general-notifications.service';
+import {
+    GeneralNotificationsService,
+    Notification
+} from '../../services/general-notifications/general-notifications.service';
 
 @Component({
     selector: 'app-root',

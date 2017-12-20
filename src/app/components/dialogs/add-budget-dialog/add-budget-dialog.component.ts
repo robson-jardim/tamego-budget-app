@@ -35,8 +35,7 @@ export class AddBudgetDialogComponent implements OnInit {
 
     private buildBudgetForm(): void {
         this.budgetForm = this.formBuilder.group({
-            budgetName: ['', Validators.required],
-            currencyType: ['', Validators.required]
+            budgetName: ['', Validators.required]
         });
     }
 
@@ -47,19 +46,12 @@ export class AddBudgetDialogComponent implements OnInit {
         const data: Budget = {
             userId: this.data.userId,
             budgetName: this.budgetForm.value.budgetName,
-            currencyType: this.budgetForm.value.currencyType
+            createdAt: FirestoreService.currentTimestamp
         };
 
-        try {
-            const budgetId = this.firestore.createId();
-
-            this.budgetCollection.doc(budgetId).set(data);
-            console.log('here');
-            this.onBudgetAdded(budgetId);
-            this.saving = false;
-        } catch (error) {
-            console.error(error);
-        }
+        const budgetId = this.firestore.generateId();
+        this.budgetCollection.doc(budgetId).set(data);
+        this.onBudgetAdded(budgetId);
     }
 
     private onBudgetAdded(newBudgetId: string): void {

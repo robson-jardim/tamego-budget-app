@@ -1,7 +1,7 @@
 export interface Budget {
     userId: string;
     budgetName: string;
-    currencyType: string;
+    createdAt: Date;
 }
 
 export interface BudgetId extends Budget {

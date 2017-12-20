@@ -1,6 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-
-import { FirebaseReferenceService } from './database.service';
+import { FirebaseReferenceService } from './firestore-reference.service';
 
 describe('DatabaseService', () => {
     beforeEach(() => {

@@ -13,12 +13,14 @@ import { CategoryGroupId } from '../../../../../models/category-group.model';
 })
 export class EditCategoryDialogComponent implements OnInit {
 
+    public saving = false;
     public categoryForm: FormGroup;
 
     public readonly category: CategoryId;
     public readonly categoryCollection: AngularFirestoreCollection<Category>;
     public readonly mode: string;
     public readonly group: CategoryGroupId;
+    public readonly nextCategoryPosition: number;
 
     constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: any,
@@ -28,6 +30,7 @@ export class EditCategoryDialogComponent implements OnInit {
         this.categoryCollection = this.data.categoryCollection;
         this.mode = this.data.mode.toUpperCase();
         this.group = this.data.group;
+        this.nextCategoryPosition = this.data.nextCategoryPosition;
     }
 
     ngOnInit() {
@@ -50,6 +53,8 @@ export class EditCategoryDialogComponent implements OnInit {
 
     public saveChanges() {
 
+        this.saving = true;
+
         if (this.mode === 'UPDATE') {
             this.updateCategory();
         }
@@ -64,7 +69,9 @@ export class EditCategoryDialogComponent implements OnInit {
     }
 
     private updateCategory() {
-        if(this.categoryForm.pristine) {
+
+
+        if (this.categoryForm.pristine) {
             this.close();
             return;
         }
@@ -73,24 +80,20 @@ export class EditCategoryDialogComponent implements OnInit {
             categoryName: this.categoryForm.value.categoryName
         };
 
-        this.categoryCollection.doc(this.category.categoryId).update(data)
-            .then(() => {
-                this.notifications.sendUpdateNotification('category');
-            });
-
+        this.categoryCollection.doc(this.category.categoryId).update(data);
+        this.notifications.sendUpdateNotification('category');
         this.close();
     }
 
     private createCategory() {
         const data: Category = {
             groupId: this.group.groupId,
-            categoryName: this.categoryForm.value.categoryName
+            categoryName: this.categoryForm.value.categoryName,
+            position: this.nextCategoryPosition
         };
 
-        this.categoryCollection.add(data).then(() => {
-            this.notifications.sendCreateNotification('category');
-        });
-
+        this.categoryCollection.add(data);
+        this.notifications.sendCreateNotification('category');
         this.close();
     }
 }

@@ -1,0 +1,17 @@
+{
+    "indexes": [
+//        {
+//            "collectionId": "categoryValues",
+//            "fields": [
+//                {
+//                    "fieldPath": "year",
+//                    "mode": "ASCENDING"
+//                },
+//                {
+//                    "fieldPath": "month",
+//                    "mode": "ASCENDING"
+//                }
+//            ]
+//        }
+    ]
+}

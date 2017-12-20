@@ -7,6 +7,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
 import { User } from '../../../../models/user.model';
+import "rxjs/add/operator/switchMap";
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,28 @@ export class AuthService {
                     return Observable.of(null);
                 }
             });
+
+        // If one tab logs out, navigate to root page
+        this.user.subscribe(user => {
+            if (!user) {
+                this.router.navigate(['/']);
+            }
+        });
+
+        this.user.subscribe(user => {
+            if (user) {
+                this.afs.doc<User>(`users/${user.userId}`).snapshotChanges().take(1).subscribe(actions => {
+                    if (actions.payload.metadata.fromCache) {
+                        console.log('Loading data from cache');
+                    }
+                    else {
+                        console.log('Loading data from firestore');
+                    }
+                });
+            }
+        });
+
+
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {

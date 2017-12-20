@@ -1,6 +1,12 @@
 {
     "name": "admin-functions",
-    "description": "Admin functions for Firebase",
+    "scripts": {
+        "build": "npm run copy && tsc",
+        "watch": "npm run copy && tsc --watch",
+        "serve": "nodemon ./dist/index.js",
+        "copy": "copyfiles src/**/*.json dist/ -f",
+        "dev": "concurrently --kill-others \"npm run watch\" \"npm run serve\""
+    },
     "dependencies": {
         "body-parser": "^1.18.2",
         "express": "^4.16.2",
@@ -13,13 +19,6 @@
         "copyfiles": "^1.2.0",
         "nodemon": "^1.13.3",
         "typescript": "^2.6.2"
-    },
-    "scripts": {
-        "build": "npm run copy && tsc",
-        "watch": "npm run copy && tsc --watch",
-        "serve": "nodemon ./dist/index.js",
-        "copy": "copyfiles src/**/*.json dist/ -f",
-        "dev": "concurrently --kill-others \"npm run watch\" \"npm run serve\""
     },
     "main": "dist/index.js",
     "private": true

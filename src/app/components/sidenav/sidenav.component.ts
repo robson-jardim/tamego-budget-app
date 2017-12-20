@@ -26,7 +26,7 @@ export class SidenavComponent implements OnInit {
         this.route.params
             .subscribe(params => {
                 const budgetId = params.budgetId;
-                this.budgetAccounts = this.firestore.getBudgetAccounts(budgetId);
+                this.budgetAccounts = this.firestore.getAccounts(budgetId);
             });
     }
 
