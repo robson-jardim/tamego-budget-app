@@ -1,9 +1,8 @@
 export interface CategoryValue {
     categoryId: string;
-    year: number;
-    month: number;
-    budgetedAmount: number;
+    budgeted: number;
     offset: number;
+    time: Date;
 }
 
 export interface CategoryValueId extends CategoryValue {

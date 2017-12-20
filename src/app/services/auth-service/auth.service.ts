@@ -35,6 +35,20 @@ export class AuthService {
             }
         });
 
+        this.user.subscribe(user => {
+            if (user) {
+                this.afs.doc<User>(`users/${user.userId}`).snapshotChanges().take(1).subscribe(actions => {
+                    if (actions.payload.metadata.fromCache) {
+                        console.log('Loading data from cache');
+                    }
+                    else {
+                        console.log('Loading data from firestore');
+                    }
+                });
+            }
+        });
+
+
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {

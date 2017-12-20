@@ -11,7 +11,9 @@ import { EditCategoryDialogComponent } from '../dialogs/category-dialog/category
 import { CategoryGroupDialogComponent } from '../dialogs/category-group-dialog/category-group-dialog.component';
 import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
 import { TransferCategoryDialogComponent } from '../dialogs/transfer-category-dialog/transfer-category-dialog.component';
-import { AngularFirestoreCollection } from "angularfire2/firestore";
+import { AngularFirestoreCollection } from 'angularfire2/firestore';
+import 'rxjs/add/operator/do';
+import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
 
 @Component({
     selector: 'app-budget',
@@ -27,7 +29,9 @@ export class EditBudgetComponent implements OnInit {
     public categoryColumns = ['categoryName', 'categoryId', 'groupId', 'actions'];
     public budget;
 
-    private editDate: Date;
+    private viewDate: Date;
+    public dataSources: CategoryDataSource[];
+
     selectedRowIndex = -1;
 
     constructor(private firestore: FirestoreService,
@@ -41,18 +45,51 @@ export class EditBudgetComponent implements OnInit {
 
         this.getBudgetId().subscribe(budgetId => {
 
-            this.budget = this.firestore.getEditBudget(budgetId).map(data => {
-
-                const dataSources = data.groups.map(group => {
-                    return new CategoryDataSource(group.categories);
-                });
-
-                return {...data, dataSources};
+            this.budget = this.firestore.getEditBudget(budgetId).do(data => {
+                this.buildDataSources(data);
             });
         });
 
         this.buildCategoryGroupForm();
         this.buildCategoryForm();
+    }
+
+    public buildDataSources(data) {
+
+        this.dataSources = data.groups.map(group => {
+
+            const formattedGroup = group.categories.map(category => {
+
+                const isOnOrBeforeViewDate = (value: CategoryValueId) => {
+                    return value.time <= this.viewDate;
+                };
+
+                const sum = (prev, next) => {
+                    return prev + next;
+                };
+
+                const budgted = (value: CategoryValueId) => {
+                    return value.budgeted;
+                };
+
+                const offset = (value: CategoryValueId) => {
+                    return value.offset;
+                };
+
+                const offsetTotal = category.values.filter(isOnOrBeforeViewDate).map(offset).reduce(sum, 0);
+                const budgetedTotal = category.values.filter(isOnOrBeforeViewDate).map(budgted).reduce(sum, 0);
+                const docExists = category.values.map(value => value.time.toISOString()).includes(this.viewDate.toISOString());
+
+                return {
+                    ...category,
+                    offsetTotal,
+                    budgetedTotal,
+                    docExists
+                };
+            });
+
+            return new CategoryDataSource(formattedGroup);
+        });
     }
 
     public getBudgetId(): Observable<string> {
@@ -151,27 +188,28 @@ export class EditBudgetComponent implements OnInit {
 
     private setDate() {
         const temp = new Date();
+        // getMonth() is user over getUTCMonth() because the following should be based on local time
         const currentMonth = temp.getMonth();
         const currentYear = temp.getFullYear();
-        this.editDate = new Date(currentYear, currentMonth, 1);
+        this.viewDate = new Date(currentYear, currentMonth, 1);
     }
 
-    public get editMonth() {
-        return this.editDate.toLocaleString('en-us', {month: 'long'});
+    public get viewMonth() {
+        return this.viewDate.toLocaleString('en-us', {month: 'long'});
     }
 
-    public get editYear() {
-        return this.editDate.getFullYear();
+    public get viewYear() {
+        return this.viewDate.getFullYear();
     }
 
     public nextMonth() {
-        const currentMonth = this.editDate.getMonth();
-        this.editDate.setMonth(currentMonth + 1);
+        const currentMonth = this.viewDate.getMonth();
+        this.viewDate.setMonth(currentMonth + 1);
     }
 
     public previousMonth() {
-        const currentMonth = this.editDate.getMonth();
-        this.editDate.setMonth(currentMonth - 1);
+        const currentMonth = this.viewDate.getMonth();
+        this.viewDate.setMonth(currentMonth - 1);
     }
 
 }

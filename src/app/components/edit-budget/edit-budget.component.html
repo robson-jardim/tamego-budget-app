@@ -1,15 +1,15 @@
 <div class="edit-budget-container" *ngIf="budget | async as budget; else loading">
 
-    <h1 class="mat-headline">{{editMonth}} {{editYear}}</h1>
+    <h1 class="mat-headline">{{viewMonth}} {{viewYear}}</h1>
 
     <button mat-raised-button color="primary" (click)="createGroupDialog(budget)">Add
         category group
     </button>
 
-    <button mat-button (click)="previousMonth()">
+    <button mat-button (click)="previousMonth(); buildDataSources(budget)">
         <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
-    <button mat-button (click)="nextMonth()">
+    <button mat-button (click)="nextMonth(); buildDataSources(budget)">
         <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
 
@@ -53,7 +53,7 @@
             <mat-card-content>
 
                 <mat-table *ngIf="group.categories.length > 0; else noCategories" #table
-                           [dataSource]="budget.dataSources[groupIndex]"
+                           [dataSource]="dataSources[groupIndex]"
                            [trackBy]="trackCategories">
 
                     <mat-header-row *matHeaderRowDef="categoryColumns" class="budget-card-grey"></mat-header-row>

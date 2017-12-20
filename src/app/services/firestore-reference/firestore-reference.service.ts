@@ -37,8 +37,7 @@ export class FirestoreReferenceService {
 
     public getCategoryValuesCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryValue> {
         return this.afs.collection<CategoryValue>(`budgets/${budgetId}/categoryValues`, ref =>
-            ref.orderBy('year', 'asc')
-                .orderBy('month', 'asc')
+                ref.orderBy('time', 'asc')
         );
     }
 }
