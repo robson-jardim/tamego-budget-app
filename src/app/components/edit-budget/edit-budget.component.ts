@@ -86,7 +86,6 @@ export class EditBudgetComponent implements OnInit {
 
                 const offsetTotal = category.values.filter(isOnOrBeforeViewDate).map(offset).reduce(sum, 0);
                 const budgetedTotal = category.values.filter(isOnOrBeforeViewDate).map(budgted).reduce(sum, 0);
-
                 let desiredValue = category.values.filter(isOnViewDate).find(first);
 
                 if (!desiredValue) {
@@ -173,17 +172,18 @@ export class EditBudgetComponent implements OnInit {
         });
     }
 
-    public updateCategoryDialog(budget, category: CategoryId) {
+    public updateCategoryDialog(budget, category) {
         this.dialog.open(EditCategoryDialogComponent, {
             data: {
                 category: category,
                 categoryCollection: budget.collections.categories,
+                categoryValueCollection: budget.collections.categoryValues,
                 mode: 'UPDATE'
             }
         });
     }
 
-    public createCategoryDialog(budget, group: CategoryGroupId, groupIndex) {
+    public createCategoryDialog(budget, group, groupIndex) {
 
         const nextCategoryPosition = budget.groups[groupIndex].categories.length;
 
@@ -244,7 +244,6 @@ export class CategoryDataSource extends DataSource<any> {
 
     constructor(data) {
         super();
-        console.log(data);
         this.data = data;
     }
 

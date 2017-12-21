@@ -5,6 +5,7 @@ import { Category, CategoryId } from '../../../../../models/category.model';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { GeneralNotificationsService } from '../../../services/general-notifications/general-notifications.service';
 import { CategoryGroupId } from '../../../../../models/category-group.model';
+import { CategoryValue } from '../../../../../models/category-value.model';
 
 @Component({
     selector: 'app-edit-category-dialog',
@@ -16,19 +17,29 @@ export class EditCategoryDialogComponent implements OnInit {
     public saving = false;
     public categoryForm: FormGroup;
 
-    public readonly category: CategoryId;
+    // Shared resources by all modes
+    public readonly mode: string; // Possible modes are CREATE/UPDATE
     public readonly categoryCollection: AngularFirestoreCollection<Category>;
-    public readonly mode: string;
-    public readonly group: CategoryGroupId;
+
+    // UPDATE mode specific
+    public readonly category: any; // Altered version of the category entity that contains data about the current category value given the current budget view
+    public readonly categoryValueCollection: AngularFirestoreCollection<CategoryValue>;
+
+    // CREATE mode specific
+    public readonly group: any; // Altered version of the categoryGroup entity that contains an array of categories
     public readonly nextCategoryPosition: number;
 
     constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: any,
                 private formBuilder: FormBuilder,
                 private notifications: GeneralNotificationsService) {
-        this.category = this.data.category;
-        this.categoryCollection = this.data.categoryCollection;
+
         this.mode = this.data.mode.toUpperCase();
+        this.categoryCollection = this.data.categoryCollection;
+
+        this.category = this.data.category;
+        this.categoryValueCollection = this.data.categoryValueCollection;
+
         this.group = this.data.group;
         this.nextCategoryPosition = this.data.nextCategoryPosition;
     }
@@ -39,9 +50,11 @@ export class EditCategoryDialogComponent implements OnInit {
 
     private buildCategoryForm(): void {
 
-        if (this.mode == 'UPDATE') {
+        if (this.mode === 'UPDATE') {
             this.categoryForm = this.formBuilder.group({
-                categoryName: [this.category.categoryName, Validators.required]
+                categoryName: [this.category.categoryName, Validators.required],
+                budgeted: [this.category.desiredValue.budgeted, Validators.required],
+                offset: [this.category.desiredValue.offset, Validators.required]
             });
         }
         else {
@@ -70,19 +83,94 @@ export class EditCategoryDialogComponent implements OnInit {
 
     private updateCategory() {
 
+        this.updateCategoryEntity();
+        this.saveCategoryValueChanges();
 
-        if (this.categoryForm.pristine) {
-            this.close();
-            return;
+        this.notifications.sendUpdateNotification('category');
+        this.close();
+    }
+
+    private saveCategoryValueChanges() {
+
+        const valueDocExists = () => {
+            return this.category.desiredValue.exists;
+        };
+
+        const newCategoryValuesAreZero = () => {
+            return this.categoryForm.value.budgeted == 0 && this.categoryForm.value.offset == 0;
+        };
+
+        const getCategoryValueId = () => {
+            return this.category.categoryValueId;
+        };
+
+        const getBudgetedValue = () => {
+            const budgeted = this.categoryForm.value.budgeted;
+            // Sets precision to 2 decimal places
+            return Number(budgeted.toFixed(2));
+        };
+
+        const getOffsetValue = () => {
+            const offset = this.categoryForm.value.offset;
+            // Sets precision to 2 decimal places
+            return Number(offset.toFixed(2));
+        };
+
+        const generateValueId = () => {
+            let month = this.category.desiredValue.time.getUTCMonth() + 1;
+            const year = this.category.desiredValue.time.getUTCFullYear();
+            const categoryId = this.category.categoryId;
+
+            if (month < 10) {
+                // Formats months to always contain 2 characters
+                month = '0' + month;
+            }
+
+            // Value ID is generated this way to avoid duplicate documents for the same category.
+            // Although a category may have many categoryValues, only a single categoryValue is allowed for a specific
+            // year and month. By putting both in the value ID, possible duplicates will overwrite each other,
+            // which is the desired outcome for offline capabilities. The most recently made document is the one
+            // that will persist in Firestore.
+            return `${categoryId}-${year}-${month}`;
+        };
+
+        const getValueTime = () => {
+            return this.category.desiredValue.time;
+        };
+
+        const getCategoryId = () => {
+            return this.category.categoryId;
+        };
+
+        if (valueDocExists() && newCategoryValuesAreZero()) {
+            // Delete empty values because delete operations are cheaper than continuing to read empty entities
+            this.categoryValueCollection.doc(generateValueId()).delete();
         }
+        else if (!valueDocExists() && !newCategoryValuesAreZero()) {
+            const data = {
+                budgeted: getBudgetedValue(),
+                offset: getOffsetValue(),
+                time: getValueTime(),
+                categoryId: getCategoryId()
+            };
+            this.categoryValueCollection.doc(generateValueId()).set(data);
+        }
+        else {
+            const data = {
+                budgeted: getBudgetedValue(),
+                offset: getOffsetValue()
+            };
 
+            this.categoryValueCollection.doc(generateValueId()).update(data);
+        }
+    }
+
+    private updateCategoryEntity() {
         const data = {
             categoryName: this.categoryForm.value.categoryName
         };
 
         this.categoryCollection.doc(this.category.categoryId).update(data);
-        this.notifications.sendUpdateNotification('category');
-        this.close();
     }
 
     private createCategory() {
@@ -96,4 +184,6 @@ export class EditCategoryDialogComponent implements OnInit {
         this.notifications.sendCreateNotification('category');
         this.close();
     }
+
+
 }

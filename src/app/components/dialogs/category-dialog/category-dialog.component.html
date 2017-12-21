@@ -6,8 +6,18 @@
     <mat-dialog-content>
 
         <mat-form-field>
-            <input matInput formControlName="categoryName" placeholder="Category name" type="text">
+            <input matInput formControlName="categoryName" placeholder="Category" type="text">
         </mat-form-field>
+
+        <ng-container *ngIf="mode == 'UPDATE'">
+            <mat-form-field>
+                <input matInput formControlName="budgeted" placeholder="Budget" type="number">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput formControlName="offset" placeholder="Available" type="number">
+            </mat-form-field>
+        </ng-container>
 
     </mat-dialog-content>
 
