@@ -6,8 +6,8 @@ const db = admin.firestore();
 export const onUserCreate = functions.auth.user().onCreate(async event => {
 
     const user: User = {
-        userId: event.data.uid,
         email: event.data.email
+        userId: event.data.uid,
     };
 
     try {

@@ -17,7 +17,13 @@
         </mat-form-field>
 
         <mat-form-field [floatPlaceholder]="'never'">
-            <input matInput formControlName="password" placeholder="Password" type="password">
+            <input matInput formControlName="password" placeholder="Password" type="password"
+                   [type]="hideLoginPassword ? 'password' : 'text'">
+
+            <mat-icon matSuffix (click)="hideLoginPassword  = !hideLoginPassword">{{hideLoginPassword ? 'visibility_off'
+                :
+                'visibility'}}
+            </mat-icon>
         </mat-form-field>
 
         <button mat-raised-button color="primary" mat-button type="submit">Sign in</button>
@@ -39,8 +45,8 @@
         <mat-form-field [floatPlaceholder]="'never'">
 
             <input matInput formControlName="password" placeholder="Password"
-                   [type]="hidePassword ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' :
+                   [type]="hideCreatePassword ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">{{hideCreatePassword ? 'visibility_off' :
                 'visibility'}}
             </mat-icon>
 
