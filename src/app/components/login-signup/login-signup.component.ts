@@ -15,7 +15,9 @@ export class LoginSignupComponent implements OnInit {
     public loading = false;
     public showAuthError = false;
 
-    public hidePassword = true;
+    public hideCreatePassword = true;
+    public hideLoginPassword = true;
+
     public createUserForm: FormGroup;
     public signInForm: FormGroup;
 

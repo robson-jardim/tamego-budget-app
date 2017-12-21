@@ -27,8 +27,27 @@ service cloud.firestore {
             }
 
             match /categoryValues/{categoryValueId} {
-                allow read, create, update: if userOwnsBudget();
-                //Don't allow delete, transactions are tied to category
+                allow read: if userOwnsBudget();
+                allow create: if userOwnsBudget() && validateValueSchema();
+                allow update: if userOwnsBudget() && validateValueSchema() && isNotEditingTime() && isNotEditingCategoryId();
+                allow delete: if userOwnsBudget();
+
+                function isNotEditingTime() {
+                    return request.resource.data.time == resource.data.time;
+                }
+
+                function isNotEditingCategoryId() {
+                    return request.resource.data.categoryId == resource.data.categoryId;
+                }
+
+                function validateValueSchema() {
+                    return request.resource.data.keys().hasAll(['budgeted', 'offset', 'categoryId', 'time'])
+                        && request.resource.data.size() == 4
+                        && request.resource.data.budgeted is number
+                        && request.resource.data.offset is number
+                        && request.resource.data.categoryId is string
+                        && request.resource.data.time is timestamp
+                }
             }
 
             function userOwnsBudget() {

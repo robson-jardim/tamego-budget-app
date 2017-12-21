@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Router } from '@angular/router';
 
 import * as firebase from 'firebase/app';
@@ -53,7 +53,9 @@ export class AuthService {
 
     public async createUserWithEmailAndPassword(email: string, password: string) {
         try {
-            return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+            const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+            await this.afAuth.auth.currentUser.sendEmailVerification();
+            return user;
         }
         catch (error) {
             const errorCode = error.code;
