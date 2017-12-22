@@ -93,7 +93,7 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private routeToBudgetSelection(user) {
-        this.auth.userLoggedIn().subscribe(() => {
+        this.auth.userLoggedInEvent().take(1).subscribe(() => {
             this.router.navigate(['budgets']);
         });
     }

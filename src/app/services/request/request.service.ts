@@ -12,13 +12,4 @@ export class RequestService {
     constructor(private http: HttpClient,
                 private dialog: MatDialog) {
     }
-
-    public post(endpoint: string) {
-        return this.http.post(environment.functions + endpoint, {}).catch(error => {
-            if (error.status == 0) {
-                this.dialog.open(OfflineDialogComponent);
-            }
-            return Observable.throw(error);
-        });
-    }
 }

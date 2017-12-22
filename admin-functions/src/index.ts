@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-// noinspection ES6ConvertRequireIntoImport
+import { expressApi } from './express-api';
 const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
@@ -7,5 +7,5 @@ admin.initializeApp({
     databaseURL: 'https://budget-app-dev.firebaseio.com'
 });
 
-export { api } from './express-api';
 
+export const api = expressApi;

@@ -9,6 +9,8 @@ import { Budget, BudgetId } from '../../../../models/budget.model';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { User } from '../../../../models/user.model';
 import 'rxjs/add/operator/first';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-dashboard',
@@ -24,18 +26,25 @@ export class BudgetSelectionComponent implements OnInit {
                 private dialog: MatDialog,
                 private router: Router,
                 private route: ActivatedRoute,
-                private auth: AuthService) {
+                public auth: AuthService,
+                private http: HttpClient) {
     }
 
     ngOnInit() {
-        this.auth.userLoggedIn().subscribe((user: User) => {
+        this.auth.userSnapshot().subscribe(user => {
             this.budgets = this.firestore.getBudgets(user.userId);
+        });
+    }
+
+    public test() {
+        this.http.post(environment.functions + 'api/verifyUser', {}).subscribe(x => {
+            console.log(x);
         });
     }
 
     public openAddNewBudgetDialog(): void {
 
-        this.auth.userLoggedIn().subscribe((user: User) => {
+        this.auth.userSnapshot().subscribe((user: User) => {
             const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
                 data: {
                     budgetCollection: this.budgets.collection,
