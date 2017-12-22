@@ -7,7 +7,8 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
 import { User } from '../../../../models/user.model';
-import "rxjs/add/operator/switchMap";
+import 'rxjs/add/operator/switchMap';
+import { RequestService } from '../request/request.service';
 
 @Injectable()
 export class AuthService {
@@ -17,11 +18,10 @@ export class AuthService {
     constructor(private afAuth: AngularFireAuth,
                 private afs: AngularFirestore,
                 private authNotification: AuthNotificationService,
-                private router: Router) {
+                private router: Router,
+                private requestService: RequestService) {
 
-        this.afAuth.idToken.subscribe(x => {
-            console.log(x);
-        });
+
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {
@@ -32,26 +32,43 @@ export class AuthService {
             });
 
         // If one tab logs out, navigate to root page
-        this.user.subscribe(user => {
-            if (!user) {
-                this.router.navigate(['/']);
-            }
+        this.userLoggedOut().subscribe(() => {
+            this.router.navigate(['/']);
         });
+    }
 
-        this.user.subscribe(user => {
-            if (user) {
-                this.afs.doc<User>(`users/${user.userId}`).snapshotChanges().take(1).subscribe(actions => {
-                    if (actions.payload.metadata.fromCache) {
-                        console.log('Loading data from cache');
-                    }
-                    else {
-                        console.log('Loading data from firestore');
-                    }
+    public verifyUser() {
+
+        this.userLoggedIn().subscribe(async (user: User) => {
+
+            const docVerifiedState = () => {
+                return user.emailVerified;
+            };
+
+            await this.forceRefreshToken();
+
+            this.requestService.post('api/verifyUser').subscribe(
+                response => {
+                    console.log(response);
+                },
+                error => {
+                    console.error(error);
                 });
-            }
         });
+    }
 
 
+    public userLoggedIn(): Observable<User> {
+        return this.user.first(user => user != null);
+    }
+
+    public userLoggedOut(): Observable<any> {
+        // Returns a null observable
+        return this.user.first(user => user == null);
+    }
+
+    public forceRefreshToken() {
+        return this.afAuth.auth.currentUser.getIdToken(true);
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {

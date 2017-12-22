@@ -34,6 +34,9 @@ import { GeneralNotificationsService } from './services/general-notifications/ge
 import { CategoryGroupDialogComponent } from './components/dialogs/category-group-dialog/category-group-dialog.component';
 import { TransferCategoryDialogComponent } from './components/dialogs/transfer-category-dialog/transfer-category-dialog.component';
 import { SignedInGuard } from './guards/signed-in/signed-in.guard';
+import { AuthComponent } from './components/auth/auth.component';
+import { RequestService } from "./services/request/request.service";
+import { OfflineDialogComponent } from './offline-dialog/offline-dialog.component';
 
 @NgModule({
     declarations: [
@@ -50,6 +53,8 @@ import { SignedInGuard } from './guards/signed-in/signed-in.guard';
         EditCategoryDialogComponent,
         CategoryGroupDialogComponent,
         TransferCategoryDialogComponent,
+        AuthComponent,
+        OfflineDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -70,16 +75,18 @@ import { SignedInGuard } from './guards/signed-in/signed-in.guard';
         AddAccountToBudgetDialogComponent,
         EditCategoryDialogComponent,
         CategoryGroupDialogComponent,
-        TransferCategoryDialogComponent
+        TransferCategoryDialogComponent,
+        OfflineDialogComponent
     ],
     providers: [
         AuthGuard,
         SignedInGuard,
-        // {
-        //     provide: HTTP_INTERCEPTORS,
-        //     useClass: TokenInterceptor,
-        //     multi: true
-        // },
+        RequestService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
         FirestoreReferenceService,
         MapFirestoreDocumentIdService,
         FirestoreService,

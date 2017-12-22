@@ -9,26 +9,25 @@ const auth = admin.auth();
 router.post('/', async (request: any, response) => {
 
     const userId = request.user.uid;
-    let user;
+    const emailVerified = request.user.email_verified;
+
+    if (!emailVerified) {
+        return response.status(400).json({
+            message: 'User has not completed verification email'
+        });
+    }
 
     try {
-        user = await auth.getUser(userId);
+        await db.doc('users/' + userId).update({emailVerified: true});
+        return response.status(200).json({
+            message: 'User email verification process completed'
+        });
     }
     catch (error) {
         console.error(error);
-        return response.status(500).send('Database error');
-    }
-
-    try {
-        if (user.emailVerified) {
-            await db.doc(`users/${userId}`).update({emailVerified: true});
-            return response.status(200).send('User document email verified');
-        }
-        return response.status(400).send('User email is not verified');
-    }
-    catch (error) {
-        console.error(error);
-        return response.status(500).send('Database error');
+        return response.status(500).json({
+            message: 'Database error'
+        });
     }
 });
 
