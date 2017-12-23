@@ -9,6 +9,7 @@ const auth = admin.auth();
 router.post('/', async (request: any, response) => {
 
     const userId = request.user.uid;
+    const email = request.user.email;
     const emailVerified = request.user.email_verified;
 
     if (!emailVerified) {
@@ -19,6 +20,7 @@ router.post('/', async (request: any, response) => {
 
     try {
         await db.doc('users/' + userId).update({emailVerified: true});
+        console.log(`Verified email: ${email}`);
         return response.status(200).json({
             message: 'User email verification process completed'
         });

@@ -7,10 +7,10 @@ const app = express();
 
 const whitelist = [
     'http://localhost:4200',
-    'https://budget-app-dev.firebaseapp.com/',
-    'https://budget-app-staging-1.firebaseapp.com/',
-    'https://budget-app-prod.firebaseapp.com/',
-    'https://app.tamego.com/'
+    'https://budget-app-dev.firebaseapp.com',
+    'https://budget-app-staging-1.firebaseapp.com',
+    'https://budget-app-prod.firebaseapp.com',
+    'https://app.tamego.com'
 ];
 
 const corsOptions = {
