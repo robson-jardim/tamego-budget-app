@@ -12,16 +12,16 @@ export class TokenInterceptor implements TokenInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        return this.afAuth.idToken.flatMap<string, HttpEvent<any>>(idToken => {
-            if (!idToken) {
-                return next.handle(request);
-            }
 
-            request = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${idToken}`
-                }
-            });
+        return this.afAuth.idToken.first().flatMap(idToken => {
+            if (idToken) {
+
+                request = request.clone({
+                    setHeaders: {
+                        Authorization: `Bearer ${idToken}`
+                    }
+                });
+            }
 
             return next.handle(request);
         });

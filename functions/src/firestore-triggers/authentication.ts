@@ -9,7 +9,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
     const user: User = {
         email: event.data.email,
         userId: event.data.uid,
-        verified: false
+        emailVerified: false
     };
 
     try {

@@ -11,8 +11,8 @@ import { usersController } from './controllers/usersController';
 
 router.use('/users', usersController);
 
-app.listen(3000, () => {
-    console.log('Admin functions listening on port 3000')
+app.listen(1234, () => {
+    console.log('Admin functions listening on port `1234')
 });
 
-export const api = app;
+export const expressApi = app;

@@ -6,7 +6,8 @@ import { BudgetSelectionComponent } from './components/budget-selection/budget-s
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SignedInGuard } from "./guards/signed-in/signed-in.guard";
+import { SignedInGuard } from './guards/signed-in/signed-in.guard';
+import { AuthComponent } from "./components/auth/auth.component";
 
 const routes: Routes = [
     {
@@ -42,6 +43,10 @@ const routes: Routes = [
                 component: AccountsComponent
             }
         ]
+    },
+    {
+        path: 'auth',
+        component: AuthComponent
     },
     {
         path: '**',
