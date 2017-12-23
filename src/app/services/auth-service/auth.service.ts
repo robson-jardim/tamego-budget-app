@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
 
     public user: Observable<User>;
-    // private x;
+    private verifiedWatcher;
 
     constructor(private afAuth: AngularFireAuth,
                 private afs: AngularFirestore,
@@ -43,14 +43,13 @@ export class AuthService {
             this.router.navigate(['/']);
         });
 
-        this.userLoggedInEvent().subscribe(res => {
-        // this.x = this.userLoggedInEvent().subscribe(res => {
+        this.verifiedWatcher = this.userLoggedInEvent().subscribe(res => {
             // Called twice on force because
             this.verifyUser();
         });
     }
 
-    public verifyUser(forceRefresh = false) {
+    public verifyUser(forceRefreshToken = false) {
 
         this.userSnapshot().subscribe(async user => {
 
@@ -68,17 +67,16 @@ export class AuthService {
                 return;
             }
 
-            if (forceRefresh && !userVerifiedState()) {
+            if (forceRefreshToken && !userVerifiedState()) {
                 try {
                     // The server checks the email verified property encoded in the JWT.
                     // If the user recently completed the verification email, the current JWT
                     // will contain old values unless refreshed.
                     await this.afAuth.auth.currentUser.reload();
                     await this.afAuth.auth.currentUser.getIdToken(true);
-                    // this.x.unsubscribe();
                 }
                 catch (error) {
-                    console.error('error 1', error);
+                    console.error('Offline error 1', error);
                     return;
                 }
             }
@@ -91,10 +89,14 @@ export class AuthService {
             // This is being called twice again after logging out after verification
             this.http.post(environment.functions + 'api/verifyUser', {}).first().subscribe(
                 response => {
+
+                    this.verifiedWatcher.unsubscribe();
+                    // Unsubscribes to the verified watcher because once the user document changes
+                    // the observable will emit a value continuing to enter verify user
                     console.log(response);
                 },
                 error => {
-                    console.error('error 2', error);
+                    console.error('Offline erro 2', error);
                 }
             );
         });

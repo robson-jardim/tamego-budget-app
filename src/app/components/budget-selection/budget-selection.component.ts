@@ -36,12 +36,6 @@ export class BudgetSelectionComponent implements OnInit {
         });
     }
 
-    public test() {
-        this.http.post(environment.functions + 'api/verifyUser', {}).subscribe(x => {
-            console.log(x);
-        });
-    }
-
     public openAddNewBudgetDialog(): void {
 
         this.auth.userSnapshot().subscribe((user: User) => {

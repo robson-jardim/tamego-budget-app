@@ -13,28 +13,9 @@ import "rxjs/add/operator/catch";
 })
 export class AuthComponent implements OnInit {
 
-    constructor(public http: HttpClient,
-                private dialog: MatDialog) {
+    constructor() {
     }
 
     ngOnInit() {
-    }
-
-    public test() {
-
-        this.wrapper().subscribe(response => {
-            console.log(response);
-        }, error => {
-            console.error(error);
-        });
-    }
-
-    public wrapper() {
-        return this.http.get('https://jsonplaceholder.typicode.com/users').catch(error => {
-            if (error.status == 0) {
-                this.dialog.open(OfflineDialogComponent);
-            }
-            return Observable.throw(error);
-        });
     }
 }

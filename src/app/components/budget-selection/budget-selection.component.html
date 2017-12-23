@@ -3,7 +3,6 @@
 <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
     <button mat-button (click)="openAddNewBudgetDialog()">Add new budget</button>
     <button mat-button (click)="auth.verifyUser(true)">Verify</button>
-    <button mat-button (click)="test()">Test</button>
 
     <mat-card *ngFor="let budget of budgets" class="budget-container" [routerLink]="[budget.budgetId]">
         <p>{{budget.budgetName}}</p>
