@@ -41,12 +41,12 @@ router.delete('/', async (request, response) => {
     }
 
     try {
-        listAllUsers();
+        listAllUsers({});
         await Promise.all(promises);
-        return response.send('All users deleted');
+        return response.status(200).send('All users deleted');
     }
     catch (error) {
-        return reponse.send('Error');
+        return response.status(500).send('Error');
     }
 
 });

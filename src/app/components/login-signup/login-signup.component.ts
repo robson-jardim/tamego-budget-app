@@ -93,13 +93,8 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private routeToBudgetSelection(user) {
-        this.auth.user.first(x => x != null).subscribe(async x => {
-            try {
-                await this.router.navigate(['budgets']);
-            }
-            catch (error) {
-                console.error(error);
-            }
+        this.auth.userLoggedInEvent().take(1).subscribe(() => {
+            this.router.navigate(['budgets']);
         });
     }
 }
