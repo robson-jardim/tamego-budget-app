@@ -6,12 +6,15 @@ import { Budget, BudgetId } from '../../../../../models/budget.model';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FirestoreService } from '../../../services/firestore/firestore.service';
 import 'rxjs/add/operator/retry';
-import { CollectionResult } from "../../../../../models/collection-result.model";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/observable/of";
-import "rxjs/add/observable/merge";
-import { CategoryGroup, CategoryGroupId } from "../../../../../models/category-group.model";
+import { CollectionResult } from '../../../../../models/collection-result.model';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/merge';
+import { CategoryGroup, CategoryGroupId } from '../../../../../models/category-group.model';
+import 'rxjs/add/operator/delayWhen';
+import 'rxjs/add/operator/retryWhen';
+import "rxjs/add/observable/timer";
 
 @Component({
     selector: 'app-add-budget-dialog',
@@ -64,9 +67,8 @@ export class AddBudgetDialogComponent implements OnInit {
         // This is a work around for the get() issue with Firestore security rules.
         // Once Firebase fixes the issue, this will no longer be needed.
         // LINK: https://stackoverflow.com/questions/47818878/firestore-rule-failing-while-using-get-on-newly-created-documents
-        // Retrying like this creates a lot of network overhead
-        const groups: CollectionResult<CategoryGroup, CategoryGroupId[]> = this.firestore.getGroups(budgetId);
-        groups.collection.valueChanges().retry().first().subscribe(() => {
+        const groupsObservable = this.firestore.getGroups(budgetId).collection.valueChanges();
+        groupsObservable.retryWhen(errors => errors.delayWhen(() => Observable.timer(1000))).first().subscribe(() => {
             this.onBudgetAdded(budgetId);
         });
     }
