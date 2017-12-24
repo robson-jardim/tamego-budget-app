@@ -2,9 +2,16 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Budget } from '../../../../../models/budget.model';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Budget, BudgetId } from '../../../../../models/budget.model';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FirestoreService } from '../../../services/firestore/firestore.service';
+import 'rxjs/add/operator/retry';
+import { CollectionResult } from "../../../../../models/collection-result.model";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/fromEvent";
+import "rxjs/add/observable/of";
+import "rxjs/add/observable/merge";
+import { CategoryGroup, CategoryGroupId } from "../../../../../models/category-group.model";
 
 @Component({
     selector: 'app-add-budget-dialog',
@@ -16,7 +23,7 @@ export class AddBudgetDialogComponent implements OnInit {
 
     public budgetForm: FormGroup;
 
-    private budgetCollection: AngularFirestoreCollection<Budget>;
+    private budgets: CollectionResult<Budget, BudgetId[]>;
     private userId: string;
 
     public saving = false;
@@ -24,8 +31,9 @@ export class AddBudgetDialogComponent implements OnInit {
     constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
                 private formBuilder: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) private data: any,
-                private firestore: FirestoreService) {
-        this.budgetCollection = data.budgetCollection;
+                private firestore: FirestoreService,
+                private afs: AngularFirestore) {
+        this.budgets = data.budgets;
         this.userId = data.userId;
     }
 
@@ -49,12 +57,21 @@ export class AddBudgetDialogComponent implements OnInit {
             createdAt: FirestoreService.currentTimestamp
         };
 
+        const budgetCollection = this.budgets.collection;
         const budgetId = this.firestore.generateId();
-        this.budgetCollection.doc(budgetId).set(data);
-        this.onBudgetAdded(budgetId);
+        budgetCollection.doc(budgetId).set(data);
+
+        // This is a work around for the get() issue with Firestore security rules.
+        // Once Firebase fixes the issue, this will no longer be needed.
+        // LINK: https://stackoverflow.com/questions/47818878/firestore-rule-failing-while-using-get-on-newly-created-documents
+        // Retrying like this creates a lot of network overhead
+        const groups: CollectionResult<CategoryGroup, CategoryGroupId[]> = this.firestore.getGroups(budgetId);
+        groups.collection.valueChanges().retry().first().subscribe(() => {
+            this.onBudgetAdded(budgetId);
+        });
     }
 
-    private onBudgetAdded(newBudgetId: string): void {
-        this.dialogRef.close(newBudgetId);
+    private onBudgetAdded(budgetId: string): void {
+        this.dialogRef.close(budgetId);
     }
 }

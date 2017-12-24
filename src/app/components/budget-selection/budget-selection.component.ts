@@ -39,9 +39,10 @@ export class BudgetSelectionComponent implements OnInit {
     public openAddNewBudgetDialog(): void {
 
         this.auth.userSnapshot().subscribe((user: User) => {
+
             const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
                 data: {
-                    budgetCollection: this.budgets.collection,
+                    budgets: this.budgets,
                     userId: user.userId
                 }
             });

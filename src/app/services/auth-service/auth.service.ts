@@ -44,9 +44,15 @@ export class AuthService {
         });
 
         this.verifiedWatcher = this.userLoggedInEvent().subscribe(res => {
-            // Called twice on force because
+            // verifyUser is called twice if email verification is successful because the user observable emits a
+            // new value because once the user document updates. To get out this, a watcher is set and unsubscribed
+            // after a successful user document change.
             this.verifyUser();
         });
+    }
+
+    public sendEmailVerification() {
+        return this.afAuth.auth.currentUser.sendEmailVerification();
     }
 
     public verifyUser(forceRefreshToken = false) {
@@ -121,7 +127,7 @@ export class AuthService {
     public async createUserWithEmailAndPassword(email: string, password: string) {
         try {
             const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-            await this.afAuth.auth.currentUser.sendEmailVerification();
+            await this.sendEmailVerification();
             return user;
         }
         catch (error) {

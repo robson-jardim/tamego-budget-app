@@ -6,14 +6,15 @@ import { BudgetSelectionComponent } from './components/budget-selection/budget-s
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SignedInGuard } from './guards/signed-in/signed-in.guard';
-import { AuthComponent } from "./components/auth/auth.component";
+import { SignedOutGuard } from './guards/signed-in/signed-in.guard';
+import { AuthComponent } from './components/auth/auth.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
     {
         path: '',
         component: LoginSignupComponent,
-        canActivate: [SignedInGuard]
+        canActivate: [SignedOutGuard]
     },
     {
         path: 'budgets',
@@ -47,6 +48,12 @@ const routes: Routes = [
     {
         path: 'auth',
         component: AuthComponent
+    },
+    {
+        path: 'settings',
+        component: SettingsComponent,
+        canActivate: [AuthGuard]
+
     },
     {
         path: '**',

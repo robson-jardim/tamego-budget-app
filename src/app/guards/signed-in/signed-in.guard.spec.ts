@@ -1,15 +1,15 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 
-import { SignedInGuard } from './signed-in.guard';
+import { SignedOutGuard } from './signed-in.guard';
 
-describe('SignedInGuard', () => {
+describe('SignedOutGuard', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [SignedInGuard]
+            providers: [SignedOutGuard]
         });
     });
 
-    it('should ...', inject([SignedInGuard], (guard: SignedInGuard) => {
+    it('should ...', inject([SignedOutGuard], (guard: SignedOutGuard) => {
         expect(guard).toBeTruthy();
     }));
 });

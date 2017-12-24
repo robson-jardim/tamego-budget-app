@@ -7,7 +7,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class SignedInGuard implements CanActivate {
+export class SignedOutGuard implements CanActivate {
 
     constructor(private auth: AuthService, private router: Router) {
     }

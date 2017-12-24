@@ -1,0 +1,19 @@
+<app-toolbar></app-toolbar>
+
+<ng-container *ngIf="auth.user | async as user">
+
+    <ng-container *ngIf="user.emailVerified; then verified else unverified">
+
+    </ng-container>
+
+    <ng-template #verified>
+        <p mat-body-1>User is verified</p>
+    </ng-template>
+
+    <ng-template #unverified>
+        <p>You account is currently not verified</p>
+        <button mat-button (click)="auth.sendEmailVerification()">Resend verification email</button>
+        <button mat-button (click)="auth.verifyUser(true)">Update verification status</button>
+    </ng-template>
+
+</ng-container>

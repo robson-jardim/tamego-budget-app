@@ -1,9 +1,10 @@
 <mat-toolbar color="primary">
 
     <span>Budget</span>
+    <button mat-button (click)="routeToHome()">Home</button>
 
     <span class="banner-spacer"></span>
 
+    <button mat-button (click)="routeToSettings()">Settings</button>
     <button mat-button (click)="auth.signOut()">Sign out</button>
-
 </mat-toolbar>
