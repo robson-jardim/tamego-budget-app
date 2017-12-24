@@ -55,8 +55,8 @@ async function validateCategoryValue(event) {
 
     const valueIdDelimiter = categoryValue.categoryValueId.split('-');
     const categoryId = valueIdDelimiter[0];
-    let year = valueIdDelimiter[1];
-    let month = valueIdDelimiter[2];
+    const year = valueIdDelimiter[1];
+    const month = valueIdDelimiter[2];
 
     if (valueIdDelimiter.length !== 3) {
         console.error('Invalid value ID structure');
@@ -78,19 +78,27 @@ async function validateCategoryValue(event) {
         return false;
     }
 
+    
+    // Values are stored as strings and must be converted to numbers in order to be set as parameters for Date
     const yearTemp = Number(year);
-    const monthTemp = Number(month);
+    const monthTemp = Number(month) - 1;    // 1 month must be subtracted here because months are indexed by 0,
+                                            // while the month stored in the ID are indexed by 1
 
     const dateFromId = new Date(yearTemp, monthTemp, 1);
     const dateFromProperty = new Date(categoryValue.time);
 
-    if (dateFromProperty.getDate() !== 1) {
-        console.error('Date property is not set to the first of the month');
+    if (dateFromId.getUTCDay() !== dateFromProperty.getUTCDay()) {
+        console.error('Day on time property is not set to the first of the month');
         return false;
     }
 
-    if (dateFromId.getTime() !== dateFromProperty.getTime()) {
-        console.error('Dates from ID and property do not match');
+    if (dateFromId.getUTCMonth() !== dateFromProperty.getUTCMonth()) {
+        console.error('Month value on property and ID do not match');
+        return false;
+    }
+
+    if (dateFromId.getUTCFullYear() !== dateFromProperty.getUTCFullYear()) {
+        console.error('Year value on property and ID do not match');
         return false;
     }
 

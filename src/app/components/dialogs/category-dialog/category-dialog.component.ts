@@ -147,6 +147,8 @@ export class EditCategoryDialogComponent implements OnInit {
             this.categoryValueCollection.doc(generateValueId()).delete();
         }
         else if (!valueDocExists() && !newCategoryValuesAreZero()) {
+            console.log(getValueTime());
+
             const data = {
                 budgeted: getBudgetedValue(),
                 offset: getOffsetValue(),
