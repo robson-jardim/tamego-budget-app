@@ -34,7 +34,8 @@ export const onValueUpdate = functions.firestore.document('budgets/{budgetId}/ca
     try {
         const budgetId = event.params.budgetId;
         const categoryValueId = event.params.categoryValueId;
-        await db.doc(`budgets/${budgetId}/categoryValues/${categoryValueId}`).delete();
+        const previousVersion = event.data.previous.data();
+        await db.doc(`budgets/${budgetId}/categoryValues/${categoryValueId}`).update(previousVersion);
     }
     catch (error) {
         console.log('Database error', error);
@@ -54,8 +55,8 @@ async function validateCategoryValue(event) {
 
     const valueIdDelimiter = categoryValue.categoryValueId.split('-');
     const categoryId = valueIdDelimiter[0];
-    const year = valueIdDelimiter[1];
-    const month = valueIdDelimiter[2];
+    let year = valueIdDelimiter[1];
+    let month = valueIdDelimiter[2];
 
     if (valueIdDelimiter.length !== 3) {
         console.error('Invalid value ID structure');
@@ -76,9 +77,17 @@ async function validateCategoryValue(event) {
         console.error('Month within value ID was not between 1-12');
         return false;
     }
-    
-    const dateFromId = new Date(year, month - 1, 1);
+
+    const yearTemp = Number(year);
+    const monthTemp = Number(month);
+
+    const dateFromId = new Date(yearTemp, monthTemp, 1);
     const dateFromProperty = new Date(categoryValue.time);
+
+    if (dateFromProperty.getDate() !== 1) {
+        console.error('Date property is not set to the first of the month');
+        return false;
+    }
 
     if (dateFromId.getTime() !== dateFromProperty.getTime()) {
         console.error('Dates from ID and property do not match');
