@@ -25,7 +25,6 @@ export class AuthService {
                 private router: Router,
                 private requestService: RequestService) {
 
-
         this.user = this.afAuth.authState
             .switchMap(user => {
                 if (user) {

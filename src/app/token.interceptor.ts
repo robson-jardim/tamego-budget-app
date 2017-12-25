@@ -12,7 +12,7 @@ export class TokenInterceptor implements TokenInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-
+        // first() operator is required as to avoid duplicate requests on emmission of another idToken
         return this.afAuth.idToken.first().flatMap(idToken => {
             if (idToken) {
 
