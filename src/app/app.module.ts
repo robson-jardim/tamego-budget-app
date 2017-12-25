@@ -29,7 +29,7 @@ import { TransferCategoryDialogComponent } from './components/dialogs/transfer-c
 import { SignedOutGuard } from './guards/signed-in/signed-in.guard';
 import { AuthComponent } from './components/auth/auth.component';
 import { RequestService } from './services/request/request.service';
-import { OfflineDialogComponent } from './offline-dialog/offline-dialog.component';
+import { OfflineDialogComponent } from './components/dialogs/offline-dialog/offline-dialog.component';
 import { TokenInterceptor } from './token.interceptor';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ViewTransactionsComponent } from "./components/view-transactions/view-transactions.component";

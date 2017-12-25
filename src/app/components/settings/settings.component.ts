@@ -2,15 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth-service/auth.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(public auth: AuthService) { }
+    public forceRefreshToken = true;
+    public showOfflinePopups = true;
 
-  ngOnInit() {
-  }
+    constructor(public auth: AuthService) {
+    }
+
+    ngOnInit() {
+        this.auth.verifyUser(this.forceRefreshToken);
+    }
 
 }

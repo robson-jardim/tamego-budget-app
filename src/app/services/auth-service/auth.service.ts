@@ -23,8 +23,7 @@ export class AuthService {
                 private afs: AngularFirestore,
                 private authNotification: AuthNotificationService,
                 private router: Router,
-                private requestService: RequestService,
-                private http: HttpClient) {
+                private requestService: RequestService) {
 
 
         this.user = this.afAuth.authState
@@ -39,7 +38,6 @@ export class AuthService {
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
-            console.log('Logged out');
             this.router.navigate(['/']);
         });
 
@@ -51,31 +49,36 @@ export class AuthService {
         });
     }
 
-    public sendEmailVerification() {
-        return this.afAuth.auth.currentUser.sendEmailVerification();
+    public async sendEmailVerification(showOfflinePopup = false) {
+        try {
+            await this.afAuth.auth.currentUser.sendEmailVerification();
+        } catch (error) {
+
+            if (showOfflinePopup) {
+                this.requestService.openOfflineDialog();
+            }
+
+            console.error(error);
+        }
     }
 
-    public verifyUser(forceRefreshToken = false) {
+    public verifyUser(forceRefreshToken = false, showOfflinePopups = false) {
 
         this.userSnapshot().subscribe(async user => {
 
-            const verificationComplete = () => {
-                return user.emailVerified;
-            };
-
-            const userVerifiedState = () => {
+            const verificationEmailComplete = () => {
                 return this.afAuth.auth.currentUser.emailVerified;
             };
 
-            const completedVerificationEmail = () => {
-                return userVerifiedState();
+            const verificationProcessComplete = () => {
+                return user.emailVerified;
             };
 
-            if (verificationComplete()) {
+            if (verificationProcessComplete()) {
                 return;
             }
 
-            if (forceRefreshToken && !userVerifiedState()) {
+            if (forceRefreshToken) {
                 try {
                     // The server checks the email verified property encoded in the JWT.
                     // If the user recently completed the verification email, the current JWT
@@ -85,26 +88,25 @@ export class AuthService {
                 }
                 catch (error) {
                     console.error(error);
+                    if (showOfflinePopups) {
+                        this.requestService.openOfflineDialog();
+                    }
                     return;
                 }
             }
 
-            if (!completedVerificationEmail()) {
+            if (!verificationEmailComplete()) {
                 return;
             }
 
-            this.http.post(environment.functions + 'api/verifyUser', {}).first().subscribe(
+            this.requestService.post('api/verifyUser', undefined, showOfflinePopups).subscribe(
                 response => {
-
-                    this.verifiedWatcher.unsubscribe();
                     // Unsubscribes to the verified watcher because once the user document changes
                     // the observable will emit a value continuing to enter verify user
-                    console.log(response);
-                },
-                error => {
-                    console.error('Offline erro 2', error);
-                }
-            );
+                    this.verifiedWatcher.unsubscribe();
+                }, error => {
+                    console.error(error);
+                });
         });
     }
 
@@ -127,7 +129,7 @@ export class AuthService {
     public async createUserWithEmailAndPassword(email: string, password: string) {
         try {
             const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-            await this.sendEmailVerification();
+            this.sendEmailVerification(); // Success of this operation is not important. No need to catch the returned promise
             return user;
         }
         catch (error) {
@@ -146,7 +148,7 @@ export class AuthService {
             else if (errorCode === 'auth/weak-password') {
                 errorMessage = 'Please choose a more secure password';
             }
-            else if (errorCode === 'auth/network-request-failed') {
+            else if (errorCode === 'auth/network-requestService-failed') {
                 errorMessage = 'Offline';
             }
             else {
@@ -179,7 +181,7 @@ export class AuthService {
             else if (errorCode === 'auth/wrong-password') {
                 errorMessage = 'Incorrect password';
             }
-            else if (errorCode === 'auth/network-request-failed') {
+            else if (errorCode === 'auth/network-requestService-failed') {
                 errorMessage = 'Offline';
             }
             else {
