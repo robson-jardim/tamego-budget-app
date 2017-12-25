@@ -14,6 +14,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
 import 'rxjs/add/operator/skip';
+import { Transaction, TransactionId } from '../../../../models/transaction.model';
+import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
+import { split } from 'ts-node';
 
 @Injectable()
 export class FirestoreService {
@@ -69,7 +72,19 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-    public getEditBudget(budgetId: string) {
+    public getTransactions(budgetId: string, accountId: string | undefined): CollectionResult<Transaction, TransactionId[]> {
+        const collection: AngularFirestoreCollection<Transaction> = this.references.getTransactionCollectionRef(budgetId, accountId);
+        const observable: Observable<TransactionId[]> = this.mapDocumentId.mapTransactionIds(collection);
+        return {collection, observable};
+    }
+
+    private getSplitTransactions(budgetId: string): CollectionResult<SplitTransaction, SplitTransactionId[]> {
+        const collection: AngularFirestoreCollection<SplitTransaction> = this.references.getSplitTransactionCollectionRef(budgetId);
+        const observable: Observable<SplitTransactionId[]> = this.mapDocumentId.mapSplitTransactionIds(collection);
+        return {collection, observable};
+    }
+
+    public getBudgetView(budgetId: string) {
         const groupsResult: CollectionResult<CategoryGroup, CategoryGroupId[]> = this.getGroups(budgetId);
         const categoriesResult: CollectionResult<Category, CategoryId[]> = this.getCategories(budgetId);
         const categoryValuesResult: CollectionResult<CategoryValue, CategoryValueId[]> = this.getCategoryValues(budgetId);
@@ -97,6 +112,46 @@ export class FirestoreService {
                 },
                 groups: formattedData
             };
+        });
+    }
+
+    public getTransactionView(budgetId: string, accountId: string | undefined) {
+
+        const transactionsResult: CollectionResult<Transaction, TransactionId[]> = this.getTransactions(budgetId, accountId);
+        const splitTransactionsResult: CollectionResult<SplitTransaction, SplitTransactionId[]> = this.getSplitTransactions(budgetId);
+
+        const observables = [transactionsResult.observable, splitTransactionsResult.observable];
+
+        return Observable.combineLatest(observables, (transactions: TransactionId[], splitTransactions: SplitTransactionId[]) => {
+
+            const transactionIdToSplits = new Map();
+
+            splitTransactions.forEach(split => {
+
+                const transactionId = split.transactionId;
+
+                if (transactionIdToSplits.has(transactionId)) {
+                    const splits = transactionIdToSplits.get(transactionId);
+                    splits.push(split);
+                    transactionIdToSplits.set(transactionId, splits);
+                }
+                else {
+                    transactionIdToSplits.set(transactionId, [split]);
+                }
+
+            });
+
+            return transactions.map((transaction: any) => {
+
+                const transactionId = transaction.transactionId;
+
+                if (transactionIdToSplits.has(transactionId)) {
+                    transaction.splits = transactionIdToSplits.get(transactionId);
+                }
+
+                return transaction;
+            });
+
         });
     }
 }

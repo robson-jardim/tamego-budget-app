@@ -17,11 +17,11 @@ import { CategoryValue, CategoryValueId } from '../../../../models/category-valu
 
 @Component({
     selector: 'app-budget',
-    templateUrl: './edit-budget.component.html',
-    styleUrls: ['./edit-budget.component.scss'],
+    templateUrl: './view-budget.component.html',
+    styleUrls: ['./view-budget.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class EditBudgetComponent implements OnInit {
+export class ViewBudgetComponent implements OnInit {
 
     public categoryForm: FormGroup;
     public groupForm: FormGroup;
@@ -45,7 +45,7 @@ export class EditBudgetComponent implements OnInit {
 
         this.getBudgetId().subscribe(budgetId => {
 
-            this.budget = this.firestore.getEditBudget(budgetId).do(data => {
+            this.budget = this.firestore.getBudgetView(budgetId).do(data => {
                 this.buildDataSources(data);
             });
         });

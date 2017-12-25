@@ -7,6 +7,9 @@ import { Category } from '../../../../models/category.model';
 import { Budget } from '../../../../models/budget.model';
 import { BudgetAccount } from '../../../../models/budget-account.model';
 import { CategoryValue } from '../../../../models/category-value.model';
+import { Transaction } from '../../../../models/transaction.model';
+import * as firebase from 'firebase';
+import { SplitTransaction } from '../../../../models/split-transaction.model';
 
 @Injectable()
 export class FirestoreReferenceService {
@@ -39,6 +42,24 @@ export class FirestoreReferenceService {
         return this.afs.collection<CategoryValue>(`budgets/${budgetId}/categoryValues`, ref =>
             ref.orderBy('time', 'asc')
         );
+    }
+
+    public getTransactionCollectionRef(budgetId: string, accountId: string | undefined) {
+        return this.afs.collection<Transaction>(`budgets/${budgetId}/transactions`, ref => {
+            let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+
+            if (accountId) {
+                query = query.where('accountId', '==', accountId);
+            }
+
+            query = query.orderBy('date', 'desc');
+
+            return query;
+        });
+    }
+
+    public getSplitTransactionCollectionRef(budgetId: string) {
+        return this.afs.collection<SplitTransaction>(`budgets/${budgetId}/splitTransactions`);
     }
 }
 

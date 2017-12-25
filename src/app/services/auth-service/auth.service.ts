@@ -59,7 +59,6 @@ export class AuthService {
 
         this.userSnapshot().subscribe(async user => {
 
-            console.log('Attempt');
             const verificationComplete = () => {
                 return user.emailVerified;
             };
@@ -68,8 +67,11 @@ export class AuthService {
                 return this.afAuth.auth.currentUser.emailVerified;
             };
 
+            const completedVerificationEmail = () => {
+                return userVerifiedState();
+            };
+
             if (verificationComplete()) {
-                console.log('User has completed verification process already');
                 return;
             }
 
@@ -82,17 +84,15 @@ export class AuthService {
                     await this.afAuth.auth.currentUser.getIdToken(true);
                 }
                 catch (error) {
-                    console.error('Offline error 1', error);
+                    console.error(error);
                     return;
                 }
             }
 
-            if (!userVerifiedState()) {
-                console.log('User has not completed email');
+            if (!completedVerificationEmail()) {
                 return;
             }
 
-            // This is being called twice again after logging out after verification
             this.http.post(environment.functions + 'api/verifyUser', {}).first().subscribe(
                 response => {
 

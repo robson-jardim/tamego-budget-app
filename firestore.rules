@@ -16,6 +16,15 @@ service cloud.firestore {
                 //Don't allow direct delete, must delete dependencies first
             }
 
+            match /transactions/{transactionId} {
+                allow read, create, update: if userOwnsBudget();
+                //Don't allow delete, splits are tied to transaction
+            }
+
+            match /splitTransactions/{splitTransactionId} {
+                allow read, write: if userOwnsBudget();
+            }
+
             match /categoryGroups/{groupId} {
                 allow read, create, update: if userOwnsBudget();
                 //Don't allow delete, categories are tied to group

@@ -1,17 +1,17 @@
 {
     "indexes": [
-//        {
-//            "collectionId": "categoryValues",
-//            "fields": [
-//                {
-//                    "fieldPath": "year",
-//                    "mode": "ASCENDING"
-//                },
-//                {
-//                    "fieldPath": "month",
-//                    "mode": "ASCENDING"
-//                }
-//            ]
-//        }
+        {
+            "collectionId": "transactions",
+            "fields": [
+                {
+                    "fieldPath": "accountId",
+                    "mode": "ASCENDING"
+                },
+                {
+                    "fieldPath": "date",
+                    "mode": "DESCENDING"
+                }
+            ]
+        }
     ]
 }

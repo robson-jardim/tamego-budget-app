@@ -14,8 +14,6 @@ import { AppMaterialModule } from './modules/app-material.module';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { AccountsComponent } from './components/accounts/accounts.component';
-import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AddBudgetDialogComponent } from './components/dialogs/add-budget-dialog/add-budget-dialog.component';
 import { AddAccountToBudgetDialogComponent } from './components/dialogs/add-account-to-budget-dialog/add-account-to-budget-dialog.component';
@@ -34,6 +32,8 @@ import { RequestService } from './services/request/request.service';
 import { OfflineDialogComponent } from './offline-dialog/offline-dialog.component';
 import { TokenInterceptor } from './token.interceptor';
 import { SettingsComponent } from './components/settings/settings.component';
+import { ViewTransactionsComponent } from "./components/view-transactions/view-transactions.component";
+import { ViewBudgetComponent } from "./components/view-budget/view-budget.component";
 
 @NgModule({
     declarations: [
@@ -41,8 +41,8 @@ import { SettingsComponent } from './components/settings/settings.component';
         LoginSignupComponent,
         BudgetSelectionComponent,
         ToolbarComponent,
-        AccountsComponent,
-        EditBudgetComponent,
+        ViewTransactionsComponent,
+        ViewBudgetComponent,
         SidenavComponent,
         AddBudgetDialogComponent,
         AddAccountToBudgetDialogComponent,

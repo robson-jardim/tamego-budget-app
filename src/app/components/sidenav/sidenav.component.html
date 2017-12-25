@@ -17,5 +17,6 @@
     <mat-list-item *ngFor="let account of budgetAccounts?.observable | async as accounts"
                    [routerLink]="['./accounts', account.budgetAccountId]"
                    routerLinkActive="active">
+        {{account.accountName}}
     </mat-list-item>
 </mat-list>

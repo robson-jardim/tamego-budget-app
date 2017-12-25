@@ -39,7 +39,7 @@ export class SidenavComponent implements OnInit {
 
         addAccountToBudgetDialogRef.beforeClose().subscribe(newAccountId => {
             if (newAccountId) {
-                this.router.navigate(['./accounts', newAccountId], {relativeTo: this.route});
+                this.router.navigate(['accounts', newAccountId], {relativeTo: this.route});
             }
         });
     }

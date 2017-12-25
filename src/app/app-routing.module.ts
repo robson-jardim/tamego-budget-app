@@ -3,12 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
-import { AccountsComponent } from './components/accounts/accounts.component';
-import { EditBudgetComponent } from './components/edit-budget/edit-budget.component';
+
+import { ViewBudgetComponent } from './components/view-budget/view-budget.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SignedOutGuard } from './guards/signed-in/signed-in.guard';
 import { AuthComponent } from './components/auth/auth.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { ViewTransactionsComponent } from './components/view-transactions/view-transactions.component';
 
 const routes: Routes = [
     {
@@ -33,15 +34,15 @@ const routes: Routes = [
             },
             {
                 path: 'budget',
-                component: EditBudgetComponent,
+                component: ViewBudgetComponent,
             },
             {
                 path: 'accounts',
-                component: AccountsComponent,
+                component: ViewTransactionsComponent,
             },
             {
                 path: 'accounts/:accountId',
-                component: AccountsComponent
+                component: ViewTransactionsComponent
             }
         ]
     },

@@ -1,0 +1,5 @@
+<div *ngIf="transactions | async as transactions">
+    <mat-card *ngFor="let transaction of transactions">
+        <p>{{transaction | json}}</p>
+    </mat-card>
+</div>
