@@ -55,7 +55,7 @@ export class FirestoreService {
 
         const categoriesResult = this.getCategories(budgetId);
         const groupsResult = this.getGroups(budgetId);
-
+    
         const observables = [groupsResult.observable, categoriesResult.observable];
 
         return Observable.combineLatest(observables, (groups: CategoryGroupId[], categories: CategoryId[]) => {
@@ -111,7 +111,6 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-
     private getTransferTransactions(budgetId: string, accountId: string): Observable<TransferTransactionId[]> {
         const origin = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
         const destination = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
@@ -132,7 +131,7 @@ export class FirestoreService {
         const observables = [groupsResult.observable, categoriesResult.observable, categoryValuesResult.observable];
         return Observable.combineLatest(observables, (groups, categories, categoryValues) => {
 
-            const formattedData = groups.map((group: CategoryGroupId) => {  
+            const formattedData = groups.map((group: CategoryGroupId) => {
 
                 const getCategories = () => {
                     return categories.filter(c => c.groupId === group.groupId).map(category => {
@@ -187,48 +186,22 @@ export class FirestoreService {
             }
 
             function orderByDate(array: Array<any>) {
-                array.sort((aa, bb) => {
-                    const a = new Date(aa.transactionDate);
-                    const b = new Date(bb.transactionDate);
+                array.sort((a, b) => {
+                    const date1 = new Date(a.transactionDate);
+                    const date2 = new Date(b.transactionDate);
 
-                    return a > b ? -1 : a < b ? 1 : 0;
+                    if (date1 > date2) {
+                        return -1;
+                    }
+                    else if (date1 < date2) {
+                        return 1;
+                    }
+                    return 0;
                 });
             }
 
         });
 
-        //
-        // return Observable.combineLatest(observables, (transactions: TransactionId[], splitTransactions: SplitTransactionId[]) => {
-        //
-        //     const transactionIdToSplits = new Map();
-        //
-        //     splitTransactions.forEach(split => {
-        //
-        //         const transactionId = split.transactionId;
-        //
-        //         if (transactionIdToSplits.has(transactionId)) {
-        //             const splits = transactionIdToSplits.get(transactionId);
-        //             splits.push(split);
-        //             transactionIdToSplits.set(transactionId, splits);
-        //         }
-        //         else {
-        //             transactionIdToSplits.set(transactionId, [split]);
-        //         }
-        //
-        //     });
-        //
-        //     return transactions.map((transaction: any) => {
-        //
-        //         const transactionId = transaction.transactionId;
-        //
-        //         if (transactionIdToSplits.has(transactionId)) {
-        //             transaction.splits = transactionIdToSplits.get(transactionId);
-        //         }
-        //
-        //         return transaction;
-        //     });
-        //
-        // });
     }
 
 }
