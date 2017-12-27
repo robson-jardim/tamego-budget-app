@@ -117,8 +117,8 @@ export class EditCategoryDialogComponent implements OnInit {
         };
 
         const generateValueId = () => {
-            let month = this.category.desiredValue.time.getUTCMonth() + 1;
-            const year = this.category.desiredValue.time.getUTCFullYear();
+            let month = this.category.desiredValue.budgetMonth.getUTCMonth() + 1;
+            const year = this.category.desiredValue.budgetMonth.getUTCFullYear();
             const categoryId = this.category.categoryId;
 
             if (month < 10) {
@@ -135,7 +135,7 @@ export class EditCategoryDialogComponent implements OnInit {
         };
 
         const getValueTime = () => {
-            return this.category.desiredValue.time;
+            return this.category.desiredValue.budgetMonth;
         };
 
         const getCategoryId = () => {
@@ -147,14 +147,14 @@ export class EditCategoryDialogComponent implements OnInit {
             this.categoryValueCollection.doc(generateValueId()).delete();
         }
         else if (!valueDocExists() && !newCategoryValuesAreZero()) {
-            console.log(getValueTime());
 
-            const data = {
+            const data: CategoryValue = {
                 budgeted: getBudgetedValue(),
                 offset: getOffsetValue(),
-                time: getValueTime(),
+                budgetMonth: getValueTime(),
                 categoryId: getCategoryId()
             };
+
             this.categoryValueCollection.doc(generateValueId()).set(data);
         }
         else {

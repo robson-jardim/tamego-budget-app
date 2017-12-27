@@ -55,21 +55,21 @@ async function validateCategoryValue(event) {
 
     const valueIdDelimiter = categoryValue.categoryValueId.split('-');
     const categoryId = valueIdDelimiter[0];
-    const year = valueIdDelimiter[1];
-    const month = valueIdDelimiter[2];
+    const year = Number(valueIdDelimiter[1]);
+    const month = Number(valueIdDelimiter[2]);
 
     if (valueIdDelimiter.length !== 3) {
         console.error('Invalid value ID structure');
         return false;
     }
 
-    if (!isNumeric(year)) {
-        console.error('Year within value ID was not numeric');
+    if (!Number.isSafeInteger(year)) {
+        console.error('Year within value ID is not an integer');
         return false;
     }
 
-    if (!isNumeric(month)) {
-        console.error('Month within value ID was not numeric');
+    if (!Number.isSafeInteger(month)) {
+        console.error('Month within value ID is not an integer');
         return false;
     }
 
@@ -78,14 +78,13 @@ async function validateCategoryValue(event) {
         return false;
     }
 
-    
     // Values are stored as strings and must be converted to numbers in order to be set as parameters for Date
     const yearTemp = Number(year);
     const monthTemp = Number(month) - 1;    // 1 month must be subtracted here because months are indexed by 0,
                                             // while the month stored in the ID are indexed by 1
 
     const dateFromId = new Date(yearTemp, monthTemp, 1);
-    const dateFromProperty = new Date(categoryValue.time);
+    const dateFromProperty = new Date(categoryValue.budgetMonth);
 
     if (dateFromId.getUTCDay() !== dateFromProperty.getUTCDay()) {
         console.error('Day on time property is not set to the first of the month');
@@ -138,13 +137,9 @@ function isValidMonth(month) {
     return num <= 12 && num >= 1;
 }
 
-function isNumeric(num: any) {
-    return !isNaN(num);
-}
-
 function isTwoDecimalPlaces(num) {
-    const num1 = Number(num.toFixed(2));
-    const num2 = Number(num);
-    return num1 === num2;
+    const original = Number(num);
+    const twoDecimals = Number(num.toFixed(2));
+    return original === twoDecimals;
 }
 

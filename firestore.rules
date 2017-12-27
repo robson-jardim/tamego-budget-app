@@ -46,7 +46,7 @@ service cloud.firestore {
                 allow delete: if userOwnsBudget();
 
                 function isNotEditingTime() {
-                    return request.resource.data.time == resource.data.time;
+                    return request.resource.data.budgetMonth == resource.data.budgetMonth;
                 }
 
                 function isNotEditingCategoryId() {
@@ -54,12 +54,12 @@ service cloud.firestore {
                 }
 
                 function validateValueSchema() {
-                    return request.resource.data.keys().hasAll(['budgeted', 'offset', 'categoryId', 'time'])
+                    return request.resource.data.keys().hasAll(['budgeted', 'offset', 'categoryId', 'budgetMonth'])
                         && request.resource.data.size() == 4
                         && request.resource.data.budgeted is number
                         && request.resource.data.offset is number
                         && request.resource.data.categoryId is string
-                        && request.resource.data.time is timestamp
+                        && request.resource.data.budgetMonth is timestamp
                 }
             }
 

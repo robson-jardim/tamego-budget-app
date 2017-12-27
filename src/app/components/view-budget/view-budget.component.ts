@@ -61,11 +61,11 @@ export class ViewBudgetComponent implements OnInit {
             const formattedTableData = group.categories.map(category => {
 
                 const isOnOrBeforeViewDate = (value) => {
-                    return value.time <= this.viewDate;
+                    return value.budgetMonth <= this.viewDate;
                 };
 
                 const isOnViewDate = (value) => {
-                    return value.time <= this.viewDate && value.time >= this.viewDate;
+                    return value.budgetMonth <= this.viewDate && value.budgetMonth >= this.viewDate;
                 };
 
                 const sum = (prev, next) => {
@@ -93,7 +93,7 @@ export class ViewBudgetComponent implements OnInit {
                         categoryId: category.categoryId,
                         budgeted: 0,
                         offset: 0,
-                        time: this.viewDate,
+                        budgetMonth: this.viewDate,
                         exists: false
                     };
                 }
