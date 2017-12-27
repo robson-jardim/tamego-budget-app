@@ -1,19 +1,19 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "angularfire2/firestore";
-import {MapFirestoreDocumentIdService} from "../map-firestore-document-id/map-firestore-docoument-id.service";
-import {FirestoreReferenceService} from "../firestore-reference/firestore-reference.service";
-import {CollectionResult} from "../../../../models/collection-result.model";
-import {BudgetAccount, BudgetAccountId} from "../../../../models/budget-account.model";
-import {CategoryGroup, CategoryGroupId} from "../../../../models/category-group.model";
-import {Category, CategoryId} from "../../../../models/category.model";
-import {Budget, BudgetId} from "../../../../models/budget.model";
-import {Observable} from "rxjs/Observable";
-import "rxjs/add/observable/combineLatest";
-import {CategoryValue, CategoryValueId} from "../../../../models/category-value.model";
-import "rxjs/add/operator/skip";
-import {Transaction, TransactionId} from "../../../../models/transaction.model";
-import {SplitTransaction, SplitTransactionId} from "../../../../models/split-transaction.model";
-import {TransferTransaction, TransferTransactionId} from "../../../../models/transfer-transaction";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { MapFirestoreDocumentIdService } from '../map-firestore-document-id/map-firestore-docoument-id.service';
+import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
+import { CollectionResult } from '../../../../models/collection-result.model';
+import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
+import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
+import { Category, CategoryId } from '../../../../models/category.model';
+import { Budget, BudgetId } from '../../../../models/budget.model';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
+import 'rxjs/add/operator/skip';
+import { Transaction, TransactionId } from '../../../../models/transaction.model';
+import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
+import { TransferTransaction, TransferTransactionId } from '../../../../models/transfer-transaction.model';
 
 @Injectable()
 export class FirestoreService {
@@ -46,19 +46,49 @@ export class FirestoreService {
     }
 
     public getAccounts(budgetId: string): CollectionResult<BudgetAccount, BudgetAccountId[]> {
-        const collection = this.references.getAccountCollectionRef(budgetId);
+        const collection = this.references.getAccountsCollectionRef(budgetId);
         const observable = this.mapDocumentId.mapBudgetAccountIds(collection);
         return {collection, observable};
     }
 
+    public getGroupsAndCategories(budgetId: string) {
+
+        const categoriesResult = this.getCategories(budgetId);
+        const groupsResult = this.getGroups(budgetId);
+
+        const observables = [groupsResult.observable, categoriesResult.observable];
+
+        return Observable.combineLatest(observables, (groups: CategoryGroupId[], categories: CategoryId[]) => {
+
+            const formattedData = groups.map(group => {
+                const getCategories = () => {
+                    return categories.filter(category => category.groupId === group.groupId);
+                };
+
+                return {
+                    ...group,
+                    categories: getCategories()
+                };
+            });
+
+            return {
+                collections: {
+                    groups: groupsResult.collection,
+                    categories: categoriesResult.collection
+                },
+                data: formattedData
+            };
+        });
+    }
+
     public getGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
-        const collection = this.references.getGroupCollectionRef(budgetId);
+        const collection = this.references.getGroupsCollectionRef(budgetId);
         const observable = this.mapDocumentId.mapCategoryGroupIds(collection);
         return {collection, observable};
     }
 
     public getCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
-        const collection = this.references.getCategoryCollectionRef(budgetId);
+        const collection = this.references.getCategoriesCollectionRef(budgetId);
         const observable = this.mapDocumentId.mapCategoryIds(collection);
         return {collection, observable};
     }
@@ -69,7 +99,7 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-    public getTransactions(budgetId: string, accountId: string | undefined): CollectionResult<Transaction, TransactionId[]> {
+    public getTransactions(budgetId: string, accountId: string): CollectionResult<Transaction, TransactionId[]> {
         const collection = this.references.getTransactionCollectionRef(budgetId, accountId);
         const observable = this.mapDocumentId.mapTransactionIds(collection);
         return {collection, observable};
@@ -83,8 +113,8 @@ export class FirestoreService {
 
 
     private getTransferTransactions(budgetId: string, accountId: string): Observable<TransferTransactionId[]> {
-        const origin = this.references.getOriginTransfers(budgetId, accountId);
-        const destination = this.references.getDestinationTransfers(budgetId, accountId);
+        const origin = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
+        const destination = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
 
         const originObservable = this.mapDocumentId.mapTransferTransactionIds(origin);
         const destinationObservable = this.mapDocumentId.mapTransferTransactionIds(destination);
@@ -102,7 +132,7 @@ export class FirestoreService {
         const observables = [groupsResult.observable, categoriesResult.observable, categoryValuesResult.observable];
         return Observable.combineLatest(observables, (groups, categories, categoryValues) => {
 
-            const formattedData = groups.map((group: CategoryGroupId) => {
+            const formattedData = groups.map((group: CategoryGroupId) => {  
 
                 const getCategories = () => {
                     return categories.filter(c => c.groupId === group.groupId).map(category => {
@@ -144,7 +174,13 @@ export class FirestoreService {
             data = flatten(data);
             orderByDate(data);
 
-            return data;
+            return {
+                collections: {
+                    transactions: this.references.getTransactionCollectionRef(budgetId),
+                    transfers: this.references.getTransfers(budgetId)
+                },
+                data
+            };
 
             function flatten(array: Array<any>) {
                 return [].concat.apply([], array);

@@ -52,6 +52,7 @@ export class BudgetSelectionComponent implements OnInit {
                     await this.router.navigate([newBudgetId], {relativeTo: this.route});
                 }
             });
+
         });
     }
 

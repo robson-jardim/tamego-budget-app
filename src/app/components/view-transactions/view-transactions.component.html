@@ -1,5 +1,10 @@
+<button mat-raised-button color="primary" (click)="createTransactionDialog()">Add transaction</button>
+
 <div *ngIf="transactions | async as transactions">
-    <mat-card *ngFor="let transaction of transactions">
+    <mat-card *ngFor="let transaction of transactions.data">
+        <p *ngIf="transaction.transactionId">Transaction!</p>
+        <p>{{transaction.transactionDate | date:'dd/MM/yyyy'}}</p>
+        <p *ngIf="transaction.transferTransactionId">Transfer!</p>
         <p>{{transaction | json}}</p>
     </mat-card>
 </div>

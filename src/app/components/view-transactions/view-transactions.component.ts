@@ -1,14 +1,16 @@
-import {Component, Input, OnInit, ViewEncapsulation} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs/Observable";
-import {FirestoreService} from "../../services/firestore/firestore.service";
-import "rxjs/add/operator/map";
-import {BudgetAccountId} from "../../../../models/budget-account.model";
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { FirestoreService } from '../../services/firestore/firestore.service';
+import 'rxjs/add/operator/map';
+import { BudgetAccountId } from '../../../../models/budget-account.model';
+import { DialogService } from '../../services/dialog-service/dialog.service';
+import { TransactionDialogComponent } from '../dialogs/transaction-dialog/transaction-dialog.component';
 
 @Component({
-    selector: "app-budget",
-    templateUrl: "./view-transactions.component.html",
-    styleUrls: ["./view-transactions.component.scss"],
+    selector: 'app-budget',
+    templateUrl: './view-transactions.component.html',
+    styleUrls: ['./view-transactions.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ViewTransactionsComponent implements OnInit {
@@ -16,7 +18,8 @@ export class ViewTransactionsComponent implements OnInit {
     public transactions;
 
     constructor(private route: ActivatedRoute,
-                private firestore: FirestoreService) {
+                private firestore: FirestoreService,
+                private dialogService: DialogService) {
     }
 
     ngOnInit() {
@@ -27,9 +30,9 @@ export class ViewTransactionsComponent implements OnInit {
                 const accountIds = [accountId];
                 this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
 
-                // this.transactions.subscribe(x => {
-                //     console.log(x);
-                // });
+                this.transactions.subscribe(x => {
+                    console.log(x);
+                });
             }
             else {
                 this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
@@ -56,4 +59,11 @@ export class ViewTransactionsComponent implements OnInit {
         });
     }
 
+    public createTransactionDialog() {
+        this.dialogService.openCreate(TransactionDialogComponent, {
+            data: {
+                test: 'test message'
+            }
+        });
+    }
 }

@@ -34,6 +34,8 @@ import { TokenInterceptor } from './token.interceptor';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ViewTransactionsComponent } from "./components/view-transactions/view-transactions.component";
 import { ViewBudgetComponent } from "./components/view-budget/view-budget.component";
+import {DialogService} from "./services/dialog-service/dialog.service";
+import { TransactionDialogComponent } from './components/dialogs/transaction-dialog/transaction-dialog.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +55,7 @@ import { ViewBudgetComponent } from "./components/view-budget/view-budget.compon
         AuthComponent,
         OfflineDialogComponent,
         SettingsComponent,
+        TransactionDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -74,12 +77,14 @@ import { ViewBudgetComponent } from "./components/view-budget/view-budget.compon
         EditCategoryDialogComponent,
         CategoryGroupDialogComponent,
         TransferCategoryDialogComponent,
-        OfflineDialogComponent
+        OfflineDialogComponent,
+        TransactionDialogComponent
     ],
     providers: [
         AuthGuard,
         SignedOutGuard,
         RequestService,
+        DialogService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,

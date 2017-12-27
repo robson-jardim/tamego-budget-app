@@ -8,7 +8,7 @@ import { BudgetId, Budget } from '../../../../models/budget.model';
 import { CategoryValue, CategoryValueId } from "../../../../models/category-value.model";
 import { Transaction, TransactionId } from '../../../../models/transaction.model';
 import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
-import {TransferTransaction, TransferTransactionId} from "../../../../models/transfer-transaction";
+import {TransferTransaction, TransferTransactionId} from "../../../../models/transfer-transaction.model";
 
 @Injectable()
 export class MapFirestoreDocumentIdService {
