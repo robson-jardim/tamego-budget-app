@@ -1,13 +1,14 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { FirestoreService } from '../../services/firestore/firestore.service';
-import 'rxjs/add/operator/map';
+import {Component, Input, OnInit, ViewEncapsulation} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs/Observable";
+import {FirestoreService} from "../../services/firestore/firestore.service";
+import "rxjs/add/operator/map";
+import {BudgetAccountId} from "../../../../models/budget-account.model";
 
 @Component({
-    selector: 'app-budget',
-    templateUrl: './view-transactions.component.html',
-    styleUrls: ['./view-transactions.component.scss'],
+    selector: "app-budget",
+    templateUrl: "./view-transactions.component.html",
+    styleUrls: ["./view-transactions.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
 export class ViewTransactionsComponent implements OnInit {
@@ -15,18 +16,31 @@ export class ViewTransactionsComponent implements OnInit {
     public transactions;
 
     constructor(private route: ActivatedRoute,
-                private firstore: FirestoreService) {
+                private firestore: FirestoreService) {
     }
 
     ngOnInit() {
 
         Observable.combineLatest(this.getBudgetId(), this.getAccountId()).subscribe(([budgetId, accountId]) => {
 
-            this.transactions = this.firstore.getTransactionView(budgetId, accountId);
+            if (accountId) {
+                const accountIds = [accountId];
+                this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
 
-            this.transactions.subscribe(x => {
-                console.log(x);
-            });
+                // this.transactions.subscribe(x => {
+                //     console.log(x);
+                // });
+            }
+            else {
+                this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
+                    const accountIds = accounts.map(a => a.budgetAccountId);
+                    this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+
+                    // this.transactions.subscribe(x => {
+                    //     console.log(x);
+                    // });
+                });
+            }
         });
     }
 

@@ -1,15 +1,16 @@
 ///<reference path="../../../../models/category-value.model.ts"/>
-import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import {Injectable} from '@angular/core';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 
-import { CategoryGroup } from '../../../../models/category-group.model';
-import { Category } from '../../../../models/category.model';
-import { Budget } from '../../../../models/budget.model';
-import { BudgetAccount } from '../../../../models/budget-account.model';
-import { CategoryValue } from '../../../../models/category-value.model';
-import { Transaction } from '../../../../models/transaction.model';
+import {CategoryGroup} from '../../../../models/category-group.model';
+import {Category} from '../../../../models/category.model';
+import {Budget} from '../../../../models/budget.model';
+import {BudgetAccount} from '../../../../models/budget-account.model';
+import {CategoryValue} from '../../../../models/category-value.model';
+import {Transaction} from '../../../../models/transaction.model';
 import * as firebase from 'firebase';
-import { SplitTransaction } from '../../../../models/split-transaction.model';
+import {SplitTransaction} from '../../../../models/split-transaction.model';
+import {TransferTransaction} from '../../../../models/transfer-transaction';
 
 @Injectable()
 export class FirestoreReferenceService {
@@ -52,14 +53,28 @@ export class FirestoreReferenceService {
                 query = query.where('accountId', '==', accountId);
             }
 
-            query = query.orderBy('date', 'desc');
-
             return query;
         });
     }
 
     public getSplitTransactionCollectionRef(budgetId: string) {
         return this.afs.collection<SplitTransaction>(`budgets/${budgetId}/splitTransactions`);
+    }
+
+    public getOriginTransfers(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
+            return ref.where('originAccountId', '==', accountId);
+        });
+    }
+
+    public getDestinationTransfers(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
+            return ref.where('destinationAccountId', '==', accountId);
+        });
+    }
+
+    public getTransfers(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection(`budgets/${budgetId}/transferTransactions`);
     }
 }
 

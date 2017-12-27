@@ -17,8 +17,12 @@ service cloud.firestore {
             }
 
             match /transactions/{transactionId} {
-                allow read, create, update: if userOwnsBudget();
+                allow read, write: if userOwnsBudget();
                 //Don't allow delete, splits are tied to transaction
+            }
+
+            match /transferTransactions/{transferId} {
+                allow read, write: if userOwnsBudget();
             }
 
             match /splitTransactions/{splitTransactionId} {

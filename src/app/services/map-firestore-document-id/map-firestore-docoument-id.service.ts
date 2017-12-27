@@ -8,6 +8,7 @@ import { BudgetId, Budget } from '../../../../models/budget.model';
 import { CategoryValue, CategoryValueId } from "../../../../models/category-value.model";
 import { Transaction, TransactionId } from '../../../../models/transaction.model';
 import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
+import {TransferTransaction, TransferTransactionId} from "../../../../models/transfer-transaction";
 
 @Injectable()
 export class MapFirestoreDocumentIdService {
@@ -89,6 +90,16 @@ export class MapFirestoreDocumentIdService {
                 const splitTransaction: SplitTransactionId = this.getDocData<SplitTransactionId>(a);
                 splitTransaction.splitTransactionId = this.getDocId(a);
                 return splitTransaction;
+            });
+        });
+    }
+
+    public mapTransferTransactionIds(collection: AngularFirestoreCollection<TransferTransaction>): Observable<TransferTransactionId[]> {
+        return collection.snapshotChanges().map(actions => {
+            return actions.map(a => {
+                const transfer: TransferTransactionId = this.getDocData<TransferTransactionId>(a);
+                transfer.transferTransactionId = this.getDocId(a);
+                return transfer;
             });
         });
     }

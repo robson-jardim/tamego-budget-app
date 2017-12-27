@@ -1,12 +1,11 @@
 export interface Transaction {
+    transactionDate: Date;
     accountId: string;
-    date: Date;
     payeeId: string | null;
     categoryId: string | null;
     memo: string | null;
-    value: string | null;
-    sign: boolean | null;
-    status: string;
+    amount: number | null;
+    status: number;
 }
 
 export interface TransactionId extends Transaction {

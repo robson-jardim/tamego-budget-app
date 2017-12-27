@@ -1,4 +1,4 @@
-<div class="edit-budget-container" *ngIf="budget | async as budget; else loading">
+<div class="edit-budget-container" *ngIf="budget | async as budget">
 
     <h1 class="mat-headline">{{viewMonth}} {{viewYear}}</h1>
 
@@ -137,7 +137,7 @@
     </ng-container>
 </div>
 
-<ng-template #loading>
-    <mat-spinner></mat-spinner>
-</ng-template>
+<!--<ng-template #loading>-->
+    <!--<mat-spinner></mat-spinner>-->
+<!--</ng-template>-->
 

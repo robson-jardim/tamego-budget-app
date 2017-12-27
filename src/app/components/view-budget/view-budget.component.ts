@@ -44,8 +44,8 @@ export class ViewBudgetComponent implements OnInit {
         this.setDate();
 
         this.getBudgetId().subscribe(budgetId => {
-
             this.budget = this.firestore.getBudgetView(budgetId).do(data => {
+                // TODO - Bottleneck in building data sources
                 this.buildDataSources(data);
             });
         });
