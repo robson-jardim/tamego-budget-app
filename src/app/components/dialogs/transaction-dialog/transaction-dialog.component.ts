@@ -12,7 +12,7 @@ export class TransactionDialogComponent implements OnInit {
 
     public saving = false;
     public mode;
-    private transactionForm: FormGroup;
+    public transactionForm: FormGroup;
 
     public accounts;
     public groups;

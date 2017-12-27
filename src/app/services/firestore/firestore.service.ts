@@ -55,7 +55,7 @@ export class FirestoreService {
 
         const categoriesResult = this.getCategories(budgetId);
         const groupsResult = this.getGroups(budgetId);
-    
+
         const observables = [groupsResult.observable, categoriesResult.observable];
 
         return Observable.combineLatest(observables, (groups: CategoryGroupId[], categories: CategoryId[]) => {
