@@ -92,16 +92,14 @@ export class EditCategoryDialogComponent implements OnInit {
 
     private saveCategoryValueChanges() {
 
+        console.log(this.category);
+
         const valueDocExists = () => {
             return this.category.desiredValue.exists;
         };
 
-        const newCategoryValuesAreZero = () => {
+        const categoryValuesAreZero = () => {
             return this.categoryForm.value.budgeted == 0 && this.categoryForm.value.offset == 0;
-        };
-
-        const getCategoryValueId = () => {
-            return this.category.categoryValueId;
         };
 
         const getBudgetedValue = () => {
@@ -142,29 +140,33 @@ export class EditCategoryDialogComponent implements OnInit {
             return this.category.categoryId;
         };
 
-        if (valueDocExists() && newCategoryValuesAreZero()) {
-            // Delete empty values because delete operations are cheaper than continuing to read empty entities
-            this.categoryValueCollection.doc(generateValueId()).delete();
-        }
-        else if (!valueDocExists() && !newCategoryValuesAreZero()) {
+        if (valueDocExists()) {
+            if (categoryValuesAreZero()) {
+                // Delete empty values because delete operations are cheaper than continuing to read empty entities
+                this.categoryValueCollection.doc(generateValueId()).delete();
+            }
+            else {
+                const data = {
+                    budgeted: getBudgetedValue(),
+                    offset: getOffsetValue()
+                };
 
-            const data: CategoryValue = {
-                budgeted: getBudgetedValue(),
-                offset: getOffsetValue(),
-                budgetMonth: getValueTime(),
-                categoryId: getCategoryId()
-            };
-
-            this.categoryValueCollection.doc(generateValueId()).set(data);
+                this.categoryValueCollection.doc(generateValueId()).update(data);
+            }
         }
         else {
-            const data = {
-                budgeted: getBudgetedValue(),
-                offset: getOffsetValue()
-            };
+            if (!categoryValuesAreZero()) {
+                const data: CategoryValue = {
+                    budgeted: getBudgetedValue(),
+                    offset: getOffsetValue(),
+                    budgetMonth: getValueTime(),
+                    categoryId: getCategoryId()
+                };
 
-            this.categoryValueCollection.doc(generateValueId()).update(data);
+                this.categoryValueCollection.doc(generateValueId()).set(data);
+            }
         }
+
     }
 
     private updateCategoryEntity() {

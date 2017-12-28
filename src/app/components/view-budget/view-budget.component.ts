@@ -29,7 +29,7 @@ export class ViewBudgetComponent implements OnInit {
     public categoryColumns = ['categoryName', 'budgeted', 'budgetedTotal', 'offset', 'offsetTotal', 'activity', 'exists', 'actions'];
     public budget;
 
-    private viewDate: Date;
+    private budgetViewMonth: Date;
     public dataSources: CategoryDataSource[];
 
     selectedRowIndex = -1;
@@ -60,12 +60,13 @@ export class ViewBudgetComponent implements OnInit {
 
             const formattedTableData = group.categories.map(category => {
 
-                const isOnOrBeforeViewDate = (value) => {
-                    return value.budgetMonth <= this.viewDate;
+                const isOnOrBeforeViewMonth = (value) => {
+                    return value.budgetMonth <= this.budgetViewMonth;
                 };
 
-                const isOnViewDate = (value) => {
-                    return value.budgetMonth <= this.viewDate && value.budgetMonth >= this.viewDate;
+                const isOnViewMonth = (value) => {
+                    // Does equality check on dates to make sure they are equal
+                    return value.budgetMonth <= this.budgetViewMonth && value.budgetMonth >= this.budgetViewMonth;
                 };
 
                 const sum = (prev, next) => {
@@ -84,16 +85,16 @@ export class ViewBudgetComponent implements OnInit {
                     return !!element;
                 };
 
-                const offsetTotal = category.values.filter(isOnOrBeforeViewDate).map(offset).reduce(sum, 0);
-                const budgetedTotal = category.values.filter(isOnOrBeforeViewDate).map(budgted).reduce(sum, 0);
-                let desiredValue = category.values.filter(isOnViewDate).find(first);
+                const offsetTotal = category.values.filter(isOnOrBeforeViewMonth).map(offset).reduce(sum, 0);
+                const budgetedTotal = category.values.filter(isOnOrBeforeViewMonth).map(budgted).reduce(sum, 0);
+                let [desiredValue] = category.values.filter(isOnViewMonth);
 
                 if (!desiredValue) {
                     desiredValue = {
                         categoryId: category.categoryId,
                         budgeted: 0,
                         offset: 0,
-                        budgetMonth: this.viewDate,
+                        budgetMonth: this.budgetViewMonth,
                         exists: false
                     };
                 }
@@ -215,25 +216,25 @@ export class ViewBudgetComponent implements OnInit {
         // getMonth() is user over getUTCMonth() because the following should be based on local time
         const currentMonth = temp.getMonth();
         const currentYear = temp.getFullYear();
-        this.viewDate = new Date(currentYear, currentMonth, 1);
+        this.budgetViewMonth = new Date(currentYear, currentMonth, 1);
     }
 
     public get viewMonth() {
-        return this.viewDate.toLocaleString('en-us', {month: 'long'});
+        return this.budgetViewMonth.toLocaleString('en-us', {month: 'long'});
     }
 
     public get viewYear() {
-        return this.viewDate.getFullYear();
+        return this.budgetViewMonth.getFullYear();
     }
 
     public nextMonth() {
-        const currentMonth = this.viewDate.getMonth();
-        this.viewDate.setMonth(currentMonth + 1);
+        const currentMonth = this.budgetViewMonth.getMonth();
+        this.budgetViewMonth.setMonth(currentMonth + 1);
     }
 
     public previousMonth() {
-        const currentMonth = this.viewDate.getMonth();
-        this.viewDate.setMonth(currentMonth - 1);
+        const currentMonth = this.budgetViewMonth.getMonth();
+        this.budgetViewMonth.setMonth(currentMonth - 1);
     }
 
 }
