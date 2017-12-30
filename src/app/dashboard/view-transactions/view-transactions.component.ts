@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
 import { BudgetAccountId } from '../../../../models/budget-account.model';
-import { CloseDialogService } from '../../../shared/services/dialog/dialog.service';
+import { CloseDialogService } from '../../../shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
 
 @Component({

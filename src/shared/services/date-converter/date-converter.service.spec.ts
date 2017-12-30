@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { DateConverterService } from './date-converter.service';
 
-import { DateConverterService } from './date.service';
 
 describe('DateConverterService', () => {
     beforeEach(() => {

@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { CloseDialogService } from './dialog.service';
+import { CloseDialogService } from './close-dialog.service';
 
 describe('CloseDialogService', () => {
     beforeEach(() => {

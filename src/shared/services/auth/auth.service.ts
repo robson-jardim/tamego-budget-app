@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
 import { User } from '../../../../models/user.model';
 import 'rxjs/add/operator/switchMap';
-import { RequestService } from '../request/request.service';
+import { HttpRequestService } from '../http-request/http-request.service';
 import 'rxjs/add/operator/filter';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -23,7 +23,7 @@ export class AuthService {
                 private afs: AngularFirestore,
                 private authNotification: AuthNotificationService,
                 private router: Router,
-                private requestService: RequestService) {
+                private requestService: HttpRequestService) {
 
         this.user = this.afAuth.authState
             .switchMap(user => {

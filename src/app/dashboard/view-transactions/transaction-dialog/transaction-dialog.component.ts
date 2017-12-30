@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '../../../../shared/services/firestore/firestore.service';
-import { DateConverterService } from '../../../../shared/services/dialog/date.service';
+import { DateConverterService } from '../../../../shared/services/date-converter/date-converter.service';
 import { Transaction } from '../../../../../models/transaction.model';
 
 @Component({

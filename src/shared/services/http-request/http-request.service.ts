@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import { OfflineDialogComponent } from '../../components/offline-dialog/offline-dialog.component';
 
 @Injectable()
-export class RequestService {
+export class HttpRequestService {
 
     constructor(private http: HttpClient,
                 private dialog: MatDialog) {
