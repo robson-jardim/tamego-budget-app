@@ -86,9 +86,6 @@ async function validateCategoryValue(event) {
     const dateFromId = new Date(yearTemp, monthTemp, 1);
     const dateFromProperty = new Date(categoryValue.budgetMonth);
 
-    console.log('id', dateFromId);
-    console.log('prop', dateFromProperty);
-
     if (dateFromId.getUTCDay() !== dateFromProperty.getUTCDay()) {
         console.error('Day on time property is not set to the first of the month');
         return false;

@@ -1,0 +1,61 @@
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
+import { BudgetAccountId } from '../../../../models/budget-account.model';
+import { CloseDialogService } from '../../../shared/services/dialog/dialog.service';
+import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
+
+@Component({
+    selector: 'app-budget',
+    templateUrl: './view-transactions.component.html',
+    styleUrls: ['./view-transactions.component.scss'],
+    encapsulation: ViewEncapsulation.None
+})
+export class ViewTransactionsComponent implements OnInit {
+
+    public transactions;
+
+    constructor(private route: ActivatedRoute,
+                private firestore: FirestoreService,
+                private dialogService: CloseDialogService) {
+    }
+
+    ngOnInit() {
+
+        Observable.combineLatest(this.getBudgetId(), this.getAccountId()).subscribe(([budgetId, accountId]) => {
+
+            if (accountId) {
+                const accountIds = [accountId];
+                this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+            }
+            else {
+                this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
+                    const accountIds = accounts.map(a => a.budgetAccountId);
+                    this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+                });
+            }
+        });
+    }
+
+    private getAccountId(): Observable<string> {
+        return this.route.params.map(params => {
+            return params.accountId;
+        });
+    }
+
+    private getBudgetId(): Observable<string> {
+        return this.route.parent.params.map(params => {
+            return params.budgetId;
+        });
+    }
+
+    public createTransactionDialog() {
+        this.dialogService.openCreate(TransactionDialogComponent, {
+            data: {
+                test: 'test message'
+            }
+        });
+    }
+}

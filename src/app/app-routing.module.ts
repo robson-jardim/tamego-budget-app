@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginSignupComponent } from './components/login-signup/login-signup.component';
-import { AuthGuard } from './guards/auth/auth.guard';
-import { BudgetSelectionComponent } from './components/budget-selection/budget-selection.component';
-
-import { ViewBudgetComponent } from './components/view-budget/view-budget.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SignedOutGuard } from './guards/signed-in/signed-in.guard';
-import { AuthComponent } from './components/auth/auth.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { ViewTransactionsComponent } from './components/view-transactions/view-transactions.component';
+import { AuthGuard } from '../shared/guards/auth/auth.guard';
+import { SignedOutGuard } from '../shared/guards/signed-in/signed-in.guard';
+import { LoginSignupComponent } from './login-signup/login-signup.component';
+import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ViewBudgetComponent } from './dashboard/view-budget/view-budget.component';
+import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
     {
@@ -45,10 +43,6 @@ const routes: Routes = [
                 component: ViewTransactionsComponent
             }
         ]
-    },
-    {
-        path: 'auth',
-        component: AuthComponent
     },
     {
         path: 'settings',
