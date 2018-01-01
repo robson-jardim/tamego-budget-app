@@ -30,7 +30,7 @@ import { TransferCategoryDialogComponent } from './dashboard/view-budget/transfe
 import { SettingsComponent } from './settings/settings.component';
 import { TransactionDialogComponent } from './dashboard/view-transactions/transaction-dialog/transaction-dialog.component';
 import { UtcDatePipe } from '../shared/pipes/utc-date/utc-date.pipe';
-import { AppLoginSignupModule } from './login-signup/app-login-signup.module';
+import { LoginSignupComponent } from './login-signup/login-signup.component';
 
 @NgModule({
     imports: [
@@ -43,14 +43,15 @@ import { AppLoginSignupModule } from './login-signup/app-login-signup.module';
         AppRoutingModule,
         AppFirebaseModule,
         AppMaterialModule,
-
-        AppLoginSignupModule,
     ],
     declarations: [
         AppComponent,
         ToolbarComponent,
         OfflineDialogComponent,
         UtcDatePipe,
+
+        
+        LoginSignupComponent,
 
         BudgetSelectionComponent,
         AddBudgetDialogComponent,

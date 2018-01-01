@@ -1,10 +1,33 @@
-<button mat-raised-button color="primary" (click)="createTransactionDialog()">Add transaction</button>
+<ng-container *ngIf="transactions | async as transactions; else loading">
+    <button mat-raised-button color="primary" (click)="createTransactionDialog()">Add transaction</button>
 
-<div *ngIf="transactions | async as transactions">
-    <mat-card *ngFor="let transaction of transactions.data">
-        <p *ngIf="transaction.transactionId">Transaction!</p>
-        <p>{{transaction.transactionDate | date:'dd/MM/yyyy'}}</p>
-        <p *ngIf="transaction.transferTransactionId">Transfer!</p>
-        <p>{{transaction | json}}</p>
+    <mat-card *ngFor="let transaction of transactions.data" (click)="updateTransaction(transaction)">
+        <ng-container *ngIf="transaction.transactionId">
+            <p>Transaction</p>
+
+            <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
+            <p>AccountId: {{transaction.accountId}}</p>
+            <p *ngIf="transaction.payeeId">Payee ID: {{transaction.payeeId}}</p>
+            <p *ngIf="transaction.categoryId">AccountId: {{transaction.categoryId}}</p>
+            <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
+            <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
+            <p>Status: {{transaction.status}}</p>
+        </ng-container>
+
+        <ng-container *ngIf="transaction.transferTransactionId">
+            <p>Transfer</p>
+
+            <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
+            <p>From: {{transaction.originAccountId}}</p>
+            <p>To: {{transaction.destinationAccountId}}</p>
+            <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
+            <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
+            <p>Status: {{transaction.status}}</p>
+        </ng-container>
     </mat-card>
-</div>
+</ng-container>
+
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

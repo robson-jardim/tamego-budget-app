@@ -14,6 +14,7 @@ import 'rxjs/add/operator/skip';
 import { Transaction, TransactionId } from '../../../../models/transaction.model';
 import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
 import { TransferTransaction, TransferTransactionId } from '../../../../models/transfer-transaction.model';
+import { Payee, PayeeId } from '../../../../models/payee.model';
 
 @Injectable()
 export class FirestoreService {
@@ -111,6 +112,12 @@ export class FirestoreService {
         return {collection, observable};
     }
 
+    public getPayees(budgetId: string): CollectionResult<Payee, PayeeId[]> {
+        const collection = this.references.getPayeeCollectionRef(budgetId);
+        const observable = this.mapDocumentId.mapPayeeIds(collection);
+        return {collection, observable};
+    }
+
     private getTransferTransactions(budgetId: string, accountId: string): Observable<TransferTransactionId[]> {
         const origin = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
         const destination = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
@@ -203,5 +210,4 @@ export class FirestoreService {
         });
 
     }
-
 }

@@ -1,7 +1,7 @@
 <form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
 
-    <h1 mat-dialog-title *ngIf=" mode=== 'CREATE'">Add transaction</h1>
-    <h1 mat-dialog-title *ngIf="mode === 'UPDATE'">Edit transaction</h1>
+    <h1 mat-dialog-title *ngIf="data.state === 'CREATE'">Add transaction</h1>
+    <h1 mat-dialog-title *ngIf="data.state === 'UPDATE'">Edit transaction</h1>
 
     <mat-dialog-content>
 
@@ -22,20 +22,24 @@
         <mat-form-field>
             <mat-select placeholder="Payee" formControlName="payeeId">
 
-                <mat-option>Other payees here...</mat-option>
-
-                <mat-option *ngFor="let account of accounts.observable | async" [value]="account.budgetAccountId">
+                <mat-option (click)="setToTransferState()" *ngFor="let account of accounts.observable | async"
+                            [value]="account.budgetAccountId">
                     Transfer: {{account.accountName}}
                 </mat-option>
 
-            </mat-select>
+                <ng-container *ngIf="payees.observable | async as payees">
+                    <mat-option *ngFor="let payee of payees" (click)="setToTransactionState()" [value]="payee.payeeId">
+                        {{payee.payeeName}}
+                    </mat-option>
+                </ng-container>
 
+            </mat-select>
         </mat-form-field>
 
         <mat-form-field>
             <mat-select placeholder="Category" formControlName="categoryId">
-                <ng-container *ngIf="groups | async as groups">
-                    <ng-container *ngFor="let group of groups.data">
+                <ng-container *ngIf="groupsAndCategories | async as groupsAndCategories">
+                    <ng-container *ngFor="let group of groupsAndCategories.data">
                         <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">
                             {{group.groupName}}: {{category.categoryName}}
                         </mat-option>

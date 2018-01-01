@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '../../../../shared/services/firestore/firestore.service';
 import { DateConverterService } from '../../../../shared/services/date-converter/date-converter.service';
-import { Transaction } from '../../../../../models/transaction.model';
+import { Transaction, TransactionId } from '../../../../../models/transaction.model';
+import { CollectionResult } from '../../../../../models/collection-result.model';
+import { BudgetAccount, BudgetAccountId } from '../../../../../models/budget-account.model';
 
 @Component({
     selector: 'app-transaction-dialog',
@@ -11,54 +13,85 @@ import { Transaction } from '../../../../../models/transaction.model';
     styleUrls: ['./transaction-dialog.component.scss']
 })
 export class TransactionDialogComponent implements OnInit {
+    payees: any;
 
     public saving = false;
-    public mode;
     public transactionForm: FormGroup;
 
-    public accounts;
-    public groups;
-    public transactions;
+    public transactions: CollectionResult<Transaction, TransactionId[]>;
+    public accounts: CollectionResult<BudgetAccount, BudgetAccountId[]>;
+    public groupsAndCategories: any;
+    private isTransfer: boolean;
 
     constructor(private dialogRef: MatDialogRef<TransactionDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
                 private dateConverter: DateConverterService) {
-        this.transactions = this.firestore.getTransactions('aqvJ4oQo0E5ldQRdsxsR', 'xPVl5jgXLPLC52T1Lh3C');
-
-        this.mode = this.data.mode;
+        console.log(this.data);
     }
 
     ngOnInit() {
+
+        if (this.data.transferTransactionId) {
+            this.setToTransferState();
+        }
+
+        this.accounts = this.firestore.getAccounts(this.data.budgetId);
+        this.groupsAndCategories = this.firestore.getGroupsAndCategories(this.data.budgetId);
+        this.transactions = this.firestore.getTransactions(this.data.budgetId, this.data.accountId);
+        this.payees = this.firestore.getPayees(this.data.budgetId);
+
         this.buildTransactionForm();
-        this.accounts = this.firestore.getAccounts('aqvJ4oQo0E5ldQRdsxsR');
-        this.groups = this.firestore.getGroupsAndCategories('aqvJ4oQo0E5ldQRdsxsR');
     }
 
     private buildTransactionForm() {
-        this.transactionForm = this.formBuilder.group({
-            accountId: [null, Validators.required],
-            transactionDate: ['', Validators.required],
-            payeeId: [null],
-            categoryId: [null],
-            memo: [null],
-            amount: [null]
-        });
+
+        if (this.isTransfer) {
+            if (this.data.originAccountId === this.data.accountId) {
+                this.transactionForm = this.formBuilder.group({
+                    accountId: [this.data.originAccountId, Validators.required],
+                    transactionDate: [this.data.transactionDate, Validators.required],
+                    payeeId: [this.data.destinationAccountId],
+                    categoryId: [this.data.categoryId],
+                    memo: [this.data.memo],
+                    amount: [this.data.amount]
+                });
+            } else {
+                this.transactionForm = this.formBuilder.group({
+                    accountId: [this.data.destinationAccountId, Validators.required],
+                    transactionDate: [this.data.transactionDate, Validators.required],
+                    payeeId: [this.data.originAccountId],
+                    categoryId: [this.data.categoryId],
+                    memo: [this.data.memo],
+                    amount: [this.data.amount]
+                });
+            }
+        }
+        else {
+            this.transactionForm = this.formBuilder.group({
+                accountId: [this.data.accountId, Validators.required],
+                transactionDate: [this.data.transactionDate, Validators.required],
+                payeeId: [this.data.payeeId],
+                categoryId: [this.data.categoryId],
+                memo: [this.data.memo],
+                amount: [this.data.amount]
+            });
+        }
+
     }
 
     public saveChanges() {
 
-        const date = this.transactionForm.value.transactionDate;
-
         this.saving = true;
 
-        if (this.mode === 'CREATE') {
-            this.addNewTransaction();
+        if (this.isTransfer) {
+            this.saveTransfer();
         }
-        else if (this.mode === 'UPDATE') {
+        else {
+            this.saveTransaction();
+        }
 
-        }
     }
 
     private addNewTransaction() {
@@ -78,5 +111,35 @@ export class TransactionDialogComponent implements OnInit {
 
         this.transactions.collection.add(data);
         this.dialogRef.close();
+    }
+
+    public setToTransferState() {
+        this.isTransfer = true;
+    }
+
+    public setToTransactionState() {
+        this.isTransfer = false;
+    }
+
+    private saveTransfer() {
+
+        if (this.data.state === 'CREATE') {
+            console.log('save transfer');
+            this.addNewTransaction();
+        }
+        else if (this.data.state === 'UPDATE') {
+            console.log('update transfer');
+        }
+
+    }
+
+    private saveTransaction() {
+        if (this.data.state === 'CREATE') {
+            console.log('save transaction');
+            this.addNewTransaction();
+        }
+        else if (this.data.state === 'UPDATE') {
+            console.log('update transaction');
+        }
     }
 }

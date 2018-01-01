@@ -13,12 +13,12 @@ export class CloseDialogService {
     }
 
     public openUpdate(component, config: any = {}) {
-        config.data.mode = 'UPDATE';
+        config.data.state = 'UPDATE';
         return this.open(component, config);
     }
 
     public openCreate(component, config) {
-        config.data.mode = 'CREATE';
+        config.data.state = 'CREATE';
         return this.open(component, config);
     }
 

@@ -9,6 +9,7 @@ import { CategoryValue, CategoryValueId } from '../../../../models/category-valu
 import { Transaction, TransactionId } from '../../../../models/transaction.model';
 import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
 import { TransferTransaction, TransferTransactionId } from '../../../../models/transfer-transaction.model';
+import { Payee, PayeeId } from '../../../../models/payee.model';
 
 @Injectable()
 export class MapFirestoreDocumentIdService {
@@ -100,6 +101,16 @@ export class MapFirestoreDocumentIdService {
                 const transfer: TransferTransactionId = this.getDocData<TransferTransactionId>(a);
                 transfer.transferTransactionId = this.getDocId(a);
                 return transfer;
+            });
+        });
+    }
+
+    public mapPayeeIds(collection: AngularFirestoreCollection<Payee>): Observable<PayeeId[]> {
+        return collection.snapshotChanges().map(actions => {
+            return actions.map(a => {
+                const payee: PayeeId = this.getDocData<PayeeId>(a);
+                payee.payeeId = this.getDocId(a);
+                return payee;
             });
         });
     }

@@ -11,6 +11,7 @@ import { Transaction } from '../../../../models/transaction.model';
 import * as firebase from 'firebase';
 import { SplitTransaction } from '../../../../models/split-transaction.model';
 import { TransferTransaction } from '../../../../models/transfer-transaction.model';
+import { Payee } from '../../../../models/payee.model';
 
 @Injectable()
 export class FirestoreReferenceService {
@@ -75,6 +76,10 @@ export class FirestoreReferenceService {
 
     public getTransfers(budgetId: string): AngularFirestoreCollection<TransferTransaction> {
         return this.afs.collection(`budgets/${budgetId}/transferTransactions`);
+    }
+
+    public getPayeeCollectionRef(budgetId: string): AngularFirestoreCollection<Payee> {
+        return this.afs.collection(`budgets/${budgetId}/payees`);
     }
 }
 

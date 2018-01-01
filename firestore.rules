@@ -11,6 +11,10 @@ service cloud.firestore {
             allow read: if resource.data.userId == request.auth.uid;
             allow create: if request.auth.uid == request.resource.data.userId;
 
+            match /payees/{payeeId} {
+                allow read, create, update: if userOwnsBudget();
+            }
+
             match /accounts/{accountId} {
                 allow read, create, update: if userOwnsBudget();
                 //Don't allow direct delete, must delete dependencies first

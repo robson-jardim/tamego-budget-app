@@ -6,6 +6,7 @@ import { TransactionDialogComponent } from './transaction-dialog/transaction-dia
 import { BudgetAccountId } from '../../../../models/budget-account.model';
 import { CloseDialogService } from '../../../shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
+import { TransactionId } from '../../../../models/transaction.model';
 
 @Component({
     selector: 'app-budget',
@@ -52,10 +53,30 @@ export class ViewTransactionsComponent implements OnInit {
     }
 
     public createTransactionDialog() {
-        this.dialogService.openCreate(TransactionDialogComponent, {
-            data: {
-                test: 'test message'
-            }
-        });
+        Observable.combineLatest(this.getBudgetId(), this.getAccountId())
+            .take(1)
+            .subscribe(([budgetId, accountId]) => {
+
+                const data: any = {budgetId};
+                if (accountId) {
+                    data.accountId = accountId;
+                }
+
+                this.dialogService.openCreate(TransactionDialogComponent, {data});
+            });
+    }
+
+    public updateTransaction(transaction: TransactionId) {
+        Observable.combineLatest(this.getBudgetId(), this.getAccountId())
+            .take(1)
+            .subscribe(([budgetId, accountId]) => {
+                this.dialogService.openUpdate(TransactionDialogComponent, {
+                    data: {
+                        budgetId,
+                        accountId,
+                        ...transaction
+                    }
+                });
+            });
     }
 }
