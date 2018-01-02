@@ -24,11 +24,10 @@ export class TransactionDialogComponent implements OnInit {
     private isTransfer: boolean;
 
     constructor(private dialogRef: MatDialogRef<TransactionDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) private data: any,
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
                 private dateConverter: DateConverterService) {
-        console.log(this.data);
     }
 
     ngOnInit() {
