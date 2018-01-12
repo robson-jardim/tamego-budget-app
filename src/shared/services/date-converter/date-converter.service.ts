@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 
 @Injectable()
-export class DateConverterService {
+export class UtilityService {
 
     constructor(private afs: AngularFirestore) {
     }
@@ -17,4 +17,7 @@ export class DateConverterService {
         return utcDate;
     }
 
+    public flattenArray(arrays: Array<any>) {
+        return [].concat.apply([], arrays);
+    }
 }

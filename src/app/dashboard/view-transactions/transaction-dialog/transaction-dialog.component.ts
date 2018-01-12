@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '../../../../shared/services/firestore/firestore.service';
-import { DateConverterService } from '../../../../shared/services/date-converter/date-converter.service';
+import { UtilityService } from '../../../../shared/services/date-converter/date-converter.service';
 import { Transaction, TransactionId } from '../../../../../models/transaction.model';
 import { CollectionResult } from '../../../../../models/collection-result.model';
 import { BudgetAccount, BudgetAccountId } from '../../../../../models/budget-account.model';
@@ -27,7 +27,7 @@ export class TransactionDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
-                private dateConverter: DateConverterService) {
+                private utility: UtilityService) {
     }
 
     ngOnInit() {
@@ -54,7 +54,8 @@ export class TransactionDialogComponent implements OnInit {
                     payeeId: [this.data.destinationAccountId],
                     categoryId: [this.data.categoryId],
                     memo: [this.data.memo],
-                    amount: [this.data.amount]
+                    amount: [this.data.amount],
+                    status: [this.data.status]
                 });
             } else {
                 this.transactionForm = this.formBuilder.group({
@@ -63,7 +64,8 @@ export class TransactionDialogComponent implements OnInit {
                     payeeId: [this.data.originAccountId],
                     categoryId: [this.data.categoryId],
                     memo: [this.data.memo],
-                    amount: [this.data.amount]
+                    amount: [this.data.amount],
+                    status: [this.data.status]
                 });
             }
         }
@@ -74,10 +76,10 @@ export class TransactionDialogComponent implements OnInit {
                 payeeId: [this.data.payeeId],
                 categoryId: [this.data.categoryId],
                 memo: [this.data.memo],
-                amount: [this.data.amount]
+                amount: [this.data.amount],
+                status: [this.data.status]
             });
         }
-
     }
 
     public saveChanges() {
@@ -94,21 +96,7 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private addNewTransaction() {
-
-        const dateFromForm = this.transactionForm.value.transactionDate;
-        const utcDate = this.dateConverter.convertToUTC(dateFromForm);
-
-        const data: Transaction = {
-            transactionDate: utcDate,
-            accountId: this.transactionForm.value.accountId,
-            payeeId: this.transactionForm.value.payeeId,
-            categoryId: this.transactionForm.value.categoryId,
-            amount: this.transactionForm.value.amount,
-            memo: this.transactionForm.value.memo,
-            status: 0
-        };
-
-        this.transactions.collection.add(data);
+        this.transactions.collection.add(this.transactionFormData);
         this.dialogRef.close();
     }
 
@@ -134,11 +122,36 @@ export class TransactionDialogComponent implements OnInit {
 
     private saveTransaction() {
         if (this.data.state === 'CREATE') {
-            console.log('save transaction');
             this.addNewTransaction();
         }
         else if (this.data.state === 'UPDATE') {
-            console.log('update transaction');
+            this.updateTransaction();
         }
     }
+
+    private updateTransaction() {
+        const transactionId = this.data.transactionId;
+        this.transactions.collection.doc(transactionId).update(this.transactionFormData);
+
+        this.dialogRef.close();
+    }
+
+    private get transactionFormData() {
+        const dateFromForm = this.transactionForm.value.transactionDate;
+        const utcDate = this.utility.convertToUTC(dateFromForm);
+
+        const data: Transaction = {
+            transactionDate: utcDate,
+            accountId: this.transactionForm.value.accountId,
+            payeeId: this.transactionForm.value.payeeId,
+            categoryId: this.transactionForm.value.categoryId,
+            amount: this.transactionForm.value.amount,
+            memo: this.transactionForm.value.memo,
+            status: this.transactionForm.value.status
+        };
+
+        return data;
+    }
+
+
 }

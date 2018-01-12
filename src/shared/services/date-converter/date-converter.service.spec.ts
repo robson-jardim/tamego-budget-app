@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { DateConverterService } from './date-converter.service';
+import { UtilityService } from './date-converter.service';
 
 
-describe('DateConverterService', () => {
+describe('UtilityService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [DateConverterService]
+            providers: [UtilityService]
         });
     });
 
-    it('should be created', inject([DateConverterService], (service: DateConverterService) => {
+    it('should be created', inject([UtilityService], (service: UtilityService) => {
         expect(service).toBeTruthy();
     }));
 });

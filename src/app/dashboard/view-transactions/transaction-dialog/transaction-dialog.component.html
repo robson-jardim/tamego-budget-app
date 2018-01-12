@@ -23,7 +23,8 @@
             <mat-select placeholder="Payee" formControlName="payeeId">
 
                 <mat-option (click)="setToTransferState()" *ngFor="let account of accounts.observable | async"
-                            [value]="account.budgetAccountId">
+                            [value]="account.budgetAccountId"
+                            [disabled]="true">
                     Transfer: {{account.accountName}}
                 </mat-option>
 
@@ -38,6 +39,7 @@
 
         <mat-form-field>
             <mat-select placeholder="Category" formControlName="categoryId">
+
                 <ng-container *ngIf="groupsAndCategories | async as groupsAndCategories">
                     <ng-container *ngFor="let group of groupsAndCategories.data">
                         <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">

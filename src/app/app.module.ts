@@ -15,7 +15,7 @@ import { OfflineDialogComponent } from '../shared/components/offline-dialog/offl
 import { TokenInterceptor } from '../shared/interceptors/token.interceptor';
 import { HttpRequestService } from '../shared/services/http-request/http-request.service';
 import { CloseDialogService } from '../shared/services/close-dialog/close-dialog.service';
-import { DateConverterService } from '../shared/services/date-converter/date-converter.service';
+import { UtilityService } from '../shared/services/date-converter/date-converter.service';
 import { GeneralNotificationsService } from '../shared/services/general-notifications/general-notifications.service';
 import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
 import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';
@@ -50,7 +50,7 @@ import { LoginSignupComponent } from './login-signup/login-signup.component';
         OfflineDialogComponent,
         UtcDatePipe,
 
-        
+
         LoginSignupComponent,
 
         BudgetSelectionComponent,
@@ -83,7 +83,7 @@ import { LoginSignupComponent } from './login-signup/login-signup.component';
 
         HttpRequestService,
         CloseDialogService,
-        DateConverterService,
+        UtilityService,
         GeneralNotificationsService,
         {
             provide: HTTP_INTERCEPTORS,
