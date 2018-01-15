@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { MapFirestoreDocumentIdService } from '../map-firestore-document-id/map-firestore-docoument-id.service';
 import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
-import { CollectionResult } from '../../../../models/collection-result.model';
-import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
-import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
-import { Category, CategoryId } from '../../../../models/category.model';
-import { Budget, BudgetId } from '../../../../models/budget.model';
+import { CollectionResult } from '@models/collection-result.model';
+import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
+import { Category, CategoryId } from '@models/category.model';
+import { Budget, BudgetId } from '@models/budget.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
+import { CategoryValue, CategoryValueId } from '@models/category-value.model';
 import 'rxjs/add/operator/skip';
-import { Transaction, TransactionId } from '../../../../models/transaction.model';
-import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
-import { TransferTransaction, TransferTransactionId } from '../../../../models/transfer-transaction.model';
-import { Payee, PayeeId } from '../../../../models/payee.model';
+import { Transaction, TransactionId } from '@models/transaction.model';
+import { SplitTransaction, SplitTransactionId } from '@models/split-transaction.model';
+import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
+import { Payee, PayeeId } from '@models/payee.model';
 
 @Injectable()
 export class FirestoreService {

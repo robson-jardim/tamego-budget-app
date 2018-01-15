@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../shared/services/auth/auth.service';
-import { AuthNotificationService } from '../../shared/services/auth-notification/auth-notification.service';
+import { AuthService } from '@shared/services/auth/auth.service';
+import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
 
 @Component({
     selector: 'app-login-signup',

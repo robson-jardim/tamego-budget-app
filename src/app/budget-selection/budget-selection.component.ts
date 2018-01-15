@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBudgetDialogComponent } from './add-budget-dialog/add-budget-dialog.component';
 import 'rxjs/add/operator/first';
-import { CollectionResult } from '../../../models/collection-result.model';
-import { Budget, BudgetId } from '../../../models/budget.model';
-import { FirestoreService } from '../../shared/services/firestore/firestore.service';
-import { AuthService } from '../../shared/services/auth/auth.service';
-import { User } from '../../../models/user.model';
+import { CollectionResult } from '@models/collection-result.model';
+import { Budget, BudgetId } from '@models/budget.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { AuthService } from '@shared/services/auth/auth.service';
+import { User } from '@models/user.model';
 
 @Component({
     selector: 'app-dashboard',

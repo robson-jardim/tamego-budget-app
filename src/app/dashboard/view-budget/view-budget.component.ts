@@ -9,9 +9,9 @@ import { EditCategoryDialogComponent } from './category-dialog/category-dialog.c
 import { CategoryGroupDialogComponent } from './category-group-dialog/category-group-dialog.component';
 import { TransferCategoryDialogComponent } from './transfer-category-dialog/transfer-category-dialog.component';
 import 'rxjs/add/operator/do';
-import { CategoryGroupId } from '../../../../models/category-group.model';
-import { CategoryId } from '../../../../models/category.model';
-import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
+import { CategoryGroupId } from '@models/category-group.model';
+import { CategoryId } from '@models/category.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
 
 @Component({
     selector: 'app-budget',

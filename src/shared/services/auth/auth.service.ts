@@ -6,11 +6,11 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
-import { User } from '../../../../models/user.model';
+import { User } from '@models/user.model';
 import 'rxjs/add/operator/switchMap';
 import { HttpRequestService } from '../http-request/http-request.service';
 import 'rxjs/add/operator/filter';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()

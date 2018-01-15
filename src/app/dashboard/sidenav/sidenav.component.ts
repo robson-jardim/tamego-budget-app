@@ -2,9 +2,9 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AddAccountToBudgetDialogComponent } from './add-account-to-budget-dialog/add-account-to-budget-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CollectionResult } from '../../../../models/collection-result.model';
-import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
-import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
+import { CollectionResult } from '@models/collection-result.model';
+import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
 
 @Component({
     selector: 'app-sidenav',

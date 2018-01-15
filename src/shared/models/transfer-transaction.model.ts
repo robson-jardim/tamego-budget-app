@@ -7,6 +7,6 @@ export interface TransferTransaction {
     status: number;
 }
 
-export interface TransferTransactionId extends TransferTransaction{
+export interface TransferTransactionId extends TransferTransaction {
     transferTransactionId: string;
 }

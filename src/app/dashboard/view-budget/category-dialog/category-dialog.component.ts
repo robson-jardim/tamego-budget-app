@@ -2,9 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Category } from '../../../../../models/category.model';
-import { CategoryValue } from '../../../../../models/category-value.model';
-import { GeneralNotificationsService } from '../../../../shared/services/general-notifications/general-notifications.service';
+import { Category } from '@models/category.model';
+import { CategoryValue } from '@models/category-value.model';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+
 
 @Component({
     selector: 'app-edit-category-dialog',

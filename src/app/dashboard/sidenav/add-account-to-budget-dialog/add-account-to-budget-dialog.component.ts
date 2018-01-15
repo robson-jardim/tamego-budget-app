@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { BudgetAccount } from '../../../../../models/budget-account.model';
+import { BudgetAccount } from '@models/budget-account.model';
 
 @Component({
     selector: 'app-add-account-to-budget-dialog',

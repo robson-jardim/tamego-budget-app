@@ -11,9 +11,9 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/retryWhen';
 import 'rxjs/add/observable/timer';
-import { CollectionResult } from '../../../../models/collection-result.model';
-import { Budget, BudgetId } from '../../../../models/budget.model';
-import { FirestoreService } from '../../../shared/services/firestore/firestore.service';
+import { CollectionResult } from '@models/collection-result.model';
+import { Budget, BudgetId } from '@models/budget.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
 
 @Component({
     selector: 'app-add-budget-dialog',

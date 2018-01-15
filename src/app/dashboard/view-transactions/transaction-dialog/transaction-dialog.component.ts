@@ -1,11 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirestoreService } from '../../../../shared/services/firestore/firestore.service';
-import { UtilityService } from '../../../../shared/services/date-converter/date-converter.service';
-import { Transaction, TransactionId } from '../../../../../models/transaction.model';
-import { CollectionResult } from '../../../../../models/collection-result.model';
-import { BudgetAccount, BudgetAccountId } from '../../../../../models/budget-account.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { DateConverterService } from '@shared/services/date-converter/date-converter.service';
+import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/mergeMap';
+import { CollectionResult } from '@models/collection-result.model';
+import { Transaction, TransactionId } from '@models/transaction.model';
+
 
 @Component({
     selector: 'app-transaction-dialog',
@@ -13,7 +17,8 @@ import { BudgetAccount, BudgetAccountId } from '../../../../../models/budget-acc
     styleUrls: ['./transaction-dialog.component.scss']
 })
 export class TransactionDialogComponent implements OnInit {
-    payees: any;
+
+    public payees;
 
     public saving = false;
     public transactionForm: FormGroup;
@@ -27,7 +32,7 @@ export class TransactionDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
-                private utility: UtilityService) {
+                private utility: DateConverterService) {
     }
 
     ngOnInit() {
@@ -39,47 +44,51 @@ export class TransactionDialogComponent implements OnInit {
         this.accounts = this.firestore.getAccounts(this.data.budgetId);
         this.groupsAndCategories = this.firestore.getGroupsAndCategories(this.data.budgetId);
         this.transactions = this.firestore.getTransactions(this.data.budgetId, this.data.accountId);
-        this.payees = this.firestore.getPayees(this.data.budgetId);
+        this.payees = this.getPayees();
 
         this.buildTransactionForm();
+
+        this.transactionForm.get('payeeId').valueChanges
+            .startWith(null)
+            .mergeMap(input => {
+                if (input) {
+                    return this.filterPayees(input);
+                }
+                else {
+                    return Observable.of([]);
+                }
+            }).subscribe(x => console.log(x));
+    }
+
+    public filterPayees(name: string) {
+        return this.getPayees().map(payees => {
+            return payees.filter(payee => payee.payeeName.toLowerCase().indexOf(name.toLowerCase()) === 0);
+        });
+    }
+
+    public getPayees() {
+        return this.firestore.getPayees(this.data.budgetId).observable;
     }
 
     private buildTransactionForm() {
 
+        const baseForm: any = {
+            transactionDate: [this.data.transactionDate, Validators.required],
+            memo: [this.data.memo],
+            amount: [this.data.amount],
+            status: [this.data.status]
+        };
+
         if (this.isTransfer) {
-            if (this.data.originAccountId === this.data.accountId) {
-                this.transactionForm = this.formBuilder.group({
-                    accountId: [this.data.originAccountId, Validators.required],
-                    transactionDate: [this.data.transactionDate, Validators.required],
-                    payeeId: [this.data.destinationAccountId],
-                    categoryId: [this.data.categoryId],
-                    memo: [this.data.memo],
-                    amount: [this.data.amount],
-                    status: [this.data.status]
-                });
-            } else {
-                this.transactionForm = this.formBuilder.group({
-                    accountId: [this.data.destinationAccountId, Validators.required],
-                    transactionDate: [this.data.transactionDate, Validators.required],
-                    payeeId: [this.data.originAccountId],
-                    categoryId: [this.data.categoryId],
-                    memo: [this.data.memo],
-                    amount: [this.data.amount],
-                    status: [this.data.status]
-                });
-            }
+            console.log('Is transfer');
         }
         else {
-            this.transactionForm = this.formBuilder.group({
-                accountId: [this.data.accountId, Validators.required],
-                transactionDate: [this.data.transactionDate, Validators.required],
-                payeeId: [this.data.payeeId],
-                categoryId: [this.data.categoryId],
-                memo: [this.data.memo],
-                amount: [this.data.amount],
-                status: [this.data.status]
-            });
+            baseForm.accountId = [this.data.accountId, Validators.required];
+            baseForm.payeeId = [this.data.payeeId];
+            baseForm.categoryId = [this.data.categoryId];
         }
+
+        this.transactionForm = this.formBuilder.group(baseForm);
     }
 
     public saveChanges() {

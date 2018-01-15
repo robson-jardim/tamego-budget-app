@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-import { CategoryGroup, CategoryGroupId } from '../../../../models/category-group.model';
-import { Category, CategoryId } from '../../../../models/category.model';
-import { BudgetAccount, BudgetAccountId } from '../../../../models/budget-account.model';
-import { BudgetId, Budget } from '../../../../models/budget.model';
-import { CategoryValue, CategoryValueId } from '../../../../models/category-value.model';
-import { Transaction, TransactionId } from '../../../../models/transaction.model';
-import { SplitTransaction, SplitTransactionId } from '../../../../models/split-transaction.model';
-import { TransferTransaction, TransferTransactionId } from '../../../../models/transfer-transaction.model';
-import { Payee, PayeeId } from '../../../../models/payee.model';
+import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
+import { Category, CategoryId } from '@models/category.model';
+import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { BudgetId, Budget } from '@models/budget.model';
+import { CategoryValue, CategoryValueId } from '@models/category-value.model';
+import { Transaction, TransactionId } from '@models/transaction.model';
+import { SplitTransaction, SplitTransactionId } from '@models/split-transaction.model';
+import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
+import { Payee, PayeeId } from '@models/payee.model';
 
 @Injectable()
 export class MapFirestoreDocumentIdService {

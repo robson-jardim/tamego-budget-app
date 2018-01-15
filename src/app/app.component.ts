@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material';
 import {
     GeneralNotificationsService,
     Notification
-} from '../shared/services/general-notifications/general-notifications.service';
+} from '@shared/services/general-notifications/general-notifications.service';
 
 @Component({
     selector: 'app-root',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AuthService } from '../../shared/services/auth/auth.service';
+import { AuthService } from '@shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-settings',

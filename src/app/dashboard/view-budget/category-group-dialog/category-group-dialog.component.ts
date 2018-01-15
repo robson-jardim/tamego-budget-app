@@ -3,8 +3,8 @@ import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { EditCategoryDialogComponent } from '../category-dialog/category-dialog.component';
-import { CategoryGroup, CategoryGroupId } from '../../../../../models/category-group.model';
-import { GeneralNotificationsService } from '../../../../shared/services/general-notifications/general-notifications.service';
+import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 
 @Component({
     selector: 'app-category-group-dialog',

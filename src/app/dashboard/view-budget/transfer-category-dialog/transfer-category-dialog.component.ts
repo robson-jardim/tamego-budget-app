@@ -3,10 +3,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Category, CategoryId } from '../../../../../models/category.model';
-import { CollectionResult } from '../../../../../models/collection-result.model';
-import { CategoryGroup, CategoryGroupId } from '../../../../../models/category-group.model';
-import { FirestoreService } from '../../../../shared/services/firestore/firestore.service';
+import { Category, CategoryId } from '@models/category.model';
+import { CollectionResult } from '@models/collection-result.model';
+import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
 
 @Component({
     selector: 'app-transfer-category-dialog',

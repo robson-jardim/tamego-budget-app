@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 
 @Injectable()
-export class UtilityService {
+export class DateConverterService {
 
     constructor(private afs: AngularFirestore) {
     }
@@ -15,9 +15,5 @@ export class UtilityService {
         const utcDate = new Date(Date.UTC(year, month, day));
 
         return utcDate;
-    }
-
-    public flattenArray(arrays: Array<any>) {
-        return [].concat.apply([], arrays);
     }
 }

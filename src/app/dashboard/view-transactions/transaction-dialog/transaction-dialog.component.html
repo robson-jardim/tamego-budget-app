@@ -20,22 +20,32 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select placeholder="Payee" formControlName="payeeId">
-
-                <mat-option (click)="setToTransferState()" *ngFor="let account of accounts.observable | async"
-                            [value]="account.budgetAccountId"
-                            [disabled]="true">
-                    Transfer: {{account.accountName}}
+            <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payeeId">
+            <mat-autocomplete #payeeAutoComplete="matAutocomplete">
+                <mat-option *ngFor="let payee of payees | async"
+                            [value]="payee.payeeId">
+                    {{payee.payeeName}}
                 </mat-option>
-
-                <ng-container *ngIf="payees.observable | async as payees">
-                    <mat-option *ngFor="let payee of payees" (click)="setToTransactionState()" [value]="payee.payeeId">
-                        {{payee.payeeName}}
-                    </mat-option>
-                </ng-container>
-
-            </mat-select>
+            </mat-autocomplete>
         </mat-form-field>
+
+        <!--<mat-form-field>-->
+        <!--<mat-select placeholder="Payee" formControlName="payeeId">-->
+
+        <!--<mat-option (click)="setToTransferState()" *ngFor="let account of accounts.observable | async"-->
+        <!--[value]="account.budgetAccountId"-->
+        <!--[disabled]="true">-->
+        <!--Transfer: {{account.accountName}}-->
+        <!--</mat-option>-->
+
+        <!--<ng-container *ngIf="payees.observable | async as payees">-->
+        <!--<mat-option *ngFor="let payee of payees" (click)="setToTransactionState()" [value]="payee.payeeId">-->
+        <!--{{payee.payeeName}}-->
+        <!--</mat-option>-->
+        <!--</ng-container>-->
+
+        <!--</mat-select>-->
+        <!--</mat-form-field>-->
 
         <mat-form-field>
             <mat-select placeholder="Category" formControlName="categoryId">

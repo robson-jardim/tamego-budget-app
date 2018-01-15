@@ -1,17 +1,16 @@
-///<reference path="../../../../models/category-value.model.ts"/>
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-
-import { CategoryGroup } from '../../../../models/category-group.model';
-import { Category } from '../../../../models/category.model';
-import { Budget } from '../../../../models/budget.model';
-import { BudgetAccount } from '../../../../models/budget-account.model';
-import { CategoryValue } from '../../../../models/category-value.model';
-import { Transaction } from '../../../../models/transaction.model';
 import * as firebase from 'firebase';
-import { SplitTransaction } from '../../../../models/split-transaction.model';
-import { TransferTransaction } from '../../../../models/transfer-transaction.model';
-import { Payee } from '../../../../models/payee.model';
+
+import { Budget } from '@models/budget.model';
+import { BudgetAccount } from '@models/budget-account.model';
+import { CategoryGroup } from '@models/category-group.model';
+import { Category } from '@models/category.model';
+import { CategoryValue } from '@models/category-value.model';
+import { Transaction } from '@models/transaction.model';
+import { SplitTransaction } from '@models/split-transaction.model';
+import { TransferTransaction } from '@models/transfer-transaction.model';
+import { Payee } from '@models/payee.model';
 
 @Injectable()
 export class FirestoreReferenceService {
