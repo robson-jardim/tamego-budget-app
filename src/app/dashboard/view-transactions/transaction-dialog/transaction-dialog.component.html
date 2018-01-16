@@ -49,16 +49,14 @@
         <!--</mat-select>-->
         <!--</mat-form-field>-->
 
-        <mat-form-field>
+        <mat-form-field *ngIf="groupsAndCategories | async as groupsAndCategories">
             <mat-select placeholder="Category" formControlName="categoryId">
 
-                <ng-container *ngIf="groupsAndCategories | async as groupsAndCategories">
-                    <ng-container *ngFor="let group of groupsAndCategories.data">
+                    <mat-optgroup *ngFor="let group of groupsAndCategories.data" [label]="group.groupName">
                         <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">
-                            {{group.groupName}}: {{category.categoryName}}
+                            {{category.categoryName}}
                         </mat-option>
-                    </ng-container>
-                </ng-container>
+                    </mat-optgroup>
             </mat-select>
         </mat-form-field>
 

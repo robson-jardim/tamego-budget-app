@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CategoryValueId } from '../../../models/category-value.model';
+import { CategoryValueId } from '@models/category-value.model';
 
 const db = admin.firestore();
 
