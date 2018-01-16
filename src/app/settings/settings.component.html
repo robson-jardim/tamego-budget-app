@@ -18,9 +18,3 @@
     </ng-template>
 
 </ng-container>
-
-<div *ngIf="data | async as data">
-    <div *ngFor="let d of data">
-        {{d.time | utcDate | date: 'MM/dd/yyyy'}}
-    </div>
-</div>
