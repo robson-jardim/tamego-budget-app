@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToolbarComponent } from './toolbar.component';
+import { PayeeAutocompleteComponent } from './payee-autocomplete.component';
 
-describe('ToolbarComponent', () => {
-    let component: ToolbarComponent;
-    let fixture: ComponentFixture<ToolbarComponent>;
+describe('PayeeAutocompleteComponent', () => {
+    let component: PayeeAutocompleteComponent;
+    let fixture: ComponentFixture<PayeeAutocompleteComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ToolbarComponent]
+            declarations: [PayeeAutocompleteComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ToolbarComponent);
+        fixture = TestBed.createComponent(PayeeAutocompleteComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -19,11 +19,13 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
+
         <mat-form-field>
             <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payeeId">
-            <mat-autocomplete #payeeAutoComplete="matAutocomplete">
+
+            <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
                 <mat-option *ngFor="let payee of payees | async"
-                            [value]="payee.payeeId">
+                            [value]="payee">
                     {{payee.payeeName}}
                 </mat-option>
             </mat-autocomplete>

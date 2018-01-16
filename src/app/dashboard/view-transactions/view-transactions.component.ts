@@ -8,6 +8,7 @@ import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.s
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { TransactionId } from '@models/transaction.model';
 
+
 @Component({
     selector: 'app-budget',
     templateUrl: './view-transactions.component.html',

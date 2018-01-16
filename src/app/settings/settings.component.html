@@ -1,4 +1,4 @@
-<app-toolbar></app-toolbar>
+<app-header></app-header>
 
 <ng-container *ngIf="auth.user | async as user">
 
@@ -18,7 +18,6 @@
     </ng-template>
 
 </ng-container>
-
 
 <div *ngIf="data | async as data">
     <div *ngFor="let d of data">

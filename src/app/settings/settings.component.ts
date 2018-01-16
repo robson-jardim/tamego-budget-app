@@ -12,18 +12,11 @@ export class SettingsComponent implements OnInit {
     public forceRefreshToken = true;
     public showOfflinePopups = true;
 
-    public data;
-
-    constructor(public auth: AuthService,
-                private afs: AngularFirestore) {
+    constructor(public auth: AuthService) {
     }
 
     ngOnInit() {
         this.auth.verifyUser(this.forceRefreshToken);
-
-        this.data = this.afs.collection('dates').valueChanges();
-
-        this.data.subscribe(console.log);
     }
 
 }

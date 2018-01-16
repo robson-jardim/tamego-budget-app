@@ -25,5 +25,5 @@ import { AngularFireModule } from 'angularfire2';
     ],
     declarations: []
 })
-export class AppFirebaseModule {
+export class AppCoreModule {
 }

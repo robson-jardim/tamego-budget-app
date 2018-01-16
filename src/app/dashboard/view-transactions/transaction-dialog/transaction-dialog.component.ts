@@ -9,6 +9,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/mergeMap';
 import { CollectionResult } from '@models/collection-result.model';
 import { Transaction, TransactionId } from '@models/transaction.model';
+import { PayeeId } from '@models/payee.model';
 
 
 @Component({
@@ -48,21 +49,26 @@ export class TransactionDialogComponent implements OnInit {
 
         this.buildTransactionForm();
 
-        this.transactionForm.get('payeeId').valueChanges
-            .startWith(null)
-            .mergeMap(input => {
-                if (input) {
-                    return this.filterPayees(input);
-                }
-                else {
-                    return Observable.of([]);
-                }
-            }).subscribe(x => console.log(x));
+        // this.transactionForm.get('payeeId').valueChanges
+        //     .startWith(null)
+        //     .mergeMap(input => {
+        //         if (input) {
+        //             return this.filterPayees(input);
+        //         }
+        //         else {
+        //             return Observable.of([]);
+        //         }
+        //     })
+        //     .subscribe();
+        // .subscribe(x => console.log(x));
     }
 
-    public filterPayees(name: string) {
+    public filterPayees(textField: string) {
         return this.getPayees().map(payees => {
-            return payees.filter(payee => payee.payeeName.toLowerCase().indexOf(name.toLowerCase()) === 0);
+            console.log(textField);
+            return payees.filter(payee => {
+                return payee.payeeName.toLowerCase().indexOf(textField.toLowerCase()) === 0;
+            });
         });
     }
 
@@ -162,5 +168,8 @@ export class TransactionDialogComponent implements OnInit {
         return data;
     }
 
+    public displayPayeeName(payee: PayeeId): string {
+        return payee.payeeName;
+    }
 
 }

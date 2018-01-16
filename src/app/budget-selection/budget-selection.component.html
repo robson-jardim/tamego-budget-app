@@ -1,4 +1,4 @@
-<app-toolbar></app-toolbar>
+<app-header></app-header>
 
 <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
     <button mat-button (click)="openAddNewBudgetDialog()">Add new budget</button>
