@@ -20,5 +20,5 @@ import {
         MatDialogModule
     ]
 })
-export class GeneralMaterialModule {
+export class StandardMaterialModule {
 }

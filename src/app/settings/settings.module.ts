@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
-import { AppPipesModule } from '@shared/pipes/app-pipes.module';
 import { HeaderModule } from '@shared/components/header/header.module';
+import { SettingsRoutingModule } from './settings-routing.module';
 
 @NgModule({
     imports: [
         CommonModule,
         HeaderModule,
-        AppPipesModule
+        SettingsRoutingModule
     ],
     declarations: [
         SettingsComponent

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -16,5 +16,5 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatSelectModule
     ]
 })
-export class CustomFormModule {
+export class CustomMaterialFormsModule {
 }

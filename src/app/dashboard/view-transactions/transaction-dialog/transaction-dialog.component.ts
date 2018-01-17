@@ -19,7 +19,7 @@ import { PayeeId } from '@models/payee.model';
 })
 export class TransactionDialogComponent implements OnInit {
 
-    public payees;
+    public payees$;
 
     public saving = false;
     public transactionForm: FormGroup;
@@ -28,6 +28,7 @@ export class TransactionDialogComponent implements OnInit {
     public accounts: CollectionResult<BudgetAccount, BudgetAccountId[]>;
     public groupsAndCategories: any;
     private isTransfer: boolean;
+
 
     constructor(private dialogRef: MatDialogRef<TransactionDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
@@ -45,7 +46,7 @@ export class TransactionDialogComponent implements OnInit {
         this.accounts = this.firestore.getAccounts(this.data.budgetId);
         this.groupsAndCategories = this.firestore.getGroupsAndCategories(this.data.budgetId);
         this.transactions = this.firestore.getTransactions(this.data.budgetId, this.data.accountId);
-        this.payees = this.getPayees();
+        this.payees$ = this.getPayees();
 
         this.buildTransactionForm();
 
@@ -79,7 +80,7 @@ export class TransactionDialogComponent implements OnInit {
     private buildTransactionForm() {
 
         const baseForm: any = {
-            transactionDate: [this.data.transactionDate, Validators.required],
+            transactionDate: [this.utility.convertToLocal(this.data.transactionDate), Validators.required],
             memo: [this.data.memo],
             amount: [this.data.amount],
             status: [this.data.status]
@@ -153,7 +154,7 @@ export class TransactionDialogComponent implements OnInit {
 
     private get transactionFormData() {
         const dateFromForm = this.transactionForm.value.transactionDate;
-        const utcDate = this.utility.convertToUTC(dateFromForm);
+        const utcDate = this.utility.convertToUtc(dateFromForm);
 
         const data: Transaction = {
             transactionDate: utcDate,
@@ -168,8 +169,22 @@ export class TransactionDialogComponent implements OnInit {
         return data;
     }
 
-    public displayPayeeName(payee: PayeeId): string {
-        return payee.payeeName;
+    public displayPayeeName(payee: PayeeId) {
+
+        if (payee && payee.payeeName) {
+            return payee.payeeName;
+        }
+        return payee;
+
+        // this.payees.subscribe(x => console.log(x))
+        // this.payees.filter((p: PayeeId) => {
+        //     if (payee.payeeId === p.payeeId) {
+        //         console.log('here');
+        //         return p.payeeName;
+        //     }
+        // }).subscribe();
     }
+
+
 
 }

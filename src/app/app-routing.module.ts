@@ -9,26 +9,10 @@ import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
     {
-        path: '',
-        component: LoginSignupComponent,
-        canActivate: [SignedOutGuard]
-    },
-    {
-        path: 'budgets',
-        component: BudgetSelectionComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'settings',
-        component: SettingsComponent,
-        canActivate: [AuthGuard]
-    },
-    {
         path: '**',
-        redirectTo: '',
+        redirectTo: '', // Redirects to login page
         pathMatch: 'full'
     }
-
 ];
 
 @NgModule({

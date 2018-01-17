@@ -1,27 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PayeeAutocompleteComponent } from './payee-autocomplete/payee-autocomplete.component';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
 import { ViewTransactionsComponent } from './view-transactions.component';
 
-import { AppPipesModule } from '@shared/pipes/app-pipes.module';
-import { GeneralMaterialModule } from '@shared/components/general-material.module';
-import { CustomFormModule } from '@shared/components/custom-form.module';
+import { StandardMaterialModule } from '@shared/components/standard-material.module';
+import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { MatAutocompleteModule, MatDatepickerModule } from '@angular/material';
-
+import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 
 @NgModule({
     declarations: [
         ViewTransactionsComponent,
-        PayeeAutocompleteComponent,
         TransactionDialogComponent,
+        UtcDatePipe
     ],
     imports: [
         CommonModule,
-        GeneralMaterialModule,
+        StandardMaterialModule,
 
-        CustomFormModule,
-        AppPipesModule,
+        CustomMaterialFormsModule,
         MatAutocompleteModule,
         MatDatepickerModule
     ],

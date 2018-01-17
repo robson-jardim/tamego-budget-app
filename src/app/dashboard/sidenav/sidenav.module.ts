@@ -6,15 +6,15 @@ import {
 import { RouterModule } from '@angular/router';
 import { SidenavComponent } from './sidenav.component';
 import { AddAccountToBudgetDialogComponent } from './add-account-to-budget-dialog/add-account-to-budget-dialog.component';
-import { CustomFormModule } from '@shared/components/custom-form.module';
-import { GeneralMaterialModule } from '@shared/components/general-material.module';
+import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
+import { StandardMaterialModule } from '@shared/components/standard-material.module';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
-        CustomFormModule,
-        GeneralMaterialModule,
+        CustomMaterialFormsModule,
+        StandardMaterialModule,
 
         MatListModule,
         MatSidenavModule

@@ -4,16 +4,16 @@ import { ViewBudgetComponent } from './view-budget.component';
 import { TransferCategoryDialogComponent } from './transfer-category-dialog/transfer-category-dialog.component';
 import { CategoryGroupDialogComponent } from './category-group-dialog/category-group-dialog.component';
 import { EditCategoryDialogComponent } from './category-dialog/category-dialog.component';
-import { CustomFormModule } from '@shared/components/custom-form.module';
-import { GeneralMaterialModule } from '@shared/components/general-material.module';
+import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
+import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { MatDialogModule, MatMenuModule, MatTableModule } from '@angular/material';
 
 @NgModule({
     imports: [
         CommonModule,
 
-        CustomFormModule,
-        GeneralMaterialModule,
+        CustomMaterialFormsModule,
+        StandardMaterialModule,
         MatTableModule,
         MatMenuModule,
     ],
