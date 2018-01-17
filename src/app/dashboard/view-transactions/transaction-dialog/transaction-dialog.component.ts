@@ -65,16 +65,18 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     public filterPayees(textField: string) {
-        return this.getPayees().map(payees => {
-            console.log(textField);
+        return this.payees$.map(payees => {
             return payees.filter(payee => {
                 return payee.payeeName.toLowerCase().indexOf(textField.toLowerCase()) === 0;
             });
         });
     }
 
-    public getPayees() {
-        return this.firestore.getPayees(this.data.budgetId).observable;
+    private getPayees() {
+        return Observable.combineLatest(
+            this.firestore.getPayees(this.data.budgetId).observable, payees => {
+                return payees;
+            });
     }
 
     private buildTransactionForm() {
@@ -91,11 +93,19 @@ export class TransactionDialogComponent implements OnInit {
         }
         else {
             baseForm.accountId = [this.data.accountId, Validators.required];
-            baseForm.payeeId = [this.data.payeeId];
+            baseForm.payee = [''];
             baseForm.categoryId = [this.data.categoryId];
         }
 
         this.transactionForm = this.formBuilder.group(baseForm);
+
+        this.payees$.first().subscribe(payees => {
+            payees.filter(x => x.payeeId === this.data.payeeId).map(payee => {
+                this.transactionForm.patchValue({
+                    payee
+                });
+            });
+        });
     }
 
     public saveChanges() {
@@ -159,7 +169,7 @@ export class TransactionDialogComponent implements OnInit {
         const data: Transaction = {
             transactionDate: utcDate,
             accountId: this.transactionForm.value.accountId,
-            payeeId: this.transactionForm.value.payeeId,
+            payeeId: this.transactionForm.value.payee.payeeId || null,
             categoryId: this.transactionForm.value.categoryId,
             amount: this.transactionForm.value.amount,
             memo: this.transactionForm.value.memo,
@@ -184,7 +194,6 @@ export class TransactionDialogComponent implements OnInit {
         //     }
         // }).subscribe();
     }
-
 
 
 }

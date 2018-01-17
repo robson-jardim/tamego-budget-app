@@ -21,7 +21,7 @@
 
 
         <mat-form-field>
-            <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payeeId">
+            <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee">
 
             <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
                 <mat-option *ngFor="let payee of payees$ | async"
@@ -51,14 +51,15 @@
         <!--</mat-select>-->
         <!--</mat-form-field>-->
 
-        <mat-form-field *ngIf="groupsAndCategories | async as groupsAndCategories">
+        <mat-form-field>
             <mat-select placeholder="Category" formControlName="categoryId">
-
-                <mat-optgroup *ngFor="let group of groupsAndCategories.data" [label]="group.groupName">
-                    <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">
-                        {{category.categoryName}}
-                    </mat-option>
-                </mat-optgroup>
+                <ng-container *ngIf="groupsAndCategories | async as groupsAndCategories">
+                    <mat-optgroup *ngFor="let group of groupsAndCategories.data" [label]="group.groupName">
+                        <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">
+                            {{category.categoryName}}
+                        </mat-option>
+                    </mat-optgroup>
+                </ng-container>
             </mat-select>
         </mat-form-field>
 
