@@ -5,7 +5,7 @@ import { ViewTransactionsComponent } from './view-transactions.component';
 
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { MatAutocompleteModule, MatDatepickerModule } from '@angular/material';
+import { MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 
 @NgModule({
@@ -20,7 +20,8 @@ import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 
         CustomMaterialFormsModule,
         MatAutocompleteModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
 
     entryComponents: [

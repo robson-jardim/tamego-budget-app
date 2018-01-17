@@ -25,10 +25,11 @@
 
             <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
                 <mat-option *ngFor="let payee of payees$ | async"
-                            [value]="payee.payeeId">
+                            [value]="payee">
                     {{payee.payeeName}}
                 </mat-option>
             </mat-autocomplete>
+
         </mat-form-field>
 
 
@@ -73,7 +74,9 @@
 
     <mat-dialog-actions>
         <button mat-button type="button" [mat-dialog-close]>Cancel</button>
-        <button mat-button type="submit" mat-raised-button color="primary">Add</button>
+
+        <button mat-button *ngIf="data.state === 'CREATE'" type="submit" mat-raised-button color="primary">Add</button>
+        <button mat-button *ngIf="data.state === 'UPDATE'" type="submit" mat-raised-button color="primary">Save</button>
     </mat-dialog-actions>
 
 </form>
