@@ -1,9 +1,10 @@
 <ng-container [formGroup]="transactionForm">
     <mat-form-field>
-        <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee" (keyup)="highlightFirstOption($event)">
+        <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee"
+               (keyup)="highlightFirstOption($event)">
 
         <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
-            <mat-option *ngFor="let payee of filteredPayees$ | async"
+            <mat-option *ngFor="let payee of filteredPayees$ | async; trackBy: trackPayee"
                         [value]="payee">
                 {{payee.payeeName}}
             </mat-option>

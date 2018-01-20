@@ -78,7 +78,9 @@ export class FirestoreReferenceService {
     }
 
     public getPayeeCollectionRef(budgetId: string): AngularFirestoreCollection<Payee> {
-        return this.afs.collection(`budgets/${budgetId}/payees`);
+        return this.afs.collection(`budgets/${budgetId}/payees`, ref => {
+            return ref.orderBy('payeeName', 'asc');
+        });
     }
 }
 

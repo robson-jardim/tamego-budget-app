@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-    MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule
-} from '@angular/material';
+import { MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { SidenavComponent } from './sidenav.component';
-import { AddAccountToBudgetDialogComponent } from './add-account-to-budget-dialog/add-account-to-budget-dialog.component';
+import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 
@@ -17,14 +15,15 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
         StandardMaterialModule,
 
         MatListModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatMenuModule
     ],
     declarations: [
         SidenavComponent,
-        AddAccountToBudgetDialogComponent
+        AccountDialogComponent
     ],
     entryComponents: [
-        AddAccountToBudgetDialogComponent
+        AccountDialogComponent
     ],
     exports: [
         SidenavComponent,

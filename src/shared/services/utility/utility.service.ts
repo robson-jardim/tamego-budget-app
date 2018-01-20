@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class DateConverterService {
+export class UtilityService {
 
     constructor(private afs: AngularFirestore) {
     }

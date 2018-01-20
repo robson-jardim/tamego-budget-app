@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { CategoryId } from '@models/category.model';
     templateUrl: './category-autocomplete.component.html',
     styleUrls: ['./category-autocomplete.component.scss']
 })
-export class CategoryAutocompleteComponent implements OnInit {
+export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
 
     public transactionForm: FormGroup;
@@ -37,30 +37,30 @@ export class CategoryAutocompleteComponent implements OnInit {
             });
         });
 
+        this.filterAction();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // ngOnChanges if called before ngOninit. Therefore transaction form is not yet available
+        // to grab value
+        if (this.transactionForm) {
+            this.filterAction();
+        }
+    }
+
+    private filterAction() {
         this.filteredGroups$ = this.transactionForm.get('category').valueChanges
             .pipe(
-                startWith(null),
                 filter(x => typeof x === 'string'), // Do not go past here if a saved entity is selected
                 map(userInput => userInput ? this.filterGroups(userInput) : this.groups.slice())
             );
-
-        // this.filteredGroups$.subscribe(x => console.log(x));
     }
 
     public filterGroups(name: any) {
 
-
-        // const x = this.groups.filter(group => {
-        //     const data = group.categories.filter((category: CategoryId) => {
-        //         return category.categoryName.toLowerCase().indexOf(name.toLowerCase()) === 0;
-        //     });
-        //
-        //     return data.length > 0;
-        // });
-
         name = name.toLowerCase();
 
-        const x = this.groups.reduce((total, group) => {
+        return this.groups.reduce((total, group) => {
 
             if (group.groupName.toLowerCase().includes(name)) {
                 return [...total, group];
@@ -87,40 +87,6 @@ export class CategoryAutocompleteComponent implements OnInit {
 
             return [...total];
         }, []);
-
-        console.log(x);
-
-        //
-        // const x = this.groups.reduce((total, current) => {
-        //
-        //     if (current.groupName.toLowerCase().includes(name)) {
-        //         total.push(current);
-        //     }
-        //     else {
-        //
-        //         const res = current.reduce((total, current) => {
-        //             if (current.toLowerCase().includes(name)) {
-        //                 total.push(current);
-        //             }
-        //         }, []);
-        //
-        //         if (res.length > 0) {
-        //             const obj = {
-        //                 ...current, categories: res
-        //             };
-        //
-        //             total.push(current);
-        //         }
-        //     }
-        // }, []);
-
-
-        return this.groups;
-
-
-        // return this.groups.filter(group => {
-        //     return group.groupName.toLowerCase().indexOf(name.toLowerCase()) === 0;
-        // });
     }
 
 
@@ -135,10 +101,12 @@ export class CategoryAutocompleteComponent implements OnInit {
 
 
     public highlightFirstOption(event): void {
-        if (event.key == "ArrowDown" || event.key == "ArrowUp") {
+        if (event.key == 'ArrowDown' || event.key == 'ArrowUp') {
             return;
         }
 
         this.matAutocomplete._keyManager.setFirstItemActive();
     }
+
+
 }

@@ -9,7 +9,7 @@ import { FirestoreReferenceService } from '@shared/services/firestore-reference/
 import { environment } from '@environments/environment';
 import { AngularFireModule } from 'angularfire2';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
-import { DateConverterService } from '@shared/services/date-converter/date-converter.service';
+import { UtilityService } from '@shared/services/utility/utility.service';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { GeneralNotificationsService } from '@shared/services/general-notificati
 
         GeneralNotificationsService,
         CloseDialogService,
-        DateConverterService
+        UtilityService
     ]
 })
 export class AppCoreModule {

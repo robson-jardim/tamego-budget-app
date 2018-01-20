@@ -48,6 +48,10 @@ export class PayeeAutocompleteComponent implements OnInit {
         return payee;
     }
 
+    public trackPayee(index, payee: PayeeId) {
+        return payee ? payee.payeeId : undefined;
+    }
+
     private filterPayees(name: any) {
         return this.payees.filter(payee =>
             payee.payeeName.toLowerCase().indexOf(name.toLowerCase()) === 0
@@ -55,7 +59,7 @@ export class PayeeAutocompleteComponent implements OnInit {
     }
 
     public highlightFirstOption(event): void {
-        if (event.key == "ArrowDown" || event.key == "ArrowUp") {
+        if (event.key == 'ArrowDown' || event.key == 'ArrowUp') {
             return;
         }
 

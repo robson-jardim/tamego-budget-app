@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { AddAccountToBudgetDialogComponent } from './add-account-to-budget-dialog/add-account-to-budget-dialog.component';
+import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionResult } from '@models/collection-result.model';
 import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
@@ -31,7 +31,7 @@ export class SidenavComponent implements OnInit {
     }
 
     public openAddBudgetToAccountDialog() {
-        const addAccountToBudgetDialogRef = this.dialog.open(AddAccountToBudgetDialogComponent, {
+        const addAccountToBudgetDialogRef = this.dialog.open(AccountDialogComponent, {
             data: {
                 budgetAccountCollection: this.budgetAccounts.collection
             }
