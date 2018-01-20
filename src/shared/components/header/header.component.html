@@ -1,10 +1,13 @@
 <mat-toolbar color="primary">
+    <span>{{title}}</span>
 
-    <span>Budget</span>
-    <button mat-button (click)="routeToHome()">Home</button>
+    <ng-container *ngIf="!hideOptions">
+        <button mat-button (click)="routeToHome()">Home</button>
 
-    <span class="banner-spacer"></span>
+        <span class="banner-spacer"></span>
 
-    <button mat-button (click)="routeToSettings()">Settings</button>
-    <button mat-button (click)="auth.signOut()">Sign out</button>
+        <button mat-button (click)="routeToSettings()">Settings</button>
+        <button mat-button (click)="auth.signOut()">Sign out</button>
+    </ng-container>
+
 </mat-toolbar>

@@ -1,3 +1,7 @@
+<app-header [title]="'Tamego'"
+            [hideOptions]="true">
+</app-header>
+
 <mat-spinner *ngIf="loading"></mat-spinner>
 
 <ng-container *ngIf="authNotification.messageBroadcast | async as notification">

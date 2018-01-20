@@ -1,18 +1,20 @@
-<app-header></app-header>
+<app-header [title]="'Budgets'"></app-header>
 
-<ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
-    <button mat-button (click)="openAddNewBudgetDialog()">Add new budget</button>
+<div class="budget-selection-container">
+    <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
+        <button mat-raised-button color="primary" (click)="openAddNewBudgetDialog()">Add new budget</button>
 
-    <mat-card *ngFor="let budget of budgets" class="budget-container" [routerLink]="[budget.budgetId]">
-        <p>{{budget.budgetName}}</p>
+        <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]">
+            <p>{{budget.budgetName}}</p>
 
-        <button mat-button (click)="$event.stopPropagation()">
-            <mat-icon>delete</mat-icon>
-        </button>
+            <button mat-button (click)="$event.stopPropagation()">
+                <mat-icon>delete</mat-icon>
+            </button>
 
-    </mat-card>
+        </mat-card>
 
-</ng-container>
+    </ng-container>
+</div>
 
 <ng-template #loading>
     <mat-spinner></mat-spinner>

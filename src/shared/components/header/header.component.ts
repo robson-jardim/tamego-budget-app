@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 
@@ -8,6 +8,9 @@ import { AuthService } from '../../services/auth/auth.service';
     styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+
+    @Input() title: string;
+    @Input() hideOptions: boolean;
 
     constructor(public auth: AuthService, private route: Router) {
     }
