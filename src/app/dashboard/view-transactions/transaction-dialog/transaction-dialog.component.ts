@@ -19,15 +19,13 @@ import { PayeeId } from '@models/payee.model';
 })
 export class TransactionDialogComponent implements OnInit {
 
-    public payees$;
+    public dropdowns$;
 
     public saving = false;
     public transactionForm: FormGroup;
 
-    public transactions: CollectionResult<Transaction, TransactionId[]>;
-    public accounts: CollectionResult<BudgetAccount, BudgetAccountId[]>;
-    public groupsAndCategories: any;
     private isTransfer: boolean;
+    public transactions: CollectionResult<Transaction, TransactionId[]>;
 
 
     constructor(private dialogRef: MatDialogRef<TransactionDialogComponent>,
@@ -43,33 +41,15 @@ export class TransactionDialogComponent implements OnInit {
             this.setToTransferState();
         }
 
-        this.accounts = this.firestore.getAccounts(this.data.budgetId);
-        this.groupsAndCategories = this.firestore.getGroupsAndCategories(this.data.budgetId);
         this.transactions = this.firestore.getTransactions(this.data.budgetId, this.data.accountId);
-        this.payees$ = this.getPayees();
+
+        this.dropdowns$ = this.utility.combineLatestObj({
+            payees: this.getPayees(),
+            accounts: this.getAccounts(),
+            groups: this.getGroups()
+        });
 
         this.buildTransactionForm();
-
-        // this.transactionForm.get('payeeId').valueChanges
-        //     .startWith(null)
-        //     .mergeMap(input => {
-        //         if (input) {
-        //             return this.filterPayees(input);
-        //         }
-        //         else {
-        //             return Observable.of([]);
-        //         }
-        //     })
-        //     .subscribe();
-        // .subscribe(x => console.log(x));
-    }
-
-    public filterPayees(textField: string) {
-        return this.payees$.map(payees => {
-            return payees.filter(payee => {
-                return payee.payeeName.toLowerCase().indexOf(textField.toLowerCase()) === 0;
-            });
-        });
     }
 
     private getPayees() {
@@ -77,6 +57,14 @@ export class TransactionDialogComponent implements OnInit {
             this.firestore.getPayees(this.data.budgetId).observable, payees => {
                 return payees;
             });
+    }
+
+    private getAccounts() {
+        return this.firestore.getAccounts(this.data.budgetId).observable;
+    }
+
+    private getGroups() {
+        return this.firestore.getGroupsAndCategories(this.data.budgetId).map(x => x.data);
     }
 
     private buildTransactionForm() {
@@ -93,19 +81,11 @@ export class TransactionDialogComponent implements OnInit {
         }
         else {
             baseForm.accountId = [this.data.accountId, Validators.required];
-            baseForm.payee = [''];
-            baseForm.categoryId = [this.data.categoryId];
+            baseForm.payee = [null]; // Object set within autocomplete component
+            baseForm.category = [null]; // Object set within autocomplete component
         }
 
         this.transactionForm = this.formBuilder.group(baseForm);
-
-        this.payees$.first().subscribe(payees => {
-            payees.filter(x => x.payeeId === this.data.payeeId).map(payee => {
-                this.transactionForm.patchValue({
-                    payee
-                });
-            });
-        });
     }
 
     public saveChanges() {
@@ -122,7 +102,7 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private addNewTransaction() {
-        this.transactions.collection.add(this.transactionFormData);
+        this.transactions.collection.add(this.currentTransactionData);
         this.dialogRef.close();
     }
 
@@ -157,19 +137,36 @@ export class TransactionDialogComponent implements OnInit {
 
     private updateTransaction() {
         const transactionId = this.data.transactionId;
-        this.transactions.collection.doc(transactionId).update(this.transactionFormData);
+        this.transactions.collection.doc(transactionId).update(this.currentTransactionData);
 
         this.dialogRef.close();
     }
 
-    private get transactionFormData() {
+    private get currentTransactionData() {
         const dateFromForm = this.transactionForm.value.transactionDate;
         const utcDate = this.utility.convertToUtc(dateFromForm);
+
+        const getPayeeId = () => {
+            const payeeField: PayeeId | null = this.transactionForm.value.payee;
+
+            if (payeeField) {
+                if (payeeField.payeeId) {
+                    return payeeField.payeeId;
+                }
+                else {
+                    // TOOD - Save payee to db
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        };
 
         const data: Transaction = {
             transactionDate: utcDate,
             accountId: this.transactionForm.value.accountId,
-            payeeId: this.transactionForm.value.payee.payeeId || null,
+            payeeId: getPayeeId(),
             categoryId: this.transactionForm.value.categoryId,
             amount: this.transactionForm.value.amount,
             memo: this.transactionForm.value.memo,
@@ -177,22 +174,6 @@ export class TransactionDialogComponent implements OnInit {
         };
 
         return data;
-    }
-
-    public displayPayeeName(payee: PayeeId) {
-
-        if (payee && payee.payeeName) {
-            return payee.payeeName;
-        }
-        return payee;
-
-        // this.payees.subscribe(x => console.log(x))
-        // this.payees.filter((p: PayeeId) => {
-        //     if (payee.payeeId === p.payeeId) {
-        //         console.log('here');
-        //         return p.payeeName;
-        //     }
-        // }).subscribe();
     }
 
 

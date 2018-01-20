@@ -1,83 +1,58 @@
-<form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
+<ng-container *ngIf="dropdowns$ | async as dropdowns; else loading">
+    <form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
 
-    <h1 mat-dialog-title *ngIf="data.state === 'CREATE'">Add transaction</h1>
-    <h1 mat-dialog-title *ngIf="data.state === 'UPDATE'">Edit transaction</h1>
+        <h1 mat-dialog-title *ngIf="data.state === 'CREATE'">Add transaction</h1>
+        <h1 mat-dialog-title *ngIf="data.state === 'UPDATE'">Edit transaction</h1>
 
-    <mat-dialog-content>
+        <mat-dialog-content>
 
-        <mat-form-field>
-            <mat-select placeholder="Account" formControlName="accountId">
-                <mat-option *ngFor="let account of accounts.observable | async" [value]="account.budgetAccountId">
-                    {{account.accountName}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Account" formControlName="accountId">
+                    <mat-option *ngFor="let account of dropdowns.accounts" [value]="account.budgetAccountId">
+                        {{account.accountName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="transactionDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+            <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="transactionDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
+            <app-payee-autocomplete
+                [payees]="dropdowns.payees"
+                [selectedPayeeId]="data.payeeId">
+            </app-payee-autocomplete>
 
-        <mat-form-field>
-            <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee">
+            <app-category-autocomplete
+                [groups]="dropdowns.groups"
+                [selectedCategoryId]="data.categoryId">
+            </app-category-autocomplete>
 
-            <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
-                <mat-option *ngFor="let payee of payees$ | async"
-                            [value]="payee">
-                    {{payee.payeeName}}
-                </mat-option>
-            </mat-autocomplete>
+            <mat-form-field>
+                <input matInput placeholder="Amount" type="number" formControlName="amount">
+            </mat-form-field>
 
-        </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Memo" type="text" formControlName="memo">
+            </mat-form-field>
 
+        </mat-dialog-content>
 
-        <!--<mat-form-field>-->
-        <!--<mat-select placeholder="Payee" formControlName="payeeId">-->
+        <mat-dialog-actions>
+            <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
-        <!--<mat-option (click)="setToTransferState()" *ngFor="let account of accounts.observable | async"-->
-        <!--[value]="account.budgetAccountId"-->
-        <!--[disabled]="true">-->
-        <!--Transfer: {{account.accountName}}-->
-        <!--</mat-option>-->
+            <button mat-button *ngIf="data.state === 'CREATE'" type="submit" mat-raised-button color="primary">Add
+            </button>
+            <button mat-button *ngIf="data.state === 'UPDATE'" type="submit" mat-raised-button color="primary">Save
+            </button>
+        </mat-dialog-actions>
 
-        <!--<ng-container *ngIf="payees.observable | async as payees">-->
-        <!--<mat-option *ngFor="let payee of payees" (click)="setToTransactionState()" [value]="payee.payeeId">-->
-        <!--{{payee.payeeName}}-->
-        <!--</mat-option>-->
-        <!--</ng-container>-->
+    </form>
+</ng-container>
 
-        <!--</mat-select>-->
-        <!--</mat-form-field>-->
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
 
-        <mat-form-field>
-            <mat-select placeholder="Category" formControlName="categoryId">
-                <ng-container *ngIf="groupsAndCategories | async as groupsAndCategories">
-                    <mat-optgroup *ngFor="let group of groupsAndCategories.data" [label]="group.groupName">
-                        <mat-option *ngFor="let category of group.categories" [value]="category.categoryId">
-                            {{category.categoryName}}
-                        </mat-option>
-                    </mat-optgroup>
-                </ng-container>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput placeholder="Amount" type="number" formControlName="amount">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput placeholder="Memo" type="text" formControlName="memo">
-        </mat-form-field>
-
-    </mat-dialog-content>
-
-    <mat-dialog-actions>
-        <button mat-button type="button" [mat-dialog-close]>Cancel</button>
-
-        <button mat-button *ngIf="data.state === 'CREATE'" type="submit" mat-raised-button color="primary">Add</button>
-        <button mat-button *ngIf="data.state === 'UPDATE'" type="submit" mat-raised-button color="primary">Save</button>
-    </mat-dialog-actions>
-
-</form>

@@ -7,12 +7,16 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
+import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
+import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
 
 @NgModule({
     declarations: [
         ViewTransactionsComponent,
         TransactionDialogComponent,
-        UtcDatePipe
+        UtcDatePipe,
+        PayeeAutocompleteComponent,
+        CategoryAutocompleteComponent
     ],
     imports: [
         CommonModule,
