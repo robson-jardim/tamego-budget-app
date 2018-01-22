@@ -5,10 +5,12 @@ import { ViewTransactionsComponent } from './view-transactions.component';
 
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
+import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/cleared-checkbox.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -16,7 +18,8 @@ import { CategoryAutocompleteComponent } from './transaction-dialog/category-aut
         TransactionDialogComponent,
         UtcDatePipe,
         PayeeAutocompleteComponent,
-        CategoryAutocompleteComponent
+        CategoryAutocompleteComponent,
+        ClearedCheckboxComponent
     ],
     imports: [
         CommonModule,
@@ -25,9 +28,11 @@ import { CategoryAutocompleteComponent } from './transaction-dialog/category-aut
         CustomMaterialFormsModule,
         MatAutocompleteModule,
         MatDatepickerModule,
-        MatNativeDateModule
-    ],
+        MatNativeDateModule,
+        MatCheckboxModule,
 
+        FormsModule // TODO - remove module
+    ],
     entryComponents: [
         TransactionDialogComponent
     ]

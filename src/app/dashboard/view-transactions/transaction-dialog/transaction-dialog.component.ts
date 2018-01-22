@@ -40,7 +40,7 @@ export class TransactionDialogComponent implements OnInit {
             this.setToTransferState();
         }
 
-        this.transactions = this.firestore.getTransactions(this.data.budgetId, this.data.accountId);
+        this.transactions = this.firestore.getTransactions(this.data.budgetId);
 
         this.dropdowns$ = this.utility.combineLatestObj({
             payees: this.getPayees(),
@@ -68,11 +68,17 @@ export class TransactionDialogComponent implements OnInit {
 
     private buildTransactionForm() {
 
+        let transactionDate: Date | null;
+
+        if (this.data.transactionDate) {
+            transactionDate = this.utility.convertToLocal(this.data.transactionDate);
+        }
+
         const baseForm: any = {
-            transactionDate: [this.utility.convertToLocal(this.data.transactionDate), Validators.required],
+            transactionDate: [transactionDate, Validators.required],
             memo: [this.data.memo],
             amount: [this.data.amount],
-            status: [this.data.status]
+            status: [this.data.status || false]
         };
 
         if (this.isTransfer) {

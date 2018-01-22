@@ -1,7 +1,6 @@
 <ng-container [formGroup]="transactionForm">
     <mat-form-field>
-        <input matInput placeholder="Category" [matAutocomplete]="categoryAutoComplete" formControlName="category"
-               (keyup)="highlightFirstOption($event)">
+        <input matInput placeholder="Category" [matAutocomplete]="categoryAutoComplete" formControlName="category">
 
         <mat-autocomplete #categoryAutoComplete="matAutocomplete" [displayWith]="displayCategoryName">
             <mat-optgroup *ngFor="let group of filteredGroups$ | async" [label]="group.groupName">

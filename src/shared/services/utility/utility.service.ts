@@ -30,15 +30,18 @@ export class UtilityService {
         return utcDate;
     }
 
-    public combineLatestObj(obj): Observable<any> {
+    public combineLatestObj(obj: Object): Observable<any> {
+
         const sources = [];
         const keys = [];
+
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
-                keys.push(key.replace(/\$$/, ''));
+                keys.push(key);
                 sources.push(obj[key]);
             }
         }
+
         return Observable.combineLatest(sources, function () {
             const argsLength = arguments.length;
             const combination = {};

@@ -100,7 +100,7 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-    public getTransactions(budgetId: string, accountId: string): CollectionResult<Transaction, TransactionId[]> {
+    public getTransactions(budgetId: string, accountId?: string): CollectionResult<Transaction, TransactionId[]> {
         const collection = this.references.getTransactionCollectionRef(budgetId, accountId);
         const observable = this.mapDocumentId.mapTransactionIds(collection);
         return {collection, observable};

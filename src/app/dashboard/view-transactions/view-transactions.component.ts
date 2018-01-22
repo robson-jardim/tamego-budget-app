@@ -1,13 +1,12 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
 import { BudgetAccountId } from '@models/budget-account.model';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { TransactionId } from '@models/transaction.model';
-
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Component({
     selector: 'app-budget',
@@ -21,7 +20,8 @@ export class ViewTransactionsComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
-                private dialogService: CloseDialogService) {
+                private dialogService: CloseDialogService,
+                private utility: UtilityService) {
     }
 
     ngOnInit() {
@@ -54,22 +54,21 @@ export class ViewTransactionsComponent implements OnInit {
     }
 
     public createTransactionDialog() {
-        Observable.combineLatest(this.getBudgetId(), this.getAccountId())
-            .take(1)
-            .subscribe(([budgetId, accountId]) => {
 
-                const data: any = {budgetId};
-                if (accountId) {
-                    data.accountId = accountId;
-                }
+        this.utility.combineLatestObj({
+            budgetId: this.getBudgetId(),
+            accountId: this.getAccountId()
+        }).subscribe(response => {
+            const {budgetId, accountId} = response;
+            const data = {budgetId, accountId};
 
-                this.dialogService.openCreate(TransactionDialogComponent, {data});
-            });
+            this.dialogService.openCreate(TransactionDialogComponent, {data});
+        });
     }
 
     public updateTransaction(transaction: TransactionId) {
         Observable.combineLatest(this.getBudgetId(), this.getAccountId())
-            .take(1)
+            .first()
             .subscribe(([budgetId, accountId]) => {
                 this.dialogService.openUpdate(TransactionDialogComponent, {
                     data: {

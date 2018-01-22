@@ -1,16 +1,16 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, ViewChild, SimpleChanges } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
-import { filter, map, startWith } from 'rxjs/operators';
 import { MatAutocomplete } from '@angular/material';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
     selector: 'app-payee-autocomplete',
     templateUrl: './payee-autocomplete.component.html',
     styleUrls: ['./payee-autocomplete.component.scss']
 })
-export class PayeeAutocompleteComponent implements OnInit {
+export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     public transactionForm: FormGroup;
     @Input() payees: PayeeId[];
@@ -18,26 +18,42 @@ export class PayeeAutocompleteComponent implements OnInit {
 
     filteredPayees$: Observable<PayeeId[]>;
 
-    @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
-
     constructor(private controlContainer: ControlContainer) {
     }
 
     ngOnInit() {
         this.transactionForm = this.controlContainer.control as FormGroup;
+        // this.matAutocomplete.showPanel = true; // Always show panel when in focus
 
-        this.payees.filter(x => x.payeeId === this.selectedPayeeId)
-            .map(payee => {
-                this.transactionForm.patchValue({
-                    payee
-                });
-            });
+        const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
 
+        this.transactionForm.patchValue({
+            payee
+        });
+
+        this.filterAction();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (this.transactionForm) {
+            this.filterAction();
+        }
+    }
+
+    public filterAction() {
         this.filteredPayees$ = this.transactionForm.get('payee').valueChanges
             .pipe(
                 startWith(null),
-                filter(x => typeof x === 'string'), // Do not go past here if a saved entity is selected
-                map(userInput => userInput ? this.filterPayees(userInput) : this.payees.slice())
+                map(input => {
+                    // Defines the case that the input is a PayeeId object
+                    if (input && input.payeeName) {
+                        return input.payeeName;
+                    }
+                    else {
+                        return input;
+                    }
+                }),
+                map(input => input ? this.filterPayees(input) : this.payees.slice())
             );
     }
 
@@ -45,24 +61,14 @@ export class PayeeAutocompleteComponent implements OnInit {
         if (payee && payee.payeeName) {
             return payee.payeeName;
         }
-        return payee;
-    }
-
-    public trackPayee(index, payee: PayeeId) {
-        return payee ? payee.payeeId : undefined;
-    }
-
-    private filterPayees(name: any) {
-        return this.payees.filter(payee =>
-            payee.payeeName.toLowerCase().indexOf(name.toLowerCase()) === 0
-        );
-    }
-
-    public highlightFirstOption(event): void {
-        if (event.key == 'ArrowDown' || event.key == 'ArrowUp') {
-            return;
+        else {
+            return payee;
         }
+    }
 
-        this.matAutocomplete._keyManager.setFirstItemActive();
+    private filterPayees(name: string) {
+        return this.payees.filter(payee => {
+            return payee.payeeName.toLowerCase().includes(name.toLowerCase());
+        });
     }
 }

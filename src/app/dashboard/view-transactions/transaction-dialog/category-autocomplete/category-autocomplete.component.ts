@@ -12,14 +12,12 @@ import { CategoryId } from '@models/category.model';
 })
 export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
-
     public transactionForm: FormGroup;
 
     @Input() groups;
     @Input() selectedCategoryId: string;
 
     public filteredGroups$: Observable<any>;
-    @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
 
     constructor(private controlContainer: ControlContainer) {
     }
@@ -51,44 +49,50 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     private filterAction() {
         this.filteredGroups$ = this.transactionForm.get('category').valueChanges
             .pipe(
-                filter(x => typeof x === 'string'), // Do not go past here if a saved entity is selected
-                map(userInput => userInput ? this.filterGroups(userInput) : this.groups.slice())
+                startWith(null),
+                map(input => {
+                    if (input && input.categoryName) {
+                        // Defines the case that the input is currently a CategoryId object
+                        return input.categoryName;
+                    }
+                    else {
+                        return input;
+                    }
+                }),
+                map(input => input ? this.filterGroups(input) : this.groups.slice())
             );
     }
 
-    public filterGroups(name: any) {
+    public filterGroups(userInput: any) {
 
-        name = name.toLowerCase();
+        userInput = userInput.toLowerCase();
 
         return this.groups.reduce((total, group) => {
 
-            if (group.groupName.toLowerCase().includes(name)) {
+            if (group.groupName.toLowerCase().includes(userInput)) {
                 return [...total, group];
             }
-            else {
 
-                const res = group.categories.reduce((tot, category: CategoryId) => {
-                    if (category.categoryName.toLowerCase().includes(name)) {
-                        return [...tot, category];
-                    }
-                    else {
-                        return [...tot];
-                    }
-                }, []);
-
-                if (res.length > 0) {
-                    const refinedCategorySearch = {
-                        ...group, categories: res
-                    };
-
-                    return [...total, refinedCategorySearch];
+            const filteredCategories = group.categories.reduce((categories, category: CategoryId) => {
+                if (category.categoryName.toLowerCase().includes(userInput)) {
+                    return [...categories, category];
                 }
+                else {
+                    return [...categories];
+                }
+            }, []);
+
+            if (filteredCategories.length) {
+                const filteredGroup = {
+                    ...group, categories: filteredCategories
+                };
+
+                return [...total, filteredGroup];
             }
 
             return [...total];
         }, []);
     }
-
 
     public displayCategoryName(category: CategoryId) {
         if (category) {
@@ -98,15 +102,4 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
             return category;
         }
     }
-
-
-    public highlightFirstOption(event): void {
-        if (event.key == 'ArrowDown' || event.key == 'ArrowUp') {
-            return;
-        }
-
-        this.matAutocomplete._keyManager.setFirstItemActive();
-    }
-
-
 }
