@@ -12,6 +12,19 @@
                     "mode": "DESCENDING"
                 }
             ]
+        },
+        {
+            "collectionId": "budgets",
+            "fields": [
+                {
+                    "fieldPath": "userId",
+                    "mode": "ASCENDING" // Mode is required for where clause
+                },
+                {
+                    "fieldPath": "lastVisited",
+                    "mode": "ASCENDING"
+                }
+            ]
         }
     ]
 }

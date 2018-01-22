@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-dashboard',
@@ -8,9 +10,22 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-    constructor() {
+    constructor(private route: ActivatedRoute,
+                private afs: AngularFirestore) {
     }
 
     ngOnInit() {
+        this.route.params.subscribe(params => {
+            const {budgetId} = params;
+            this.updateBudgetVisitDate(budgetId);
+        });
     }
+
+    private updateBudgetVisitDate(budgetId: string) {
+        const currentTime = new Date();
+        this.afs.doc(`budgets/${budgetId}`).update({
+            lastVisited: currentTime
+        });
+    }
+
 }

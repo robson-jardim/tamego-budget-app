@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { DateAdapter, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
@@ -31,10 +31,13 @@ export class TransactionDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
-                private utility: UtilityService) {
+                private utility: UtilityService,
+                private adapter: DateAdapter<any>) {
     }
 
     ngOnInit() {
+
+        this.adapter.setLocale('utc');
 
         if (this.data.transferTransactionId) {
             this.setToTransferState();

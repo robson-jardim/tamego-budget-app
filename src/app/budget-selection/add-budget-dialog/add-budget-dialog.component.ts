@@ -52,11 +52,13 @@ export class AddBudgetDialogComponent implements OnInit {
     public async addBudget() {
 
         this.saving = true;
+        const currentTime = new Date();
 
         const data: Budget = {
             userId: this.data.userId,
             budgetName: this.budgetForm.value.budgetName,
-            createdAt: FirestoreService.currentTimestamp
+            createdAt: currentTime,
+            lastVisited: currentTime
         };
 
         const budgetCollection = this.budgets.collection;
