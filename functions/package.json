@@ -10,12 +10,12 @@
         "dev": "concurrently --kill-others \"npm run watch\" \"npm run shell\""
     },
     "dependencies": {
-        "firebase-admin": "~5.6.0",
-        "firebase-functions": "^0.7.5",
+        "firebase-admin": "~5.8.1",
+        "firebase-functions": "^0.8.1",
         "body-parser": "^1.18.2",
         "cors": "^2.8.4",
         "express": "^4.16.2",
-        "express-json-validator-middleware": "^1.2.0"
+        "express-json-validator-middleware": "^1.2.1"
     },
     "devDependencies": {
         "typescript": "^2.6.2",
