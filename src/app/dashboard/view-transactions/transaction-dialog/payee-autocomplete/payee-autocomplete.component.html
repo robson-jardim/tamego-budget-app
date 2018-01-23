@@ -3,10 +3,21 @@
         <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee">
 
         <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
-            <mat-option *ngFor="let payee of filteredPayees$ | async"
-                        [value]="payee">
-                {{payee.payeeName}}
-            </mat-option>
+
+            <mat-optgroup [label]="'Transfers'">
+                <mat-option *ngFor="let account of accounts" [value]="account">
+                    {{account.accountName}}
+                </mat-option>
+            </mat-optgroup>
+
+            <mat-optgroup [label]="'Payees'">
+                <mat-option *ngFor="let payee of payees"
+                            [value]="payee">
+                    {{payee.payeeName}}
+                </mat-option>
+            </mat-optgroup>
+
         </mat-autocomplete>
+
     </mat-form-field>
 </ng-container>

@@ -11,6 +11,7 @@ import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocompl
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
 import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/cleared-checkbox.component';
 import { FormsModule } from '@angular/forms';
+import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-datepicker.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
         UtcDatePipe,
         PayeeAutocompleteComponent,
         CategoryAutocompleteComponent,
-        ClearedCheckboxComponent
+        ClearedCheckboxComponent,
+        UtcDatepickerComponent
     ],
     imports: [
         CommonModule,

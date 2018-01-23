@@ -22,7 +22,7 @@
                 },
                 {
                     "fieldPath": "lastVisited",
-                    "mode": "ASCENDING"
+                    "mode": "DESCENDING"
                 }
             ]
         }

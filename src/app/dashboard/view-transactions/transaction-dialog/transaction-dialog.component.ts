@@ -1,18 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { DateAdapter, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
-import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/mergeMap';
 import { CollectionResult } from '@models/collection-result.model';
 import { Transaction, TransactionId } from '@models/transaction.model';
-import { Payee, PayeeId } from '@models/payee.model';
+import { Payee } from '@models/payee.model';
 import { CategoryId } from '@models/category.model';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-
 
 @Component({
     selector: 'app-transaction-dialog',
@@ -31,13 +29,10 @@ export class TransactionDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
-                private utility: UtilityService,
-                private adapter: DateAdapter<any>) {
+                private utility: UtilityService) {
     }
 
     ngOnInit() {
-
-        this.adapter.setLocale('utc');
 
         if (this.data.transferTransactionId) {
             this.setToTransferState();
@@ -71,14 +66,8 @@ export class TransactionDialogComponent implements OnInit {
 
     private buildTransactionForm() {
 
-        let transactionDate: Date | null;
-
-        if (this.data.transactionDate) {
-            transactionDate = this.utility.convertToLocal(this.data.transactionDate);
-        }
-
         const baseForm: any = {
-            transactionDate: [transactionDate, Validators.required],
+            transactionDate: [this.data.transactionDate, Validators.required],
             memo: [this.data.memo],
             amount: [this.data.amount],
             status: [this.data.status || false]
@@ -106,11 +95,10 @@ export class TransactionDialogComponent implements OnInit {
         else {
             this.saveTransaction();
         }
-
     }
 
     private addNewTransaction() {
-        this.transactions.collection.add(this.currentTransactionData);
+        this.transactions.collection.add(this.transactionData);
         this.dialogRef.close();
     }
 
@@ -145,36 +133,36 @@ export class TransactionDialogComponent implements OnInit {
 
     private updateTransaction() {
         const transactionId = this.data.transactionId;
-        this.transactions.collection.doc(transactionId).update(this.currentTransactionData);
+        this.transactions.collection.doc(transactionId).update(this.transactionData);
 
         this.dialogRef.close();
     }
 
-    private get currentTransactionData() {
+    private get transactionData() {
         const dateFromForm = this.transactionForm.value.transactionDate;
-        const utcDate = this.utility.convertToUtc(dateFromForm);
 
         const getPayeeId = () => {
             // Type is any due to the field value can contain null, a string, or a PayeeId
             const payeeField: any = this.transactionForm.value.payee;
 
-            if (payeeField) {
-                if (payeeField.payeeId) {
-                    return payeeField.payeeId;
-                }
-                else {
-                    const newPayeeId = this.firestore.generateId();
+            if (payeeField && payeeField.payeeId) {
+                return payeeField.payeeId;
+            }
+            else if (payeeField && payeeField.budgetAccountId) {
+                return payeeField.budgetAccountId;
+            }
+            else if (payeeField && !payeeField.payeeId) {
+                const newPayeeId = this.firestore.generateId();
 
-                    const payee: Payee = {
-                        payeeName: payeeField,
-                        belongToCategoryId: null
-                    };
+                const payee: Payee = {
+                    payeeName: payeeField,
+                    belongToCategoryId: null
+                };
 
-                    const payeeCollection: AngularFirestoreCollection<Payee> = this.firestore.getPayees(this.data.budgetId).collection;
-                    payeeCollection.doc(newPayeeId).set(payee);
+                const payeeCollection: AngularFirestoreCollection<Payee> = this.firestore.getPayees(this.data.budgetId).collection;
+                payeeCollection.doc(newPayeeId).set(payee);
 
-                    return newPayeeId;
-                }
+                return newPayeeId;
             }
             else {
                 return null;
@@ -193,7 +181,7 @@ export class TransactionDialogComponent implements OnInit {
         };
 
         const data: Transaction = {
-            transactionDate: utcDate,
+            transactionDate: this.transactionForm.value.transactionDate,
             accountId: this.transactionForm.value.accountId,
             payeeId: getPayeeId(),
             categoryId: getCategoryId(),

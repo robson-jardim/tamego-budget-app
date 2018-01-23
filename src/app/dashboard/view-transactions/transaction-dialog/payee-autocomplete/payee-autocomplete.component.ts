@@ -2,8 +2,8 @@ import { Component, Input, OnInit, OnChanges, ViewChild, SimpleChanges } from '@
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
-import { MatAutocomplete } from '@angular/material';
 import { map, startWith } from 'rxjs/operators';
+import { BudgetAccountId } from '@models/budget-account.model';
 
 @Component({
     selector: 'app-payee-autocomplete',
@@ -14,6 +14,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     public transactionForm: FormGroup;
     @Input() payees: PayeeId[];
+    @Input() accounts: BudgetAccountId[];
     @Input() selectedPayeeId: string;
 
     filteredPayees$: Observable<PayeeId[]>;
@@ -23,13 +24,16 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.transactionForm = this.controlContainer.control as FormGroup;
-        // this.matAutocomplete.showPanel = true; // Always show panel when in focus
 
         const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
+        const [account] = this.accounts.filter(x => x.budgetAccountId === this.selectedPayeeId);
+
+        const fillValue = payee ? payee : account;
 
         this.transactionForm.patchValue({
-            payee
+            payee: fillValue
         });
+
 
         this.filterAction();
     }
@@ -57,12 +61,15 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
             );
     }
 
-    public displayPayeeName(payee: PayeeId) {
-        if (payee && payee.payeeName) {
-            return payee.payeeName;
+    public displayPayeeName(entity: any) {
+        if (entity && entity.payeeId) {
+            return entity.payeeName;
+        }
+        else if (entity && entity.budgetAccountId) {
+            return entity.accountName;
         }
         else {
-            return payee;
+            return entity;
         }
     }
 
@@ -72,3 +79,4 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
         });
     }
 }
+
