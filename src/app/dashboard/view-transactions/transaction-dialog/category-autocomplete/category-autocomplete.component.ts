@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { filter, map, startWith } from 'rxjs/operators';
 import { MatAutocomplete } from '@angular/material';
 import { CategoryId } from '@models/category.model';
+import { TRANSACTION_FORM_NAMES } from '../transaction-dialog.component';
 
 @Component({
     selector: 'app-category-autocomplete',
@@ -47,7 +48,7 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     }
 
     private filterAction() {
-        this.filteredGroups$ = this.transactionForm.get('category').valueChanges
+        this.filteredGroups$ = this.transactionForm.get(TRANSACTION_FORM_NAMES.CATEGORY).valueChanges
             .pipe(
                 startWith(null),
                 map(input => {

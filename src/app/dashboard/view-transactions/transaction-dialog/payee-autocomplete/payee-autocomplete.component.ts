@@ -4,6 +4,7 @@ import { PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { BudgetAccountId } from '@models/budget-account.model';
+import { TRANSACTION_FORM_NAMES } from 'app/dashboard/view-transactions/transaction-dialog/transaction-dialog.component';
 
 @Component({
     selector: 'app-payee-autocomplete',
@@ -45,7 +46,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
     }
 
     public filterAction() {
-        this.filteredPayees$ = this.transactionForm.get('payee').valueChanges
+        this.filteredPayees$ = this.transactionForm.get(TRANSACTION_FORM_NAMES.PAYEE).valueChanges
             .pipe(
                 startWith(null),
                 map(input => {

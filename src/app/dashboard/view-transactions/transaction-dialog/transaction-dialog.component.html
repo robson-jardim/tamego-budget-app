@@ -1,8 +1,8 @@
 <ng-container *ngIf="dropdowns$ | async as dropdowns; else loading">
     <form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
 
-        <h1 mat-dialog-title *ngIf="data.state === 'CREATE'">Add transaction</h1>
-        <h1 mat-dialog-title *ngIf="data.state === 'UPDATE'">Edit transaction</h1>
+        <h1 mat-dialog-title *ngIf="DIALOG_STATE.CREATE === data.state">Add transaction</h1>
+        <h1 mat-dialog-title *ngIf="DIALOG_STATE.UPDATE === data.state">Edit transaction</h1>
 
         <mat-dialog-content>
 

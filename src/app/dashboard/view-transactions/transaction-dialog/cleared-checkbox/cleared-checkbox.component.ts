@@ -20,28 +20,4 @@ export class ClearedCheckboxComponent implements OnInit {
         this.transactionForm = this.controlContainer.control as FormGroup;
     }
 
-
-    change() {
-        if (!this.indeterminate && !this.checked) {
-            console.log('first');
-            this.indeterminate = true;
-            this.checked = false;
-        }
-        else if (this.indeterminate && !this.checked) {
-            console.log('second');
-            this.checked = true;
-            this.indeterminate = false;
-        }
-        else {
-            console.log('clear');
-            this.indeterminate = false;
-            this.checked = false;
-        }
-
-    }
-
-    interChange() {
-        console.log('inter');
-    }
-
 }

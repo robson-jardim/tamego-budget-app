@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/auth.service';
 
+const UPDATE = 'UPDATE';
+const CREATE = 'CREATE';
+
+export const DIALOG_STATE = {
+    UPDATE, CREATE
+};
+
 @Injectable()
 export class CloseDialogService {
 

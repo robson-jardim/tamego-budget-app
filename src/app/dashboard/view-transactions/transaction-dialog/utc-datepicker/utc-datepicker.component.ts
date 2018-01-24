@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlContainer, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilityService } from '@shared/services/utility/utility.service';
+import { TRANSACTION_FORM_NAMES } from 'app/dashboard/view-transactions/transaction-dialog/transaction-dialog.component';
 
 @Component({
     selector: 'app-utc-datepicker',
@@ -25,7 +26,7 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
 
         this.buildLocalDateForm();
 
-        this.dateWatcher = this.localDateForm.get('transactionDate').valueChanges.subscribe(localDate => {
+        this.dateWatcher = this.localDateForm.get(TRANSACTION_FORM_NAMES.TRANSACTION_DATE).valueChanges.subscribe(localDate => {
             if (localDate) {
                 const utcDate = this.utility.convertToUtc(localDate);
                 this.patchMasterForm(utcDate);
