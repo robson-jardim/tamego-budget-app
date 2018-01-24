@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlContainer, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilityService } from '@shared/services/utility/utility.service';
-import { TRANSACTION_FORM_NAMES } from 'app/dashboard/view-transactions/transaction-dialog/transaction-dialog.component';
+import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
 
 @Component({
     selector: 'app-utc-datepicker',

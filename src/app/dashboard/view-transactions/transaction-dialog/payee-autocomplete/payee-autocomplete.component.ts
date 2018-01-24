@@ -4,7 +4,7 @@ import { PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { BudgetAccountId } from '@models/budget-account.model';
-import { TRANSACTION_FORM_NAMES } from 'app/dashboard/view-transactions/transaction-dialog/transaction-dialog.component';
+import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
 
 @Component({
     selector: 'app-payee-autocomplete',

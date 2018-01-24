@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/auth.service';
 
-const UPDATE = 'UPDATE';
-const CREATE = 'CREATE';
-
 export const DIALOG_STATE = {
-    UPDATE, CREATE
+    UPDATE: 'UPDATE',
+    CREATE: 'CREATE'
 };
 
 @Injectable()
@@ -20,12 +18,12 @@ export class CloseDialogService {
     }
 
     public openUpdate(component, config: any = {}) {
-        config.data.state = 'UPDATE';
+        config.data.state = DIALOG_STATE.UPDATE;
         return this.open(component, config);
     }
 
     public openCreate(component, config) {
-        config.data.state = 'CREATE';
+        config.data.state = DIALOG_STATE.CREATE;
         return this.open(component, config);
     }
 

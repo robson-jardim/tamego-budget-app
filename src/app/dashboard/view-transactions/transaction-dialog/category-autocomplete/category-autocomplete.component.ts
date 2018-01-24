@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { filter, map, startWith } from 'rxjs/operators';
 import { MatAutocomplete } from '@angular/material';
 import { CategoryId } from '@models/category.model';
-import { TRANSACTION_FORM_NAMES } from '../transaction-dialog.component';
+import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
 
 @Component({
     selector: 'app-category-autocomplete',

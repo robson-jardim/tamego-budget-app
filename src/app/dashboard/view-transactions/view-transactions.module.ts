@@ -32,8 +32,6 @@ import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-
         MatDatepickerModule,
         MatNativeDateModule,
         MatCheckboxModule,
-
-        FormsModule // TODO - remove module
     ],
     entryComponents: [
         TransactionDialogComponent
