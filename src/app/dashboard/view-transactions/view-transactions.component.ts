@@ -7,7 +7,6 @@ import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.s
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { TransactionId } from '@models/transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
-import { INITIAL_TRANSACTION_STATE } from './shared/initial_transaction_state.enum';
 
 @Component({
     selector: 'app-budget',
@@ -71,16 +70,13 @@ export class ViewTransactionsComponent implements OnInit {
     }
 
     public updateTransaction(transaction: TransactionId) {
-        Observable.combineLatest(this.getBudgetId(), this.getAccountId())
-            .first()
-            .subscribe(([budgetId, accountId]) => {
-                this.dialogService.openUpdate(TransactionDialogComponent, {
-                    data: {
-                        budgetId,
-                        accountId,
-                        ...transaction
-                    }
-                });
+        this.getBudgetId().subscribe(budgetId => {
+            this.dialogService.openUpdate(TransactionDialogComponent, {
+                data: {
+                    budgetId,
+                    ...transaction
+                }
             });
+        });
     }
 }

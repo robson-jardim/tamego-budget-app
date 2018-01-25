@@ -8,7 +8,8 @@ export interface BudgetAccountId extends BudgetAccount {
 }
 
 export function instanceOfBudgetAccountId(obj: Object) {
-    return 'budgetAccountId' in obj
+    return obj
+        && 'budgetAccountId' in obj
         && 'accountName' in obj
         && 'accountType' in obj;
 }

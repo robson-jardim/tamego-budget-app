@@ -8,7 +8,8 @@ export interface PayeeId extends Payee {
 }
 
 export function instanceOfPayeeId(obj: Object) {
-    return 'payeeId' in obj
+    return obj
+        && 'payeeId' in obj
         && 'payeeName' in obj
         && 'belongToCategoryId' in obj;
 }

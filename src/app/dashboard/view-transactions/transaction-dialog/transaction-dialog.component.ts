@@ -7,12 +7,14 @@ import { Observable } from 'rxjs/Observable';
 import { CollectionResult } from '@models/collection-result.model';
 import { Transaction, TransactionId } from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
-import { DIALOG_STATE } from '@shared/services/close-dialog/close-dialog.service';
+import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { CategoryId, instanceOfCategoryId } from '@models/category.model';
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { TRANSACTION_FORM_NAMES } from '../shared/transaction-form-names';
-import { INITIAL_TRANSACTION_STATE } from '../shared/initial_transaction_state.enum';
+import { TransactionState } from '../shared/transaction_state.enum';
+import { instanceOfTransfer } from '@models/transfer-transaction.model';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { TransactionFormNames } from '../shared/transaction-form-names.enum';
 
 @Component({
     selector: 'app-transaction-dialog',
@@ -23,24 +25,24 @@ export class TransactionDialogComponent implements OnInit {
 
     public transactionForm: FormGroup;
     public dropdowns$;
-    public readonly DIALOG_STATE = DIALOG_STATE;
+    public DialogState = DialogState;
+    public TransactionFormNames = TransactionFormNames;
 
     public saving = false;
     private transactions: CollectionResult<Transaction, TransactionId[]>;
-    private initialTransactionState: INITIAL_TRANSACTION_STATE;
+    private initialTransactionState: TransactionState;
 
     constructor(private dialogRef: MatDialogRef<TransactionDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
                 private firestore: FirestoreService,
-                private utility: UtilityService) {
+                private utility: UtilityService,
+                private notifications: GeneralNotificationsService) {
     }
 
     ngOnInit() {
-
         this.setInitialTransactionState();
-
-        this.transactions = this.firestore.getTransactions(this.data.budgetId);
+        this.buildTransactionForm();
 
         this.dropdowns$ = this.utility.combineLatestObj({
             payees: this.getPayees(),
@@ -48,7 +50,7 @@ export class TransactionDialogComponent implements OnInit {
             groups: this.getGroups()
         });
 
-        this.buildTransactionForm();
+        this.transactions = this.firestore.getTransactions(this.data.budgetId);
     }
 
     private getPayees() {
@@ -70,27 +72,67 @@ export class TransactionDialogComponent implements OnInit {
 
         const form = new Object();
 
-        form[TRANSACTION_FORM_NAMES.TRANSACTION_DATE] = [this.data.transactionDate, Validators.required];
-        form[TRANSACTION_FORM_NAMES.ACCOUNT_ID] = [this.data.accountId, Validators.required];
-        form[TRANSACTION_FORM_NAMES.PAYEE] = [this.data.payee]; // Object set within autocomplete component
-        form[TRANSACTION_FORM_NAMES.CATEGORY] = [null]; // Object set within autocomplete component
-        form[TRANSACTION_FORM_NAMES.MEMO] = [this.data.memo];
-        form[TRANSACTION_FORM_NAMES.AMOUNT] = [this.data.amount];
-        form[TRANSACTION_FORM_NAMES.STATUS] = [this.data.status];
+        form[TransactionFormNames.TransactionDate] = [this.data.transactionDate, Validators.required];
+        form[TransactionFormNames.AccountId] = [this.data.accountId || this.data.originAccountId, Validators.required];
+        form[TransactionFormNames.Payee] = [null]; // Object set within autocomplete component
+        form[TransactionFormNames.Category] = [null]; // Object set within autocomplete component
+        form[TransactionFormNames.Memo] = [this.data.memo];
+        form[TransactionFormNames.Amount] = [this.data.amount];
+        form[TransactionFormNames.Status] = [this.data.status];
+
 
         this.transactionForm = this.formBuilder.group(form);
     }
 
     public saveChanges() {
         this.saving = true;
-        this.saveTransaction();
+
+
+        // TODO - work on saving for transactions
+        if (this.transactionStateChanged()) {
+            if (TransactionState.Transfer === this.initialTransactionState) {
+
+            }
+            else {
+
+            }
+        }
+
+        if (TransactionState.Transfer === this.transactionState) {
+            console.log('Saving transfer');
+        }
+        else {
+            this.saveTransaction();
+            console.log('Saving transaction');
+        }
+
+        this.sendTransactionNotification();
+    }
+
+    private transactionStateChanged() {
+        return this.initialTransactionState !== this.transactionState;
+    }
+
+    private get transactionState(): TransactionState {
+
+        const isTransfer = () => {
+            const entity: PayeeId | BudgetAccountId = this.transactionForm.value[TransactionFormNames.Payee];
+            return instanceOfBudgetAccountId(entity);
+        };
+
+        if (isTransfer()) {
+            return TransactionState.Transfer;
+        }
+        else {
+            return TransactionState.Standard;
+        }
     }
 
     private saveTransaction() {
-        if (DIALOG_STATE.CREATE === this.data.state) {
+        if (DialogState.Create === this.data.state) {
             this.addNewTransaction();
         }
-        else if (DIALOG_STATE.UPDATE === this.data.state) {
+        else if (DialogState.Update === this.data.state) {
             this.updateTransaction();
         }
     }
@@ -108,18 +150,18 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private get transactionData() {
-        const dateFromForm = this.transactionForm.value.transactionDate;
+        const dateFromForm = this.transactionForm.value.TransactionDate;
 
         const getPayeeId = () => {
 
             // Payee field type meanings
             // ---------------------------
-            // payee type: regular transaction with a payee that has previously been saved
+            // Payee type: regular transaction with a Payee that has previously been saved
             // budget account type: transfer transaction with an account that has previously been saved
-            // string: regular transaction with a new payee
-            // null: payee field was left empty
+            // string: regular transaction with a new Payee
+            // null: Payee field was left empty
 
-            const payeeField: PayeeId | BudgetAccountId | string | null = this.transactionForm.value[TRANSACTION_FORM_NAMES.PAYEE];
+            const payeeField: PayeeId | BudgetAccountId | string | null = this.transactionForm.value[TransactionFormNames.Payee];
 
             if (!payeeField) {
                 return null;
@@ -147,7 +189,7 @@ export class TransactionDialogComponent implements OnInit {
         };
 
         const getCategoryId = () => {
-            const category: CategoryId | null = this.transactionForm.value[TRANSACTION_FORM_NAMES.CATEGORY];
+            const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
 
             if (instanceOfCategoryId(category)) {
                 return (<CategoryId>category).categoryId;
@@ -158,17 +200,32 @@ export class TransactionDialogComponent implements OnInit {
         };
 
         return {
-            transactionDate: this.transactionForm.value[TRANSACTION_FORM_NAMES.TRANSACTION_DATE],
-            accountId: this.transactionForm.value[TRANSACTION_FORM_NAMES.ACCOUNT_ID],
+            transactionDate: this.transactionForm.value[TransactionFormNames.TransactionDate],
+            accountId: this.transactionForm.value[TransactionFormNames.AccountId],
             payeeId: getPayeeId(),
             categoryId: getCategoryId(),
-            amount: this.transactionForm.value[TRANSACTION_FORM_NAMES.AMOUNT],
-            memo: this.transactionForm.value[TRANSACTION_FORM_NAMES.MEMO],
-            status: this.transactionForm.value[TRANSACTION_FORM_NAMES.STATUS]
+            amount: this.transactionForm.value[TransactionFormNames.Amount],
+            memo: this.transactionForm.value[TransactionFormNames.Memo],
+            status: this.transactionForm.value[TransactionFormNames.Status]
         };
     }
 
     private setInitialTransactionState() {
-        // TODO - set transaction state
+
+        if (instanceOfTransfer(this.data)) {
+            this.initialTransactionState = TransactionState.Transfer;
+        }
+        else {
+            this.initialTransactionState = TransactionState.Standard;
+        }
+    }
+
+    private sendTransactionNotification() {
+        if (DialogState.Create === this.data.state) {
+            this.notifications.sendCreateNotification('Transaction');
+        }
+        else if (DialogState.Update === this.data.state) {
+            this.notifications.sendUpdateNotification('Transaction');
+        }
     }
 }

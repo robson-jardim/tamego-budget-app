@@ -1,6 +1,7 @@
 <ng-container [formGroup]="transactionForm">
     <mat-form-field>
-        <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete" formControlName="payee">
+        <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete"
+               formControlName="{{TransactionFormNames.Payee}}">
 
         <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
 

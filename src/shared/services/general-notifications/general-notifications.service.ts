@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 export interface Notification {
-    message: string,
-    action?: string,
-    duration?: number
+    message: string;
+    action?: string;
+    duration?: number;
+}
+
+enum Entity {
+    Transaction = 'Transaction'
 }
 
 @Injectable()
@@ -17,6 +21,7 @@ export class GeneralNotificationsService {
     private readonly defaultDuration = 2000;
 
     constructor() {
+        // Entity.Transaction = 'test';
     }
 
     public sendUpdateNotification(entity: string) {
@@ -52,7 +57,7 @@ export class GeneralNotificationsService {
         entity = this.capitalizeFirstLetter(entity);
 
         const notification: Notification = {
-            message: `${entity} delete`,
+            message: `${entity} deleted`,
             duration: this.defaultDuration
         };
 

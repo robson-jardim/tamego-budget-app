@@ -1,13 +1,13 @@
 <ng-container *ngIf="dropdowns$ | async as dropdowns; else loading">
     <form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
 
-        <h1 mat-dialog-title *ngIf="DIALOG_STATE.CREATE === data.state">Add transaction</h1>
-        <h1 mat-dialog-title *ngIf="DIALOG_STATE.UPDATE === data.state">Edit transaction</h1>
+        <h1 mat-dialog-title *ngIf="DialogState.Create === data.state">Add transaction</h1>
+        <h1 mat-dialog-title *ngIf="DialogState.Update === data.state">Edit transaction</h1>
 
         <mat-dialog-content>
 
             <mat-form-field>
-                <mat-select placeholder="Account" formControlName="accountId">
+                <mat-select placeholder="Account" formControlName="{{TransactionFormNames.AccountId}}">
                     <mat-option *ngFor="let account of dropdowns.accounts" [value]="account.budgetAccountId">
                         {{account.accountName}}
                     </mat-option>
@@ -21,7 +21,7 @@
             <app-payee-autocomplete
                 [payees]="dropdowns.payees"
                 [accounts]="dropdowns.accounts"
-                [selectedPayeeId]="data.payeeId">
+                [selectedPayeeId]="data.payeeId || data.destinationAccountId">
             </app-payee-autocomplete>
 
             <app-category-autocomplete
@@ -31,17 +31,16 @@
 
             <mat-form-field>
                 <span matPrefix>$ &nbsp;</span>
-                <input matInput placeholder="Amount" type="number" formControlName="amount">
+                <input matInput placeholder="Amount" type="number" formControlName="{{TransactionFormNames.Amount}}">
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Memo" type="text" formControlName="memo">
+                <input matInput placeholder="Memo" type="text" formControlName="{{TransactionFormNames.Memo}}">
             </mat-form-field>
 
             <app-cleared-checkbox>
 
             </app-cleared-checkbox>
-
 
 
         </mat-dialog-content>

@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, OnChanges, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { BudgetAccountId } from '@models/budget-account.model';
-import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
+import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
 @Component({
     selector: 'app-payee-autocomplete',
@@ -13,6 +13,7 @@ import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
 })
 export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
+    public TransactionFormNames = TransactionFormNames;
     public transactionForm: FormGroup;
     @Input() payees: PayeeId[];
     @Input() accounts: BudgetAccountId[];
@@ -28,6 +29,8 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
         const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
         const [account] = this.accounts.filter(x => x.budgetAccountId === this.selectedPayeeId);
+
+        debugger;
 
         const fillValue = payee ? payee : account;
 
@@ -46,7 +49,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
     }
 
     public filterAction() {
-        this.filteredPayees$ = this.transactionForm.get(TRANSACTION_FORM_NAMES.PAYEE).valueChanges
+        this.filteredPayees$ = this.transactionForm.get(TransactionFormNames.Payee).valueChanges
             .pipe(
                 startWith(null),
                 map(input => {

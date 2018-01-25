@@ -1,10 +1,9 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { filter, map, startWith } from 'rxjs/operators';
-import { MatAutocomplete } from '@angular/material';
+import { map, startWith } from 'rxjs/operators';
 import { CategoryId } from '@models/category.model';
-import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
+import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
 @Component({
     selector: 'app-category-autocomplete',
@@ -13,6 +12,7 @@ import { TRANSACTION_FORM_NAMES } from '../../shared/transaction-form-names';
 })
 export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
+    public TransactionFormNames = TransactionFormNames;
     public transactionForm: FormGroup;
 
     @Input() groups;
@@ -48,7 +48,7 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     }
 
     private filterAction() {
-        this.filteredGroups$ = this.transactionForm.get(TRANSACTION_FORM_NAMES.CATEGORY).valueChanges
+        this.filteredGroups$ = this.transactionForm.get(TransactionFormNames.Category).valueChanges
             .pipe(
                 startWith(null),
                 map(input => {

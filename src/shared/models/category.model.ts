@@ -9,9 +9,10 @@ export interface CategoryId extends Category {
 }
 
 export function instanceOfCategoryId(obj: Object) {
-    return 'categoryId' in obj &&
-        'groupId' in obj &&
-        'categoryName' in obj &&
-        'position' in obj;
+    return obj
+        && 'categoryId' in obj
+        && 'groupId' in obj
+        && 'categoryName' in obj
+        && 'position' in obj;
 }
 

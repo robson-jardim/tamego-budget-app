@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/auth.service';
 
-export const DIALOG_STATE = {
-    UPDATE: 'UPDATE',
-    CREATE: 'CREATE'
-};
+// This enum must map strings because values need to be checked inside dialog templates
+export enum DialogState {
+    Update = 'UPDATE',
+    Create = 'CREATE'
+}
 
 @Injectable()
 export class CloseDialogService {
@@ -18,12 +19,12 @@ export class CloseDialogService {
     }
 
     public openUpdate(component, config: any = {}) {
-        config.data.state = DIALOG_STATE.UPDATE;
+        config.data.state = DialogState.Update;
         return this.open(component, config);
     }
 
     public openCreate(component, config) {
-        config.data.state = DIALOG_STATE.CREATE;
+        config.data.state = DialogState.Create;
         return this.open(component, config);
     }
 

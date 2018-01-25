@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, ControlContainer } from '@angular/forms';
+import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
 @Component({
     selector: 'app-cleared-checkbox',
@@ -9,6 +10,7 @@ import { FormGroup, ControlContainer } from '@angular/forms';
 export class ClearedCheckboxComponent implements OnInit {
 
     public transactionForm: FormGroup;
+    public TransactionFormNames = TransactionFormNames;
 
     public checked = false;
     public indeterminate = false;
