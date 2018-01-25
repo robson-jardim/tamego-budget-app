@@ -5,11 +5,14 @@ import { AuthService } from '../auth/auth.service';
 // This enum must map strings because values need to be checked inside dialog templates
 export enum DialogState {
     Update = 'UPDATE',
-    Create = 'CREATE'
+    Create = 'CREATE',
+    Delete = 'DELETE'
 }
 
 @Injectable()
 export class CloseDialogService {
+
+    // TODO - move all dialogs to use dialog service
 
     // This service closes out any open dialogs boxes across all tabs
     // whenever a sign out event occurs

@@ -12,11 +12,11 @@ export interface TransferTransactionId extends TransferTransaction {
 }
 
 export function instanceOfTransfer(obj: Object) {
-    return obj
-        && 'TransactionDate' in obj
+    return obj && obj instanceof Object
+        && 'transactionDate' in obj
         && 'originAccountId' in obj
         && 'destinationAccountId' in obj
-        && 'Memo' in obj
-        && 'Amount' in obj
+        && 'memo' in obj
+        && 'amount' in obj
         && 'status' in obj;
 }

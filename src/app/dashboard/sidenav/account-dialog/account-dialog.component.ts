@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { BudgetAccount } from '@models/budget-account.model';
+import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 
 @Component({
     selector: 'app-add-account-to-budget-dialog',
@@ -11,8 +12,9 @@ import { BudgetAccount } from '@models/budget-account.model';
     encapsulation: ViewEncapsulation.None
 })
 export class AccountDialogComponent implements OnInit {
-    
-    public account: FormGroup;
+
+    public DialogState = DialogState;
+    public accountForm: FormGroup;
     private budgetAccountCollection: AngularFirestoreCollection<BudgetAccount>;
 
     constructor(private dialogRef: MatDialogRef<AccountDialogComponent>,
@@ -26,24 +28,22 @@ export class AccountDialogComponent implements OnInit {
     }
 
     private buildAccountForm() {
-        this.account = this.formBuilder.group({
+        this.accountForm = this.formBuilder.group({
             accountName: ['', Validators.required],
             accountType: ['', Validators.required]
         });
     }
 
     public addAccountToBudget(form) {
-        if (this.account.valid) {
-            const budgetAccount: BudgetAccount = {
-                accountName: form.accountName,
-                accountType: form.accountType
-            };
+        const budgetAccount: BudgetAccount = {
+            accountName: form.accountName,
+            accountType: form.accountType
+        };
 
-            this.budgetAccountCollection.add(budgetAccount).then(newAccount => {
-                const newAccountId = newAccount.id;
-                this.dialogRef.close(newAccountId);
-            });
-        }
+        this.budgetAccountCollection.add(budgetAccount).then(newAccount => {
+            const newAccountId = newAccount.id;
+            this.dialogRef.close(newAccountId);
+        });
     }
 
     private close() {

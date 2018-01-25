@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { EditCategoryDialogComponent } from '../category-dialog/category-dialog.component';
 import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { EntityNames } from '@shared/enums/entity-names.enum';
 
 @Component({
     selector: 'app-category-group-dialog',
@@ -75,7 +76,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         };
 
         this.groupCollection.add(data);
-        this.notifications.sendCreateNotification('Category group');
+        this.notifications.sendCreateNotification(EntityNames.CategoryGroup);
         this.close();
     }
 
@@ -91,7 +92,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         };
 
         this.groupCollection.doc(this.group.groupId).update(data);
-        this.notifications.sendUpdateNotification('Category group');
+        this.notifications.sendUpdateNotification(EntityNames.CategoryGroup);
         this.close();
     }
 }

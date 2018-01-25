@@ -13,7 +13,7 @@ export interface TransactionId extends Transaction {
 }
 
 export function instanceOfTransaction(obj: Object) {
-    return obj
+    return obj && obj instanceof Object
         && 'transactionDate' in obj
         && 'accountId' in obj
         && 'payeeId' in obj

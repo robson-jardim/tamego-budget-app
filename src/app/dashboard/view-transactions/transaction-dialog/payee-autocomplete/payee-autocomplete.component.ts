@@ -30,8 +30,6 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
         const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
         const [account] = this.accounts.filter(x => x.budgetAccountId === this.selectedPayeeId);
 
-        debugger;
-
         const fillValue = payee ? payee : account;
 
         this.transactionForm.patchValue({

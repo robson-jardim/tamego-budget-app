@@ -44,4 +44,7 @@ export class SidenavComponent implements OnInit {
         });
     }
 
+    public updateAccount(account: BudgetAccountId) {
+        // TODO - update dialog from sidenav
+    }
 }

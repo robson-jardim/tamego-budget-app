@@ -5,6 +5,7 @@ import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { EntityNames } from '@shared/enums/entity-names.enum';
 
 
 @Component({
@@ -86,7 +87,7 @@ export class EditCategoryDialogComponent implements OnInit {
         this.updateCategoryEntity();
         this.saveCategoryValueChanges();
 
-        this.notifications.sendUpdateNotification('category');
+        this.notifications.sendUpdateNotification(EntityNames.Category);
         this.close();
     }
 
@@ -173,7 +174,7 @@ export class EditCategoryDialogComponent implements OnInit {
         };
 
         this.categoryCollection.add(data);
-        this.notifications.sendCreateNotification('category');
+        this.notifications.sendCreateNotification(EntityNames.Category);
         this.close();
     }
 

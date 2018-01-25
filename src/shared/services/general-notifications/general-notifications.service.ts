@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { EntityNames } from '@shared/enums/entity-names.enum';
 
 export interface Notification {
     message: string;
     action?: string;
     duration?: number;
-}
-
-enum Entity {
-    Transaction = 'Transaction'
 }
 
 @Injectable()
@@ -21,13 +18,9 @@ export class GeneralNotificationsService {
     private readonly defaultDuration = 2000;
 
     constructor() {
-        // Entity.Transaction = 'test';
     }
 
-    public sendUpdateNotification(entity: string) {
-
-        entity = this.capitalizeFirstLetter(entity);
-
+    public sendUpdateNotification(entity: EntityNames) {
         const notification: Notification = {
             message: `${entity} updated`,
             duration: this.defaultDuration
@@ -38,10 +31,7 @@ export class GeneralNotificationsService {
         }, this.messageDelay);
     }
 
-    public sendCreateNotification(entity: string) {
-
-        entity = this.capitalizeFirstLetter(entity);
-
+    public sendCreateNotification(entity: EntityNames) {
         const notification: Notification = {
             message: `${entity} added`,
             duration: this.defaultDuration
@@ -52,10 +42,7 @@ export class GeneralNotificationsService {
         }, this.messageDelay);
     }
 
-    public sendDeleteNotification(entity: string) {
-
-        entity = this.capitalizeFirstLetter(entity);
-
+    public sendDeleteNotification(entity: EntityNames) {
         const notification: Notification = {
             message: `${entity} deleted`,
             duration: this.defaultDuration
@@ -64,10 +51,6 @@ export class GeneralNotificationsService {
         setTimeout(() => {
             this.notificationSource.next(notification);
         }, this.messageDelay);
-    }
-
-    private capitalizeFirstLetter(s: string) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
 }

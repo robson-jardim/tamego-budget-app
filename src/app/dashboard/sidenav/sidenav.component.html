@@ -23,7 +23,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #accountOptions>
-            <button mat-menu-item>Edit</button>
+            <button mat-menu-item (click)="updateAccount(account)">Edit</button>
             <button mat-menu-item>Delete</button>
         </mat-menu>
 
