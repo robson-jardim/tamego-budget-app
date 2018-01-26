@@ -1,7 +1,6 @@
 firebase-debug.log
 node_modules/
 dist/
-.idea/
 etc/
 
 # compiled output
@@ -17,7 +16,6 @@ etc/
 *.sublime-workspace
 
 # IDE - VSCode
-.idea
 .code
 .vscode
 !.vscode/settings.json
