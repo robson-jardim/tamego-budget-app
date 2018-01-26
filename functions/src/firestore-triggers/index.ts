@@ -1,5 +1,5 @@
 import * as authentication from './authentication';
-import * as categoryValues from './categoryValues';
+import * as categoryValues from './category-values/category-values';
 
 export const onUserCreate = authentication.onUserCreate;
 export const onValueCreate = categoryValues.onValueCreate;
