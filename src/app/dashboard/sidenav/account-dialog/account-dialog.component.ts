@@ -25,7 +25,7 @@ export class AccountDialogComponent implements OnInit {
 
     constructor(private dialogRef: MatDialogRef<AccountDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: any,
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private firestore: FirestoreService) {
     }
 

@@ -57,7 +57,11 @@ export class SidenavComponent implements OnInit {
     }
 
     private onAddNavigateToAccount(dialogRef: MatDialogRef<any>): Observable<any> {
-        return dialogRef.afterClosed().filter(x => x !== null);
+        return dialogRef.afterClosed().filter(isAccountId);
+
+        function isAccountId(id: string) {
+            return id !== null;
+        }
     }
 
     public updateAccount(account: BudgetAccountId) {

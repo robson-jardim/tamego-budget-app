@@ -15,6 +15,7 @@ import { Transaction, TransactionId } from '@models/transaction.model';
 import { SplitTransaction, SplitTransactionId } from '@models/split-transaction.model';
 import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Injectable()
 export class FirestoreService {
@@ -163,6 +164,10 @@ export class FirestoreService {
 
     public getTransactionView(budgetId: string, accountIds: string[]) {
 
+        if (accountIds.length === 0) {
+            return Observable.of([]);
+        }
+
         const observables = [];
 
         accountIds.forEach(accountId => {
@@ -174,10 +179,6 @@ export class FirestoreService {
             observables.push(transfers);
         });
 
-        if (observables.length === 0) {
-            return Observable.of([]);
-        }
-
         return Observable.combineLatest(observables, (...observablesData) => {
 
             let data = [...observablesData];
@@ -186,7 +187,7 @@ export class FirestoreService {
             return data;
 
             function flatten(array: Array<any>) {
-                return [].concat.apply([], array);
+                return array.reduce((a, b) => a.concat(b), []);
             }
 
             function orderByDate(array: Array<any>) {

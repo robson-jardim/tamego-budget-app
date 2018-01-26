@@ -26,39 +26,25 @@ export class ViewTransactionsComponent implements OnInit {
 
     ngOnInit() {
 
-        this.transactions$ = this.utility.combineLatestObj({
+        const routeData$ = this.utility.combineLatestObj({
             budgetId: this.getBudgetId(),
             accountId: this.getAccountId()
-        }).flatMap(({budgetId, accountId}) => {
-            if (accountId) {
-                return Observable.of([accountId]);
-            }
-            else {
-                return this.getAllAccountIdsForBudget(budgetId);
-            }
-        }).flatMap(accountIds => {
-            return this.firestore.getTransactionView('aqvJ4oQo0E5ldQRdsxsR', accountIds);
         });
 
-        this.transactions$.subscribe(x => console.log(x));
+        this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
+            const budgetId$: Observable<string> = Observable.of(budgetId);
+            const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
 
-        // this.transactions$ = this.firestore.getTransactionView(budgetId, accountIds).map(x => x.data);
+            return this.utility.combineLatestObj({
+                budgetId: budgetId$,
+                accountIds: accountIds$
+            });
 
+        }).flatMap(({budgetId, accountIds}) => {
+            return this.firestore.getTransactionView(budgetId, accountIds);
+        });
 
-        // Observable.combineLatest(this.getBudgetId(), this.getAccountId()).subscribe(([budgetId, accountId]) => {
-        //
-        //     if (accountId) {
-        //         const accountIds = [accountId];
-        //         this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
-        //     }
-        //     else {
-        //         this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
-        //             const accountIds = accounts.map(a => a.budgetAccountId);
-        //             this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
-        //         });
-        //     }
-        // });
     }
 
     private getAllAccountIdsForBudget(budgetId: string) {
@@ -85,7 +71,7 @@ export class ViewTransactionsComponent implements OnInit {
         this.utility.combineLatestObj({
             budgetId: this.getBudgetId(),
             accountId: this.getAccountId()
-        }).subscribe(response => {
+        }).first().subscribe(response => {
             const {budgetId, accountId} = response;
             const data = {
                 budgetId,

@@ -48,9 +48,9 @@
         <mat-dialog-actions>
             <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
-            <button mat-button *ngIf="data.state === 'CREATE'" type="submit" mat-raised-button color="primary">Add
+            <button mat-button *ngIf="data.state === 'CREATE'" [disabled]="saving" type="submit" mat-raised-button color="primary">Add
             </button>
-            <button mat-button *ngIf="data.state === 'UPDATE'" type="submit" mat-raised-button color="primary">Save
+            <button mat-button *ngIf="data.state === 'UPDATE'" [disabled]="saving" type="submit" mat-raised-button color="primary">Save
             </button>
         </mat-dialog-actions>
 
