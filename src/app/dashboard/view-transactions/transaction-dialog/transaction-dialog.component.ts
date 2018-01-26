@@ -6,11 +6,9 @@ import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
 import { CollectionResult } from '@models/collection-result.model';
 import { Transaction, TransactionId } from '@models/transaction.model';
-import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
+import { PayeeId } from '@models/payee.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
-import { CategoryId, instanceOfCategoryId } from '@models/category.model';
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { TransactionState } from '../shared/transaction_state.enum';
 import { instanceOfTransfer } from '@models/transfer-transaction.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
@@ -81,7 +79,6 @@ export class TransactionDialogComponent implements OnInit {
         form[TransactionFormNames.Amount] = [this.data.amount];
         form[TransactionFormNames.Status] = [this.data.status];
 
-
         this.transactionForm = this.formBuilder.group(form);
     }
 
@@ -97,6 +94,7 @@ export class TransactionDialogComponent implements OnInit {
             this.sendTransactionNotification();
         }
         // TODO - work on saving for transactions
+
         // only matters in the context of update
         // if (this.transactionStateChanged()) {
         //     if (TransactionState.Transfer === this.initialTransactionState) {

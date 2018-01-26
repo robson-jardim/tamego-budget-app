@@ -174,19 +174,16 @@ export class FirestoreService {
             observables.push(transfers);
         });
 
+        if (observables.length === 0) {
+            return Observable.of([]);
+        }
+
         return Observable.combineLatest(observables, (...observablesData) => {
 
             let data = [...observablesData];
             data = flatten(data);
             orderByDate(data);
-
-            return {
-                collections: {
-                    transactions: this.references.getTransactionCollectionRef(budgetId),
-                    transfers: this.references.getTransfers(budgetId)
-                },
-                data
-            };
+            return data;
 
             function flatten(array: Array<any>) {
                 return [].concat.apply([], array);

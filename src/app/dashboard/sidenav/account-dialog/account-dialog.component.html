@@ -1,21 +1,19 @@
-<form [formGroup]="accountForm" (ngSubmit)="accountForm.valid && addAccountToBudget(account.value)">
+<form [formGroup]="accountForm" (ngSubmit)="accountForm.valid && saveChanges()">
 
-    <h1 mat-dialog-title>Add account</h1>
+    <h1 mat-dialog-title *ngIf="DialogState.Create === data.state">Add account</h1>
+    <h1 mat-dialog-title *ngIf="DialogState.Update === data.state">Edit account</h1>
 
     <mat-dialog-content>
 
         <mat-form-field>
-            <input matInput formControlName="accountName" placeholder="Account name" type="text">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput formControlName="accountType" placeholder="Account type" type="text">
+            <input matInput formControlName="{{AccountFormNames.AccountName}}" placeholder="Account name" type="text">
         </mat-form-field>
 
     </mat-dialog-content>
 
     <mat-dialog-actions>
         <button mat-button type="button" [mat-dialog-close]>Cancel</button>
-        <button mat-button type="submit" mat-raised-button color="primary">Add</button>
+        <button mat-button *ngIf="DialogState.Create === data.state" type="submit" mat-raised-button color="primary">Add</button>
+        <button mat-button *ngIf="DialogState.Update === data.state" type="submit" mat-raised-button color="primary">Submit</button>
     </mat-dialog-actions>
 </form>

@@ -9,12 +9,12 @@
         <p>All Accounts</p>
     </mat-list-item>
     <mat-list-item>
-        <button mat-button (click)="openAddBudgetToAccountDialog()">Add account</button>
+        <button mat-button (click)="createAccount()">Add account</button>
     </mat-list-item>
 
     <mat-divider></mat-divider>
 
-    <mat-list-item *ngFor="let account of budgetAccounts?.observable | async as accounts"
+    <mat-list-item *ngFor="let account of accounts$ | async"
                    [routerLink]="['accounts', account.budgetAccountId]"
                    routerLinkActive="active">
         {{account.accountName}}

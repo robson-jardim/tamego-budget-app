@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CollectionResult } from '@models/collection-result.model';
-import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { BudgetAccountId } from '@models/budget-account.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'app-sidenav',
@@ -14,37 +15,61 @@ import { FirestoreService } from '@shared/services/firestore/firestore.service';
 })
 export class SidenavComponent implements OnInit {
 
-    public budgetAccounts: CollectionResult<BudgetAccount, BudgetAccountId[]>;
+    public accounts$: Observable<BudgetAccountId[]>;
 
-    constructor(private dialog: MatDialog,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private router: Router,
-                private firestore: FirestoreService) {
+                private firestore: FirestoreService,
+                private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
-        this.route.params
-            .subscribe(params => {
-                const budgetId = params.budgetId;
-                this.budgetAccounts = this.firestore.getAccounts(budgetId);
-            });
+        this.getBudgetId().subscribe(budgetId => {
+            this.accounts$ = this.getAccounts(budgetId);
+        });
     }
 
-    public openAddBudgetToAccountDialog() {
-        const addAccountToBudgetDialogRef = this.dialog.open(AccountDialogComponent, {
-            data: {
-                budgetAccountCollection: this.budgetAccounts.collection
-            }
+    private getBudgetId(): Observable<string> {
+        return this.route.params.map(params => {
+            const {budgetId} = params;
+            return budgetId;
         });
+    }
 
-        addAccountToBudgetDialogRef.beforeClose().subscribe(newAccountId => {
-            if (newAccountId) {
+    private getAccounts(budgetId: string): Observable<BudgetAccountId[]> {
+        return this.firestore.getAccounts(budgetId).observable;
+    }
+
+    public createAccount() {
+        this.getBudgetId().subscribe(budgetId => {
+
+            const dialogRef = this.dialogService.openCreate(AccountDialogComponent, {
+                data: {
+                    budgetId
+                }
+            });
+
+            this.onAddNavigateToAccount(dialogRef).subscribe(newAccountId => {
                 this.router.navigate(['accounts', newAccountId], {relativeTo: this.route});
-            }
+            });
+
         });
+    }
+
+    private onAddNavigateToAccount(dialogRef: MatDialogRef<any>): Observable<any> {
+        return dialogRef.afterClosed().filter(x => x !== null);
     }
 
     public updateAccount(account: BudgetAccountId) {
-        // TODO - update dialog from sidenav
+        this.getBudgetId().subscribe(budgetId => {
+
+            const dialogRef = this.dialogService.openUpdate(AccountDialogComponent, {
+                data: {
+                    ...account,
+                    budgetId
+                }
+            });
+
+        });
     }
 }

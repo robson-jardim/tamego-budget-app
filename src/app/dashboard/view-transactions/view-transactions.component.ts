@@ -16,7 +16,7 @@ import { UtilityService } from '@shared/services/utility/utility.service';
 })
 export class ViewTransactionsComponent implements OnInit {
 
-    public transactions;
+    public transactions$;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -26,19 +26,46 @@ export class ViewTransactionsComponent implements OnInit {
 
     ngOnInit() {
 
-        Observable.combineLatest(this.getBudgetId(), this.getAccountId()).subscribe(([budgetId, accountId]) => {
-
+        this.transactions$ = this.utility.combineLatestObj({
+            budgetId: this.getBudgetId(),
+            accountId: this.getAccountId()
+        }).flatMap(({budgetId, accountId}) => {
             if (accountId) {
-                const accountIds = [accountId];
-                this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+                return Observable.of([accountId]);
             }
             else {
-                this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
-                    const accountIds = accounts.map(a => a.budgetAccountId);
-                    this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
-                });
+                return this.getAllAccountIdsForBudget(budgetId);
             }
+        }).flatMap(accountIds => {
+            return this.firestore.getTransactionView('aqvJ4oQo0E5ldQRdsxsR', accountIds);
         });
+
+        this.transactions$.subscribe(x => console.log(x));
+
+
+        // this.transactions$ = this.firestore.getTransactionView(budgetId, accountIds).map(x => x.data);
+
+
+        // Observable.combineLatest(this.getBudgetId(), this.getAccountId()).subscribe(([budgetId, accountId]) => {
+        //
+        //     if (accountId) {
+        //         const accountIds = [accountId];
+        //         this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+        //     }
+        //     else {
+        //         this.firestore.getAccounts(budgetId).observable.take(1).subscribe((accounts: BudgetAccountId[]) => {
+        //             const accountIds = accounts.map(a => a.budgetAccountId);
+        //             this.transactions = this.firestore.getTransactionView(budgetId, accountIds);
+        //         });
+        //     }
+        // });
+    }
+
+    private getAllAccountIdsForBudget(budgetId: string) {
+        return this.firestore.getAccounts(budgetId).observable.first()
+            .map((accounts: BudgetAccountId[]) => {
+                return accounts.map(x => x.budgetAccountId);
+            });
     }
 
     private getAccountId(): Observable<string> {
