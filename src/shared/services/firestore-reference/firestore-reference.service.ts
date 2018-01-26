@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import * as firebase from 'firebase';
-
 import { Budget } from '@models/budget.model';
 import { BudgetAccount } from '@models/budget-account.model';
 import { CategoryGroup } from '@models/category-group.model';
@@ -21,7 +19,7 @@ export class FirestoreReferenceService {
     public getBudgetCollectionRef(userId): AngularFirestoreCollection<Budget> {
         return this.afs.collection<Budget>('budgets', ref =>
             ref.where('userId', '==', userId)
-               .orderBy('lastVisited', 'desc'));
+                .orderBy('lastVisited', 'desc'));
     }
 
     public getAccountsCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {
@@ -48,7 +46,7 @@ export class FirestoreReferenceService {
 
     public getTransactionCollectionRef(budgetId: string, accountId?: string) {
         return this.afs.collection<Transaction>(`budgets/${budgetId}/transactions`, ref => {
-            let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+            let query: any = ref;
 
             if (accountId) {
                 query = query.where('accountId', '==', accountId);
