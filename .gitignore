@@ -2,6 +2,8 @@ firebase-debug.log
 node_modules/
 dist/
 etc/
+.nyc_output/
+.idea/
 
 # compiled output
 /tmp
