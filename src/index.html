@@ -17,21 +17,42 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="theme-color" content="#ffffff">
 
-
 </head>
 <body>
-<app-root></app-root>
+    <app-root></app-root>
 
-<script>
-//    if ('serviceWorker' in navigator) {
-//        navigator.serviceWorker.register('/service-worker.js')
-//            .then((registration) => {
-//                // console.log('SW registered');
-//            }).catch((err) => {
-//                    // console.log('SW error', err);
-//            });
-//    }
+    <script>
 
-</script>
+        // Taken from: https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
+        window['isUpdateAvailable'] = new Promise(function (resolve, reject) {
+            if ('serviceWorker' in navigator) {
+
+                navigator.serviceWorker.register('/service-worker.js').then(registration => {
+
+                    console.log('Service worker registered');
+
+                registration.onupdatefound = () => {
+                    const installingWorker = registration.installing;
+                    installingWorker.onstatechange = () => {
+                        switch (installingWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    // new update available
+                                    resolve(true);
+                                } else {
+                                    // no update available
+                                    resolve(false);
+                                }
+                                break;
+                        }
+                    };
+                };
+            }).catch(err => {
+                    console.error('[Service worker error]', err);
+            });
+            }
+        });
+
+    </script>
 </body>
 </html>

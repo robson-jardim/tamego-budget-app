@@ -20,6 +20,13 @@ export class AppComponent implements OnInit {
         this.notification.broadcast.subscribe(notification => {
             this.showSnapbar(notification);
         });
+
+        window['isUpdateAvailable']
+            .then(isAvailable => {
+                if (isAvailable) {
+                    console.log('Update available inside angular');
+                }
+            });
     }
 
     showSnapbar(notification: Notification) {
