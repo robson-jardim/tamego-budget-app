@@ -17,6 +17,7 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
     @Input() groups;
     @Input() selectedCategoryId: string;
+    @Input() disabled;
 
     public filteredGroups$: Observable<any>;
 
@@ -25,13 +26,14 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.transactionForm = this.controlContainer.control as FormGroup;
+        this.setCategoryDisableState();
 
         this.groups.map(group => {
             group.categories.map((category: CategoryId) => {
                 if (category.categoryId === this.selectedCategoryId) {
-                    this.transactionForm.patchValue({
-                        category
-                    });
+                    const initialValue = new Object();
+                    initialValue[TransactionFormNames.Category] = category;
+                    this.transactionForm.patchValue(initialValue);
                 }
             });
         });
@@ -40,10 +42,27 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // ngOnChanges if called before ngOninit. Therefore transaction form is not yet available
+        // ngOnChanges is called before ngOninit. Therefore transaction form is not yet available
         // to grab value
-        if (this.transactionForm) {
+
+        if (changes.disabled && this.transactionForm) {
+            this.setCategoryDisableState();
+        }
+
+        if (changes.groups && this.transactionForm) {
             this.filterAction();
+        }
+    }
+
+    private setCategoryDisableState() {
+        if (this.disabled) {
+            this.transactionForm.controls[TransactionFormNames.Category].disable();
+            const value = new Object();
+            value[TransactionFormNames.Category] = null;
+            this.transactionForm.patchValue(value);
+        }
+        else {
+            this.transactionForm.controls[TransactionFormNames.Category].enable();
         }
     }
 

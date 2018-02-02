@@ -26,7 +26,8 @@
 
             <app-category-autocomplete
                 [groups]="dropdowns.groups"
-                [selectedCategoryId]="data.categoryId">
+                [selectedCategoryId]="data.categoryId"
+                [disabled]="transactionState === TransactionState.Transfer">
             </app-category-autocomplete>
 
             <mat-form-field>

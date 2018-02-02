@@ -24,6 +24,7 @@ export class CloseDialogService {
 
     constructor(private dialog: MatDialog,
                 private auth: AuthService) {
+        // TODO - add saving flag to all dialogs
     }
 
     public openUpdate(component, config: any = this.defaultConfig) {

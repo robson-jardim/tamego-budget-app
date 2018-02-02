@@ -1,3 +1,4 @@
 export enum TransactionState {
-    Standard, Transfer
+    Standard = 'standard',
+    Transfer = 'transfer'
 }

@@ -16,8 +16,6 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
 
-        // TODO - add check for loading of accounts
-
         this.route.params.subscribe(params => {
             const {budgetId} = params;
             this.updateBudgetVisitDate(budgetId);
@@ -31,4 +29,7 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    public test(e) {
+        console.log('loaded');
+    }
 }

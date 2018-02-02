@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
@@ -14,9 +14,11 @@ import { UtilityService } from '@shared/services/utility/utility.service';
     styleUrls: ['./view-transactions.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ViewTransactionsComponent implements OnInit {
+export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     public transactions$;
+
+    private watcher;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -31,21 +33,27 @@ export class ViewTransactionsComponent implements OnInit {
             accountId: this.getAccountId()
         });
 
-        this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
+        this.watcher = routeData$.subscribe(() => {
+            this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
-            const budgetId$: Observable<string> = Observable.of(budgetId);
-            const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
+                const budgetId$: Observable<string> = Observable.of(budgetId);
+                const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
 
-            return this.utility.combineLatestObj({
-                budgetId: budgetId$,
-                accountIds: accountIds$
+                return this.utility.combineLatestObj({
+                    budgetId: budgetId$,
+                    accountIds: accountIds$
+                });
+
+            }).flatMap(({budgetId, accountIds}) => {
+                return this.firestore.getTransactionView(budgetId, accountIds);
             });
-
-        }).flatMap(({budgetId, accountIds}) => {
-            return this.firestore.getTransactionView(budgetId, accountIds);
         });
-
     }
+
+    ngOnDestroy() {
+        this.watcher.unsubscribe();
+    }
+
 
     private getAllAccountIdsForBudget(budgetId: string) {
         return this.firestore.getAccounts(budgetId).observable.first()
