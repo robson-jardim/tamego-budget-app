@@ -13,11 +13,14 @@ import { LoginSignupModule } from './login-signup/login-signup.module';
 import { BudgetSelectionModule } from './budget-selection/budget-selection.module';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
+import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
+import { StandardMaterialModule } from '@shared/components/standard-material.module';
 
 @NgModule({
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        StandardMaterialModule,
         MatSnackBarModule,
 
         AppCoreModule,
@@ -33,6 +36,10 @@ import { SettingsModule } from './settings/settings.module';
     ],
     declarations: [
         AppComponent,
+        UpdateAvailableDialogComponent,
+    ],
+    entryComponents: [
+        UpdateAvailableDialogComponent
     ],
     bootstrap: [AppComponent]
 })

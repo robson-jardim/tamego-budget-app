@@ -37,7 +37,7 @@ export class CloseDialogService {
         return this.open(component, config);
     }
 
-    private open(component, config: any = this.defaultConfig) {
+    public open(component, config: any = this.defaultConfig) {
         const dialog = this.dialog.open(component, config);
         this.closeDialogOnSignout(dialog);
         return dialog;

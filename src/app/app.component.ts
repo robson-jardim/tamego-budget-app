@@ -4,6 +4,8 @@ import {
     GeneralNotificationsService,
     Notification
 } from '@shared/services/general-notifications/general-notifications.service';
+import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
+import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 
 @Component({
     selector: 'app-root',
@@ -13,7 +15,8 @@ import {
 })
 export class AppComponent implements OnInit {
     constructor(public snackBar: MatSnackBar,
-                private notification: GeneralNotificationsService) {
+                private notification: GeneralNotificationsService,
+                private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
@@ -24,7 +27,7 @@ export class AppComponent implements OnInit {
         window['isUpdateAvailable']
             .then(isAvailable => {
                 if (isAvailable) {
-                    console.log('Update available inside angular');
+                    this.dialogService.open(UpdateAvailableDialogComponent);
                 }
             });
     }

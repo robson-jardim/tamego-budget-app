@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Updates available</h1>
+
+<mat-dialog-content>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button color="primary" [disabled]="disableReload" (click)="reload()">Update now</button>
+    <button mat-button type="button" [mat-dialog-close]>Update later</button>
+</mat-dialog-actions>
