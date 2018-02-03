@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
         this.notifications.broadcast.subscribe(notification => {
             this.showSnapbar(notification);
         });
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
                         this.checkUpdates.unsubscribe();
                     });
             }
+
         });
 
     }
