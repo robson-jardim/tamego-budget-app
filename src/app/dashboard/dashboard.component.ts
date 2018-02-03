@@ -28,8 +28,4 @@ export class DashboardComponent implements OnInit {
             lastVisited: currentTime
         });
     }
-
-    public test(e) {
-        console.log('loaded');
-    }
 }

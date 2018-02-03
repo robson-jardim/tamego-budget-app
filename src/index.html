@@ -31,22 +31,22 @@
 
                     console.log('Service worker registered');
 
-                registration.onupdatefound = () => {
-                    const installingWorker = registration.installing;
-                    installingWorker.onstatechange = () => {
-                        switch (installingWorker.state) {
-                            case 'installed':
-                                if (navigator.serviceWorker.controller) {
-                                    // new update available
-                                    resolve(true);
-                                } else {
-                                    // no update available
-                                    resolve(false);
-                                }
-                                break;
-                        }
+                    registration.onupdatefound = () => {
+                        const installingWorker = registration.installing;
+                        installingWorker.onstatechange = () => {
+                            switch (installingWorker.state) {
+                                case 'installed':
+                                    if (navigator.serviceWorker.controller) {
+                                        // new update available
+                                        resolve(true);
+                                    } else {
+                                        // no update available
+                                        resolve(false);
+                                    }
+                                    break;
+                            }
+                        };
                     };
-                };
             }).catch(err => {
                     console.error('[Service worker error]', err);
             });

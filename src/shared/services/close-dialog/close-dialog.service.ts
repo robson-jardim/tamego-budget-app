@@ -27,17 +27,17 @@ export class CloseDialogService {
         // TODO - add saving flag to all dialogs
     }
 
-    public openUpdate(component, config: any = this.defaultConfig) {
+    public openUpdate(component, config: any = this.defaultConfig): MatDialogRef<any> {
         config.data.state = DialogState.Update;
         return this.open(component, config);
     }
 
-    public openCreate(component, config: any = this.defaultConfig) {
+    public openCreate(component, config: any = this.defaultConfig): MatDialogRef<any> {
         config.data.state = DialogState.Create;
         return this.open(component, config);
     }
 
-    public open(component, config: any = this.defaultConfig) {
+    public open(component, config: any = this.defaultConfig): MatDialogRef<any> {
         const dialog = this.dialog.open(component, config);
         this.closeDialogOnSignout(dialog);
         return dialog;
