@@ -4,6 +4,8 @@ import { ViewBudgetComponent } from './view-budget/view-budget.component';
 import { ViewTransactionsComponent } from './view-transactions/view-transactions.component';
 import { DashboardComponent } from './dashboard.component';
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
+import { BudgetGuard } from '@shared/guards/budget/budget.guard';
+import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
 
 
 // TODO - create route guards for budgets and accounts
@@ -12,7 +14,7 @@ const routes: Routes = [
     {
         path: 'budgets/:budgetId',
         component: DashboardComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, BudgetGuard],
         children: [
             {
                 path: '',
@@ -29,7 +31,8 @@ const routes: Routes = [
             },
             {
                 path: 'accounts/:accountId',
-                component: ViewTransactionsComponent
+                component: ViewTransactionsComponent,
+                canActivate: [BudgetAccountGuard]
             }
         ]
     },
