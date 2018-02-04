@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, ControlContainer } from '@angular/forms';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
@@ -9,17 +9,17 @@ import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 })
 export class ClearedCheckboxComponent implements OnInit {
 
-    public transactionForm: FormGroup;
+    @Input() transactionForm: FormGroup;
     public TransactionFormNames = TransactionFormNames;
 
+    // TODO - make indeterminate checkbox
     public checked = false;
     public indeterminate = false;
 
-    constructor(private controlContainer: ControlContainer) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.transactionForm = this.controlContainer.control as FormGroup;
     }
 
 }

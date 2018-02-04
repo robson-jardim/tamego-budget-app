@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
-import { PayeeId } from '@models/payee.model';
+import { instanceOfPayeeId, PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
-import { BudgetAccountId } from '@models/budget-account.model';
+import { BudgetAccount, BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
 @Component({
@@ -14,46 +14,40 @@ import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     public TransactionFormNames = TransactionFormNames;
-    public transactionForm: FormGroup;
+    @Input() transactionForm: FormGroup;
     @Input() payees: PayeeId[];
     @Input() accounts: BudgetAccountId[];
     @Input() selectedPayeeId: string;
 
+    // TODO - make filteredAccounts$, filter separately from payees
     filteredPayees$: Observable<PayeeId[]>;
 
-    constructor(private controlContainer: ControlContainer) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.transactionForm = this.controlContainer.control as FormGroup;
-
         const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
         const [account] = this.accounts.filter(x => x.budgetAccountId === this.selectedPayeeId);
 
-        const fillValue = payee ? payee : account;
-
-        this.transactionForm.patchValue({
-            payee: fillValue
-        });
-
-
-        this.filterAction();
+        const initialPayeeValue = new Object;
+        initialPayeeValue[this.TransactionFormNames.Payee] = payee ? payee : account;
+        this.transactionForm.patchValue(initialPayeeValue);
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (this.transactionForm) {
-            this.filterAction();
-        }
+    ngOnChanges(changes: SimpleChanges) {
+        this.filterAutocompleteOptions();
     }
 
-    public filterAction() {
-        this.filteredPayees$ = this.transactionForm.get(TransactionFormNames.Payee).valueChanges
+    public filterAutocompleteOptions() {
+        this.filteredPayees$ = this.transactionForm.controls[TransactionFormNames.Payee].valueChanges
             .pipe(
                 startWith(null),
                 map(input => {
-                    // Defines the case that the input is a PayeeId object
-                    if (input && input.payeeName) {
+                    if (instanceOfPayeeId(input)) {
                         return input.payeeName;
+                    }
+                    else if (instanceOfBudgetAccountId(input)) {
+                        return input.accountName;
                     }
                     else {
                         return input;
@@ -64,10 +58,10 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
     }
 
     public displayPayeeName(entity: any) {
-        if (entity && entity.payeeId) {
+        if (instanceOfPayeeId(entity)) {
             return entity.payeeName;
         }
-        else if (entity && entity.budgetAccountId) {
+        else if (instanceOfBudgetAccountId(entity)) {
             return entity.accountName;
         }
         else {
@@ -79,6 +73,10 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
         return this.payees.filter(payee => {
             return payee.payeeName.toLowerCase().includes(name.toLowerCase());
         });
+    }
+
+    public isAccountSelectedAsOrigin(account: BudgetAccountId) {
+        return this.transactionForm.controls[TransactionFormNames.AccountId].value === account.budgetAccountId;
     }
 }
 

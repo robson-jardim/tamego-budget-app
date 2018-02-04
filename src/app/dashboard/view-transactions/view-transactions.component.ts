@@ -7,6 +7,7 @@ import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.s
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { TransactionId } from '@models/transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-budget',
@@ -17,8 +18,7 @@ import { UtilityService } from '@shared/services/utility/utility.service';
 export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     public transactions$;
-
-    private watcher;
+    private routeParamsSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -33,7 +33,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             accountId: this.getAccountId()
         });
 
-        this.watcher = routeData$.subscribe(() => {
+        this.routeParamsSubscription = routeData$.subscribe(() => {
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
                 const budgetId$: Observable<string> = Observable.of(budgetId);
@@ -51,9 +51,8 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.watcher.unsubscribe();
+        this.routeParamsSubscription.unsubscribe();
     }
-
 
     private getAllAccountIdsForBudget(budgetId: string) {
         return this.firestore.getAccounts(budgetId).observable.first()

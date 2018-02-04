@@ -5,6 +5,9 @@ import { ViewTransactionsComponent } from './view-transactions/view-transactions
 import { DashboardComponent } from './dashboard.component';
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
 
+
+// TODO - create route guards for budgets and accounts
+
 const routes: Routes = [
     {
         path: 'budgets/:budgetId',

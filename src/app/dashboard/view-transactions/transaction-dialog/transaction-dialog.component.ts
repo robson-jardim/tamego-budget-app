@@ -74,6 +74,8 @@ export class TransactionDialogComponent implements OnInit {
 
         const form = new Object();
 
+        // TODO - set length of memo to be 250 characters
+
         form[TransactionFormNames.TransactionDate] = [this.data.transactionDate, Validators.required];
         form[TransactionFormNames.AccountId] = [this.data.accountId || this.data.originAccountId, Validators.required];
         form[TransactionFormNames.Payee] = [null]; // Object set within autocomplete component
@@ -95,11 +97,15 @@ export class TransactionDialogComponent implements OnInit {
         }
         else if (DialogState.Update === this.data.state) {
             if (this.transactionStateChanged()) {
-                this.removeReplacedEntity();
+                this.deleteReplacedEntity();
+                this.createTransaction();
             }
-            this.updateTransaction();
+            else {
+                this.updateTransaction();
+            }
         }
         else {
+            this.notifications.sendErrorNotification();
             throw new Error('Unable to determine dialog state');
         }
 
@@ -119,7 +125,7 @@ export class TransactionDialogComponent implements OnInit {
         if (isTransfer()) {
             return TransactionState.Transfer;
         }
-        else  {
+        else {
             return TransactionState.Standard;
         }
     }
@@ -130,12 +136,8 @@ export class TransactionDialogComponent implements OnInit {
             transactions.add(this.getTransactionData());
         }
         else if (TransactionState.Transfer === this.transactionState) {
-            // TODO = add transfer
             const transfers = this.getTransferCollection();
             transfers.add(this.getTransferData());
-        }
-        else {
-            throw new Error('Unable to determine transaction state');
         }
     }
 
@@ -145,18 +147,24 @@ export class TransactionDialogComponent implements OnInit {
 
     private updateTransaction() {
         if (TransactionState.Standard === this.transactionState) {
-            const transactionId = this.data.transactionId;
             const transactions = this.getTransactionCollection();
-            transactions.doc(transactionId).update(this.getTransactionData());
+            transactions.doc(this.data.transactionId).update(this.getTransactionData());
         }
         else if (TransactionState.Transfer === this.transactionState) {
-
-            // TODO - add transfer
+            const transfers = this.getTransferCollection();
+            transfers.doc(this.data.transferTransactionId).update(this.getTransferData());
         }
     }
 
-    private removeReplacedEntity() {
-
+    private deleteReplacedEntity() {
+        if (this.TransactionState.Standard === this.initialTransactionState) {
+            const transactions = this.getTransactionCollection();
+            transactions.doc(this.data.transactionId).delete();
+        }
+        else if (this.TransactionState.Transfer === this.initialTransactionState) {
+            const transfers = this.getTransferCollection();
+            transfers.doc(this.data.transferTransactionId).delete();
+        }
     }
 
     private readonly getPayeeId = () => {
@@ -193,7 +201,7 @@ export class TransactionDialogComponent implements OnInit {
 
             return newPayeeId;
         }
-    }
+    };
 
     private readonly getCategoryId = () => {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
@@ -204,7 +212,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private getTransactionData(): Transaction {
         return {
@@ -251,10 +259,20 @@ export class TransactionDialogComponent implements OnInit {
         }
     }
 
-
     private getTransferCollection() {
         return this.references.getTransfers(this.data.budgetId);
     }
 
+    public isAccountSelectedAsDestination(account: BudgetAccountId) {
+
+        let payee: BudgetAccountId | PayeeId | string = this.transactionForm.controls[TransactionFormNames.Payee].value;
+
+        if (!instanceOfBudgetAccountId(payee)) {
+            return false;
+        }
+
+        payee = payee as BudgetAccountId;
+        return payee.budgetAccountId === account.budgetAccountId;
+    }
 
 }

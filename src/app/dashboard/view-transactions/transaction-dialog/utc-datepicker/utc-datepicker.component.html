@@ -1,6 +1,6 @@
 <ng-container [formGroup]="localDateForm">
     <mat-form-field>
-        <input matInput [matDatepicker]="picker" placeholder="Date"
+        <input matInput [matDatepicker]="picker" placeholder="Date" required
                formControlName="{{TransactionFormNames.TransactionDate}}">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>

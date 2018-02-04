@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     canActivate(): Observable<boolean> {
 
         return this.auth.user
-            .take(1)
+            .first()
             .map(user => !!user) // ensures the resulting type is a boolean
             .do(loggedIn => {
                 if (!loggedIn) {

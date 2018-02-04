@@ -12,45 +12,36 @@ import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 })
 export class CategoryAutocompleteComponent implements OnInit, OnChanges {
 
-    public TransactionFormNames = TransactionFormNames;
-    public transactionForm: FormGroup;
-
+    @Input() transactionForm: FormGroup;
     @Input() groups;
     @Input() selectedCategoryId: string;
     @Input() disabled;
+    public TransactionFormNames = TransactionFormNames;
 
     public filteredGroups$: Observable<any>;
 
-    constructor(private controlContainer: ControlContainer) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.transactionForm = this.controlContainer.control as FormGroup;
-        this.setCategoryDisableState();
-
         this.groups.map(group => {
             group.categories.map((category: CategoryId) => {
                 if (category.categoryId === this.selectedCategoryId) {
-                    const initialValue = new Object();
-                    initialValue[TransactionFormNames.Category] = category;
-                    this.transactionForm.patchValue(initialValue);
+                    const initialCategoryValue = new Object();
+                    initialCategoryValue[TransactionFormNames.Category] = category;
+                    this.transactionForm.patchValue(initialCategoryValue);
                 }
             });
         });
-
-        this.filterAction();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // ngOnChanges is called before ngOninit. Therefore transaction form is not yet available
-        // to grab value
-
-        if (changes.disabled && this.transactionForm) {
+        if (changes.disabled) {
             this.setCategoryDisableState();
         }
 
-        if (changes.groups && this.transactionForm) {
-            this.filterAction();
+        if (changes.groups) {
+            this.filterAutocompleteOptions();
         }
     }
 
@@ -66,8 +57,8 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
         }
     }
 
-    private filterAction() {
-        this.filteredGroups$ = this.transactionForm.get(TransactionFormNames.Category).valueChanges
+    private filterAutocompleteOptions() {
+        this.filteredGroups$ = this.transactionForm.controls[TransactionFormNames.Category].valueChanges
             .pipe(
                 startWith(null),
                 map(input => {

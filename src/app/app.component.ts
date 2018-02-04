@@ -10,8 +10,9 @@ import {
     UpdateDecision
 } from './update-available-dialog/update-available-dialog.component';
 import { Observable } from 'rxjs/Observable';
-import { NavigationEnd, Router } from '@angular/router';
+import { Event, NavigationEnd, Router } from '@angular/router';
 import { UtilityService } from '@shared/services/utility/utility.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-root',
@@ -21,7 +22,8 @@ import { UtilityService } from '@shared/services/utility/utility.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    public checkUpdates;
+    public updatesSubscription: Subscription;
+    private notificationSubscription: Subscription;
 
     constructor(public snackBar: MatSnackBar,
                 private notifications: GeneralNotificationsService,
@@ -31,36 +33,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
-        this.notifications.broadcast.subscribe(notification => {
-            this.showSnapbar(notification);
-        });
-
-        this.checkUpdates = this.utility.combineLatestObj({
-            isLogin: this.isLoginPage(),
-            isUpdatesAvailable: this.isUpdatesAvailable(),
-        }).subscribe(({isLogin, isUpdatesAvailable}) => {
-
-            if (isUpdatesAvailable && !isLogin) {
-                const updatesDialog: MatDialogRef<any> = this.dialogService.open(UpdateAvailableDialogComponent, {
-                    disableClose: true
-                });
-
-                updatesDialog.componentInstance
-                    .onUpdateDecision
-                    .filter((decision: UpdateDecision) => decision === UpdateDecision.Declined)
-                    .first()
-                    .subscribe(() => {
-                        this.checkUpdates.unsubscribe();
-                    });
-            }
-
-        });
-
+        this.checkForUpdates();
+        this.enableGlobalAppNotifications();
     }
 
     ngOnDestroy() {
-        this.checkUpdates.unsubscribe();
+        this.updatesSubscription.unsubscribe();
+        this.notificationSubscription.unsubscribe();
     }
 
     private isLoginPage(): Observable<boolean> {
@@ -72,13 +51,52 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private isUpdatesAvailable(): Observable<boolean> {
-        return Observable.fromPromise(window['isUpdateAvailable']);
+        // Service worker is not enabled in development, so update check
+        // is not defined
+        if (window['isUpdateAvailable']) {
+            return Observable.fromPromise(window['isUpdateAvailable']);
+        }
+        else {
+            return Observable.of(false);
+        }
     }
 
-    showSnapbar(notification: Notification) {
+    private showSnapbar(notification: Notification) {
         this.snackBar.open(notification.message, notification.action, {
             duration: notification.duration
         });
     }
 
+    private checkForUpdates() {
+        this.updatesSubscription = this.utility.combineLatestObj({
+            isLoginPage: this.isLoginPage(),
+            isUpdatesAvailable: this.isUpdatesAvailable(),
+        }).subscribe(({isLoginPage, isUpdatesAvailable}) => {
+
+            if (isUpdatesAvailable && !isLoginPage) {
+                const updatesDialog: MatDialogRef<any> = this.dialogService.open(UpdateAvailableDialogComponent, {
+                    disableClose: true
+                });
+
+                updatesDialog.componentInstance
+                    .onUpdateDecision
+                    .filter(isUpdateDeclined)
+                    .first()
+                    .subscribe(() => {
+                        this.updatesSubscription.unsubscribe();
+                    });
+            }
+
+            function isUpdateDeclined(decision: UpdateDecision) {
+                return decision === UpdateDecision.Declined;
+            }
+
+        });
+    }
+
+    private enableGlobalAppNotifications() {
+        this.notificationSubscription = this.notifications.broadcast.subscribe(notification => {
+            this.showSnapbar(notification);
+        });
+    }
 }

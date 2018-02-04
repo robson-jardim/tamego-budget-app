@@ -53,4 +53,14 @@ export class GeneralNotificationsService {
         }, this.messageDelay);
     }
 
+    public sendErrorNotification() {
+        const notification: Notification = {
+            message: `Error`,
+            duration: this.defaultDuration
+        };
+
+        setTimeout(() => {
+            this.notificationSource.next(notification);
+        }, this.messageDelay);
+    }
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../../services/auth/auth.service';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/do';
@@ -16,7 +15,7 @@ export class SignedOutGuard implements CanActivate {
                 state: RouterStateSnapshot) {
 
         return this.auth.user
-            .take(1)
+            .first()
             .map(user => !!user) // ensures the resulting type is a boolean
             .map(loggedIn => {
                 if (loggedIn) {

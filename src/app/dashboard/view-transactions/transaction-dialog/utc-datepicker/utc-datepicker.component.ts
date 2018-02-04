@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlContainer, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-utc-datepicker',
@@ -15,7 +16,7 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
     public localDateForm: FormGroup;
 
     @Input() transactionDate: Date;
-    public dateWatcher;
+    public dateField: Subscription;
 
     constructor(private controlContainer: ControlContainer,
                 private utility: UtilityService,
@@ -27,7 +28,9 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
 
         this.buildLocalDateForm();
 
-        this.dateWatcher = this.localDateForm.get(TransactionFormNames.TransactionDate).valueChanges.subscribe(localDate => {
+        // TODO - set date as marked as touched on submit fail
+
+        this.dateField = this.localDateForm.controls[TransactionFormNames.TransactionDate].valueChanges.subscribe(localDate => {
             if (localDate) {
                 const utcDate = this.utility.convertToUtc(localDate);
                 this.patchMasterForm(utcDate);
@@ -39,7 +42,7 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.dateWatcher.unsubscribe();
+        this.dateField.unsubscribe();
     }
 
     private patchMasterForm(date: Date) {

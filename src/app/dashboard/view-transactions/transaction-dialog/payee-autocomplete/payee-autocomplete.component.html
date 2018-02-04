@@ -6,17 +6,21 @@
         <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
 
             <mat-optgroup [label]="'Transfers'">
-                <mat-option *ngFor="let account of accounts" [value]="account">
+                <mat-option *ngFor="let account of accounts"
+                            [value]="account"
+                            [disabled]="isAccountSelectedAsOrigin(account)">
                     {{account.accountName}}
                 </mat-option>
             </mat-optgroup>
 
-            <mat-optgroup [label]="'Payees'">
-                <mat-option *ngFor="let payee of payees"
-                            [value]="payee">
-                    {{payee.payeeName}}
-                </mat-option>
-            </mat-optgroup>
+            <ng-container *ngIf="filteredPayees$ | async as filteredPayees">
+                <mat-optgroup [label]="'Payees'" *ngIf="filteredPayees.length > 0">
+                    <mat-option *ngFor="let payee of filteredPayees"
+                                [value]="payee">
+                        {{payee.payeeName}}
+                    </mat-option>
+                </mat-optgroup>
+            </ng-container>
 
         </mat-autocomplete>
 
