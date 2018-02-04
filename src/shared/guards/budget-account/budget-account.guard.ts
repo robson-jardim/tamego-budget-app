@@ -14,7 +14,6 @@ export class BudgetAccountGuard implements CanActivate {
 
         const {accountId} = next.params;
         const {budgetId} = next.parent.params;
-
         const accountDocument: AngularFirestoreDocument<BudgetAccount> = this.afs.doc(`budgets/${budgetId}/accounts/${accountId}`);
 
         return accountDocument.snapshotChanges().map(doc => {

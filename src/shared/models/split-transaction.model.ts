@@ -1,12 +1,10 @@
 export interface SplitTransaction {
-    transactionId: string;
-    payeeId: string | null;
     categoryId: string | null;
-    memo: string | null;
-    value: string | null;
-    sign: boolean | null;
+    amount: number | null;
 }
 
-export interface SplitTransactionId extends SplitTransaction {
-    splitTransactionId: string;
+export function instanceOfTransaction(obj: Object) {
+    return obj && obj instanceof Object
+        && 'categoryId' in obj
+        && 'amount' in obj;
 }

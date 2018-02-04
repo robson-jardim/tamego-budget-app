@@ -12,10 +12,8 @@ import 'rxjs/add/observable/combineLatest';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
 import 'rxjs/add/operator/skip';
 import { Transaction, TransactionId } from '@models/transaction.model';
-import { SplitTransaction, SplitTransactionId } from '@models/split-transaction.model';
-import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
+import { TransferTransactionId } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
-import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Injectable()
 export class FirestoreService {
@@ -104,12 +102,6 @@ export class FirestoreService {
     public getTransactions(budgetId: string, accountId?: string): CollectionResult<Transaction, TransactionId[]> {
         const collection = this.references.getTransactionCollectionRef(budgetId, accountId);
         const observable = this.mapDocumentId.mapTransactionIds(collection);
-        return {collection, observable};
-    }
-
-    private getSplitTransactions(budgetId: string): CollectionResult<SplitTransaction, SplitTransactionId[]> {
-        const collection = this.references.getSplitTransactionCollectionRef(budgetId);
-        const observable = this.mapDocumentId.mapSplitTransactionIds(collection);
         return {collection, observable};
     }
 

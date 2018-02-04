@@ -1,9 +1,12 @@
+import { SplitTransaction } from '@models/split-transaction.model';
+
 export interface Transaction {
     transactionDate: Date;
     accountId: string;
     payeeId: string | null;
     categoryId: string | null;
     memo: string | null;
+    splits: Array<SplitTransaction>;
     amount: number | null;
     status: number;
 }

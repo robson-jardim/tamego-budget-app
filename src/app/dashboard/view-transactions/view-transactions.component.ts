@@ -48,6 +48,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
                 return this.firestore.getTransactionView(budgetId, accountIds);
             });
         });
+
     }
 
     ngOnDestroy() {

@@ -5,19 +5,32 @@
         <mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"
                   class="transaction-card">
             <ng-container *ngIf="transaction.transactionId">
-                <p>Transaction</p>
+                <strong>
+                    <p>Transaction</p>
+                </strong>
 
                 <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
                 <p>AccountId: {{transaction.accountId}}</p>
+
                 <p *ngIf="transaction.payeeId">Payee ID: {{transaction.payeeId}}</p>
-                <p *ngIf="transaction.categoryId">AccountId: {{transaction.categoryId}}</p>
+                <p *ngIf="transaction.categoryId">Category ID: {{transaction.categoryId}}</p>
                 <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
                 <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
                 <p>Status: {{transaction.status}}</p>
+
+                <ng-container *ngIf="transaction.splits.length > 0">
+                    <p>Splits:</p>
+                    <ng-container *ngFor="let split of transaction.splits; let ix = index">
+                        <p>{{ix + 1}} {{split | json}}</p>
+                    </ng-container>
+                </ng-container>
+
             </ng-container>
 
             <ng-container *ngIf="transaction.transferTransactionId">
-                <p>Transfer</p>
+                <strong>
+                    <p>Transfer</p>
+                </strong>
 
                 <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
                 <p>From: {{transaction.originAccountId}}</p>

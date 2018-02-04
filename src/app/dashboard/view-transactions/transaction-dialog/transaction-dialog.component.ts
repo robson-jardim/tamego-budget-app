@@ -91,7 +91,6 @@ export class TransactionDialogComponent implements OnInit {
 
         this.saving = true;
 
-        // TODO - work on saving for transactions
         if (DialogState.Create === this.data.state) {
             this.createTransaction();
         }
@@ -201,7 +200,7 @@ export class TransactionDialogComponent implements OnInit {
 
             return newPayeeId;
         }
-    };
+    }
 
     private readonly getCategoryId = () => {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
@@ -212,7 +211,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    };
+    }
 
     private getTransactionData(): Transaction {
         return {
@@ -220,6 +219,7 @@ export class TransactionDialogComponent implements OnInit {
             accountId: this.transactionForm.value[TransactionFormNames.AccountId],
             payeeId: this.getPayeeId(),
             categoryId: this.getCategoryId(),
+            splits: [],
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
             status: this.transactionForm.value[TransactionFormNames.Status] || false
