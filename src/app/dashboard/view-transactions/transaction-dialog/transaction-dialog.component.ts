@@ -4,8 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
-import { CollectionResult } from '@models/collection-result.model';
-import { instanceOfTransaction, Transaction, TransactionId } from '@models/transaction.model';
+import { Transaction } from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
@@ -177,17 +176,13 @@ export class TransactionDialogComponent implements OnInit {
 
         const payeeField: PayeeId | BudgetAccountId | string | null = this.transactionForm.value[TransactionFormNames.Payee];
 
-        if (!payeeField) {
-            return null;
-        }
-        else if (instanceOfPayeeId(payeeField)) {
+        if (instanceOfPayeeId(payeeField)) {
             return (<PayeeId>payeeField).payeeId;
         }
         else if (instanceOfBudgetAccountId(payeeField)) {
             return (<BudgetAccountId>payeeField).budgetAccountId;
         }
-        else {
-            // Unsaved payeeId
+        else if (typeof payeeField === 'string') {
             const newPayeeId = this.firestore.generateId();
 
             const newPayee: Payee = {
@@ -199,6 +194,9 @@ export class TransactionDialogComponent implements OnInit {
             payeeCollection.doc(newPayeeId).set(newPayee);
 
             return newPayeeId;
+        }
+        else {
+            return null;
         }
     }
 
@@ -219,7 +217,6 @@ export class TransactionDialogComponent implements OnInit {
             accountId: this.transactionForm.value[TransactionFormNames.AccountId],
             payeeId: this.getPayeeId(),
             categoryId: this.getCategoryId(),
-            splits: [],
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
             status: this.transactionForm.value[TransactionFormNames.Status] || false

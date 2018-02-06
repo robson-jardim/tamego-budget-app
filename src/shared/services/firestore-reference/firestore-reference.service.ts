@@ -6,7 +6,6 @@ import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { Transaction } from '@models/transaction.model';
-import { SplitTransaction } from '@models/split-transaction.model';
 import { TransferTransaction } from '@models/transfer-transaction.model';
 import { Payee } from '@models/payee.model';
 
@@ -54,10 +53,6 @@ export class FirestoreReferenceService {
 
             return query;
         });
-    }
-
-    public getSplitTransactionCollectionRef(budgetId: string) {
-        return this.afs.collection<SplitTransaction>(`budgets/${budgetId}/splitTransactions`);
     }
 
     public getOriginTransfersCollectionRef(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {

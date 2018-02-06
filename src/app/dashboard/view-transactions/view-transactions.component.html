@@ -17,14 +17,6 @@
                 <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
                 <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
                 <p>Status: {{transaction.status}}</p>
-
-                <ng-container *ngIf="transaction.splits.length > 0">
-                    <p>Splits:</p>
-                    <ng-container *ngFor="let split of transaction.splits; let ix = index">
-                        <p>{{ix + 1}} {{split | json}}</p>
-                    </ng-container>
-                </ng-container>
-
             </ng-container>
 
             <ng-container *ngIf="transaction.transferTransactionId">

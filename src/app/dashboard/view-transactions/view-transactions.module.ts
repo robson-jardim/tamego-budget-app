@@ -11,7 +11,6 @@ import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocompl
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
 import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/cleared-checkbox.component';
 import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-datepicker.component';
-import { TransactionSplitsComponent } from './transaction-dialog/transaction-splits/transaction-splits.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +21,6 @@ import { TransactionSplitsComponent } from './transaction-dialog/transaction-spl
         CategoryAutocompleteComponent,
         ClearedCheckboxComponent,
         UtcDatepickerComponent,
-        TransactionSplitsComponent
     ],
     imports: [
         CommonModule,
