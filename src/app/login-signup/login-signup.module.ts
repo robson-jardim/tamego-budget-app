@@ -5,6 +5,7 @@ import { LoginSigupRoutingModule } from './login-sigup-routing.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { HeaderModule } from '@shared/components/header/header.module';
+import { DemoComponent } from './demo/demo.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import { HeaderModule } from '@shared/components/header/header.module';
         LoginSigupRoutingModule
     ],
     declarations: [
-        LoginSignupComponent
+        LoginSignupComponent,
+        DemoComponent
     ],
     entryComponents: []
 })

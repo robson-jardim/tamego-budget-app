@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@shared/services/auth/auth.service';
 import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login-signup',
@@ -93,7 +94,10 @@ export class LoginSignupComponent implements OnInit {
     }
 
     private routeToBudgetSelection(user) {
-        this.auth.userLoggedInEvent().take(1).subscribe(() => {
+        this.auth.userLoggedInEvent()
+            .pipe(
+                first(),
+            ).subscribe(() => {
             this.router.navigate(['budgets']);
         });
     }

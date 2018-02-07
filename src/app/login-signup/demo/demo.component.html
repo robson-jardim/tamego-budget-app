@@ -1,0 +1,8 @@
+<button (click)="createAnonymousAccount()">Anon</button>
+
+<div>
+    <input type="email" placeholder="email" #email>
+    <input type="password" placeholder="password" #password>
+
+    <button (click)="linkAnonymousAccountToEmail(email.value, password.value)">Create</button>
+</div>

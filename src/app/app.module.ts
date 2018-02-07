@@ -27,10 +27,10 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
         AppGuardsModule,
         OfflineClientModule,
 
-        // Routing priority is based on import order
-        DashboardModule,
-        BudgetSelectionModule,
+        // Import order is important due to routing precedence
         SettingsModule,
+        BudgetSelectionModule,
+        DashboardModule,
         LoginSignupModule,
         AppRoutingModule
     ],

@@ -7,7 +7,7 @@ const db = admin.firestore();
 export const onUserCreate = functions.auth.user().onCreate(async event => {
 
     const user: User = {
-        email: event.data.email,
+        email: event.data.email || null,
         userId: event.data.uid,
         emailVerified: false
     };
