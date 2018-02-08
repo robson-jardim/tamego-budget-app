@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { User } from '@models/user.model';
+import { createStripeCustomer } from '../stripe';
 
 const db = admin.firestore();
 
@@ -9,8 +10,19 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
     const user: User = {
         email: event.data.email || null,
         userId: event.data.uid,
-        emailVerified: false
+        emailVerified: false,
+        customerId: null
     };
+
+    if (user.email) {
+        try {
+            user.customerId = await createStripeCustomer(user.email);
+        } catch (error) {
+            console.error('Failed to add stripe customer');
+            console.error(error);
+            throw error;
+        }
+    }
 
     try {
         await db.doc(`users/${user.userId}`).set(user);
@@ -20,4 +32,6 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         console.error(error);
         throw error;
     }
+
+
 });

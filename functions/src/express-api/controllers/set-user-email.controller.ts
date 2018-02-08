@@ -34,4 +34,4 @@ router.post('/', async (request: any, response) => {
     }
 });
 
-export const setEmailOnUserController = router;
+export const setUserEmailController = router;

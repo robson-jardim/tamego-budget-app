@@ -51,6 +51,5 @@ export class CloseDialogService {
         userLoggedOut$.takeUntil(dialogClosed$).subscribe(() => {
             dialog.close();
         });
-
     }
 }

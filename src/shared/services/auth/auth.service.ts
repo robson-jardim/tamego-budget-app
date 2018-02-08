@@ -43,7 +43,7 @@ export class AuthService {
             }
         }).filter(result => result === true)
             .flatMap(() => {
-                return this.requestService.post('api/setEmailOnUser');
+                return this.requestService.post('api/linkAccount');
             }).subscribe(x => console.log(x));
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
@@ -51,7 +51,7 @@ export class AuthService {
             this.router.navigate(['/']);
         });
 
-        this.verifiedSubscription = this.userLoggedInEvent().subscribe(res => {
+        this.verifiedSubscription = this.userSnapshot().subscribe(user => {
             // verifyUser is called twice if email verification is successful because the user observable emits a
             // new value because once the user document updates. To get out this, a watcher is set and unsubscribed
             // after a successful user document change.
@@ -109,7 +109,7 @@ export class AuthService {
                 return;
             }
 
-            this.requestService.post('api/verifyUser', undefined, showOfflinePopups).subscribe(
+            this.requestService.post('api/verifyUser', showOfflinePopups).subscribe(
                 response => {
                     // Unsubscribes to the verified watcher because once the user document changes
                     // the observable will emit a value continuing to enter verify user
@@ -124,9 +124,6 @@ export class AuthService {
         return this.user.first(x => x != null);
     }
 
-    public userLoggedInEvent(): Observable<any> {
-        return this.user.filter(user => user != null).map(() => undefined);
-    }
 
     public userLoggedOutEvent(): Observable<any> {
 
@@ -147,10 +144,13 @@ export class AuthService {
 
         const credential = firebase.auth.EmailAuthProvider.credential(email, password);
 
-        this.afAuth.auth.currentUser.linkWithCredential(credential).then(account => {
-            this.requestService.post('api/setEmailOnUser').subscribe();
-            this.afAuth.auth.currentUser.sendEmailVerification();
-        });
+        try {
+            await this.afAuth.auth.currentUser.linkWithCredential(credential);
+            this.requestService.post('api/linkAccount', true).subscribe();
+            this.sendEmailVerification();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     public async createUserWithEmailAndPassword(email: string, password: string) {

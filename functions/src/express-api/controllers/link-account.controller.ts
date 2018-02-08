@@ -5,7 +5,7 @@ const router = express.Router();
 const db = admin.firestore();
 const auth = admin.auth();
 
-// POST: api/verifyUser
+// POST: api/linkAccount
 router.post('/', async (request: any, response) => {
 
     const userId = request.user.uid;
@@ -33,4 +33,4 @@ router.post('/', async (request: any, response) => {
     }
 });
 
-export const verifyUserController = router;
+export const linkAccountController = router;
