@@ -30,7 +30,7 @@ after_success:
         firebase deploy --project prod --token $FIREBASE_TOKEN;
       fi
     - if [ "$TRAVIS_BRANCH" = "staging" ]; then
-        firebase functions:config:set stripe.secret_key="$STRIPE_LIVE_SECRET_KEY"
+        firebase functions:config:set stripe.secret_key=""$STRIPE_LIVE_SECRET_KEY""
         firebase deploy --project staging --token $FIREBASE_TOKEN;
       fi
 
