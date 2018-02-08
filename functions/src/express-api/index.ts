@@ -29,8 +29,10 @@ app.use(middleware.authenticate);
 
 // Controllers
 import { verifyUserController } from './controllers/verifyUserController';
+import { setEmailOnUserController } from './controllers/setEmailOnUser';
 
 app.use('/verifyUser', verifyUserController);
+app.use('/setEmailOnUser', setEmailOnUserController);
 
 // Error handler
 app.use((error, request, response, next) => {

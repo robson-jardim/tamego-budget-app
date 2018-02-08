@@ -18,7 +18,7 @@ export class HttpRequestService {
             if (error.status === 0) {
                 this.openOfflineDialog();
             }
-            return Observable.throw(error);
+            return Observable.of(error);
         });
     }
 

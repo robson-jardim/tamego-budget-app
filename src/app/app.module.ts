@@ -15,6 +15,7 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
+import { DemoComponent } from './demo/demo.component';
 
 @NgModule({
     imports: [
@@ -27,7 +28,6 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
         AppGuardsModule,
         OfflineClientModule,
 
-        // Import order is important due to routing precedence
         SettingsModule,
         BudgetSelectionModule,
         DashboardModule,
@@ -37,6 +37,7 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
     declarations: [
         AppComponent,
         UpdateAvailableDialogComponent,
+        DemoComponent
     ],
     entryComponents: [
         UpdateAvailableDialogComponent

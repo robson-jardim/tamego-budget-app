@@ -31,6 +31,8 @@ export class LoginSignupComponent implements OnInit {
     ngOnInit() {
         this.buildSignInForm();
         this.buildCreateAccountForm();
+
+        this.onLoginRouteToBudgets();
     }
 
     private buildSignInForm() {
@@ -64,9 +66,7 @@ export class LoginSignupComponent implements OnInit {
         try {
             const email = this.signInForm.value.email;
             const password = this.signInForm.value.password;
-
             const user = await this.auth.signInWithEmailAndPassword(email, password);
-            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;
@@ -82,9 +82,7 @@ export class LoginSignupComponent implements OnInit {
         try {
             const email = this.createUserForm.value.email;
             const password = this.createUserForm.value.password;
-
             const user = await this.auth.createUserWithEmailAndPassword(email, password);
-            this.routeToBudgetSelection(user);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;
@@ -93,11 +91,8 @@ export class LoginSignupComponent implements OnInit {
         }
     }
 
-    private routeToBudgetSelection(user) {
-        this.auth.userLoggedInEvent()
-            .pipe(
-                first(),
-            ).subscribe(() => {
+    private onLoginRouteToBudgets() {
+        this.auth.userLoggedInEvent().first().subscribe(() => {
             this.router.navigate(['budgets']);
         });
     }

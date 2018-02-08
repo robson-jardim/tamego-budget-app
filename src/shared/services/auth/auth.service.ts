@@ -1,23 +1,21 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
-import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
 import { User } from '@models/user.model';
-import 'rxjs/add/operator/switchMap';
 import { HttpRequestService } from '../http-request/http-request.service';
-import 'rxjs/add/operator/filter';
-import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/pairwise';
+import * as firebase from 'firebase';
 
 @Injectable()
 export class AuthService {
 
     public user: Observable<User>;
-    private verifiedWatcher;
+    private verifiedSubscription: Subscription;
 
     constructor(private afAuth: AngularFireAuth,
                 private afs: AngularFirestore,
@@ -25,22 +23,35 @@ export class AuthService {
                 private router: Router,
                 private requestService: HttpRequestService) {
 
-        this.user = this.afAuth.authState
-            .switchMap(user => {
-                if (user) {
-                    return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-                } else {
-                    return Observable.of(null);
-                }
-            });
+        this.user = this.afAuth.authState.switchMap(user => {
 
+            if (user) {
+                return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+            }
+            else {
+                return Observable.of(null);
+            }
+
+        });
+
+        Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
+            if (user && !user.email && authState && !authState.isAnonymous) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }).filter(result => result === true)
+            .flatMap(() => {
+                return this.requestService.post('api/setEmailOnUser');
+            }).subscribe(x => console.log(x));
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
             this.router.navigate(['/']);
         });
 
-        this.verifiedWatcher = this.userLoggedInEvent().subscribe(res => {
+        this.verifiedSubscription = this.userLoggedInEvent().subscribe(res => {
             // verifyUser is called twice if email verification is successful because the user observable emits a
             // new value because once the user document updates. To get out this, a watcher is set and unsubscribed
             // after a successful user document change.
@@ -102,7 +113,7 @@ export class AuthService {
                 response => {
                     // Unsubscribes to the verified watcher because once the user document changes
                     // the observable will emit a value continuing to enter verify user
-                    this.verifiedWatcher.unsubscribe();
+                    this.verifiedSubscription.unsubscribe();
                 }, error => {
                     console.error(error);
                 });
@@ -114,14 +125,31 @@ export class AuthService {
     }
 
     public userLoggedInEvent(): Observable<any> {
-        return this.user.filter(user => user != null).map(() => {
-            return undefined;
-        });
+            return this.user.filter(user => user != null).map(() => undefined);
     }
 
     public userLoggedOutEvent(): Observable<any> {
-        return this.user.filter(user => user == null).map(() => {
-            return undefined;
+
+        return this.user
+            .pairwise()
+            .map(([previouslyLoggedIn, currentlyLoggedIn]) => {
+                if (previouslyLoggedIn && !currentlyLoggedIn) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }).filter(Boolean)
+            .map(() => undefined);
+    }
+
+    public async linkAnonymousAccountToEmail(email: string, password: string) {
+
+        const credential = firebase.auth.EmailAuthProvider.credential(email, password);
+
+        this.afAuth.auth.currentUser.linkWithCredential(credential).then(account => {
+            this.requestService.post('api/setEmailOnUser').subscribe();
+            this.afAuth.auth.currentUser.sendEmailVerification();
         });
     }
 
