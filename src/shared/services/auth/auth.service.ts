@@ -125,7 +125,7 @@ export class AuthService {
     }
 
     public userLoggedInEvent(): Observable<any> {
-            return this.user.filter(user => user != null).map(() => undefined);
+        return this.user.filter(user => user != null).map(() => undefined);
     }
 
     public userLoggedOutEvent(): Observable<any> {

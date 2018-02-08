@@ -17,7 +17,7 @@ import {
         MatIconModule,
         MatProgressSpinnerModule,
         MatCardModule,
-        MatDialogModule
+        MatDialogModule,
     ]
 })
 export class StandardMaterialModule {

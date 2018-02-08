@@ -18,3 +18,11 @@
     </ng-template>
 
 </ng-container>
+
+
+<div>
+    <input matInput type="email" placeholder="Email" #email>
+    <input matInput type="password" placeholder="Password" #password>
+    <button (click)="auth.linkAnonymousAccountToEmail(email.value, password.value)">Link to Email</button>
+
+</div>
