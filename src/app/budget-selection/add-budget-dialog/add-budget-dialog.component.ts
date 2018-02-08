@@ -3,17 +3,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { AngularFirestore } from 'angularfire2/firestore';
-import 'rxjs/add/operator/retry';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/delayWhen';
-import 'rxjs/add/operator/retryWhen';
-import 'rxjs/add/observable/timer';
 import { CollectionResult } from '@models/collection-result.model';
 import { Budget, BudgetId } from '@models/budget.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { first, retryWhen } from 'rxjs/operators';
+import { timer } from 'rxjs/observable/timer';
 
 @Component({
     selector: 'app-add-budget-dialog',
@@ -61,17 +56,26 @@ export class AddBudgetDialogComponent implements OnInit {
             lastVisited: currentTime
         };
 
-        const budgetCollection = this.budgets.collection;
+        const budgets = this.budgets.collection;
         const budgetId = this.firestore.generateId();
-        budgetCollection.doc(budgetId).set(data);
+        budgets.doc(budgetId).set(data);
 
-        // This is a work around for the get() issue with Firestore security rules.
-        // Once Firebase fixes the issue, this will no longer be needed.
+        // This is a work around for an issue with get() inside the Firestore security rules.
+        // The bug occurs when trying to access sub-collections on newly created documents.
+        // Retry query sub-collections until they emit a value successfully. Only
+        // then is is safe to query sub-collections without getting a permission denied error.
         // LINK: https://stackoverflow.com/questions/47818878/firestore-rule-failing-while-using-get-on-newly-created-documents
-        const groupsObservable = this.firestore.getGroups(budgetId).collection.valueChanges();
-        groupsObservable.retryWhen(errors => errors.delayWhen(() => Observable.timer(1000))).first().subscribe(() => {
+        const groups = this.firestore.getGroups(budgetId).collection.valueChanges();
+        groups.pipe(
+            retryWhen(permissionDenied),
+            first()
+        ).subscribe(() => {
             this.onBudgetAdded(budgetId);
         });
+
+        function permissionDenied(errors) {
+            return errors;
+        }
     }
 
     private onBudgetAdded(budgetId: string): void {
