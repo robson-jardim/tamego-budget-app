@@ -13,6 +13,9 @@ export const environment = {
         storageBucket: 'budget-app-dev.appspot.com',
         messagingSenderId: '428455197993'
     },
-    functions: 'http://localhost:5000/budget-app-dev/us-central1/'
+    functions: 'http://localhost:5000/budget-app-dev/us-central1/',
+    stripe: {
+        public_key: 'pk_test_WIIBXcPsp6SP6b1YHzRKm4Lt\n'
+    }
 };
 

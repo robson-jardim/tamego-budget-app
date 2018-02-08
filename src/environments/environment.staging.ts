@@ -8,5 +8,8 @@ export const environment = {
         storageBucket: 'budget-app-staging-1.appspot.com',
         messagingSenderId: '840315097873'
     },
-    functions: 'https://us-central1-budget-app-staging-1.cloudfunctions.net/'
+    functions: 'https://us-central1-budget-app-staging-1.cloudfunctions.net/',
+    stripe: {
+        public_key: 'pk_test_WIIBXcPsp6SP6b1YHzRKm4Lt\n'
+    }
 };
