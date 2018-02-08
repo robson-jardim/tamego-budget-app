@@ -26,10 +26,12 @@ script:
 
 after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then
+        firebase use prod;
         firebase functions:config:set stripe.secret_key=$STRIPE_LIVE_SECRET_KEY;
         firebase deploy --project prod --token $FIREBASE_TOKEN;
       fi
     - if [ "$TRAVIS_BRANCH" = "staging" ]; then
+        firebase use staging;
         firebase functions:config:set stripe.secret_key=$STRIPE_LIVE_SECRET_KEY;
         firebase deploy --project staging --token $FIREBASE_TOKEN;
       fi
