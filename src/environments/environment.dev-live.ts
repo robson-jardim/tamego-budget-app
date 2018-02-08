@@ -10,7 +10,7 @@ export const environment = {
     },
     functions: 'https://us-central1-budget-app-dev.cloudfunctions.net/',
     stripe: {
-        public_key: 'pk_test_WIIBXcPsp6SP6b1YHzRKm4Lt\n'
+        public_key: 'pk_test_vEuDGivFhI5XdcM9an40FIL4'
     }
 };
 

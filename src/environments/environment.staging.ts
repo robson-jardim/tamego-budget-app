@@ -10,6 +10,6 @@ export const environment = {
     },
     functions: 'https://us-central1-budget-app-staging-1.cloudfunctions.net/',
     stripe: {
-        public_key: 'pk_test_WIIBXcPsp6SP6b1YHzRKm4Lt\n'
+        public_key: 'pk_test_aXDmkLAoIV4d0EfZbEH9m4So'
     }
 };
