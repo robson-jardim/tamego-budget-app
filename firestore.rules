@@ -7,50 +7,51 @@ service cloud.firestore {
 
         match /budgets/{budgetId} {
 
-            // Cannot use get() on current document when document already exists in resource?
-            allow read: if resource.data.userId == request.auth.uid && (isAnonymous() || isPremium());
-            allow create, update: if request.auth.uid == request.resource.data.userId && (isAnonymous() || isPremium());
+            // Cannot use get() when references the current document
+            allow read: if resource.data.userId == request.auth.uid && isAuthorized();
+            allow create, update: if request.auth.uid == request.resource.data.userId && isAuthorized();
 
             match /payees/{payeeId} {
-                allow read, create, update: if userOwnsBudget();
+                allow read, create, update: if isBudgetOwner();
             }
 
+            // TODO - set proper permissions for rules
             match /accounts/{accountId} {
-                allow read, create, update: if userOwnsBudget();
+                allow read, create, update: if isBudgetOwner();
                 //Don't allow direct delete, must delete dependencies first
             }
 
             match /transactions/{transactionId} {
-                allow read, write: if userOwnsBudget();
+                allow read, write: if isBudgetOwner();
                 //Don't allow delete, splits are tied to transaction
             }
 
             match /transferTransactions/{transferId} {
-                allow read, write: if userOwnsBudget();
+                allow read, write: if isBudgetOwner();
             }
 
             match /categoryGroups/{groupId} {
-                allow read, create, update: if userOwnsBudget();
+                allow read, create, update: if isBudgetOwner();
                 //Don't allow delete, categories are tied to group
             }
 
             match /categories/{categoryId} {
-                allow read, create, update: if userOwnsBudget();
+                allow read, create, update: if isBudgetOwner();
                 //Don't allow delete, transactions are tied to category
             }
 
             match /categoryValues/{categoryValueId} {
-                allow read: if userOwnsBudget();
-                allow create: if userOwnsBudget() && validateValueSchema();
-                allow update: if userOwnsBudget() && validateValueSchema() && isNotEditingTime() && isNotEditingCategoryId();
-                allow delete: if userOwnsBudget();
+                allow read: if isBudgetOwner();
+                allow create: if isBudgetOwner() && validateValueSchema();
+                allow update: if isBudgetOwner() && validateValueSchema() && isEditingTime() && !isEditingCategoryId();
+                allow delete: if isBudgetOwner();
 
-                function isNotEditingTime() {
-                    return request.resource.data.budgetMonth == resource.data.budgetMonth;
+                function isEditingTime() {
+                    return request.resource.data.budgetMonth != resource.data.budgetMonth;
                 }
 
-                function isNotEditingCategoryId() {
-                    return request.resource.data.categoryId == resource.data.categoryId;
+                function isEditingCategoryId() {
+                    return request.resource.data.categoryId != resource.data.categoryId;
                 }
 
                 function validateValueSchema() {
@@ -63,8 +64,12 @@ service cloud.firestore {
                 }
             }
 
-            function userOwnsBudget() {
+            function isBudgetOwner() {
                 return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+            }
+
+            function isAuthorizedUser() {
+                 return (isAnonymous() && !isExpired()) || isPremium();
             }
 
             function isPremium() {
@@ -72,10 +77,12 @@ service cloud.firestore {
             }
 
             function isAnonymous() {
-                // There is no way to check for anonymous users inside Firestore security,
-                // so check the date of the user document instead
-                // Only allow 2 weeks old anonymous users
-                return request.time < get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(2, 'w');
+                return request.auth.token.firebase.sign_in_provider == 'anonymous';
+            }
+
+            function isExpired() {
+                // Only allow 2 week old anonymous user accounts
+                return request.time >= get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(2, 'w');
             }
         }
     }
