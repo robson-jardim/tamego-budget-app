@@ -11,7 +11,8 @@
         "pwa": "sw-precache --root=dist --config=precache-config.js",
         "build:dev": "ng build --prod --env=dev && npm run pwa",
         "build:staging": "ng build --prod --env=staging && npm run pwa",
-        "build:prod": "ng build --prod --env=prod && npm run pwa"
+        "build:prod": "ng build --prod --env=prod && npm run pwa",
+        "local": "ng serve --env=dev:local"
     },
     "private": true,
     "dependencies": {

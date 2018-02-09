@@ -5,25 +5,24 @@ const router = express.Router();
 const db = admin.firestore();
 const auth = admin.auth();
 
-// POST: api/setEmailOnUser
+// POST: api/verifyUser
 router.post('/', async (request: any, response) => {
 
-    const {isAnonymous} = request.user;
-    const {uid} = request.user;
-    const {email} = request.user;
+    const userId = request.user.uid;
+    const email = request.user.email;
+    const emailVerified = request.user.email_verified;
 
-    if (isAnonymous) {
+    if (!emailVerified) {
         return response.status(400).json({
-            message: 'Account must be linked to an email before setting email to user document.'
+            message: 'User has not completed verification email'
         });
     }
 
     try {
-        await db.doc('users/' + uid).update({email});
-        console.log(`Set email for userId: ${uid}`);
-
+        await db.doc('users/' + userId).update({emailVerified: true});
+        console.log(`Verified email: ${email}`);
         return response.status(200).json({
-            message: 'Anonymous account link complete'
+            message: 'User email verification process completed'
         });
     }
     catch (error) {
@@ -34,4 +33,4 @@ router.post('/', async (request: any, response) => {
     }
 });
 
-export const setUserEmailController = router;
+export const verifyUserController = router;

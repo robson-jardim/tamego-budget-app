@@ -1,5 +1,8 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+
 const stripe = require('stripe')(functions.config().stripe.secret_key);
+const db = admin.firestore();
 
 export const createStripeCustomer = async (email: string) => {
     const customer = await stripe.customers.create({email});

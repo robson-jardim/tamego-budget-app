@@ -52,7 +52,7 @@ export class AddBudgetDialogComponent implements OnInit {
         const data: Budget = {
             userId: this.data.userId,
             budgetName: this.budgetForm.value.budgetName,
-            createdAt: currentTime,
+            timeCreated: currentTime,
             lastVisited: currentTime
         };
 

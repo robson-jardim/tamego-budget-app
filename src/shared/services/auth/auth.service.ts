@@ -43,7 +43,7 @@ export class AuthService {
             }
         }).filter(result => result === true)
             .flatMap(() => {
-                return this.requestService.post('api/linkAccount');
+                return this.requestService.post('api/linkAnonymousAccount');
             }).subscribe(x => console.log(x));
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
@@ -146,8 +146,8 @@ export class AuthService {
 
         try {
             await this.afAuth.auth.currentUser.linkWithCredential(credential);
-            this.requestService.post('api/linkAccount', true).subscribe();
-            this.sendEmailVerification();
+            this.requestService.post('api/linkAnonymousAccount', true).subscribe();
+            await this.sendEmailVerification();
         } catch (error) {
             console.error(error);
         }

@@ -1,7 +1,7 @@
 export interface Budget {
     userId: string;
     budgetName: string;
-    createdAt: Date;
+    timeCreated: Date;
     lastVisited: Date;
 }
 

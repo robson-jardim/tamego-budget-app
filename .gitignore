@@ -4,6 +4,7 @@ dist/
 etc/
 .nyc_output/
 .idea/
+.runtimeconfig.json
 
 # compiled output
 /tmp

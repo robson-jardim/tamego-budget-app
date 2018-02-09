@@ -1,24 +1,36 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { User } from '@models/user.model';
-import { createStripeCustomer } from '../stripe';
+import { signUpForTrial } from '../stripe';
 
 const db = admin.firestore();
 
 export const onUserCreate = functions.auth.user().onCreate(async event => {
 
-    const user: User = {
-        email: event.data.email || null,
+    let user: User = {
         userId: event.data.uid,
+        email: event.data.email || null,
+        timeCreated: new Date(),
         emailVerified: false,
-        customerId: null
+        customerId: null,
+        subscriptionId: null,
+        premium: false,
+        trial: {
+            isTrial: false,
+            trialEnd: null
+        }
     };
 
-    if (user.email) {
+    const isAnonymousAccount = () => {
+        return user.email == null;
+    };
+
+    if (!isAnonymousAccount()) {
         try {
-            user.customerId = await createStripeCustomer(user.email);
+            const trialData = await signUpForTrial(user.email);
+            user = {...user, ...trialData};
         } catch (error) {
-            console.error('Failed to add stripe customer');
+            console.error('Unable to signup for trial');
             console.error(error);
             throw error;
         }

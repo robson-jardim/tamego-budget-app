@@ -8,8 +8,8 @@ service cloud.firestore {
         match /budgets/{budgetId} {
 
             // Cannot use get() on current document when document already exists in resource?
-            allow read: if resource.data.userId == request.auth.uid;
-            allow create, update: if request.auth.uid == request.resource.data.userId;
+            allow read: if resource.data.userId == request.auth.uid && (isAnonymous() || isPremium());
+            allow create, update: if request.auth.uid == request.resource.data.userId && (isAnonymous() || isPremium());
 
             match /payees/{payeeId} {
                 allow read, create, update: if userOwnsBudget();
@@ -26,10 +26,6 @@ service cloud.firestore {
             }
 
             match /transferTransactions/{transferId} {
-                allow read, write: if userOwnsBudget();
-            }
-
-            match /splitTransactions/{splitTransactionId} {
                 allow read, write: if userOwnsBudget();
             }
 
@@ -69,6 +65,17 @@ service cloud.firestore {
 
             function userOwnsBudget() {
                 return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+            }
+
+            function isPremium() {
+                return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.premium == true;
+            }
+
+            function isAnonymous() {
+                // There is no way to check for anonymous users inside Firestore security,
+                // so check the date of the user document instead
+                // Only allow 7 day old anonymous users
+                return request.time < get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(7, 'd');
             }
         }
     }

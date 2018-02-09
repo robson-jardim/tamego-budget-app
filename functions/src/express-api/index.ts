@@ -28,11 +28,11 @@ app.use(bodyParser.json());
 app.use(middleware.authenticate);
 
 // Controllers
-import { linkAccountController } from './controllers/link-account.controller';
-import { setUserEmailController } from './controllers/set-user-email.controller';
+import { linkAnonymousAccountController } from './controllers/link-account.controller';
+import { verifyUserController } from './controllers/verify-user.controller';
 
-app.use('/verifyUser', setUserEmailController);
-app.use('/linkAccount', linkAccountController);
+app.use('/linkAnonymousAccount', linkAnonymousAccountController);
+app.use('/verifyUser', verifyUserController);
 
 // Error handler
 app.use((error, request, response, next) => {
