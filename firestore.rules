@@ -74,8 +74,8 @@ service cloud.firestore {
             function isAnonymous() {
                 // There is no way to check for anonymous users inside Firestore security,
                 // so check the date of the user document instead
-                // Only allow 7 day old anonymous users
-                return request.time < get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(7, 'd');
+                // Only allow 2 weeks old anonymous users
+                return request.time < get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(2, 'w');
             }
         }
     }

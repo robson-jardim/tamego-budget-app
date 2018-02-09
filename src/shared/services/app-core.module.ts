@@ -17,7 +17,9 @@ import { GeneralNotificationsService } from '@shared/services/general-notificati
         AngularFireAuthModule,
         AngularFirestoreModule,
         AngularFireModule.initializeApp(environment.firebase),
-        AngularFirestoreModule.enablePersistence(),
+
+        // TODO - conditionally enable persistence if user is premium
+        // AngularFirestoreModule.enablePersistence(),
     ],
     providers: [
         FirestoreService,
