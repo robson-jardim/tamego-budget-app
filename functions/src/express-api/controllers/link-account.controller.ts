@@ -18,7 +18,6 @@ router.post('/', async (request: any, response) => {
         });
     }
 
-
     try {
         const userDocumentRef = db.doc('users/' + uid);
         await userDocumentRef.update({email});
@@ -26,7 +25,6 @@ router.post('/', async (request: any, response) => {
         const userDocumentSnapshot = await userDocumentRef.get();
         const customerId = userDocumentSnapshot.get('customerId');
 
-        // TODO - set email on stripe subscription
         await updateCustomerEmail(customerId, email);
 
         return response.status(200).json({

@@ -3,6 +3,9 @@ import * as bodyParser from 'body-parser';
 import * as middleware from './middleware';
 import * as express from 'express';
 
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+
 const app = express();
 
 const whitelist = [
@@ -44,4 +47,4 @@ app.use((error, request, response, next) => {
     }
 });
 
-export const expressApi = app;
+export const api = functions.https.onRequest(app);
