@@ -7,9 +7,10 @@ service cloud.firestore {
 
         match /budgets/{budgetId} {
 
-            // Cannot use get() when references the current document
-            allow read: if resource.data.userId == request.auth.uid && isAuthorized();
-            allow create, update: if request.auth.uid == request.resource.data.userId && isAuthorized();
+            // Cannot use get() when references the current document, therefore isBudgetOwner() is
+            // unable to be used right here
+            allow read: if resource.data.userId == request.auth.uid && isPremium();
+            allow create, update: if request.auth.uid == request.resource.data.userId && isPremium();
 
             match /payees/{payeeId} {
                 allow read, create, update: if isBudgetOwner();
@@ -43,7 +44,7 @@ service cloud.firestore {
             match /categoryValues/{categoryValueId} {
                 allow read: if isBudgetOwner();
                 allow create: if isBudgetOwner() && validateValueSchema();
-                allow update: if isBudgetOwner() && validateValueSchema() && isEditingTime() && !isEditingCategoryId();
+                allow update: if isBudgetOwner() && validateValueSchema() && !isEditingTime() && !isEditingCategoryId();
                 allow delete: if isBudgetOwner();
 
                 function isEditingTime() {
@@ -68,21 +69,8 @@ service cloud.firestore {
                 return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
             }
 
-            function isAuthorizedUser() {
-                 return (isAnonymous() && !isExpired()) || isPremium();
-            }
-
             function isPremium() {
                 return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.premium == true;
-            }
-
-            function isAnonymous() {
-                return request.auth.token.firebase.sign_in_provider == 'anonymous';
-            }
-
-            function isExpired() {
-                // Only allow 2 week old anonymous user accounts
-                return request.time >= get(/databases/$(database)/documents/users/$(request.auth.uid)).data.timeCreated + duration.value(2, 'w');
             }
         }
     }

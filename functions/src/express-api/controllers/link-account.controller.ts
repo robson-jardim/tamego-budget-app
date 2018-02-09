@@ -1,10 +1,9 @@
 import * as admin from 'firebase-admin';
 import * as express from 'express';
-import { signUpForTrial } from '../../stripe';
+import { updateCustomerEmail } from '../../stripe/create-customer';
 
 const router = express.Router();
 const db = admin.firestore();
-const auth = admin.auth();
 
 // POST: api/linkAnonymousAccount
 router.post('/', async (request: any, response) => {
@@ -15,32 +14,29 @@ router.post('/', async (request: any, response) => {
 
     if (isAnonymous) {
         return response.status(400).json({
-            message: 'Account must be linked to an email before setting email to user document.'
+            message: 'Unable to link because no email has been associated with the given account'
         });
     }
 
-    try {
-    } catch (error) {
-        console.error('Unable to signup for trial');
-        console.error(error);
-        throw error;
-    }
 
     try {
-        const data = await signUpForTrial(email);
-        await db.doc('users/' + uid).update({email, ...data});
+        const userDocumentRef = db.doc('users/' + uid);
+        await userDocumentRef.update({email});
 
-        console.log(`Linked email for userId: ${uid}`);
-        console.log('User signed up for trial');
+        const userDocumentSnapshot = await userDocumentRef.get();
+        const customerId = userDocumentSnapshot.get('customerId');
+
+        // TODO - set email on stripe subscription
+        await updateCustomerEmail(customerId, email);
 
         return response.status(200).json({
-            message: 'Anonymous account link complete. Trial started'
+            message: 'Anonymous account successfully linked to email'
         });
     }
     catch (error) {
         console.error(error);
         return response.status(500).json({
-            message: 'Stripe or database error'
+            message: 'Database error'
         });
     }
 });

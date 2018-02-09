@@ -4,7 +4,16 @@ import * as admin from 'firebase-admin';
 const stripe = require('stripe')(functions.config().stripe.secret_key);
 const db = admin.firestore();
 
-export const createStripeSubscription = async (customerId: string) => {
+
+export interface Subscription {
+    subscriptionId: string;
+    trial: {
+        isTrial: boolean;
+        trialEnd: Date;
+    };
+}
+
+export const createStripeSubscription = async (customerId: string): Promise<Subscription> => {
     const premiumPlanSnapshot = await db.doc('stripePlans/premium').get();
     const premiumPlanId = premiumPlanSnapshot.get('planId');
 
@@ -20,13 +29,11 @@ export const createStripeSubscription = async (customerId: string) => {
 
     return {
         subscriptionId: subscription.id,
-        premium: true,
         trial: {
             isTrial: true,
             trialEnd: new Date(subscription.trial_end * 1000)
         }
     };
-
 };
 
 

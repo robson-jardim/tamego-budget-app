@@ -1,13 +1,15 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { User } from '@models/user.model';
-import { signUpForTrial } from '../stripe';
+import { createStripeCustomer } from '../stripe';
+import { createStripeSubscription } from '../stripe';
+import { Subscription } from '../stripe/create-subscription';
 
 const db = admin.firestore();
 
 export const onUserCreate = functions.auth.user().onCreate(async event => {
 
-    let user: User = {
+    const user: User = {
         userId: event.data.uid,
         email: event.data.email || null,
         timeCreated: new Date(),
@@ -21,29 +23,33 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         }
     };
 
-    const isAnonymousAccount = () => {
-        return user.email == null;
-    };
+    try {
+        user.customerId = await createStripeCustomer(user.email);
+    }
+    catch (error) {
+        console.error('Unable to add stripe customer');
+        console.error(error);
+        throw error;
+    }
 
-    if (!isAnonymousAccount()) {
-        try {
-            const trialData = await signUpForTrial(user.email);
-            user = {...user, ...trialData};
-        } catch (error) {
-            console.error('Unable to signup for trial');
-            console.error(error);
-            throw error;
-        }
+    try {
+        const subscription: Subscription = await createStripeSubscription(user.customerId);
+        user.subscriptionId = subscription.subscriptionId;
+        user.trial = subscription.trial;
+        user.premium = true;
+    } catch (error) {
+        console.error('Unable to add stripe subscription');
+        console.error(error);
+        throw error;
     }
 
     try {
         await db.doc(`users/${user.userId}`).set(user);
-        console.log('User document added: ' + JSON.stringify(user));
+        console.log('User added: ' + user.userId);
     } catch (error) {
         console.error('Failed to add user document');
         console.error(error);
         throw error;
     }
-
 
 });
