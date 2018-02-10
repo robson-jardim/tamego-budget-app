@@ -16,7 +16,8 @@ import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { DemoComponent } from './demo/demo.component';
-import { LinkAnonymousAccountDialogComponent } from '../shared/components/header/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
+import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
+import { AppHeaderModule } from '@shared/components/header/header.module';
 
 @NgModule({
     imports: [
@@ -24,7 +25,7 @@ import { LinkAnonymousAccountDialogComponent } from '../shared/components/header
         BrowserAnimationsModule,
         StandardMaterialModule,
         MatSnackBarModule,
-
+        AppHeaderModule,
         AppCoreModule,
         AppGuardsModule,
         OfflineClientModule,

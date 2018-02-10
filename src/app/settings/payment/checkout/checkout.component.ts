@@ -30,8 +30,7 @@ export class CheckoutComponent implements OnInit {
             this.handler.open({
                 name: 'Tamego',
                 description: 'Premium',
-                email: user.email,
-                label: 'Subscribe'
+                email: user.email
             });
         });
     }

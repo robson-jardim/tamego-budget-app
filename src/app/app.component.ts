@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Subscription } from 'rxjs/Subscription';
+import { AuthService } from '@shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 private notifications: GeneralNotificationsService,
                 private dialogService: CloseDialogService,
                 private router: Router,
-                private utility: UtilityService) {
+                private utility: UtilityService,
+                private auth: AuthService) {
     }
 
     ngOnInit() {
@@ -99,4 +101,5 @@ export class AppComponent implements OnInit, OnDestroy {
             this.showSnapbar(notification);
         });
     }
+
 }

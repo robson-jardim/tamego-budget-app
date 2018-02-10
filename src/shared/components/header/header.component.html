@@ -1,12 +1,20 @@
 <mat-toolbar color="primary">
-    <span>{{title}}</span>
+    <span>Tamego</span>
 
     <ng-container *ngIf="!hideOptions">
-        <button mat-button (click)="routeToHome()">Home</button>
+        <button mat-icon-button (click)="routeToHome()">
+            <mat-icon>home</mat-icon>
+        </button>
 
         <span class="banner-spacer"></span>
 
-        <button mat-button (click)="routeToSettings()">Settings</button>
+        <ng-container *ngIf="auth.user | async as user">
+            <p *ngIf="user.trial.isTrial">Trial ends: {{user.trial.trialEnd | date}}</p>
+        </ng-container>
+
+        <button mat-icon-button (click)="routeToSettings()">
+            <mat-icon>settings</mat-icon>
+        </button>
 
         <ng-container *ngIf="auth.user | async as user">
 
@@ -15,11 +23,16 @@
             </ng-container>
 
             <ng-template #isAnonymous>
-                <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn">Create account</button>
+                <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn">Create account
+                </button>
             </ng-template>
 
         </ng-container>
 
     </ng-container>
 
+    <ng-container *ngIf="showDemo">
+        <span class="banner-spacer"></span>
+        <button mat-raised-button color="warn" [routerLink]="['demo']">Go to demo</button>
+    </ng-container>
 </mat-toolbar>

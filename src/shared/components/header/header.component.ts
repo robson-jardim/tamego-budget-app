@@ -2,9 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
-import { LinkAnonymousAccountDialogComponent } from '@shared/components/header/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
-import { Observable } from 'rxjs/Observable';
-import { User } from '@models/user.model';
+import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 
 @Component({
     selector: 'app-header',
@@ -13,16 +11,13 @@ import { User } from '@models/user.model';
 })
 export class HeaderComponent implements OnInit {
 
-    @Input() title: string;
     @Input() hideOptions: boolean;
-
-    user$: Observable<User>;
+    @Input() showDemo: boolean;
 
     constructor(public auth: AuthService, private route: Router, private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
-        console.log('here');
     }
 
     public routeToHome() {

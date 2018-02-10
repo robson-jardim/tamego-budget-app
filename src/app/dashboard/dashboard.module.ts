@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderModule } from '@shared/components/header/header.module';
+import { AppHeaderModule } from '@shared/components/header/header.module';
 import { DashboardComponent } from './dashboard.component';
 import { ViewTransactionsModule } from 'app/dashboard/view-transactions/view-transactions.module';
 import { SidenavModule } from './sidenav/sidenav.module';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
     imports: [
         CommonModule,
         RouterModule,
-        HeaderModule,
+        AppHeaderModule,
         SidenavModule,
         ViewBudgetModule,
         ViewTransactionsModule

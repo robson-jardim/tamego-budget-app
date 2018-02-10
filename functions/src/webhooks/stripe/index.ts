@@ -16,6 +16,10 @@ router.post('/', async (request: any, response) => {
         // Note rawBody property is used instead of body due to the middleware present on Firebase Cloud Functions
         event = stripe.webhooks.constructEvent(request.rawBody, signature, webhooksSecret);
         hook = event.type;
+
+        if (hook) {
+            console.log(`Stripe web hook: ${hook}`);
+        }
     } catch (error) {
         console.error('Error', error.message);
         return response.status(400).send('Webhook Error: ' + error.message);

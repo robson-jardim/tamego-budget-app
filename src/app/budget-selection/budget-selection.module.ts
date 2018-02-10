@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { HeaderModule } from '@shared/components/header/header.module';
+import { AppHeaderModule } from '@shared/components/header/header.module';
 import { BudgetSelectionComponent } from './budget-selection.component';
 import { AddBudgetDialogComponent } from './add-budget-dialog/add-budget-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 @NgModule({
     imports: [
         CommonModule,
-        HeaderModule,
+        AppHeaderModule,
         CustomMaterialFormsModule,
         StandardMaterialModule,
         RouterModule

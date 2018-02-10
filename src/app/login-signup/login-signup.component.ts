@@ -11,7 +11,10 @@ import { first } from 'rxjs/operators';
     styleUrls: ['./login-signup.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class LoginSignupComponent implements OnInit {
+export class SigninCreateAccountComponent implements OnInit {
+
+    // TODO - rename to signin create account
+    // TODO - move to separate components
 
     public loading = false;
     public showAuthError = false;

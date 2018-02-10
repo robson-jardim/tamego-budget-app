@@ -1,6 +1,9 @@
-<app-header [title]="'Budgets'"></app-header>
+<app-header></app-header>
 
 <div class="budget-selection-container">
+
+    <h1 class="mat-headline">Budgets</h1>
+
     <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
         <button mat-raised-button color="primary" (click)="openAddNewBudgetDialog()">Add new budget</button>
 

@@ -33,7 +33,7 @@ export class SidenavComponent implements OnInit {
         return this.route.params.map(params => {
             const {budgetId} = params;
             return budgetId;
-        });
+        }).first();
     }
 
     private getAccounts(budgetId: string): Observable<BudgetAccountId[]> {
@@ -41,7 +41,7 @@ export class SidenavComponent implements OnInit {
     }
 
     public createAccount() {
-        this.getBudgetId().subscribe(budgetId => {
+        this.getBudgetId().flatMap(budgetId => {
 
             const dialogRef = this.dialogService.openCreate(AccountDialogComponent, {
                 data: {
@@ -49,18 +49,20 @@ export class SidenavComponent implements OnInit {
                 }
             });
 
-            this.onAddNavigateToAccount(dialogRef).subscribe(newAccountId => {
-                this.router.navigate(['accounts', newAccountId], {relativeTo: this.route});
-            });
+            return dialogRef.afterClosed();
 
+        }).first().subscribe(newAccountId => {
+            if (newAccountId) {
+                this.router.navigate(['accounts', newAccountId], {relativeTo: this.route});
+            }
         });
     }
 
     private onAddNavigateToAccount(dialogRef: MatDialogRef<any>): Observable<any> {
-        return dialogRef.afterClosed().filter(isAccountId);
+        return dialogRef.afterClosed().filter(id => id !== null);
 
         function isAccountId(id: string) {
-            return id !== null;
+            return id === null;
         }
     }
 

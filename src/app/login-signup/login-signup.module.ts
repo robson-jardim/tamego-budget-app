@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { LoginSignupComponent } from './login-signup.component';
+import { SigninCreateAccountComponent } from './login-signup.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { HeaderModule } from '@shared/components/header/header.module';
+import { AppHeaderModule } from '@shared/components/header/header.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
-        HeaderModule,
+        AppHeaderModule,
         CommonModule,
         StandardMaterialModule,
         CustomMaterialFormsModule
     ],
     declarations: [
-        LoginSignupComponent,
+        SigninCreateAccountComponent,
     ],
     entryComponents: []
 })

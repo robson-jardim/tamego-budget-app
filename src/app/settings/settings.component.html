@@ -1,30 +1,65 @@
-<app-header [title]="'Settings'"></app-header>
+<app-header></app-header>
 
-<ng-container *ngIf="auth.user | async as user">
+<div class="settings-container">
 
-    <ng-container *ngIf="user.emailVerified; then verified else unverified">
+    <div class="settings-card">
 
-    </ng-container>
+        <h1 class="mat-headline">Account</h1>
 
-    <ng-template #verified>
-        <p mat-body-1>User is verified</p>
-    </ng-template>
+        <ng-container *ngIf="auth.user | async as user">
 
-    <ng-template #unverified>
-        <p>You account is currently not verified</p>
-        <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">Resend verification email</button>
-        <button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Update verification status
-        </button>
-    </ng-template>
+            <ng-container *ngIf="user.email; else isAnonymous">
+                <div class="mat-body-1">
+                    <span>Email: {{user.email}}</span>
 
-</ng-container>
+                    <ng-container *ngIf="!user.emailVerified">
+                        (unverified)
+                    </ng-container>
+                </div>
 
-<div>
-    <input matInput type="email" placeholder="Email" #email>
-    <input matInput type="password" placeholder="Password" #password>
-    <button (click)="auth.linkAnonymousAccountToEmail(email.value, password.value)">Link to Email</button>
+                <ng-container *ngIf="!user.emailVerified">
+                    <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">Resend verification
+                        email
+                    </button>
+                    <button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update
+                        verification status
+                    </button>
+                </ng-container>
+
+            </ng-container>
+
+            <ng-template #isAnonymous>
+                <p class="mat-body-1">Create account</p>
+
+                <div>
+                    <button mat-raised-button color="warn" (click)="openLinkAnonymousAccountDialog()">Create account</button>
+                </div>
+
+                <mat-form-field>
+                    <input matInput type="email" placeholder="Email" #email>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput type="password" placeholder="Password" #password>
+                </mat-form-field>
+
+                <button mat-button type="submit"
+                        (click)="auth.linkAnonymousAccountToEmail(email.value, password.value)">Link to Email
+                </button>
+
+            </ng-template>
+
+        </ng-container>
+
+
+    </div>
+
+    <div class="settings-card">
+
+        <h1 class="mat-headline">Billing</h1>
+
+        <app-checkout>
+
+        </app-checkout>
+    </div>
 </div>
-
-<app-checkout>
-
-</app-checkout>

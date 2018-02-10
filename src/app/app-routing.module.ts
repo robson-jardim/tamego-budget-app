@@ -8,7 +8,7 @@ import { ViewBudgetComponent } from './dashboard/view-budget/view-budget.compone
 import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
 import { SettingsComponent } from './settings/settings.component';
-import { LoginSignupComponent } from './login-signup/login-signup.component';
+import { SigninCreateAccountComponent } from './login-signup/login-signup.component';
 import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
 import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
 import { PremiumGuard } from '@shared/guards/premium/premium.guard';
@@ -55,7 +55,7 @@ const routes: Routes = [
     },
     {
         path: '',
-        component: LoginSignupComponent,
+        component: SigninCreateAccountComponent,
         canActivate: [SignedOutGuard]
     },
     {
