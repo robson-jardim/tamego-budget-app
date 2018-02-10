@@ -15,6 +15,9 @@ import { TokenInterceptor } from '@shared/interceptors/token.interceptor';
     declarations: [
         OfflineDialogComponent
     ],
+    entryComponents: [
+        OfflineDialogComponent
+    ],
     providers: [
         HttpRequestService,
         {
