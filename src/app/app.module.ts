@@ -16,6 +16,7 @@ import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { DemoComponent } from './demo/demo.component';
+import { LinkAnonymousAccountDialogComponent } from '../shared/components/header/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import { DemoComponent } from './demo/demo.component';
     declarations: [
         AppComponent,
         UpdateAvailableDialogComponent,
-        DemoComponent
+        DemoComponent,
+        LinkAnonymousAccountDialogComponent
     ],
     entryComponents: [
         UpdateAvailableDialogComponent

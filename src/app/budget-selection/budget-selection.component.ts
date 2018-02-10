@@ -27,14 +27,14 @@ export class BudgetSelectionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.auth.userSnapshot().subscribe(user => {
+        this.auth.userSnapshot().first().subscribe(user => {
             this.budgets = this.firestore.getBudgets(user.userId);
         });
     }
 
     public openAddNewBudgetDialog(): void {
 
-        this.auth.userSnapshot().subscribe((user: User) => {
+        this.auth.userSnapshot().first().subscribe((user: User) => {
 
             const addBudgetDialogRef = this.dialog.open(AddBudgetDialogComponent, {
                 data: {

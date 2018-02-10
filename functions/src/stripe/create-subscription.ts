@@ -14,7 +14,7 @@ export interface Subscription {
 }
 
 export const createStripeSubscription = async (customerId: string): Promise<Subscription> => {
-    const premiumPlanSnapshot = await db.doc('stripePlans/premium').get();
+    const premiumPlanSnapshot = await db.doc('pricingPlans/premium').get();
     const premiumPlanId = premiumPlanSnapshot.get('planId');
 
     const subscription = await stripe.subscriptions.create({

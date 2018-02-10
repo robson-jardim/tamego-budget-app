@@ -70,7 +70,7 @@ service cloud.firestore {
             }
 
             function isPremium() {
-                return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.premium == true;
+                return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true;
             }
         }
     }

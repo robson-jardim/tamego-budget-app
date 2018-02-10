@@ -74,7 +74,7 @@ export class AuthService {
 
     public verifyUser(forceRefreshToken = false, showOfflinePopups = false) {
 
-        this.userSnapshot().subscribe(async user => {
+        this.userSnapshot().first().subscribe(async user => {
 
             const verificationEmailComplete = () => {
                 return this.afAuth.auth.currentUser.emailVerified;
@@ -121,9 +121,8 @@ export class AuthService {
     }
 
     public userSnapshot(): Observable<User> {
-        return this.user.first(x => x != null);
+        return this.user.filter(x => x != null);
     }
-
 
     public userLoggedOutEvent(): Observable<any> {
 

@@ -16,7 +16,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         emailVerified: false,
         customerId: null,
         subscriptionId: null,
-        premium: false,
+        isPremium: false,
         trial: {
             isTrial: false,
             trialEnd: null
@@ -36,7 +36,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         const subscription: Subscription = await createStripeSubscription(user.customerId);
         user.subscriptionId = subscription.subscriptionId;
         user.trial = subscription.trial;
-        user.premium = true;
+        user.isPremium = true;
     } catch (error) {
         console.error('Unable to add stripe subscription');
         console.error(error);

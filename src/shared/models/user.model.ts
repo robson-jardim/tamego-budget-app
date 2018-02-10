@@ -3,7 +3,7 @@ export interface User {
     email: string;
     timeCreated: Date;
     emailVerified: boolean;
-    premium: boolean;
+    isPremium: boolean;
     customerId: string;
     subscriptionId: string;
     trial: {
