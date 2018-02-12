@@ -42,14 +42,14 @@ export class AuthService {
         }).filter(result => result === true)
             .flatMap(() => {
                 return this.requestService.post('api/linkAnonymousAccount');
-            }).subscribe(x => console.log(x));
+            }).subscribe();
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
             this.router.navigate(['/']);
         });
 
-        this.verifiedSubscription = this.userSnapshot().subscribe(user => {
+        this.verifiedSubscription = this.user.filter(x => x != null).subscribe(user => {
             // verifyUser is called twice if email verification is successful because the user observable emits a
             // new value because once the user document updates. To get out this, a watcher is set and unsubscribed
             // after a successful user document change.
@@ -72,7 +72,7 @@ export class AuthService {
 
     public verifyUser(forceRefreshToken = false, showOfflinePopups = false) {
 
-        this.userSnapshot().first().subscribe(async user => {
+        this.user.first(x => x != null).subscribe(async user => {
 
             const verificationEmailComplete = () => {
                 return this.afAuth.auth.currentUser.emailVerified;
@@ -116,10 +116,6 @@ export class AuthService {
                     console.error(error);
                 });
         });
-    }
-
-    public userSnapshot(): Observable<User> {
-        return this.user.filter(x => x != null);
     }
 
     public userLoggedOutEvent(): Observable<any> {

@@ -26,7 +26,7 @@ export class CheckoutComponent implements OnInit {
 
     public handlePayment() {
 
-        this.auth.userSnapshot().first().subscribe(user => {
+        this.auth.user.first().subscribe(user => {
             this.handler.open({
                 name: 'Tamego',
                 description: 'Premium',

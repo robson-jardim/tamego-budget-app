@@ -27,7 +27,7 @@ export class DemoComponent implements OnInit {
                 return Observable.of(null);
             }
         }).flatMap(() => {
-            return this.auth.userSnapshot();
+            return this.auth.user.first(x => x != null);
         }).do(() => {
             this.router.navigate(['budgets']);
         }).first().subscribe();

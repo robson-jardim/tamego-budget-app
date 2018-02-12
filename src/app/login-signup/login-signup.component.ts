@@ -95,7 +95,7 @@ export class SigninCreateAccountComponent implements OnInit {
     }
 
     private onLoginRouteToBudgets() {
-        this.auth.userSnapshot().first().subscribe(user => {
+        this.auth.user.first(x => x != null).subscribe(user => {
             this.router.navigate(['budgets']);
         });
     }
