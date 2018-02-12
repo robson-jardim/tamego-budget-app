@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppCoreModule } from '@shared/services/app-core.module';
 import { AppGuardsModule } from '@shared/guards/app-guards.module';
 
-import { LoginSignupModule } from './login-signup/login-signup.module';
 import { BudgetSelectionModule } from './budget-selection/budget-selection.module';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
@@ -18,6 +17,8 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { DemoComponent } from './demo/demo.component';
 import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 import { AppHeaderModule } from '@shared/components/header/header.module';
+import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
+import { AuthenticateModule } from './authenticate/authenticate.module';
 
 @NgModule({
     imports: [
@@ -25,22 +26,23 @@ import { AppHeaderModule } from '@shared/components/header/header.module';
         BrowserAnimationsModule,
         StandardMaterialModule,
         MatSnackBarModule,
+        CustomMaterialFormsModule,
         AppHeaderModule,
         AppCoreModule,
         AppGuardsModule,
         OfflineClientModule,
 
+        AuthenticateModule,
         SettingsModule,
         BudgetSelectionModule,
         DashboardModule,
-        LoginSignupModule,
         AppRoutingModule
     ],
     declarations: [
         AppComponent,
         UpdateAvailableDialogComponent,
         DemoComponent,
-        LinkAnonymousAccountDialogComponent
+        LinkAnonymousAccountDialogComponent,
     ],
     entryComponents: [
         UpdateAvailableDialogComponent

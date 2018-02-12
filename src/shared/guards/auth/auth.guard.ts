@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
             .map(user => !!user) // ensures the resulting type is a boolean
             .do(loggedIn => {
                 if (!loggedIn) {
-                    this.router.navigate(['/']);
+                    this.router.navigate(['/signin']);
                 }
             });
     }

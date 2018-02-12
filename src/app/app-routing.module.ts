@@ -1,17 +1,22 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DemoComponent } from './demo/demo.component';
-import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';
+
+import { SigninSignUpComponent } from './signin-signup/signin-signup.component';
+import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthGuard } from '@shared/guards/auth/auth.guard';
+import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';
 import { ViewBudgetComponent } from './dashboard/view-budget/view-budget.component';
+import { SettingsComponent } from './settings/settings.component';
+import { DemoComponent } from './demo/demo.component';
+
+import { AuthGuard } from '@shared/guards/auth/auth.guard';
+import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
+import { PremiumGuard } from '@shared/guards/premium/premium.guard';
 import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
-import { SettingsComponent } from './settings/settings.component';
-import { SigninCreateAccountComponent } from './login-signup/login-signup.component';
-import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
-import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
-import { PremiumGuard } from '@shared/guards/premium/premium.guard';
+import { SigninComponent } from './authenticate/signin/signin.component';
+import { SignupComponent } from './authenticate/signup/signup.component';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 const routes: Routes = [
     {
@@ -55,12 +60,22 @@ const routes: Routes = [
     },
     {
         path: '',
-        component: SigninCreateAccountComponent,
-        canActivate: [SignedOutGuard]
+        component: AuthenticateComponent,
+        canActivate: [SignedOutGuard],
+        children: [
+            {
+                path: 'signin',
+                component: SigninComponent
+            },
+            {
+                path: 'signup',
+                component: SignupComponent
+            }
+        ]
     },
     {
         path: '**',
-        redirectTo: '', // Redirects to login page
+        redirectTo: 'signin', // Redirects to sign in page
         pathMatch: 'full'
     }
 ];

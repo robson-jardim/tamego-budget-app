@@ -46,7 +46,7 @@ export class AuthService {
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
-            this.router.navigate(['/']);
+            this.router.navigate(['/signin']);
         });
 
         this.verifiedSubscription = this.user.filter(x => x != null).subscribe(user => {
@@ -217,7 +217,7 @@ export class AuthService {
     public async signOut() {
         try {
             await this.afAuth.auth.signOut();
-            await this.router.navigate(['/']);
+            await this.router.navigate(['/signin']);
         } catch (error) {
             console.error(error);
         }

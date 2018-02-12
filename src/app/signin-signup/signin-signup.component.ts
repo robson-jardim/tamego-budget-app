@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '@shared/services/auth/auth.service';
-import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
+import { AuthService } from 'shared/services/auth/auth.service';
+import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
 import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login-signup',
-    templateUrl: './login-signup.component.html',
-    styleUrls: ['./login-signup.component.scss'],
+    templateUrl: './signin-signup.component.html',
+    styleUrls: ['./signin-signup.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SigninCreateAccountComponent implements OnInit {
+export class SigninSignUpComponent implements OnInit {
 
     // TODO - rename to signin create account
     // TODO - move to separate components

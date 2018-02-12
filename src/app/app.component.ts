@@ -44,11 +44,11 @@ export class AppComponent implements OnInit, OnDestroy {
         this.notificationSubscription.unsubscribe();
     }
 
-    private isLoginPage(): Observable<boolean> {
+    private isAuthenticatePage(): Observable<boolean> {
         return this.router.events.filter((event: any) => {
             return event instanceof NavigationEnd;
         }).map(event => {
-            return event.url === '/';
+            return event.url === '/signin' || event.url === '/signup';
         });
     }
 
@@ -70,12 +70,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private checkForUpdates() {
-        this.updatesSubscription = this.utility.combineLatestObj({
-            isLoginPage: this.isLoginPage(),
-            isUpdatesAvailable: this.isUpdatesAvailable(),
-        }).subscribe(({isLoginPage, isUpdatesAvailable}) => {
 
-            if (isUpdatesAvailable && !isLoginPage) {
+        this.updatesSubscription = this.utility.combineLatestObj({
+            isAuthenticatePage: this.isAuthenticatePage(),
+            isUpdatesAvailable: this.isUpdatesAvailable(),
+        }).subscribe(({isAuthenticatePage, isUpdatesAvailable}) => {
+
+            if (isUpdatesAvailable && !isAuthenticatePage) {
                 const updatesDialog: MatDialogRef<any> = this.dialogService.open(UpdateAvailableDialogComponent, {
                     disableClose: true
                 });

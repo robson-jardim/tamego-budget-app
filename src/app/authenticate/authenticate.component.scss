@@ -1,0 +1,16 @@
+.cardContainer {
+    padding: 0;
+    width: 400px;
+    margin: 30px auto 0;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+nav a {
+    // TODO - fix tab spacing
+    width: 49%
+}

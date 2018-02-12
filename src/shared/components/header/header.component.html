@@ -23,8 +23,7 @@
             </ng-container>
 
             <ng-template #isAnonymous>
-                <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn">Create account
-                </button>
+                <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn">Sign up</button>
             </ng-template>
 
         </ng-container>
@@ -33,6 +32,6 @@
 
     <ng-container *ngIf="showDemo">
         <span class="banner-spacer"></span>
-        <button mat-raised-button color="warn" [routerLink]="['demo']">Go to demo</button>
+        <button mat-raised-button color="warn" routerLink="/demo">Try demo</button>
     </ng-container>
 </mat-toolbar>

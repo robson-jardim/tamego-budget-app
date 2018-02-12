@@ -40,3 +40,4 @@ export class PremiumGuard implements CanActivate {
         return now > trial.trialEnd;
     }
 }
+

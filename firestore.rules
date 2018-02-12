@@ -7,45 +7,41 @@ service cloud.firestore {
 
         match /budgets/{budgetId} {
 
-            // Cannot use get() when references the current document, therefore isBudgetOwner() is
+            // Cannot use get() when referencing the current document, therefore, isBudgetOwner() is
             // unable to be used right here
+
             allow read: if resource.data.userId == request.auth.uid && isPremium();
-            allow create, update: if request.auth.uid == request.resource.data.userId && isPremium();
+            allow create, update, delete: if request.auth.uid == request.resource.data.userId && isPremium();
 
             match /payees/{payeeId} {
-                allow read, create, update: if isBudgetOwner();
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
-            // TODO - set proper permissions for rules
             match /accounts/{accountId} {
-                allow read, create, update: if isBudgetOwner();
-                //Don't allow direct delete, must delete dependencies first
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
             match /transactions/{transactionId} {
-                allow read, write: if isBudgetOwner();
-                //Don't allow delete, splits are tied to transaction
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
             match /transferTransactions/{transferId} {
-                allow read, write: if isBudgetOwner();
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
             match /categoryGroups/{groupId} {
-                allow read, create, update: if isBudgetOwner();
-                //Don't allow delete, categories are tied to group
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
             match /categories/{categoryId} {
-                allow read, create, update: if isBudgetOwner();
-                //Don't allow delete, transactions are tied to category
+                allow read, write: if isBudgetOwner() && isPremium();
             }
 
             match /categoryValues/{categoryValueId} {
-                allow read: if isBudgetOwner();
-                allow create: if isBudgetOwner() && validateValueSchema();
-                allow update: if isBudgetOwner() && validateValueSchema() && !isEditingTime() && !isEditingCategoryId();
-                allow delete: if isBudgetOwner();
+                allow read: if isBudgetOwner() && isPremium();
+                allow create: if isBudgetOwner() && isPremium() && validateValueSchema();
+                allow update: if isBudgetOwner() && isPremium() && validateValueSchema() && !isEditingTime() && !isEditingCategoryId();
+                allow delete: if isBudgetOwner() && isPremium();
 
                 function isEditingTime() {
                     return request.resource.data.budgetMonth != resource.data.budgetMonth;

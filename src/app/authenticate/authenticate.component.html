@@ -1,0 +1,27 @@
+<app-header [hideOptions]="true" [showDemo]="true"></app-header>
+
+<mat-card class="cardContainer">
+    <mat-card-title>
+        <nav mat-tab-nav-bar>
+            <a mat-tab-link routerLink="/signin"
+               routerLinkActive
+               #signin="routerLinkActive"
+               [active]="signin.isActive">
+                Signin
+            </a>
+            <a mat-tab-link
+               routerLink="/signup"
+               routerLinkActive
+               #signup="routerLinkActive"
+               [active]="signup.isActive">
+                Sign up
+            </a>
+        </nav>
+    </mat-card-title>
+
+    <div class="cardContent">
+        <router-outlet></router-outlet>
+    </div>
+</mat-card>
+
+
