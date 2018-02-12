@@ -16,14 +16,12 @@ router.post('/', async (request: any, response) => {
         // Note rawBody property is used instead of body due to the middleware present on Firebase Cloud Functions
         event = stripe.webhooks.constructEvent(request.rawBody, signature, webhooksSecret);
         hook = event.type;
-
-        if (hook) {
-            console.log(`Stripe web hook: ${hook}`);
-        }
     } catch (error) {
         console.error('Error', error.message);
-        return response.status(400).send('Webhook Error: ' + error.message);
+        return response.status(400).send(`Webhook Error: ${error.message}`);
     }
+
+    console.log(`Stripe web hook: ${hook}`);
 
     if ('invoice.payment_succeeded' === hook) {
         // Occurs whenever an invoice payment attempt succeeds.
@@ -41,7 +39,7 @@ router.post('/', async (request: any, response) => {
     }
 
     response.status(500).send('Not a matching webhook');
-    throw new Error('Not a matching webhook');
+    throw new Error(`${hook}:  not a matching webhook`);
 });
 
 export const stripeWebhooks = router;
