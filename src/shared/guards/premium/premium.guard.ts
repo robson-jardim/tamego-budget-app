@@ -10,12 +10,13 @@ export class PremiumGuard implements CanActivate {
     }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        return this.auth.user.first().map(user => {
-            return user.isPremium;
-        }).do(isPremium => {
-            if (!isPremium) {
-                this.router.navigate(['settings'], {queryParams: {trialOver: true}});
-            }
-        });
+        return this.auth.user
+            .first()
+            .map(user => user.isPremium)
+            .do(isPremium => {
+                if (!isPremium) {
+                    this.router.navigate(['settings'], {queryParams: {trialOver: true}});
+                }
+            });
     }
 }

@@ -24,14 +24,12 @@ export class AuthService {
                 private requestService: HttpRequestService) {
 
         this.user = this.afAuth.authState.switchMap(user => {
-
             if (user) {
                 return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
             }
             else {
                 return Observable.of(null);
             }
-
         });
 
         Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
