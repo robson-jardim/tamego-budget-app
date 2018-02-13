@@ -1,15 +1,28 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@shared/services/auth/auth.service';
+import { Router } from '@angular/router';
+import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
 
 @Component({
-  selector: 'app-authenticate',
-  templateUrl: './authenticate.component.html',
-  styleUrls: ['./authenticate.component.scss']
+    selector: 'app-authenticate',
+    templateUrl: './authenticate.component.html',
+    styleUrls: ['./authenticate.component.scss']
 })
 export class AuthenticateComponent implements OnInit {
 
-  constructor() { }
+    constructor(private auth: AuthService,
+                private router: Router,
+                public authNotification: AuthNotificationService) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this.onLoginRouteToBudgets();
+    }
+
+    private onLoginRouteToBudgets() {
+        this.auth.user.first(x => x != null).subscribe(user => {
+            this.router.navigate(['/budgets']);
+        });
+    }
 
 }

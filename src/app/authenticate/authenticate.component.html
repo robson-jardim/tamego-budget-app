@@ -1,5 +1,11 @@
 <app-header [hideOptions]="true" [showDemo]="true"></app-header>
 
+<ng-container *ngIf="authNotification.messageBroadcast | async as notification">
+    <mat-card class="cardContainer" *ngIf="showAuthError">
+        <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+    </mat-card>
+</ng-container>
+
 <mat-card class="cardContainer">
     <mat-card-title>
         <nav mat-tab-nav-bar>
@@ -7,7 +13,7 @@
                routerLinkActive
                #signin="routerLinkActive"
                [active]="signin.isActive">
-                Signin
+                Sign in
             </a>
             <a mat-tab-link
                routerLink="/signup"
@@ -22,6 +28,5 @@
     <div class="cardContent">
         <router-outlet></router-outlet>
     </div>
+
 </mat-card>
-
-

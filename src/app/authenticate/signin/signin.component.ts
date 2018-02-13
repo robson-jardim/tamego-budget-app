@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
 import { AuthService } from '@shared/services/auth/auth.service';
-import { Router } from '@angular/router';
+import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
 
 @Component({
     selector: 'app-signin',
@@ -11,7 +10,43 @@ import { Router } from '@angular/router';
 })
 export class SigninComponent implements OnInit {
 
-    ngOnInit() {
+    public signInForm: FormGroup;
+    public hideSigninPassword = true;
+    public saving = false;
+    private showAuthError;
+
+    constructor(private formBuilder: FormBuilder,
+                private auth: AuthService,
+                public authNotification: AuthNotificationService) {
     }
 
+    ngOnInit() {
+        this.buildSignInForm();
+    }
+
+    private buildSignInForm() {
+        this.signInForm = this.formBuilder.group({
+            email: ['', Validators.email],
+            // Don't check for min length on password because all identity providers have different requirements
+            password: ['', Validators.required]
+        });
+    }
+
+    public async signin() {
+        // this.loading = true;
+        this.saving = true;
+        this.showAuthError = false;
+
+        try {
+            const email = this.signInForm.value.email;
+            const password = this.signInForm.value.password;
+            const user = await this.auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+            // Auth notification service broadcasts the error to template
+            // this.loading = false;
+            this.saving = false;
+            this.showAuthError = true;
+            console.error(error);
+        }
+    }
 }

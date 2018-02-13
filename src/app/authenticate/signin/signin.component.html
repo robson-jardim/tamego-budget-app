@@ -1,1 +1,27 @@
-<p>Sign in</p>
+<div class="container">
+
+    <ng-container *ngIf="authNotification.messageBroadcast | async as notification">
+        <mat-card class="cardContainer" *ngIf="showAuthError">
+            <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+        </mat-card>
+    </ng-container>
+
+    <form [formGroup]="signInForm" (ngSubmit)="signInForm.valid && signin()" class="formContainer">
+
+        <mat-form-field [floatPlaceholder]="'never'">
+            <input matInput formControlName="email" placeholder="Email" type="email">
+        </mat-form-field>
+
+        <mat-form-field [floatPlaceholder]="'never'">
+            <input matInput formControlName="password" placeholder="Password" type="password"
+                   [type]="hideSigninPassword ? 'password' : 'text'">
+
+            <mat-icon matSuffix (click)="hideSigninPassword  = !hideSigninPassword">
+                {{hideSigninPassword ? 'visibility_off' : 'visibility'}}
+            </mat-icon>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" mat-button type="submit" [disabled]="saving">Sign in</button>
+
+    </form>
+</div>

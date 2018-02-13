@@ -1,1 +1,41 @@
-<p>Sign up</p>
+<div class="container">
+    <form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && signupUser()"
+          class="formContainer">
+
+        <mat-form-field [floatPlaceholder]="'never'">
+            <input matInput formControlName="email" placeholder="Email" type="email">
+            <mat-error *ngIf="signupForm.get('email').hasError">{{emailErrorMessage}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field [floatPlaceholder]="'never'">
+
+            <input matInput formControlName="password" placeholder="Password"
+                   [type]="hideCreatePassword ? 'password' : 'text'">
+
+            <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+                {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
+            </mat-icon>
+
+            <mat-error *ngIf="signupForm.get('password').hasError('required')">Password required</mat-error>
+            <mat-error *ngIf="signupForm.get('password').hasError('minlength')">Password must be at least 6
+                characters
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [floatPlaceholder]="'never'">
+
+            <input matInput formControlName="confirmPassword" placeholder="Confirm password"
+                   [type]="hideCreatePassword ? 'password' : 'text'">
+
+            <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+                {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
+            </mat-icon>
+
+            <mat-error *ngIf="signupForm.get('confirmPassword').hasError('matchPassword')">Password not match
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="saving">Sign up</button>
+
+    </form>
+</div>

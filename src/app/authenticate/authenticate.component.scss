@@ -1,13 +1,12 @@
 .cardContainer {
     padding: 0;
     width: 400px;
-    margin: 30px auto 0;
+    margin: 50px auto 0;
 }
 
 .cardContent {
-    display: flex;
-    flex-direction: column;
     padding: 24px;
+    padding-top: 0;
 }
 
 nav a {
