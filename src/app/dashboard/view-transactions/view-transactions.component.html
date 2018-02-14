@@ -19,7 +19,8 @@
                 <p *ngIf="transaction.categoryId">Category ID: {{transaction.categoryId}}</p>
                 <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
                 <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
-                <p>Status: {{transaction.status}}</p>
+                <p>Cleared: {{transaction.cleared}}</p>
+                <p>Locked: {{transaction.locked}}</p>
             </ng-container>
 
             <ng-container *ngIf="transaction.transferTransactionId">

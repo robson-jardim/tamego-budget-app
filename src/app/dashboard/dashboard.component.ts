@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
 
+        // TODO - retrieve budget and account document to get most updated version for route guards
+
         this.route.params.subscribe(params => {
             const {budgetId} = params;
             this.updateBudgetVisitDate(budgetId);

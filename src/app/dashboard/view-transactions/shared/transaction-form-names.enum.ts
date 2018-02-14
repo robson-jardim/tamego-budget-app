@@ -3,7 +3,7 @@ export enum TransactionFormNames {
     TransactionDate = 'transactionDate',
     Memo = 'memo',
     Amount = 'amount',
-    Status = 'status',
+    Cleared = 'cleared',
     Payee = 'payee',
     Category = 'category',
     AccountId = 'accountId'

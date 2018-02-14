@@ -81,7 +81,7 @@ export class TransactionDialogComponent implements OnInit {
         form[TransactionFormNames.Category] = [null]; // Object set within autocomplete component
         form[TransactionFormNames.Memo] = [this.data.memo];
         form[TransactionFormNames.Amount] = [this.data.amount];
-        form[TransactionFormNames.Status] = [this.data.status];
+        form[TransactionFormNames.Cleared] = [this.data.cleared];
 
         this.transactionForm = this.formBuilder.group(form);
     }
@@ -218,8 +218,10 @@ export class TransactionDialogComponent implements OnInit {
             payeeId: this.getPayeeId(),
             categoryId: this.getCategoryId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
+            splits: [],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
-            status: this.transactionForm.value[TransactionFormNames.Status] || false
+            cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+            locked: this.data.locked
         };
     }
 
@@ -230,7 +232,8 @@ export class TransactionDialogComponent implements OnInit {
             destinationAccountId: this.getPayeeId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
-            status: this.transactionForm.value[TransactionFormNames.Status] || false
+            cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+            locked: this.data.locked
         };
     }
 

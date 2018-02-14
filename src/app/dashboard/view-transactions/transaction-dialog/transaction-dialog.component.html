@@ -42,9 +42,15 @@
                 <input matInput placeholder="Memo" type="text" formControlName="{{TransactionFormNames.Memo}}">
             </mat-form-field>
 
-            <app-cleared-checkbox
-                [transactionForm]="transactionForm">
-            </app-cleared-checkbox>
+            <app-repeat-transaction>
+
+            </app-repeat-transaction>
+
+            <mat-checkbox
+                color="primary"
+                formControlName="{{TransactionFormNames.Cleared}}">
+                Cleared
+            </mat-checkbox>
 
         </mat-dialog-content>
 

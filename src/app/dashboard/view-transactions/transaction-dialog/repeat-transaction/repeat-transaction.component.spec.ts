@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ClearedCheckboxComponent } from './cleared-checkbox.component';
+import { RepeatTransactionComponent } from './repeat-transaction.component';
 
-describe('ClearedCheckboxComponent', () => {
-    let component: ClearedCheckboxComponent;
-    let fixture: ComponentFixture<ClearedCheckboxComponent>;
+describe('RepeatTransactionComponent', () => {
+    let component: RepeatTransactionComponent;
+    let fixture: ComponentFixture<RepeatTransactionComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ClearedCheckboxComponent]
+            declarations: [RepeatTransactionComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ClearedCheckboxComponent);
+        fixture = TestBed.createComponent(RepeatTransactionComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

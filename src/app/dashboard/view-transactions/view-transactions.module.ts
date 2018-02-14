@@ -9,8 +9,8 @@ import { MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule, MatNativ
 import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
-import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/cleared-checkbox.component';
 import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-datepicker.component';
+import { RepeatTransactionComponent } from './transaction-dialog/repeat-transaction/repeat-transaction.component';
 
 @NgModule({
     declarations: [
@@ -19,8 +19,8 @@ import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-
         UtcDatePipe,
         PayeeAutocompleteComponent,
         CategoryAutocompleteComponent,
-        ClearedCheckboxComponent,
         UtcDatepickerComponent,
+        RepeatTransactionComponent,
     ],
     imports: [
         CommonModule,
