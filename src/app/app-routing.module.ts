@@ -69,6 +69,11 @@ const routes: Routes = [
             {
                 path: 'signup',
                 component: SignupComponent
+            },
+            {
+                path: '**',
+                redirectTo: 'signin', // Redirects to sign in page
+                pathMatch: 'full'
             }
         ]
     },
