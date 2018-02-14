@@ -13,9 +13,9 @@ export class SigninComponent implements OnInit {
     public signInForm: FormGroup;
     public hideSigninPassword;
 
-    private showAuthError;
+    public showAuthError;
     public saving;
-    private loading;
+    public loading;
 
     constructor(private formBuilder: FormBuilder,
                 private auth: AuthService,
