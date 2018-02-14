@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SigninSignUpComponent } from './signin-signup/signin-signup.component';
 import { BudgetSelectionComponent } from './budget-selection/budget-selection.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';

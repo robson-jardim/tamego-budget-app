@@ -14,8 +14,8 @@ export class SignupComponent implements OnInit {
     public hideCreatePassword;
 
     public showAuthError;
-    private saving;
-    private loading;
+    public saving;
+    public loading;
 
     @Input() isAnonymousSignup;
     @Output() onSignupEvent: EventEmitter<any> = new EventEmitter();
@@ -64,6 +64,15 @@ export class SignupComponent implements OnInit {
             this.saving = false;
             this.showAuthError = true;
             console.error(error);
+        }
+    }
+
+    public get emailErrorMessage(): string {
+        if (this.signupForm.get('email').hasError('required')) {
+            return 'Email required';
+        }
+        else if (this.signupForm.get('email').hasError('email')) {
+            return 'Input a valid email';
         }
     }
 
