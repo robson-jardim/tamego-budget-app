@@ -3,12 +3,12 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 
 <ng-container *ngIf="authNotification.messageBroadcast | async as notification">
-    <mat-card class="cardContainer" *ngIf="showAuthError">
+    <mat-card class="authenticate-card-container" *ngIf="showAuthError">
         <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
     </mat-card>
 </ng-container>
 
-<mat-card class="cardContainer">
+<mat-card class="authenticate-card-container">
 
     <mat-card-title>Sign in</mat-card-title>
 
@@ -34,7 +34,7 @@
 
 </mat-card>
 
-<mat-card class="cardContainer">
+<mat-card class="authenticate-card-container">
     <mat-card-title>Create account</mat-card-title>
 
     <form [formGroup]="createUserForm" (ngSubmit)="createUserForm.valid && createUserWithEmailAndPassword()"

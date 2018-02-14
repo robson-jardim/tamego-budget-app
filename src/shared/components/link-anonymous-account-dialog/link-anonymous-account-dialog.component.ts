@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { AddBudgetDialogComponent } from '../../../app/budget-selection/add-budget-dialog/add-budget-dialog.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-anonymous-user-signup-dialog',
-  templateUrl: './link-anonymous-account-dialog.component.html',
-  styleUrls: ['./link-anonymous-account-dialog.component.scss']
+    selector: 'app-anonymous-user-signup-dialog',
+    templateUrl: './link-anonymous-account-dialog.component.html',
+    styleUrls: ['./link-anonymous-account-dialog.component.scss']
 })
 export class LinkAnonymousAccountDialogComponent implements OnInit {
 
-  constructor() { }
+    constructor(public dialogRef: MatDialogRef<AddBudgetDialogComponent>) {
+    }
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {
+    }
 }

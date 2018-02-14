@@ -29,23 +29,9 @@
             </ng-container>
 
             <ng-template #isAnonymous>
-                <p class="mat-body-1">Create account</p>
-
                 <div>
-                    <button mat-raised-button color="warn" (click)="openLinkAnonymousAccountDialog()">Create account</button>
+                    <button mat-raised-button color="warn" (click)="openLinkAnonymousAccountDialog()">Sign up</button>
                 </div>
-
-                <mat-form-field>
-                    <input matInput type="email" placeholder="Email" #email>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <input matInput type="password" placeholder="Password" #password>
-                </mat-form-field>
-
-                <button mat-button type="submit"
-                        (click)="auth.linkAnonymousAccountToEmail(email.value, password.value)">Link to Email
-                </button>
 
             </ng-template>
 

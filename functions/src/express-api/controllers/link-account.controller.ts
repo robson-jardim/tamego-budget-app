@@ -5,6 +5,9 @@ import { updateCustomerEmail } from '../../stripe/create-customer';
 const router = express.Router();
 const db = admin.firestore();
 
+// TODO - wrap controllers in express async middleware
+// https://github.com/Abazhenov/express-async-handler/blob/master/index.js
+
 // POST: api/linkAnonymousAccount
 router.post('/', async (request: any, response) => {
 

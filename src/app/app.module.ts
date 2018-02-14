@@ -15,10 +15,10 @@ import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { DemoComponent } from './demo/demo.component';
-import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { AuthenticateModule } from './authenticate/authenticate.module';
+import { AuthenticateUserModule } from './authenticate/authenticate-user.module';
+import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account.module';
 
 @NgModule({
     imports: [
@@ -31,8 +31,9 @@ import { AuthenticateModule } from './authenticate/authenticate.module';
         AppCoreModule,
         AppGuardsModule,
         OfflineClientModule,
+        LinkAnonymousAccountModule,
 
-        AuthenticateModule,
+        AuthenticateUserModule,
         SettingsModule,
         BudgetSelectionModule,
         DashboardModule,
@@ -41,8 +42,7 @@ import { AuthenticateModule } from './authenticate/authenticate.module';
     declarations: [
         AppComponent,
         UpdateAvailableDialogComponent,
-        DemoComponent,
-        LinkAnonymousAccountDialogComponent,
+        DemoComponent
     ],
     entryComponents: [
         UpdateAvailableDialogComponent

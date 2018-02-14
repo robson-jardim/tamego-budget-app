@@ -9,11 +9,6 @@
 
         <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]">
             <p>{{budget.budgetName}}</p>
-
-            <button mat-button (click)="$event.stopPropagation()">
-                <mat-icon>delete</mat-icon>
-            </button>
-
         </mat-card>
 
     </ng-container>

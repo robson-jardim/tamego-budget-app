@@ -29,6 +29,8 @@ export class HeaderComponent implements OnInit {
     }
 
     public openLinkAnonymousAccountDialog() {
-        this.dialogService.open(LinkAnonymousAccountDialogComponent);
+        this.dialogService.open(LinkAnonymousAccountDialogComponent, {
+            minWidth: 400
+        });
     }
 }

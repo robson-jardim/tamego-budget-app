@@ -5,8 +5,8 @@ import { AuthNotificationService } from '@shared/services/auth-notification/auth
 
 @Component({
     selector: 'app-authenticate',
-    templateUrl: './authenticate.component.html',
-    styleUrls: ['./authenticate.component.scss']
+    templateUrl: './authenticate-user.component.html',
+    styleUrls: ['./authenticate-user.component.scss']
 })
 export class AuthenticateComponent implements OnInit {
 

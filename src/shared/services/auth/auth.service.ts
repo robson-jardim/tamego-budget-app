@@ -139,10 +139,11 @@ export class AuthService {
 
         try {
             await this.afAuth.auth.currentUser.linkWithCredential(credential);
-            this.requestService.post('api/linkAnonymousAccount', true).subscribe();
+            this.requestService.post('api/linkAnonymousAccount').subscribe();
             await this.sendEmailVerification();
         } catch (error) {
-            console.error(error);
+            this.signUpAuthErrorHandler(error);
+            throw error;
         }
     }
 
@@ -153,30 +154,7 @@ export class AuthService {
             return user;
         }
         catch (error) {
-            const errorCode = error.code;
-            let errorMessage: string;
-
-            if (errorCode === 'auth/email-already-in-use') {
-                errorMessage = 'Email is already registered with another account';
-            }
-            else if (errorCode === 'auth/invalid-email') {
-                errorMessage = 'Invalid email';
-            }
-            else if (errorCode === 'auth/operation-not-allowed') {
-                errorMessage = 'Error';
-            }
-            else if (errorCode === 'auth/weak-password') {
-                errorMessage = 'Please choose a more secure password';
-            }
-            else if (errorCode === 'auth/network-requestService-failed') {
-                errorMessage = 'Offline';
-            }
-            else {
-                errorMessage = 'Error';
-            }
-
-            this.authNotification.update(errorMessage, 'error');
-
+            this.signUpAuthErrorHandler(error);
             throw error;
         }
     }
@@ -186,30 +164,7 @@ export class AuthService {
             return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
         }
         catch (error) {
-            const errorCode = error.code;
-            let errorMessage: string;
-
-            if (errorCode === 'auth/invalid-email') {
-                errorMessage = 'Invalid email';
-            }
-            else if (errorCode === 'auth/user-disabled') {
-                errorMessage = 'This account has been disabled';
-            }
-            else if (errorCode === 'auth/user-not-found') {
-                errorMessage = 'No account exists with the given email';
-            }
-            else if (errorCode === 'auth/wrong-password') {
-                errorMessage = 'Incorrect password';
-            }
-            else if (errorCode === 'auth/network-requestService-failed') {
-                errorMessage = 'Offline';
-            }
-            else {
-                errorMessage = 'Error';
-            }
-
-            this.authNotification.update(errorMessage, 'error');
-
+            this.signInAuthErrorHandler(error);
             throw error;
         }
     }
@@ -221,5 +176,58 @@ export class AuthService {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    private signInAuthErrorHandler(error) {
+        const errorCode = error.code;
+        let errorMessage: string;
+
+        if (errorCode === 'auth/invalid-email') {
+            errorMessage = 'Invalid email';
+        }
+        else if (errorCode === 'auth/user-disabled') {
+            errorMessage = 'This account has been disabled';
+        }
+        else if (errorCode === 'auth/user-not-found') {
+            errorMessage = 'No account exists with the given email';
+        }
+        else if (errorCode === 'auth/wrong-password') {
+            errorMessage = 'Incorrect password';
+        }
+        else if (errorCode === 'auth/network-request-failed') {
+            errorMessage = 'Internet connection required';
+        }
+        else {
+            errorMessage = 'Error';
+        }
+
+        this.authNotification.update(errorMessage, 'error');
+    }
+
+    private signUpAuthErrorHandler(error) {
+        const errorCode = error.code;
+        let errorMessage: string;
+
+        if (errorCode === 'auth/email-already-in-use') {
+            errorMessage = 'Email is registered to another account';
+        }
+        else if (errorCode === 'auth/invalid-email') {
+            errorMessage = 'Invalid email';
+        }
+        else if (errorCode === 'auth/operation-not-allowed') {
+            errorMessage = 'Error';
+        }
+        else if (errorCode === 'auth/weak-password') {
+            errorMessage = 'Please choose a more secure password';
+        }
+        else if (errorCode === 'auth/network-request-failed') {
+            errorMessage = 'Internet connection required';
+        }
+        else {
+            errorMessage = 'Error';
+        }
+
+        this.authNotification.update(errorMessage, 'error');
+
     }
 }

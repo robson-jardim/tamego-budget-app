@@ -1,10 +1,6 @@
 <h1 mat-dialog-title>Sign up</h1>
 
-<p mat-body-1>
-    <!--TODO - create form here-->
-</p>
-
-<mat-dialog-actions>
-    <button mat-button type="button" [mat-dialog-close]>Close</button>
-</mat-dialog-actions>
+<mat-dialog-content>
+    <app-signup [isAnonymousSignup]="true" (onSignupEvent)="dialogRef.close()"></app-signup>
+</mat-dialog-content>
 

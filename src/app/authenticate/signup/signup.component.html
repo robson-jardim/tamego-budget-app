@@ -1,41 +1,49 @@
-<div class="container">
-    <form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && signupUser()"
-          class="formContainer">
+<ng-container *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</ng-container>
 
-        <mat-form-field [floatPlaceholder]="'never'">
-            <input matInput formControlName="email" placeholder="Email" type="email">
-            <mat-error *ngIf="signupForm.get('email').hasError">{{emailErrorMessage}}</mat-error>
-        </mat-form-field>
+<ng-container *ngIf="authNotification.messageBroadcast | async as notification">
+    <mat-card class="authenticate-card-container" *ngIf="showAuthError">
+        <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+    </mat-card>
+</ng-container>
 
-        <mat-form-field [floatPlaceholder]="'never'">
+<form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && signupUser()"
+      class="signup-form">
 
-            <input matInput formControlName="password" placeholder="Password"
-                   [type]="hideCreatePassword ? 'password' : 'text'">
+    <mat-form-field [floatPlaceholder]="'never'">
+        <input matInput formControlName="email" placeholder="Email" type="email">
+        <mat-error *ngIf="signupForm.get('email').hasError">{{emailErrorMessage}}</mat-error>
+    </mat-form-field>
 
-            <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
-                {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
-            </mat-icon>
+    <mat-form-field [floatPlaceholder]="'never'">
 
-            <mat-error *ngIf="signupForm.get('password').hasError('required')">Password required</mat-error>
-            <mat-error *ngIf="signupForm.get('password').hasError('minlength')">Password must be at least 6
-                characters
-            </mat-error>
-        </mat-form-field>
+        <input matInput formControlName="password" placeholder="Password"
+               [type]="hideCreatePassword ? 'password' : 'text'">
 
-        <mat-form-field [floatPlaceholder]="'never'">
+        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+            {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
 
-            <input matInput formControlName="confirmPassword" placeholder="Confirm password"
-                   [type]="hideCreatePassword ? 'password' : 'text'">
+        <mat-error *ngIf="signupForm.get('password').hasError('required')">Password required</mat-error>
+        <mat-error *ngIf="signupForm.get('password').hasError('minlength')">Password must be at least 6
+            characters
+        </mat-error>
+    </mat-form-field>
 
-            <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
-                {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
-            </mat-icon>
+    <mat-form-field [floatPlaceholder]="'never'">
 
-            <mat-error *ngIf="signupForm.get('confirmPassword').hasError('matchPassword')">Password not match
-            </mat-error>
-        </mat-form-field>
+        <input matInput formControlName="confirmPassword" placeholder="Confirm password"
+               [type]="hideCreatePassword ? 'password' : 'text'">
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="saving">Sign up</button>
+        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+            {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
 
-    </form>
-</div>
+        <mat-error *ngIf="signupForm.get('confirmPassword').hasError('matchPassword')">Password not match
+        </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="saving">Sign up</button>
+
+</form>

@@ -16,7 +16,7 @@ import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
 import { SigninComponent } from './authenticate/signin/signin.component';
 import { SignupComponent } from './authenticate/signup/signup.component';
-import { AuthenticateComponent } from './authenticate/authenticate.component';
+import { AuthenticateComponent } from './authenticate/authenticate-user.component';
 
 const routes: Routes = [
     {

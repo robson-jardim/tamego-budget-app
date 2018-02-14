@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
+import { AuthService } from '@shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-signup',
@@ -9,13 +11,22 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 export class SignupComponent implements OnInit {
 
     public signupForm: FormGroup;
-    public hideCreatePassword = true;
-    private saving = false;
+    public hideCreatePassword;
 
-    constructor(private formBuilder: FormBuilder) {
+    public showAuthError;
+    private saving;
+    private loading;
+
+    @Input() isAnonymousSignup;
+    @Output() onSignupEvent: EventEmitter<any> = new EventEmitter();
+
+    constructor(private formBuilder: FormBuilder,
+                public authNotification: AuthNotificationService,
+                private auth: AuthService) {
     }
 
     ngOnInit() {
+        this.hideCreatePassword = true;
         this.buildSignupForm();
     }
 
@@ -25,12 +36,35 @@ export class SignupComponent implements OnInit {
             password: [null, Validators.compose([Validators.required, Validators.minLength(6)])],
             confirmPassword: [null]
         }, {
-            validator: PasswordValidation.MatchPassword // your validation method
+            validator: PasswordValidation.MatchPassword
         });
     }
 
-    public signupUser() {
+    public async signupUser() {
+        this.loading = true;
         this.saving = true;
+        this.showAuthError = false;
+
+        const email = this.signupForm.value.email;
+        const password = this.signupForm.value.password;
+
+        try {
+            if (!this.isAnonymousSignup) {
+                await this.auth.createUserWithEmailAndPassword(email, password);
+            }
+            else {
+                await this.auth.linkAnonymousAccountToEmail(email, password);
+            }
+
+            this.onSignupEvent.emit();
+        }
+        catch (error) {
+            // Auth notification service broadcasts the error to template
+            this.loading = false;
+            this.saving = false;
+            this.showAuthError = true;
+            console.error(error);
+        }
     }
 
 }

@@ -11,9 +11,11 @@ import { AuthNotificationService } from '@shared/services/auth-notification/auth
 export class SigninComponent implements OnInit {
 
     public signInForm: FormGroup;
-    public hideSigninPassword = true;
-    public saving = false;
+    public hideSigninPassword;
+
     private showAuthError;
+    public saving;
+    private loading;
 
     constructor(private formBuilder: FormBuilder,
                 private auth: AuthService,
@@ -21,6 +23,7 @@ export class SigninComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.hideSigninPassword = true;
         this.buildSignInForm();
     }
 
@@ -33,7 +36,7 @@ export class SigninComponent implements OnInit {
     }
 
     public async signin() {
-        // this.loading = true;
+        this.loading = true;
         this.saving = true;
         this.showAuthError = false;
 
@@ -43,7 +46,7 @@ export class SigninComponent implements OnInit {
             const user = await this.auth.signInWithEmailAndPassword(email, password);
         } catch (error) {
             // Auth notification service broadcasts the error to template
-            // this.loading = false;
+            this.loading = false;
             this.saving = false;
             this.showAuthError = true;
             console.error(error);
