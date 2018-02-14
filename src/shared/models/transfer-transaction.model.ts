@@ -4,8 +4,12 @@ export interface TransferTransaction {
     destinationAccountId: string;
     memo: string | null;
     amount: number | null;
-    cleared: boolean;
-    locked: boolean;
+
+    clearedOrigin: boolean;
+    clearedDestination: boolean;
+
+    lockedOrigin: boolean;
+    lockedDestination: boolean;
 }
 
 export interface TransferTransactionId extends TransferTransaction {
@@ -19,6 +23,8 @@ export function instanceOfTransfer(obj: Object) {
         && 'destinationAccountId' in obj
         && 'memo' in obj
         && 'amount' in obj
-        && 'cleared' in obj
-        && 'locked' in obj;
+        && 'clearedOrigin' in obj
+        && 'clearedDestination' in obj
+        && 'lockedOrigin' in obj
+        && 'lockedDestination' in obj;
 }

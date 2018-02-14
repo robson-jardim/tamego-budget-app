@@ -198,7 +198,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private readonly getCategoryId = () => {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
@@ -209,7 +209,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private getTransactionData(): Transaction {
         return {
@@ -221,7 +221,7 @@ export class TransactionDialogComponent implements OnInit {
             splits: [],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
             cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false,
-            locked: this.data.locked
+            locked: this.data.locked || false
         };
     }
 
@@ -232,8 +232,10 @@ export class TransactionDialogComponent implements OnInit {
             destinationAccountId: this.getPayeeId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
-            cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false,
-            locked: this.data.locked
+            clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+            clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+            lockedOrigin: this.data.lockedOrigin || false,
+            lockedDestination: this.data.lockedDestination || false
         };
     }
 
