@@ -1,0 +1,8 @@
+<ng-container [formGroup]="transactionForm">
+    <mat-form-field>
+        <mat-select placeholder="Repeat" formControlName="{{TransactionFormNames.ReoccurringSchedule}}">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let option of repeatOptions" [value]="option.frequency">{{option.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-container>

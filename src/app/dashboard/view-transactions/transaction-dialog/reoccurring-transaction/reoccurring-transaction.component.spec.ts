@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepeatTransactionComponent } from './repeat-transaction.component';
+import { RepeatTransactionComponent } from './reoccurring-transaction.component';
 
 describe('RepeatTransactionComponent', () => {
     let component: RepeatTransactionComponent;

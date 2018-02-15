@@ -4,12 +4,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
-import { Transaction } from '@models/transaction.model';
+import { instanceOfReoccurringTransactionId, instanceOfTransactionId, Transaction } from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
 import { TransactionState } from '../shared/transaction_state.enum';
-import { instanceOfTransfer, TransferTransaction } from '@models/transfer-transaction.model';
+import {
+    instanceOfReoccurringTransferTransactionId, instanceOfTransferTransactionId,
+    TransferTransaction
+} from '@models/transfer-transaction.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { TransactionFormNames } from '../shared/transaction-form-names.enum';
 import { EntityNames } from '@shared/enums/entity-names.enum';
@@ -44,6 +47,8 @@ export class TransactionDialogComponent implements OnInit {
 
     ngOnInit() {
         this.setInitialTransactionState();
+        console.log(`Initial state: ${this.initialTransactionState}`);
+
         this.buildTransactionForm();
 
         this.dropdowns$ = this.utility.combineLatestObj({
@@ -82,6 +87,7 @@ export class TransactionDialogComponent implements OnInit {
         form[TransactionFormNames.Memo] = [this.data.memo];
         form[TransactionFormNames.Amount] = [this.data.amount];
         form[TransactionFormNames.Cleared] = [this.data.cleared];
+        form[TransactionFormNames.ReoccurringSchedule] = [this.data.reoccurringSchedule];
 
         this.transactionForm = this.formBuilder.group(form);
     }
@@ -94,6 +100,7 @@ export class TransactionDialogComponent implements OnInit {
             this.createTransaction();
         }
         else if (DialogState.Update === this.data.state) {
+
             if (this.transactionStateChanged()) {
                 this.deleteReplacedEntity();
                 this.createTransaction();
@@ -129,30 +136,64 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private createTransaction() {
+
         if (TransactionState.Standard === this.transactionState) {
-            const transactions = this.getTransactionCollection();
-            transactions.add(this.getTransactionData());
+
+            if (this.isReoccurringTransaction()) {
+                // add reoccurring standard transaction
+                console.log('Create reoccurring standard transaction');
+            }
+            else {
+                const transactions = this.getTransactionCollection();
+                transactions.add(this.getTransactionData());
+            }
         }
         else if (TransactionState.Transfer === this.transactionState) {
-            const transfers = this.getTransferCollection();
-            transfers.add(this.getTransferData());
+
+            if (this.isReoccurringTransaction()) {
+                // add reoccurring transfer transaction
+                console.log('Create reoccurring transfer transaction');
+            }
+            else {
+                const transfers = this.getTransferCollection();
+                transfers.add(this.getTransferData());
+            }
         }
+    }
+
+    private updateTransaction() {
+        if (TransactionState.Standard === this.transactionState) {
+
+            if (this.isReoccurringTransaction()) {
+                // update reoccurring standard transaction
+                console.log('Create reoccurring standard transaction');
+            }
+            else {
+                const transactions = this.getTransactionCollection();
+                transactions.doc(this.data.transactionId).update(this.getTransactionData());
+            }
+        }
+        else if (TransactionState.Transfer === this.transactionState) {
+            if (this.isReoccurringTransaction()) {
+                // update reoccurring transfer transaction
+                console.log('Update reoccurring transfer transaction');
+            }
+            else {
+                const transfers = this.getTransferCollection();
+                transfers.doc(this.data.transferTransactionId).update(this.getTransferData());
+            }
+        }
+    }
+
+    private isReoccurringTransaction() {
+        return this.transactionForm.value[TransactionFormNames.ReoccurringSchedule] !== null;
     }
 
     private getTransactionCollection() {
         return this.references.getTransactionCollectionRef(this.data.budgetId);
     }
 
-    private updateTransaction() {
-        if (TransactionState.Standard === this.transactionState) {
-            const transactions = this.getTransactionCollection();
-            transactions.doc(this.data.transactionId).update(this.getTransactionData());
-        }
-        else if (TransactionState.Transfer === this.transactionState) {
-            const transfers = this.getTransferCollection();
-            transfers.doc(this.data.transferTransactionId).update(this.getTransferData());
-        }
-    }
+
 
     private deleteReplacedEntity() {
         if (this.TransactionState.Standard === this.initialTransactionState) {
@@ -241,11 +282,17 @@ export class TransactionDialogComponent implements OnInit {
 
     private setInitialTransactionState() {
 
-        if (instanceOfTransfer(this.data)) {
+        if (instanceOfTransferTransactionId(this.data)) {
             this.initialTransactionState = TransactionState.Transfer;
         }
-        else {
+        else if (instanceOfTransactionId(this.data)) {
             this.initialTransactionState = TransactionState.Standard;
+        }
+        else if (instanceOfReoccurringTransactionId(this.data)) {
+            this.initialTransactionState = TransactionState.ReoccurringStandard;
+        }
+        else if (instanceOfReoccurringTransferTransactionId(this.data)) {
+            this.initialTransactionState = TransactionState.ReoccurringTransfer;
         }
     }
 

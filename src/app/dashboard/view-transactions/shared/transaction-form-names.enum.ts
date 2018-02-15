@@ -6,5 +6,6 @@ export enum TransactionFormNames {
     Cleared = 'cleared',
     Payee = 'payee',
     Category = 'category',
-    AccountId = 'accountId'
+    AccountId = 'accountId',
+    ReoccurringSchedule = 'reoccurringSchedule'
 }

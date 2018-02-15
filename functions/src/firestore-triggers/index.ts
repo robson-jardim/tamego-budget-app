@@ -6,3 +6,4 @@ export const onValueCreate = categoryValues.onValueCreate;
 export const onValueUpdate = categoryValues.onValueUpdate;
 
 
+// TODO - add TSlint to functions project

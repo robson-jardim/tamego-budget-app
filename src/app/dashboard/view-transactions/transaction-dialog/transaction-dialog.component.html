@@ -42,7 +42,8 @@
                 <input matInput placeholder="Memo" type="text" formControlName="{{TransactionFormNames.Memo}}">
             </mat-form-field>
 
-            <app-repeat-transaction>
+            <app-repeat-transaction
+                [transactionForm]="transactionForm">
 
             </app-repeat-transaction>
 
