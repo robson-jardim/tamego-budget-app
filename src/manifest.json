@@ -1,9 +1,9 @@
 {
     "short_name": "Tamego",
-    "name": "Tamego: A Budgeting Story...",
+    "name": "Tamego",
     "start_url": "/",
-    "theme_color": "#f48c5b",
-    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "background_color": "#039BE5",
     "display": "standalone",
     "orientation": "portrait",
     "icons": [
