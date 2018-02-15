@@ -1,11 +1,23 @@
-<mat-sidenav-container class="sidenav-container">
+<div class="container" [class.is-mobile]="mobileQuery.matches">
 
-    <app-header></app-header>
+    <mat-sidenav-container class="sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #sidenav
+                     [mode]="mobileQuery.matches ? 'over' : 'side'"
+                     [opened]="initialSidenavState"
+                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <app-sidenav></app-sidenav>
+        </mat-sidenav>
 
-    <mat-sidenav #sidenav position="start" mode="side" opened="true" class="sidenav">
-        <app-sidenav></app-sidenav>
-    </mat-sidenav>
+        <mat-sidenav-content>
 
-    <router-outlet></router-outlet>
+            <div class="toolbar">
+                <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>
+            </div>
 
-</mat-sidenav-container>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+</div>
+

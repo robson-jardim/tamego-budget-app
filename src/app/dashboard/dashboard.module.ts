@@ -6,6 +6,8 @@ import { ViewTransactionsModule } from 'app/dashboard/view-transactions/view-tra
 import { SidenavModule } from './sidenav/sidenav.module';
 import { ViewBudgetModule } from './view-budget/view-budget.module';
 import { RouterModule } from '@angular/router';
+import { StandardMaterialModule } from '@shared/components/standard-material.module';
+import { MatListModule, MatToolbarModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -14,7 +16,11 @@ import { RouterModule } from '@angular/router';
         AppHeaderModule,
         SidenavModule,
         ViewBudgetModule,
-        ViewTransactionsModule
+        ViewTransactionsModule,
+
+        StandardMaterialModule,
+        MatToolbarModule,
+        MatListModule
     ],
     declarations: [
         DashboardComponent,

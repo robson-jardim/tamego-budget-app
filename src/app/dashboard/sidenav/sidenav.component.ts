@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,6 @@ import { Observable } from 'rxjs/Observable';
     selector: 'app-sidenav',
     templateUrl: './sidenav.component.html',
     styleUrls: ['./sidenav.component.scss'],
-    encapsulation: ViewEncapsulation.None
 })
 export class SidenavComponent implements OnInit {
 

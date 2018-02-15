@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
@@ -15,7 +14,6 @@ enum AccountFormNames {
     selector: 'app-add-account-to-budget-dialog',
     templateUrl: './account-dialog.component.html',
     styleUrls: ['./account-dialog.component.scss'],
-    encapsulation: ViewEncapsulation.None
 })
 export class AccountDialogComponent implements OnInit {
 

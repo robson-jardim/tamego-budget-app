@@ -1,16 +1,13 @@
-.sidenav-container {
-    height: 100vh;
+mat-list-item * {
+    color: rgba(255, 255, 255, .7);
 }
 
-.sidenav {
-    background-color: #262F3D;
+.container {
+    height: 100%;
     width: 250px;
+    background-color: #262F3D;
 }
 
 .active {
     background-color: #3E4651;
-}
-
-mat-list-item * {
-    color: rgba(255, 255, 255, .7);
 }

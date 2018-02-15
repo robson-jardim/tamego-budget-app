@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/skip';
@@ -17,7 +17,6 @@ import { FirestoreService } from '@shared/services/firestore/firestore.service';
     selector: 'app-budget',
     templateUrl: './view-budget.component.html',
     styleUrls: ['./view-budget.component.scss'],
-    encapsulation: ViewEncapsulation.None
 })
 export class ViewBudgetComponent implements OnInit {
 

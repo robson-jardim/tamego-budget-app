@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
@@ -12,8 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'app-budget',
     templateUrl: './view-transactions.component.html',
-    styleUrls: ['./view-transactions.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./view-transactions.component.scss']
 })
 export class ViewTransactionsComponent implements OnInit, OnDestroy {
 

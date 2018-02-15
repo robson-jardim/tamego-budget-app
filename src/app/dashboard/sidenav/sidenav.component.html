@@ -1,31 +1,34 @@
-<mat-list class="mat-subheading-1">
-    <mat-list-item [routerLink]="['budget']" routerLinkActive="active">
-        <mat-icon>trending_up</mat-icon>
-        <p>Budget</p>
-    </mat-list-item>
-    <mat-list-item [routerLink]="['accounts']" [routerLinkActiveOptions]="{exact: true}"
-                   routerLinkActive="active">
-        <mat-icon>attach_money</mat-icon>
-        <p>All Accounts</p>
-    </mat-list-item>
-    <mat-list-item>
-        <button mat-button (click)="createAccount()">Add account</button>
-    </mat-list-item>
+<div class="container">
 
-    <mat-divider></mat-divider>
+    <mat-list class="mat-subheading-1">
+        <mat-list-item [routerLink]="['budget']" routerLinkActive="active">
+            <mat-icon>trending_up</mat-icon>
+            <p>Budget</p>
+        </mat-list-item>
+        <mat-list-item [routerLink]="['accounts']" [routerLinkActiveOptions]="{exact: true}"
+                       routerLinkActive="active">
+            <mat-icon>attach_money</mat-icon>
+            <p>All Accounts</p>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button (click)="createAccount()">Add account</button>
+        </mat-list-item>
 
-    <mat-list-item *ngFor="let account of accounts$ | async"
-                   [routerLink]="['accounts', account.budgetAccountId]"
-                   routerLinkActive="active">
-        {{account.accountName}}
+        <mat-divider></mat-divider>
 
-        <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #accountOptions>
-            <button mat-menu-item (click)="updateAccount(account)">Edit</button>
-            <button mat-menu-item>Delete</button>
-        </mat-menu>
+        <mat-list-item *ngFor="let account of accounts$ | async"
+                       [routerLink]="['accounts', account.budgetAccountId]"
+                       routerLinkActive="active">
+            <p>{{account.accountName}}</p>
 
-    </mat-list-item>
-</mat-list>
+            <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #accountOptions>
+                <button mat-menu-item (click)="updateAccount(account)">Edit</button>
+                <button mat-menu-item>Delete</button>
+            </mat-menu>
+
+        </mat-list-item>
+    </mat-list>
+</div>

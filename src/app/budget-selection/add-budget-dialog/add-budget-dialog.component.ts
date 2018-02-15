@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -13,8 +13,7 @@ import { timer } from 'rxjs/observable/timer';
 @Component({
     selector: 'app-add-budget-dialog',
     templateUrl: './add-budget-dialog.component.html',
-    styleUrls: ['./add-budget-dialog.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./add-budget-dialog.component.scss']
 })
 export class AddBudgetDialogComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
@@ -13,6 +13,8 @@ export class HeaderComponent implements OnInit {
 
     @Input() hideOptions: boolean;
     @Input() showDemo: boolean;
+    @Output() onSidenavToggle: EventEmitter<any> = new EventEmitter();
+    @Input() showSidenavToggle;
 
     constructor(public auth: AuthService, private route: Router, private dialogService: CloseDialogService) {
     }
@@ -32,5 +34,9 @@ export class HeaderComponent implements OnInit {
         this.dialogService.open(LinkAnonymousAccountDialogComponent, {
             minWidth: 400
         });
+    }
+
+    public toggleSidenav() {
+        this.onSidenavToggle.emit();
     }
 }

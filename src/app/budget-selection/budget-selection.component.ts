@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBudgetDialogComponent } from './add-budget-dialog/add-budget-dialog.component';
@@ -13,7 +13,6 @@ import { User } from '@models/user.model';
     selector: 'app-dashboard',
     templateUrl: './budget-selection.component.html',
     styleUrls: ['./budget-selection.component.scss'],
-    encapsulation: ViewEncapsulation.None
 })
 export class BudgetSelectionComponent implements OnInit {
 

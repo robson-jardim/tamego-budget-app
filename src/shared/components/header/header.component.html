@@ -1,12 +1,12 @@
 <mat-toolbar color="primary">
 
-    <span>Tamego</span>
+    <button mat-icon-button *ngIf="showSidenavToggle" (click)="toggleSidenav()" class="toggleSidenav">
+        <mat-icon>menu</mat-icon>
+    </button>
 
-    <ng-container *ngIf="!hideOptions">
-        <button mat-icon-button (click)="routeToHome()">
-            <mat-icon>home</mat-icon>
-        </button>
-    </ng-container>
+    <div (click)="routeToHome()">
+        <h1>Tamego</h1>
+    </div>
 
     <span class="banner-spacer"></span>
 
@@ -48,3 +48,5 @@
     </ng-container>
 
 </mat-toolbar>
+
+
