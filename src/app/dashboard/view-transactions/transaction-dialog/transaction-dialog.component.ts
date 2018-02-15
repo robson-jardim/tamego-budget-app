@@ -4,7 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
-import { instanceOfReoccurringTransactionId, instanceOfTransactionId, Transaction } from '@models/transaction.model';
+import {
+    instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransaction,
+    Transaction
+} from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
@@ -141,6 +144,8 @@ export class TransactionDialogComponent implements OnInit {
 
             if (this.isReoccurringTransaction()) {
                 // add reoccurring standard transaction
+                const reoccurringTransactions = this.getReoccurringTransactionCollection();
+                reoccurringTransactions.add(this.getReoccurringTransactionData());
                 console.log('Create reoccurring standard transaction');
             }
             else {
@@ -193,8 +198,10 @@ export class TransactionDialogComponent implements OnInit {
         return this.references.getTransactionCollectionRef(this.data.budgetId);
     }
 
-
-
+    private getReoccurringTransactionCollection() {
+        return this.references.getReoccurringTransactionCollectionRef(this.data.budgetId);
+    }
+    
     private deleteReplacedEntity() {
         if (this.TransactionState.Standard === this.initialTransactionState) {
             const transactions = this.getTransactionCollection();
@@ -324,4 +331,11 @@ export class TransactionDialogComponent implements OnInit {
         return payee.budgetAccountId === account.budgetAccountId;
     }
 
+    private getReoccurringTransactionData(): ReoccurringTransaction {
+        const transactionData: Transaction = this.getTransactionData();
+        return {
+            reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
+            ...transactionData,
+        };
+    }
 }

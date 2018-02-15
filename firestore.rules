@@ -25,7 +25,15 @@ service cloud.firestore {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 
+            match /reoccurringTransactions/{reoccurringTransactionsId} {
+                allow read, write: if isBudgetOwner() && isPremium();
+            }
+
             match /transferTransactions/{transferId} {
+                allow read, write: if isBudgetOwner() && isPremium();
+            }
+
+            match /reoccurringTransferTransactions/{reoccurringTransferTransactionsId} {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 

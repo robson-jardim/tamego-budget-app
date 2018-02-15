@@ -76,6 +76,18 @@ export class FirestoreReferenceService {
             return ref.orderBy('payeeName', 'asc');
         });
     }
+
+    public getReoccurringTransactionCollectionRef(budgetId: string, accountId?: string) {
+        return this.afs.collection<Transaction>(`budgets/${budgetId}/reoccurringTransactions`, ref => {
+            let query: any = ref;
+
+            if (accountId) {
+                query = query.where('accountId', '==', accountId);
+            }
+
+            return query;
+        });
+    }
 }
 
 
