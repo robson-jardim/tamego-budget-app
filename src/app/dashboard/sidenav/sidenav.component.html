@@ -1,32 +1,34 @@
 <div class="container">
 
     <mat-list class="mat-subheading-1">
-        <mat-list-item [routerLink]="['budget']" routerLinkActive="active">
+        <mat-list-item [routerLink]="['budget']" routerLinkActive="active" (click)="sidenavSelection()">
             <mat-icon>trending_up</mat-icon>
             <p>Budget</p>
         </mat-list-item>
         <mat-list-item [routerLink]="['accounts']" [routerLinkActiveOptions]="{exact: true}"
-                       routerLinkActive="active">
+                       routerLinkActive="active"
+                       (click)="sidenavSelection()">
             <mat-icon>attach_money</mat-icon>
             <p>All Accounts</p>
         </mat-list-item>
         <mat-list-item>
-            <button mat-button (click)="createAccount()">Add account</button>
+            <button mat-button (click)="createAccount(); sidenavSelection()">Add account</button>
         </mat-list-item>
 
         <mat-divider></mat-divider>
 
         <mat-list-item *ngFor="let account of accounts$ | async"
                        [routerLink]="['accounts', account.budgetAccountId]"
-                       routerLinkActive="active">
+                       routerLinkActive="active"
+                       (click)="sidenavSelection()">
             <p>{{account.accountName}}</p>
 
             <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #accountOptions>
-                <button mat-menu-item (click)="updateAccount(account)">Edit</button>
-                <button mat-menu-item>Delete</button>
+                <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
+                <button mat-menu-item (click)="sidenavSelection()">Delete</button>
             </mat-menu>
 
         </mat-list-item>

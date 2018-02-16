@@ -4,14 +4,12 @@
         <mat-sidenav #sidenav
                      [mode]="mobileQuery.matches ? 'over' : 'side'"
                      [opened]="initialSidenavState"
-                     [style.marginTop.px]="mobileQuery.matches ? -56 : 0"
-                     [fixedInViewport]="mobileQuery.matches"
-                     fixedTopGap="56">
+                     [fixedInViewport]="mobileQuery.matches">
 
-            <app-sidenav></app-sidenav>
+            <app-sidenav (onSidenavSelection)="mobileQuery.matches && sidenav.toggle()"></app-sidenav>
         </mat-sidenav>
 
-        <mat-sidenav-content>
+        <mat-sidenav-content [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
 
             <div class="toolbar">
                 <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>

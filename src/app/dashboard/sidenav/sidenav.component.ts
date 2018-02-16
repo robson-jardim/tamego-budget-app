@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { Observable } from 'rxjs/Observable';
 export class SidenavComponent implements OnInit {
 
     public accounts$: Observable<BudgetAccountId[]>;
+
+    @Output() onSidenavSelection: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -76,5 +78,9 @@ export class SidenavComponent implements OnInit {
             });
 
         });
+    }
+
+    public sidenavSelection() {
+        this.onSidenavSelection.emit();
     }
 }
