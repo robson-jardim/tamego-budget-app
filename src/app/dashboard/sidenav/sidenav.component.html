@@ -12,7 +12,10 @@
             <p>All Accounts</p>
         </mat-list-item>
         <mat-list-item>
-            <button mat-button (click)="createAccount(); sidenavSelection()">Add account</button>
+            <button mat-button (click)="createAccount(); sidenavSelection()">
+                <mat-icon>add</mat-icon>
+                <span>Add account</span>
+            </button>
         </mat-list-item>
 
         <mat-divider></mat-divider>
@@ -21,15 +24,19 @@
                        [routerLink]="['accounts', account.budgetAccountId]"
                        routerLinkActive="active"
                        (click)="sidenavSelection()">
+
             <p>{{account.accountName}}</p>
 
-            <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
-                <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #accountOptions>
-                <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
-                <button mat-menu-item (click)="sidenavSelection()">Delete</button>
-            </mat-menu>
+            <div class="account-options">
+                <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #accountOptions>
+                    <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
+                    <button mat-menu-item (click)="sidenavSelection()">Delete</button>
+                </mat-menu>
+
+            </div>
 
         </mat-list-item>
     </mat-list>

@@ -143,10 +143,8 @@ export class TransactionDialogComponent implements OnInit {
         if (TransactionState.Standard === this.transactionState) {
 
             if (this.isReoccurringTransaction()) {
-                // add reoccurring standard transaction
                 const reoccurringTransactions = this.getReoccurringTransactionCollection();
                 reoccurringTransactions.add(this.getReoccurringTransactionData());
-                console.log('Create reoccurring standard transaction');
             }
             else {
                 const transactions = this.getTransactionCollection();
@@ -201,7 +199,7 @@ export class TransactionDialogComponent implements OnInit {
     private getReoccurringTransactionCollection() {
         return this.references.getReoccurringTransactionCollectionRef(this.data.budgetId);
     }
-    
+
     private deleteReplacedEntity() {
         if (this.TransactionState.Standard === this.initialTransactionState) {
             const transactions = this.getTransactionCollection();
