@@ -10,19 +10,23 @@
     <mat-card class="authenticate-card-container">
         <mat-card-title>
             <nav mat-tab-nav-bar>
-                <a mat-tab-link routerLink="/signin"
-                   routerLinkActive
-                   #signin="routerLinkActive"
-                   [active]="signin.isActive">
-                    Sign in
-                </a>
-                <a mat-tab-link
-                   routerLink="/signup"
-                   routerLinkActive
-                   #signup="routerLinkActive"
-                   [active]="signup.isActive">
-                    Sign up
-                </a>
+                <div class="nav-tabs">
+
+                    <a mat-tab-link routerLink="/signin"
+                       routerLinkActive
+                       #signin="routerLinkActive"
+                       [active]="signin.isActive">
+                        Sign in
+                    </a>
+                    <a mat-tab-link
+                       routerLink="/signup"
+                       routerLinkActive
+                       #signup="routerLinkActive"
+                       [active]="signup.isActive">
+                        Sign up
+                    </a>
+                </div>
+
             </nav>
         </mat-card-title>
 

@@ -14,7 +14,10 @@
     padding-top: 0;
 }
 
-nav a {
-    // TODO - fix tab spacing
-    width: 49%
+.nav-tabs {
+    display: flex;
+}
+
+.nav-tabs a {
+    flex: 1;
 }
