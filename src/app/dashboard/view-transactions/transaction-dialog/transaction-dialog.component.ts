@@ -13,7 +13,7 @@ import { DialogState } from '@shared/services/close-dialog/close-dialog.service'
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
 import { TransactionState } from '../shared/transaction_state.enum';
 import {
-    instanceOfReoccurringTransferTransactionId, instanceOfTransferTransactionId,
+    instanceOfReoccurringTransferTransactionId, instanceOfTransferTransactionId, ReoccurringTransferTransaction,
     TransferTransaction
 } from '@models/transfer-transaction.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
@@ -154,8 +154,8 @@ export class TransactionDialogComponent implements OnInit {
         else if (TransactionState.Transfer === this.transactionState) {
 
             if (this.isReoccurringTransaction()) {
-                // add reoccurring transfer transaction
-                console.log('Create reoccurring transfer transaction');
+                const reoccurringTransferTransactions = this.getReoccurringTransferTransactionCollection();
+                reoccurringTransferTransactions.add(this.getReoccurringTransferTransactionData());
             }
             else {
                 const transfers = this.getTransferCollection();
@@ -335,5 +335,18 @@ export class TransactionDialogComponent implements OnInit {
             reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
             ...transactionData,
         };
+    }
+
+    private getReoccurringTransferTransactionData(): ReoccurringTransferTransaction {
+        const transferData: TransferTransaction = this.getTransferData();
+
+        return {
+            reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
+            ...transferData,
+        };
+    }
+
+    private getReoccurringTransferTransactionCollection() {
+        return this.references.getReoccurringTransferTransactionCollectionRef(this.data.budgetId);
     }
 }

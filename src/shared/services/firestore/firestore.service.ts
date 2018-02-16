@@ -112,11 +112,11 @@ export class FirestoreService {
     }
 
     private getTransferTransactions(budgetId: string, accountId: string): Observable<TransferTransactionId[]> {
-        const origin = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
-        const destination = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
+        const originTransfers = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
+        const destinationTransfers = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
 
-        const originObservable = this.mapDocumentId.mapTransferTransactionIds(origin);
-        const destinationObservable = this.mapDocumentId.mapTransferTransactionIds(destination);
+        const originObservable = this.mapDocumentId.mapTransferTransactionIds(originTransfers);
+        const destinationObservable = this.mapDocumentId.mapTransferTransactionIds(destinationTransfers);
 
         return Observable.combineLatest(originObservable, destinationObservable, (origin, destination) => {
             return [...origin, ...destination];

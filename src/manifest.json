@@ -2,8 +2,8 @@
     "short_name": "Tamego",
     "name": "Tamego",
     "start_url": "/",
-    "theme_color": "#ffffff",
-    "background_color": "#039BE5",
+    "theme_color": "#039BE5",
+    "background_color": "#fafafa",
     "display": "standalone",
     "orientation": "portrait",
     "icons": [

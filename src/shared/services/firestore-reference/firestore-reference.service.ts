@@ -5,7 +5,7 @@ import { BudgetAccount } from '@models/budget-account.model';
 import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
-import { Transaction } from '@models/transaction.model';
+import { ReoccurringTransaction, Transaction } from '@models/transaction.model';
 import { TransferTransaction } from '@models/transfer-transaction.model';
 import { Payee } from '@models/payee.model';
 
@@ -77,8 +77,20 @@ export class FirestoreReferenceService {
         });
     }
 
-    public getReoccurringTransactionCollectionRef(budgetId: string, accountId?: string) {
-        return this.afs.collection<Transaction>(`budgets/${budgetId}/reoccurringTransactions`, ref => {
+    public getReoccurringTransactionCollectionRef(budgetId: string, accountId?: string): AngularFirestoreCollection<ReoccurringTransaction> {
+        return this.afs.collection<ReoccurringTransaction>(`budgets/${budgetId}/reoccurringTransactions`, ref => {
+            let query: any = ref;
+
+            if (accountId) {
+                query = query.where('accountId', '==', accountId);
+            }
+
+            return query;
+        });
+    }
+
+    public getReoccurringTransferTransactionCollectionRef(budgetId: string, accountId?: string): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection<TransferTransaction>(`budgets/${budgetId}/reoccurringTransferTransactions`, ref => {
             let query: any = ref;
 
             if (accountId) {

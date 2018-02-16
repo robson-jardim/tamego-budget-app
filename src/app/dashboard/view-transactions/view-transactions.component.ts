@@ -33,6 +33,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
         });
 
         this.routeParamsSubscription = routeData$.subscribe(() => {
+
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
                 const budgetId$: Observable<string> = Observable.of(budgetId);
@@ -46,6 +47,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             }).flatMap(({budgetId, accountIds}) => {
                 return this.firestore.getTransactionView(budgetId, accountIds);
             });
+
         });
 
     }
