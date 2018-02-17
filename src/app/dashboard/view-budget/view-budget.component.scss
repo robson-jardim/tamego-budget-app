@@ -1,20 +1,98 @@
-.edit-budget-container {
+.view-budget-container {
     margin: 25px auto;
     width: 75%;
 }
-
-.budgetCard {
-    margin: 20px auto;
+.view-budget-container mat-card {
+    margin: 30px 0;
 }
 
-.budget-card-grey {
-    background-color: #F5F5F5;
+.view-budget-header {
+    display: flex;
+    align-items: flex-start;
 }
 
-.action-spacer {
-    flex: 1 1 auto;
+.view-budget-month {
+    display: flex;
+    flex-direction: column;
 }
 
-.highlight {
-    background: #F5F5F5;
+.view-budget-month h1 {
+    margin: 0;
+    padding-right: 5px;
 }
+
+.view-transaction-month {
+    margin: 0;
+}
+
+.view-budget-header-options {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.group-card {
+    padding: 0;
+}
+
+.group-card-grey {
+    background-color: #f5f5f5;
+}
+
+.group-card-header {
+    display: flex;
+    align-items: center;
+    padding: 7px;
+}
+
+.group-name {
+    display: flex;
+    align-items: center;
+}
+
+.group-name h1 {
+    margin: 0;
+}
+
+.group-card-options {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.spinner-container {
+    position: absolute;
+    display: flex;
+    top: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+
+//
+//.budget-card {
+//    margin: 20px auto;
+//    padding: 0;
+//}
+//
+//.budget-card-header {
+//    display: flex;
+//    background-color: #f5f5f5;
+//    padding: 20px;
+//}
+//
+//.budget-card-header {
+//    align-self: flex-end;
+//}
+//
+////.action-spacer {
+////    flex: 1 1 auto;
+////}
+//
+//.highlight {
+//    background: #F5F5F5;
+//}
