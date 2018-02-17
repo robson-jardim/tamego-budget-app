@@ -1,14 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MatSnackBar } from '@angular/material';
-import {
-    GeneralNotificationsService,
-    Notification
-} from '@shared/services/general-notifications/general-notifications.service';
+import { MatSnackBar } from '@angular/material';
+import { GeneralNotificationsService, Notification } from '@shared/services/general-notifications/general-notifications.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
-import {
-    UpdateAvailableDialogComponent,
-    UpdateDecision
-} from './update-available-dialog/update-available-dialog.component';
+import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { Observable } from 'rxjs/Observable';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { UtilityService } from '@shared/services/utility/utility.service';
@@ -22,7 +16,6 @@ import { AuthService } from '@shared/services/auth/auth.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    public updatesSubscription: Subscription;
     private notificationSubscription: Subscription;
 
     constructor(public snackBar: MatSnackBar,
@@ -39,7 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.updatesSubscription.unsubscribe();
         this.notificationSubscription.unsubscribe();
     }
 
@@ -69,30 +61,19 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private checkForUpdates() {
-
-        this.updatesSubscription = this.utility.combineLatestObj({
+        this.utility.combineLatestObj({
             isAuthenticatePage: this.isAuthenticatePage(),
             isUpdatesAvailable: this.isUpdatesAvailable(),
-        }).subscribe(({isAuthenticatePage, isUpdatesAvailable}) => {
+        }).filter(({isAuthenticatePage, isUpdatesAvailable}) => {
+            return !isAuthenticatePage && isUpdatesAvailable;
+        }).first().subscribe(() => {
+            this.openUpdateAvailableDialog();
+        });
+    }
 
-            if (isUpdatesAvailable && !isAuthenticatePage) {
-                const updatesDialog: MatDialogRef<any> = this.dialogService.open(UpdateAvailableDialogComponent, {
-                    disableClose: true
-                });
-
-                updatesDialog.componentInstance
-                    .onUpdateDecision
-                    .filter(isUpdateDeclined)
-                    .first()
-                    .subscribe(() => {
-                        this.updatesSubscription.unsubscribe();
-                    });
-            }
-
-            function isUpdateDeclined(decision: UpdateDecision) {
-                return decision === UpdateDecision.Declined;
-            }
-
+    private openUpdateAvailableDialog() {
+        this.dialogService.open(UpdateAvailableDialogComponent, {
+            disableClose: true
         });
     }
 

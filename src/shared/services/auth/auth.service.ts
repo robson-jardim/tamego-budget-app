@@ -33,13 +33,13 @@ export class AuthService {
         });
 
         Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
-            if (user && !user.email && authState && !authState.isAnonymous) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }).filter(result => result === true)
+                if (user && !user.email && authState && !authState.isAnonymous) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }).filter(result => result === true)
             .flatMap(() => {
                 return this.requestService.post('api/linkAnonymousAccount');
             }).subscribe();

@@ -22,12 +22,12 @@
                     </div>
 
                     <ng-container *ngIf="!user.emailVerified">
-                        <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">Resend verification
-                            email
+                        <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
+                            Resend verification email
                         </button>
-                        <button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update
-                            verification status
-                        </button>
+                        <!--<button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update-->
+                            <!--verification status-->
+                        <!--</button>-->
                     </ng-container>
 
                 </ng-container>
