@@ -11,3 +11,17 @@ mat-list-item * {
 .active {
     background-color: #3E4651;
 }
+
+.sidenav-account-item {
+    display: flex;
+}
+
+.account-options {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.sidenav-list-icon {
+    margin-right: 8px;
+}

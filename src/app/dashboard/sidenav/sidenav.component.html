@@ -2,13 +2,13 @@
 
     <mat-list class="mat-subheading-1">
         <mat-list-item [routerLink]="['budget']" routerLinkActive="active" (click)="sidenavSelection()">
-            <mat-icon>trending_up</mat-icon>
+            <mat-icon class="sidenav-list-icon">trending_up</mat-icon>
             <p>Budget</p>
         </mat-list-item>
         <mat-list-item [routerLink]="['accounts']" [routerLinkActiveOptions]="{exact: true}"
                        routerLinkActive="active"
                        (click)="sidenavSelection()">
-            <mat-icon>attach_money</mat-icon>
+            <mat-icon class="sidenav-list-icon">attach_money</mat-icon>
             <p>All Accounts</p>
         </mat-list-item>
         <mat-list-item>
@@ -23,7 +23,8 @@
         <mat-list-item *ngFor="let account of accounts$ | async"
                        [routerLink]="['accounts', account.budgetAccountId]"
                        routerLinkActive="active"
-                       (click)="sidenavSelection()">
+                       (click)="sidenavSelection()"
+                        class="sidenav-account-item">
 
             <p>{{account.accountName}}</p>
 
@@ -33,7 +34,7 @@
                 </button>
                 <mat-menu #accountOptions>
                     <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
-                    <button mat-menu-item (click)="sidenavSelection()">Delete</button>
+                    <button mat-menu-item (click)="sidenavSelection()">Close account</button>
                 </mat-menu>
 
             </div>
