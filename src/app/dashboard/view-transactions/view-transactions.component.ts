@@ -8,6 +8,7 @@ import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { TransactionId } from '@models/transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Subscription } from 'rxjs/Subscription';
+import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 
 @Component({
     selector: 'app-budget',
@@ -21,6 +22,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
+                private dashboardViews: DashboardViewService,
                 private dialogService: CloseDialogService,
                 private utility: UtilityService) {
     }
@@ -32,9 +34,12 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             accountId: this.getAccountId()
         });
 
+
         this.routeParamsSubscription = routeData$.subscribe(() => {
 
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
+
+                this.firestore.getReoccurringTransactions(budgetId, accountId).observable.subscribe(x => console.log(x));
 
                 const budgetId$: Observable<string> = Observable.of(budgetId);
                 const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
@@ -45,7 +50,8 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
                 });
 
             }).flatMap(({budgetId, accountIds}) => {
-                return this.firestore.getTransactionView(budgetId, accountIds);
+
+                return this.dashboardViews.getTransactionView(budgetId, accountIds);
             });
 
         });

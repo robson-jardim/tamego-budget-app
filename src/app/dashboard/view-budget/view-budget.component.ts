@@ -12,6 +12,7 @@ import 'rxjs/add/operator/do';
 import { CategoryGroupId } from '@models/category-group.model';
 import { CategoryId } from '@models/category.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 
 @Component({
     selector: 'app-budget',
@@ -31,17 +32,17 @@ export class ViewBudgetComponent implements OnInit {
 
     selectedRowIndex = -1;
 
-    constructor(private firestore: FirestoreService,
-                private formBuilder: FormBuilder,
+    constructor(private formBuilder: FormBuilder,
                 private route: ActivatedRoute,
-                private dialog: MatDialog) {
+                private dialog: MatDialog,
+                private dashboardViews: DashboardViewService) {
     }
 
     ngOnInit() {
         this.setDate();
 
         this.getBudgetId().subscribe(budgetId => {
-            this.budget = this.firestore.getBudgetView(budgetId).do(data => {
+            this.budget = this.dashboardViews.getBudgetView(budgetId).do(data => {
                 this.buildDataSources(data);
             });
         });

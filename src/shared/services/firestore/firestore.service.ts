@@ -11,32 +11,27 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
 import 'rxjs/add/operator/skip';
-import { Transaction, TransactionId } from '@models/transaction.model';
-import { TransferTransactionId } from '@models/transfer-transaction.model';
+import {
+    ReoccurringTransaction, ReoccurringTransactionId, Transaction,
+    TransactionId
+} from '@models/transaction.model';
+import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
+import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Injectable()
 export class FirestoreService {
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
                 private references: FirestoreReferenceService,
-                private afs: AngularFirestore) {
+                private afs: AngularFirestore,
+                private reoccurring: ReoccurringTransactionService,
+                private utility: UtilityService) {
     }
 
     public generateId(): string {
         return this.afs.createId();
-    }
-
-    public static get currentTimestamp() {
-        return new Date();
-    }
-
-    public static get currentMonth() {
-        return new Date().getMonth() + 1;
-    }
-
-    public static get currentYear() {
-        return new Date().getFullYear();
     }
 
     public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {
@@ -51,6 +46,75 @@ export class FirestoreService {
         return {collection, observable};
     }
 
+    public getGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
+        const collection = this.references.getGroupsCollectionRef(budgetId);
+        const observable = this.mapDocumentId.mapCategoryGroupIds(collection);
+        return {collection, observable};
+    }
+
+    public getCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
+        const collection = this.references.getCategoriesCollectionRef(budgetId);
+        const observable = this.mapDocumentId.mapCategoryIds(collection);
+        return {collection, observable};
+    }
+
+    public getCategoryValues(budgetId: string): CollectionResult<CategoryValue, CategoryValueId[]> {
+        const collection = this.references.getCategoryValuesCollectionRef(budgetId);
+        const observable = this.mapDocumentId.mapCategoryValueIds(collection);
+        return {collection, observable};
+    }
+
+    public getPayees(budgetId: string): CollectionResult<Payee, PayeeId[]> {
+        const collection = this.references.getPayeeCollectionRef(budgetId);
+        const observable = this.mapDocumentId.mapPayeeIds(collection);
+        return {collection, observable};
+    }
+
+    public getTransactions(budgetId: string, accountId: string): CollectionResult<Transaction, TransactionId[]> {
+        const collection = this.references.getTransactionCollectionRef(budgetId, accountId);
+        const observable = this.mapDocumentId.mapTransactionIds(collection);
+        return {collection, observable};
+    }
+
+    public getTransferTransactions(budgetId: string, accountId: string): CollectionResult<TransferTransaction, TransferTransactionId[]> {
+
+        const collection = this.references.getTransferTransactionCollectionRef(budgetId);
+
+        const originCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
+            accountId,
+            findByProperty: 'originAccountId'
+        });
+        const destinationCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
+            accountId,
+            findByProperty: 'destinationAccountId'
+        });
+
+        const origin$ = this.mapDocumentId.mapTransferTransactionIds(originCollection);
+        const destionation$ = this.mapDocumentId.mapTransferTransactionIds(destinationCollection);
+
+        const combinedTransfers = this.utility.combineLatestObj({
+            origin: origin$,
+            destination: destionation$
+        }).map(({origin, destination}) => {
+            return [...origin, ...destination];
+        });
+
+        return {
+            collection,
+            observable: combinedTransfers
+        };
+    }
+
+    public getReoccurringTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransaction, ReoccurringTransactionId[]> {
+        return this.reoccurring.getReoccurringTransactions(budgetId, accountId);
+    }
+
+    public getReoccurringTransferTransactions() {
+        return this.reoccurring.getReoccurringTransferTransaction();
+    }
+
+
+    // TODO - add groups and categories view model
     public getGroupsAndCategories(budgetId: string) {
 
         const categoriesResult = this.getCategories(budgetId);
@@ -81,123 +145,5 @@ export class FirestoreService {
         });
     }
 
-    public getGroups(budgetId: string): CollectionResult<CategoryGroup, CategoryGroupId[]> {
-        const collection = this.references.getGroupsCollectionRef(budgetId);
-        const observable = this.mapDocumentId.mapCategoryGroupIds(collection);
-        return {collection, observable};
-    }
 
-    public getCategories(budgetId: string): CollectionResult<Category, CategoryId[]> {
-        const collection = this.references.getCategoriesCollectionRef(budgetId);
-        const observable = this.mapDocumentId.mapCategoryIds(collection);
-        return {collection, observable};
-    }
-
-    public getCategoryValues(budgetId: string): CollectionResult<CategoryValue, CategoryValueId[]> {
-        const collection = this.references.getCategoryValuesCollectionRef(budgetId);
-        const observable = this.mapDocumentId.mapCategoryValueIds(collection);
-        return {collection, observable};
-    }
-
-    public getTransactions(budgetId: string, accountId?: string): CollectionResult<Transaction, TransactionId[]> {
-        const collection = this.references.getTransactionCollectionRef(budgetId, accountId);
-        const observable = this.mapDocumentId.mapTransactionIds(collection);
-        return {collection, observable};
-    }
-
-    public getPayees(budgetId: string): CollectionResult<Payee, PayeeId[]> {
-        const collection = this.references.getPayeeCollectionRef(budgetId);
-        const observable = this.mapDocumentId.mapPayeeIds(collection);
-        return {collection, observable};
-    }
-
-    private getTransferTransactions(budgetId: string, accountId: string): Observable<TransferTransactionId[]> {
-        const originTransfers = this.references.getOriginTransfersCollectionRef(budgetId, accountId);
-        const destinationTransfers = this.references.getDestinationTransfersCollectionRef(budgetId, accountId);
-
-        const originObservable = this.mapDocumentId.mapTransferTransactionIds(originTransfers);
-        const destinationObservable = this.mapDocumentId.mapTransferTransactionIds(destinationTransfers);
-
-        return Observable.combineLatest(originObservable, destinationObservable, (origin, destination) => {
-            return [...origin, ...destination];
-        });
-    }
-
-    public getBudgetView(budgetId: string) {
-        const groupsResult: CollectionResult<CategoryGroup, CategoryGroupId[]> = this.getGroups(budgetId);
-        const categoriesResult: CollectionResult<Category, CategoryId[]> = this.getCategories(budgetId);
-        const categoryValuesResult: CollectionResult<CategoryValue, CategoryValueId[]> = this.getCategoryValues(budgetId);
-
-        const observables = [groupsResult.observable, categoriesResult.observable, categoryValuesResult.observable];
-        return Observable.combineLatest(observables, (groups, categories, categoryValues) => {
-
-            const formattedData = groups.map((group: CategoryGroupId) => {
-
-                const getCategories = () => {
-                    return categories.filter(c => c.groupId === group.groupId).map(category => {
-                        category.values = categoryValues.filter(value => value.categoryId === category.categoryId);
-                        return category;
-                    });
-                };
-
-                return {...group, categories: getCategories()};
-            });
-
-            return {
-                collections: {
-                    groups: groupsResult.collection,
-                    categories: categoriesResult.collection,
-                    categoryValues: categoryValuesResult.collection
-                },
-                groups: formattedData
-            };
-        });
-    }
-
-    public getTransactionView(budgetId: string, accountIds: string[]) {
-
-        if (accountIds.length === 0) {
-            return Observable.of([]);
-        }
-
-        const observables = [];
-
-        accountIds.forEach(accountId => {
-
-            const transactions = this.getTransactions(budgetId, accountId);
-            const transfers = this.getTransferTransactions(budgetId, accountId);
-
-            observables.push(transactions.observable);
-            observables.push(transfers);
-        });
-
-        return Observable.combineLatest(observables, (...observablesData) => {
-
-            let data = [...observablesData];
-            data = flatten(data);
-            orderByDate(data);
-            return data;
-
-            function flatten(array: Array<any>) {
-                return array.reduce((a, b) => a.concat(b), []);
-            }
-
-            function orderByDate(array: Array<any>) {
-                array.sort((a, b) => {
-                    const date1 = new Date(a.transactionDate);
-                    const date2 = new Date(b.transactionDate);
-
-                    if (date1 > date2) {
-                        return -1;
-                    }
-                    else if (date1 < date2) {
-                        return 1;
-                    }
-                    return 0;
-                });
-            }
-
-        });
-
-    }
 }

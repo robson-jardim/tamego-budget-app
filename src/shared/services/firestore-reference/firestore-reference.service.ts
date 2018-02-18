@@ -9,6 +9,11 @@ import { ReoccurringTransaction, Transaction } from '@models/transaction.model';
 import { TransferTransaction } from '@models/transfer-transaction.model';
 import { Payee } from '@models/payee.model';
 
+interface TransferOptions {
+    accountId: string;
+    findByProperty: string
+}
+
 @Injectable()
 export class FirestoreReferenceService {
 
@@ -43,7 +48,14 @@ export class FirestoreReferenceService {
         );
     }
 
+    public getPayeeCollectionRef(budgetId: string): AngularFirestoreCollection<Payee> {
+        return this.afs.collection(`budgets/${budgetId}/payees`, ref => {
+            return ref.orderBy('payeeName', 'asc');
+        });
+    }
+
     public getTransactionCollectionRef(budgetId: string, accountId?: string) {
+        // Omit the account Id only if the collection is needed as a references and not for rendering data to the UI
         return this.afs.collection<Transaction>(`budgets/${budgetId}/transactions`, ref => {
             let query: any = ref;
 
@@ -52,28 +64,6 @@ export class FirestoreReferenceService {
             }
 
             return query;
-        });
-    }
-
-    public getOriginTransfersCollectionRef(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {
-        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
-            return ref.where('originAccountId', '==', accountId);
-        });
-    }
-
-    public getDestinationTransfersCollectionRef(budgetId: string, accountId: string): AngularFirestoreCollection<TransferTransaction> {
-        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
-            return ref.where('destinationAccountId', '==', accountId);
-        });
-    }
-
-    public getTransfers(budgetId: string): AngularFirestoreCollection<TransferTransaction> {
-        return this.afs.collection(`budgets/${budgetId}/transferTransactions`);
-    }
-
-    public getPayeeCollectionRef(budgetId: string): AngularFirestoreCollection<Payee> {
-        return this.afs.collection(`budgets/${budgetId}/payees`, ref => {
-            return ref.orderBy('payeeName', 'asc');
         });
     }
 
@@ -89,17 +79,30 @@ export class FirestoreReferenceService {
         });
     }
 
-    public getReoccurringTransferTransactionCollectionRef(budgetId: string, accountId?: string): AngularFirestoreCollection<TransferTransaction> {
-        return this.afs.collection<TransferTransaction>(`budgets/${budgetId}/reoccurringTransferTransactions`, ref => {
+    public getTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
             let query: any = ref;
 
-            if (accountId) {
-                query = query.where('accountId', '==', accountId);
+            if (options && options.accountId && options.findByProperty) {
+                query = query.where(options.findByProperty, '==', options.accountId);
             }
 
             return query;
         });
     }
+
+    public getReoccurringTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<TransferTransaction> {
+        return this.afs.collection(`budgets/${budgetId}/reoccurringTransferTransactions`, ref => {
+            let query: any = ref;
+
+            if (options && options.accountId && options.findByProperty) {
+                query = query.where(options.findByProperty, '==', options.accountId);
+            }
+
+            return query;
+        });
+    }
+
 }
 
 

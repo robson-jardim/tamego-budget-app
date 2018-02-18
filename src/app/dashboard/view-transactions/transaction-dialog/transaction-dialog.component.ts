@@ -314,7 +314,7 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private getTransferCollection() {
-        return this.references.getTransfers(this.data.budgetId);
+        return this.references.getTransferTransactionCollectionRef(this.data.budgetId);
     }
 
     public isAccountSelectedAsDestination(account: BudgetAccountId) {

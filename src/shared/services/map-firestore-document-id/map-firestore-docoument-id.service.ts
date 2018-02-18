@@ -6,7 +6,10 @@ import { Category, CategoryId } from '@models/category.model';
 import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
 import { BudgetId, Budget } from '@models/budget.model';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
-import { Transaction, TransactionId } from '@models/transaction.model';
+import {
+    ReoccurringTransaction, ReoccurringTransactionId, Transaction,
+    TransactionId
+} from '@models/transaction.model';
 import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
 
@@ -100,6 +103,16 @@ export class MapFirestoreDocumentIdService {
                 const payee: PayeeId = this.getDocData<PayeeId>(a);
                 payee.payeeId = this.getDocId(a);
                 return payee;
+            });
+        });
+    }
+
+    public mapReoccurringTransactionIds(collection: AngularFirestoreCollection<ReoccurringTransaction>): Observable<ReoccurringTransactionId[]> {
+        return collection.snapshotChanges().map(actions => {
+            return actions.map(a => {
+                const transaction: ReoccurringTransactionId = this.getDocData<ReoccurringTransactionId>(a);
+                transaction.reoccurringTransactionId = this.getDocId(a);
+                return transaction;
             });
         });
     }

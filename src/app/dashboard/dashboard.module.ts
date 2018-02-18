@@ -8,6 +8,7 @@ import { ViewBudgetModule } from './view-budget/view-budget.module';
 import { RouterModule } from '@angular/router';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { MatListModule, MatToolbarModule } from '@angular/material';
+import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 
 @NgModule({
     imports: [
@@ -21,6 +22,9 @@ import { MatListModule, MatToolbarModule } from '@angular/material';
         StandardMaterialModule,
         MatToolbarModule,
         MatListModule
+    ],
+    providers: [
+        DashboardViewService
     ],
     declarations: [
         DashboardComponent,
