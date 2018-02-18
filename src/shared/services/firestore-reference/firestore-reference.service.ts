@@ -6,12 +6,12 @@ import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { ReoccurringTransaction, Transaction } from '@models/transaction.model';
-import { TransferTransaction } from '@models/transfer-transaction.model';
+import { ReoccurringTransferTransaction, TransferTransaction } from '@models/transfer-transaction.model';
 import { Payee } from '@models/payee.model';
 
 interface TransferOptions {
     accountId: string;
-    findByProperty: string
+    findByAccountProperty: string;
 }
 
 @Injectable()
@@ -83,20 +83,20 @@ export class FirestoreReferenceService {
         return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
             let query: any = ref;
 
-            if (options && options.accountId && options.findByProperty) {
-                query = query.where(options.findByProperty, '==', options.accountId);
+            if (options && options.accountId && options.findByAccountProperty) {
+                query = query.where(options.findByAccountProperty, '==', options.accountId);
             }
 
             return query;
         });
     }
 
-    public getReoccurringTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<TransferTransaction> {
+    public getReoccurringTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<ReoccurringTransferTransaction> {
         return this.afs.collection(`budgets/${budgetId}/reoccurringTransferTransactions`, ref => {
             let query: any = ref;
 
-            if (options && options.accountId && options.findByProperty) {
-                query = query.where(options.findByProperty, '==', options.accountId);
+            if (options && options.accountId && options.findByAccountProperty) {
+                query = query.where(options.findByAccountProperty, '==', options.accountId);
             }
 
             return query;

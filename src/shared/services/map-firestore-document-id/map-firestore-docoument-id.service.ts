@@ -10,7 +10,10 @@ import {
     ReoccurringTransaction, ReoccurringTransactionId, Transaction,
     TransactionId
 } from '@models/transaction.model';
-import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
+import {
+    ReoccurringTransferTransactionId, TransferTransaction,
+    TransferTransactionId
+} from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
 
 @Injectable()
@@ -112,6 +115,16 @@ export class MapFirestoreDocumentIdService {
             return actions.map(a => {
                 const transaction: ReoccurringTransactionId = this.getDocData<ReoccurringTransactionId>(a);
                 transaction.reoccurringTransactionId = this.getDocId(a);
+                return transaction;
+            });
+        });
+    }
+
+    mapReoccurringTransferTransactionIds(collection: AngularFirestoreCollection<TransferTransaction>): Observable<ReoccurringTransferTransactionId[]> {
+        return collection.snapshotChanges().map(actions => {
+            return actions.map(a => {
+                const transaction: ReoccurringTransferTransactionId = this.getDocData<ReoccurringTransferTransactionId>(a);
+                transaction.reoccurringTransferTransactionId = this.getDocId(a);
                 return transaction;
             });
         });

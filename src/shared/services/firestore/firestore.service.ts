@@ -15,7 +15,10 @@ import {
     ReoccurringTransaction, ReoccurringTransactionId, Transaction,
     TransactionId
 } from '@models/transaction.model';
-import { TransferTransaction, TransferTransactionId } from '@models/transfer-transaction.model';
+import {
+    ReoccurringTransferTransaction, ReoccurringTransferTransactionId, TransferTransaction,
+    TransferTransactionId
+} from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
 import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
@@ -82,19 +85,19 @@ export class FirestoreService {
 
         const originCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
             accountId,
-            findByProperty: 'originAccountId'
+            findByAccountProperty: 'originAccountId'
         });
         const destinationCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
             accountId,
-            findByProperty: 'destinationAccountId'
+            findByAccountProperty: 'destinationAccountId'
         });
 
         const origin$ = this.mapDocumentId.mapTransferTransactionIds(originCollection);
-        const destionation$ = this.mapDocumentId.mapTransferTransactionIds(destinationCollection);
+        const destination$ = this.mapDocumentId.mapTransferTransactionIds(destinationCollection);
 
         const combinedTransfers = this.utility.combineLatestObj({
             origin: origin$,
-            destination: destionation$
+            destination: destination$
         }).map(({origin, destination}) => {
             return [...origin, ...destination];
         });
@@ -109,8 +112,8 @@ export class FirestoreService {
         return this.reoccurring.getReoccurringTransactions(budgetId, accountId);
     }
 
-    public getReoccurringTransferTransactions() {
-        return this.reoccurring.getReoccurringTransferTransaction();
+    public getReoccurringTransferTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransferTransaction, ReoccurringTransferTransactionId[]> {
+        return this.reoccurring.getReoccurringTransferTransaction(budgetId, accountId);
     }
 
 

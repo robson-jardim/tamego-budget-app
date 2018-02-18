@@ -39,8 +39,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
-                this.firestore.getReoccurringTransactions(budgetId, accountId).observable.subscribe(x => console.log(x));
-
                 const budgetId$: Observable<string> = Observable.of(budgetId);
                 const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
 
