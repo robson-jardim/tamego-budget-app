@@ -39,7 +39,7 @@ export class AuthService {
                 else {
                     return false;
                 }
-            }).filter(result => result === true)
+            }).filter(Boolean)
             .flatMap(() => {
                 return this.requestService.post('api/linkAnonymousAccount');
             }).subscribe();

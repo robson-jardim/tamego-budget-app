@@ -55,9 +55,13 @@ export class DashboardViewService {
 
             const transactions = this.firestore.getTransactions(budgetId, accountId);
             const transfers = this.firestore.getTransferTransactions(budgetId, accountId);
+            const reoccurringTransactions = this.firestore.getReoccurringTransactions(budgetId, accountId);
+            const reoccurringTransfers = this.firestore.getReoccurringTransferTransactions(budgetId, accountId);
 
             observables.push(transactions.observable);
             observables.push(transfers.observable);
+            observables.push(reoccurringTransactions.observable);
+            observables.push(reoccurringTransfers.observable);
         });
 
         return Observable.combineLatest(observables, (...observablesData) => {

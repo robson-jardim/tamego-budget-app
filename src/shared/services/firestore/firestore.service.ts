@@ -33,6 +33,7 @@ export class FirestoreService {
                 private utility: UtilityService) {
     }
 
+
     public generateId(): string {
         return this.afs.createId();
     }

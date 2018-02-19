@@ -48,7 +48,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
                 });
 
             }).flatMap(({budgetId, accountIds}) => {
-
                 return this.dashboardViews.getTransactionView(budgetId, accountIds);
             });
 
