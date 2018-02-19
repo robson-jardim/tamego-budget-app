@@ -6,7 +6,7 @@ import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { ReoccurringTransaction, Transaction } from '@models/transaction.model';
-import { ReoccurringTransferTransaction, TransferTransaction } from '@models/transfer-transaction.model';
+import { ReoccurringTransfer, Transfer } from '@models/transfer-transaction.model';
 import { Payee } from '@models/payee.model';
 
 interface TransferOptions {
@@ -79,8 +79,8 @@ export class FirestoreReferenceService {
         });
     }
 
-    public getTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<TransferTransaction> {
-        return this.afs.collection(`budgets/${budgetId}/transferTransactions`, ref => {
+    public getTransferCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<Transfer> {
+        return this.afs.collection(`budgets/${budgetId}/transfers`, ref => {
             let query: any = ref;
 
             if (options && options.accountId && options.findByAccountProperty) {
@@ -91,8 +91,8 @@ export class FirestoreReferenceService {
         });
     }
 
-    public getReoccurringTransferTransactionCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<ReoccurringTransferTransaction> {
-        return this.afs.collection(`budgets/${budgetId}/reoccurringTransferTransactions`, ref => {
+    public getReoccurringTransferCollectionRef(budgetId: string, options?: TransferOptions): AngularFirestoreCollection<ReoccurringTransfer> {
+        return this.afs.collection(`budgets/${budgetId}/reoccurringTransfers`, ref => {
             let query: any = ref;
 
             if (options && options.accountId && options.findByAccountProperty) {

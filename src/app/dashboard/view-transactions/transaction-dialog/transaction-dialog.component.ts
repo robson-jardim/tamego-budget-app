@@ -13,8 +13,8 @@ import { DialogState } from '@shared/services/close-dialog/close-dialog.service'
 import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
 import { TransactionState } from '../shared/transaction_state.enum';
 import {
-    instanceOfReoccurringTransferTransactionId, instanceOfTransferTransactionId, ReoccurringTransferTransaction,
-    TransferTransaction
+    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransfer,
+    Transfer
 } from '@models/transfer-transaction.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { TransactionFormNames } from '../shared/transaction-form-names.enum';
@@ -138,20 +138,20 @@ export class TransactionDialogComponent implements OnInit {
         }
         else {
             if (isReoccurring()) {
-                return TransactionState.ReoccurringStandard;
+                return TransactionState.ReoccurringTransaction;
             }
             else {
-                return TransactionState.Standard;
+                return TransactionState.Transaction;
             }
         }
     }
 
     private createTransaction() {
-        if (TransactionState.Standard === this.transactionState) {
+        if (TransactionState.Transaction === this.transactionState) {
             const transactions = this.getTransactionCollection();
             transactions.add(this.getTransactionData());
         }
-        else if (TransactionState.ReoccurringStandard === this.transactionState) {
+        else if (TransactionState.ReoccurringTransaction === this.transactionState) {
             const reoccurringTransactions = this.getReoccurringTransactionCollection();
             reoccurringTransactions.add(this.getReoccurringTransactionData());
         }
@@ -160,8 +160,8 @@ export class TransactionDialogComponent implements OnInit {
             transfers.add(this.getTransferData());
         }
         else if (TransactionState.ReoccurringTransfer === this.transactionState) {
-            const reoccurringTransferTransactions = this.getReoccurringTransferTransactionCollection();
-            reoccurringTransferTransactions.add(this.getReoccurringTransferTransactionData());
+            const reoccurringTransfers = this.getReoccurringTransferCollection();
+            reoccurringTransfers.add(this.getReoccurringTransferData());
         }
         else {
             this.notifications.sendErrorNotification();
@@ -170,21 +170,21 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private updateTransaction() {
-        if (TransactionState.Standard === this.transactionState) {
+        if (TransactionState.Transaction === this.transactionState) {
             const transactions = this.getTransactionCollection();
             transactions.doc(this.data.transactionId).update(this.getTransactionData());
         }
-        else if (TransactionState.ReoccurringStandard === this.transactionState) {
+        else if (TransactionState.ReoccurringTransaction === this.transactionState) {
             const reoccurringTransactions = this.getReoccurringTransactionCollection();
             reoccurringTransactions.doc(this.data.reoccurringTransactionId).update(this.getReoccurringTransactionData());
         }
         else if (TransactionState.Transfer === this.transactionState) {
             const transfers = this.getTransferCollection();
-            transfers.doc(this.data.transferTransactionId).update(this.getTransferData());
+            transfers.doc(this.data.transferId).update(this.getTransferData());
         }
         else if (TransactionState.ReoccurringTransfer === this.transactionState) {
-            const reoccurringTransfers = this.getReoccurringTransferTransactionCollection();
-            reoccurringTransfers.doc(this.data.reoccurringTransferTransactionId).update(this.getReoccurringTransferTransactionData());
+            const reoccurringTransfers = this.getReoccurringTransferCollection();
+            reoccurringTransfers.doc(this.data.reoccurringTransferId).update(this.getReoccurringTransferData());
         }
         else {
             this.notifications.sendErrorNotification();
@@ -210,21 +210,21 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private deleteReplacedEntity() {
-        if (TransactionState.Standard === this.initialTransactionState) {
+        if (TransactionState.Transaction === this.initialTransactionState) {
             const transactions = this.getTransactionCollection();
             transactions.doc(this.data.transactionId).delete();
         }
-        else if (this.TransactionState.ReoccurringStandard === this.initialTransactionState) {
+        else if (this.TransactionState.ReoccurringTransaction === this.initialTransactionState) {
             const reoccurringTransactions = this.getReoccurringTransactionCollection();
             reoccurringTransactions.doc(this.data.reoccurringTransactionId).delete();
         }
         else if (TransactionState.Transfer === this.initialTransactionState) {
             const transfers = this.getTransferCollection();
-            transfers.doc(this.data.transferTransactionId).delete();
+            transfers.doc(this.data.transferId).delete();
         }
         else if (this.TransactionState.ReoccurringTransfer === this.initialTransactionState) {
-            const reoccurringTransfers = this.getReoccurringTransferTransactionCollection();
-            reoccurringTransfers.doc(this.data.reoccurringTransferTransactionId).delete();
+            const reoccurringTransfers = this.getReoccurringTransferCollection();
+            reoccurringTransfers.doc(this.data.reoccurringTransferId).delete();
         }
         else {
             this.notifications.sendErrorNotification();
@@ -292,7 +292,7 @@ export class TransactionDialogComponent implements OnInit {
         };
     }
 
-    private getTransferData(): TransferTransaction {
+    private getTransferData(): Transfer {
         return {
             transactionDate: this.transactionForm.value[TransactionFormNames.TransactionDate],
             originAccountId: this.transactionForm.value[TransactionFormNames.AccountId],
@@ -308,16 +308,16 @@ export class TransactionDialogComponent implements OnInit {
 
     private setInitialTransactionState() {
 
-        if (instanceOfTransferTransactionId(this.data)) {
+        if (instanceOfTransferId(this.data)) {
             this.initialTransactionState = TransactionState.Transfer;
         }
         else if (instanceOfTransactionId(this.data)) {
-            this.initialTransactionState = TransactionState.Standard;
+            this.initialTransactionState = TransactionState.Transaction;
         }
         else if (instanceOfReoccurringTransactionId(this.data)) {
-            this.initialTransactionState = TransactionState.ReoccurringStandard;
+            this.initialTransactionState = TransactionState.ReoccurringTransaction;
         }
-        else if (instanceOfReoccurringTransferTransactionId(this.data)) {
+        else if (instanceOfReoccurringTransferId(this.data)) {
             this.initialTransactionState = TransactionState.ReoccurringTransfer;
         }
     }
@@ -335,7 +335,7 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private getTransferCollection() {
-        return this.references.getTransferTransactionCollectionRef(this.data.budgetId);
+        return this.references.getTransferCollectionRef(this.data.budgetId);
     }
 
     public isAccountSelectedAsDestination(account: BudgetAccountId) {
@@ -358,8 +358,8 @@ export class TransactionDialogComponent implements OnInit {
         };
     }
 
-    private getReoccurringTransferTransactionData(): ReoccurringTransferTransaction {
-        const transferData: TransferTransaction = this.getTransferData();
+    private getReoccurringTransferData(): ReoccurringTransfer {
+        const transferData: Transfer = this.getTransferData();
 
         return {
             reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
@@ -367,7 +367,7 @@ export class TransactionDialogComponent implements OnInit {
         };
     }
 
-    private getReoccurringTransferTransactionCollection() {
-        return this.references.getReoccurringTransferTransactionCollectionRef(this.data.budgetId);
+    private getReoccurringTransferCollection() {
+        return this.references.getReoccurringTransferCollectionRef(this.data.budgetId);
     }
 }

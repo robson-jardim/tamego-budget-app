@@ -3,7 +3,7 @@ import { FirestoreReferenceService } from '@shared/services/firestore-reference/
 import { MapFirestoreDocumentIdService } from '@shared/services/map-firestore-document-id/map-firestore-docoument-id.service';
 import { CollectionResult } from '@models/collection-result.model';
 import { ReoccurringTransaction, ReoccurringTransactionId } from '@models/transaction.model';
-import { ReoccurringTransferTransaction, ReoccurringTransferTransactionId } from '@models/transfer-transaction.model';
+import { ReoccurringTransfer, ReoccurringTransferId } from '@models/transfer-transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Injectable()
@@ -20,21 +20,21 @@ export class ReoccurringTransactionService {
         return {collection, observable};
     }
 
-    public getReoccurringTransferTransaction(budgetId: string, accountId: string): CollectionResult<ReoccurringTransferTransaction, ReoccurringTransferTransactionId[]> {
+    public getReoccurringTransfers(budgetId: string, accountId: string): CollectionResult<ReoccurringTransfer, ReoccurringTransferId[]> {
 
-        const collection = this.references.getReoccurringTransferTransactionCollectionRef(budgetId);
+        const collection = this.references.getReoccurringTransferCollectionRef(budgetId);
 
-        const originCollection = this.references.getReoccurringTransferTransactionCollectionRef(budgetId, {
+        const originCollection = this.references.getReoccurringTransferCollectionRef(budgetId, {
             accountId,
             findByAccountProperty: 'originAccountId'
         });
-        const destinationCollection = this.references.getReoccurringTransferTransactionCollectionRef(budgetId, {
+        const destinationCollection = this.references.getReoccurringTransferCollectionRef(budgetId, {
             accountId,
             findByAccountProperty: 'destinationAccountId'
         });
 
-        const origin$ = this.mapDocumentId.mapReoccurringTransferTransactionIds(originCollection);
-        const destination$ = this.mapDocumentId.mapReoccurringTransferTransactionIds(destinationCollection);
+        const origin$ = this.mapDocumentId.mapReoccurringTransferIds(originCollection);
+        const destination$ = this.mapDocumentId.mapReoccurringTransferIds(destinationCollection);
 
         const combinedTransfers = this.utility.combineLatestObj({
             origin: origin$,

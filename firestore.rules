@@ -29,11 +29,11 @@ service cloud.firestore {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 
-            match /transferTransactions/{transferId} {
+            match /transfers/{transferId} {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 
-            match /reoccurringTransferTransactions/{reoccurringTransferTransactionsId} {
+            match /reoccurringTransfers/{reoccurringTransferId} {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 

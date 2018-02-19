@@ -1,6 +1,6 @@
 import { Reoccurring } from '@models/reoccuring.model';
 
-export interface TransferTransaction {
+export interface Transfer {
     transactionDate: Date;
     originAccountId: string;
     destinationAccountId: string;
@@ -12,19 +12,12 @@ export interface TransferTransaction {
     lockedDestination: boolean;
 }
 
-export interface TransferTransactionId extends TransferTransaction {
-    transferTransactionId: string;
+export interface TransferId extends Transfer {
+    transferId: string;
 }
 
-export interface ReoccurringTransferTransaction extends TransferTransaction, Reoccurring {
-}
-
-export interface ReoccurringTransferTransactionId extends ReoccurringTransferTransaction {
-    reoccurringTransferTransactionId: string;
-}
-
-// Don't export to avoid confusion with instanceOfTransferTransactionId
-function instanceOfTransferTransaction(obj: Object) {
+// Don't export to avoid confusion with instanceOfTransferId
+function instanceOfTransfer(obj: Object) {
     return obj && obj instanceof Object
         && 'transactionDate' in obj
         && 'originAccountId' in obj
@@ -37,17 +30,24 @@ function instanceOfTransferTransaction(obj: Object) {
         && 'lockedDestination' in obj;
 }
 
-export function instanceOfTransferTransactionId(obj: Object) {
+export function instanceOfTransferId(obj: Object) {
     return obj && obj instanceof Object
-        && instanceOfTransferTransaction(obj)
-        && 'transferTransactionId' in obj;
+        && instanceOfTransfer(obj)
+        && 'transferId' in obj;
 }
 
-export function instanceOfReoccurringTransferTransactionId(obj: Object) {
+export interface ReoccurringTransfer extends Transfer, Reoccurring {
+}
+
+export interface ReoccurringTransferId extends ReoccurringTransfer {
+    reoccurringTransferId: string;
+}
+
+export function instanceOfReoccurringTransferId(obj: Object) {
     return obj && obj instanceof Object
-        && instanceOfTransferTransaction(obj)
+        && instanceOfTransfer(obj)
         && 'reoccurringSchedule' in obj
-        && 'reoccurringTransferTransactionId' in obj;
+        && 'reoccurringTransferId' in obj;
 }
 
 

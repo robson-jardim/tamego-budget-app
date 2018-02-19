@@ -11,8 +11,8 @@ import {
     TransactionId
 } from '@models/transaction.model';
 import {
-    ReoccurringTransferTransactionId, TransferTransaction,
-    TransferTransactionId
+    ReoccurringTransferId, Transfer,
+    TransferId
 } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
 
@@ -90,11 +90,11 @@ export class MapFirestoreDocumentIdService {
         });
     }
 
-    public mapTransferTransactionIds(collection: AngularFirestoreCollection<TransferTransaction>): Observable<TransferTransactionId[]> {
+    public mapTransferIds(collection: AngularFirestoreCollection<Transfer>): Observable<TransferId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const transfer: TransferTransactionId = this.getDocData<TransferTransactionId>(a);
-                transfer.transferTransactionId = this.getDocId(a);
+                const transfer: TransferId = this.getDocData<TransferId>(a);
+                transfer.transferId = this.getDocId(a);
                 return transfer;
             });
         });
@@ -120,11 +120,11 @@ export class MapFirestoreDocumentIdService {
         });
     }
 
-    mapReoccurringTransferTransactionIds(collection: AngularFirestoreCollection<TransferTransaction>): Observable<ReoccurringTransferTransactionId[]> {
+    mapReoccurringTransferIds(collection: AngularFirestoreCollection<Transfer>): Observable<ReoccurringTransferId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const transaction: ReoccurringTransferTransactionId = this.getDocData<ReoccurringTransferTransactionId>(a);
-                transaction.reoccurringTransferTransactionId = this.getDocId(a);
+                const transaction: ReoccurringTransferId = this.getDocData<ReoccurringTransferId>(a);
+                transaction.reoccurringTransferId = this.getDocId(a);
                 return transaction;
             });
         });

@@ -16,8 +16,8 @@ import {
     TransactionId
 } from '@models/transaction.model';
 import {
-    ReoccurringTransferTransaction, ReoccurringTransferTransactionId, TransferTransaction,
-    TransferTransactionId
+    ReoccurringTransfer, ReoccurringTransferId, Transfer,
+    TransferId
 } from '@models/transfer-transaction.model';
 import { Payee, PayeeId } from '@models/payee.model';
 import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
@@ -80,21 +80,21 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-    public getTransferTransactions(budgetId: string, accountId: string): CollectionResult<TransferTransaction, TransferTransactionId[]> {
+    public getTransfers(budgetId: string, accountId: string): CollectionResult<Transfer, TransferId[]> {
 
-        const collection = this.references.getTransferTransactionCollectionRef(budgetId);
+        const collection = this.references.getTransferCollectionRef(budgetId);
 
-        const originCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
+        const originCollection = this.references.getTransferCollectionRef(budgetId, {
             accountId,
             findByAccountProperty: 'originAccountId'
         });
-        const destinationCollection = this.references.getTransferTransactionCollectionRef(budgetId, {
+        const destinationCollection = this.references.getTransferCollectionRef(budgetId, {
             accountId,
             findByAccountProperty: 'destinationAccountId'
         });
 
-        const origin$ = this.mapDocumentId.mapTransferTransactionIds(originCollection);
-        const destination$ = this.mapDocumentId.mapTransferTransactionIds(destinationCollection);
+        const origin$ = this.mapDocumentId.mapTransferIds(originCollection);
+        const destination$ = this.mapDocumentId.mapTransferIds(destinationCollection);
 
         const combinedTransfers = this.utility.combineLatestObj({
             origin: origin$,
@@ -113,8 +113,8 @@ export class FirestoreService {
         return this.reoccurring.getReoccurringTransactions(budgetId, accountId);
     }
 
-    public getReoccurringTransferTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransferTransaction, ReoccurringTransferTransactionId[]> {
-        return this.reoccurring.getReoccurringTransferTransaction(budgetId, accountId);
+    public getReoccurringTransfers(budgetId: string, accountId: string): CollectionResult<ReoccurringTransfer, ReoccurringTransferId[]> {
+        return this.reoccurring.getReoccurringTransfers(budgetId, accountId);
     }
 
 

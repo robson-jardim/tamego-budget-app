@@ -24,9 +24,9 @@
                 <p>Locked: {{transaction.locked}}</p>
             </ng-container>
 
-            <ng-container *ngIf="transaction.transferTransactionId || transaction.reoccurringTransferTransactionId">
-                <strong *ngIf="transaction.transferTransactionId"><p>Transfer</p></strong>
-                <strong *ngIf="transaction.reoccurringTransferTransactionId"><p>Reoccurring: Transfer</p></strong>
+            <ng-container *ngIf="transaction.transferId || transaction.reoccurringTransferId">
+                <strong *ngIf="transaction.transferId"><p>Transfer</p></strong>
+                <strong *ngIf="transaction.reoccurringTransferId"><p>Reoccurring: Transfer</p></strong>
 
                 <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
                 <p>Origin: {{transaction.originAccountId}}</p>

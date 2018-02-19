@@ -54,9 +54,9 @@ export class DashboardViewService {
         accountIds.forEach(accountId => {
 
             const transactions = this.firestore.getTransactions(budgetId, accountId);
-            const transfers = this.firestore.getTransferTransactions(budgetId, accountId);
+            const transfers = this.firestore.getTransfers(budgetId, accountId);
             const reoccurringTransactions = this.firestore.getReoccurringTransactions(budgetId, accountId);
-            const reoccurringTransfers = this.firestore.getReoccurringTransferTransactions(budgetId, accountId);
+            const reoccurringTransfers = this.firestore.getReoccurringTransfers(budgetId, accountId);
 
             observables.push(transactions.observable);
             observables.push(transfers.observable);
