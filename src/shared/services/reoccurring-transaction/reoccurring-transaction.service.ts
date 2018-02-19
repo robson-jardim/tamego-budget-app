@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 import { MapFirestoreDocumentIdService } from '@shared/services/map-firestore-document-id/map-firestore-docoument-id.service';
 import { CollectionResult } from '@models/collection-result.model';
-import { ReoccurringTransaction, ReoccurringTransactionId } from '@models/transaction.model';
+import {
+    ReoccurringTransaction, ReoccurringTransactionId, SplitTransaction,
+    Transaction
+} from '@models/transaction.model';
 import { ReoccurringTransfer, ReoccurringTransferId } from '@models/transfer-transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ReoccurringTransactionService {
@@ -15,9 +19,41 @@ export class ReoccurringTransactionService {
     }
 
     public getReoccurringTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransaction, ReoccurringTransactionId[]> {
-        const collection = this.references.getReoccurringTransactionCollectionRef(budgetId, accountId);
-        const observable = this.mapDocumentId.mapReoccurringTransactionIds(collection);
-        return {collection, observable};
+        const reoccurringTransactionCollection = this.references.getReoccurringTransactionCollectionRef(budgetId, accountId);
+        const transactionCollection = this.references.getTransactionCollectionRef(budgetId);
+        let reoccurringTransactions$: Observable<ReoccurringTransactionId[]> = this.mapDocumentId.mapReoccurringTransactionIds(reoccurringTransactionCollection);
+
+        reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
+
+            const now = new Date();
+
+            reoccurringTransactions.map(transaction => {
+                if (transaction.transactionDate < now) {
+                    const utcString = this.utility.utcToString(transaction.transactionDate);
+                    const newTransactionId = transaction.reoccurringTransactionId + '_' + utcString;
+
+                    const nonreoccurring: Transaction = {
+                        transactionDate: transaction.transactionDate,
+                        accountId: transaction.accountId,
+                        payeeId: transaction.payeeId,
+                        categoryId: transaction.categoryId,
+                        splits: transaction.splits,
+                        memo: transaction.memo,
+                        amount: transaction.amount,
+                        cleared: transaction.cleared,
+                        locked: transaction.locked
+                    };
+
+                    transactionCollection.doc(newTransactionId).set({...nonreoccurring});
+                    // reoccurringTransactionCollection.doc(transaction.reoccurringTransactionId).update({transactionDate: '1'});
+                }
+            });
+        });
+
+        return {
+            collection: reoccurringTransactionCollection,
+            observable: reoccurringTransactions$
+        };
     }
 
     public getReoccurringTransfers(budgetId: string, accountId: string): CollectionResult<ReoccurringTransfer, ReoccurringTransferId[]> {
