@@ -24,7 +24,7 @@ export class BudgetGuard implements CanActivate {
             return Observable.of(false);
         }).do(ownsBudget => {
             if (!ownsBudget) {
-                this.router.navigate(['/budgets']);
+                this.router.navigate(['/budgets'], {replaceUrl: true});
             }
         });
     }

@@ -30,7 +30,7 @@ export class PremiumGuard implements CanActivate {
             }
         }).do(isPremium => {
             if (!isPremium) {
-                this.router.navigate(['settings']);
+                this.router.navigate(['settings'], {replaceUrl: true});
             }
         });
     }

@@ -27,7 +27,7 @@ export class SignedOutGuard implements CanActivate {
             })
             .do(loggedIn => {
                 if (!loggedIn) {
-                    this.router.navigate(['/budgets']);
+                    this.router.navigate(['/budgets'], {replaceUrl: true});
                 }
             });
     }
