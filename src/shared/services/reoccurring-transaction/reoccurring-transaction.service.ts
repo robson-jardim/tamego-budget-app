@@ -9,6 +9,8 @@ import {
 import { ReoccurringTransfer, ReoccurringTransferId } from '@models/transfer-transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
+import { Reoccurring } from '@models/reoccuring.model';
+import { ReoccurringSchedules } from '@shared/enums/reoccurring-schedules.enum';
 
 @Injectable()
 export class ReoccurringTransactionService {
@@ -27,25 +29,27 @@ export class ReoccurringTransactionService {
 
             const now = new Date();
 
-            reoccurringTransactions.map(transaction => {
-                if (transaction.transactionDate < now) {
-                    const utcString = this.utility.utcToString(transaction.transactionDate);
-                    const newTransactionId = transaction.reoccurringTransactionId + '_' + utcString;
+            reoccurringTransactions.map(reoccurringTransaction => {
+                if (reoccurringTransaction.transactionDate < now) {
+                    const utcString = this.utility.utcToString(reoccurringTransaction.transactionDate);
+                    const newTransactionId = reoccurringTransaction.reoccurringTransactionId + '_' + utcString;
 
                     const nonreoccurring: Transaction = {
-                        transactionDate: transaction.transactionDate,
-                        accountId: transaction.accountId,
-                        payeeId: transaction.payeeId,
-                        categoryId: transaction.categoryId,
-                        splits: transaction.splits,
-                        memo: transaction.memo,
-                        amount: transaction.amount,
-                        cleared: transaction.cleared,
-                        locked: transaction.locked
+                        transactionDate: reoccurringTransaction.transactionDate,
+                        accountId: reoccurringTransaction.accountId,
+                        payeeId: reoccurringTransaction.payeeId,
+                        categoryId: reoccurringTransaction.categoryId,
+                        splits: reoccurringTransaction.splits,
+                        memo: reoccurringTransaction.memo,
+                        amount: reoccurringTransaction.amount,
+                        cleared: reoccurringTransaction.cleared,
+                        locked: reoccurringTransaction.locked
                     };
 
+                    const nextOccurrence = this.getNextOccurrence(reoccurringTransaction.transactionDate, reoccurringTransaction.reoccurringSchedule);
+
+                    reoccurringTransactionCollection.doc(reoccurringTransaction.reoccurringTransactionId).update({transactionDate: nextOccurrence});
                     transactionCollection.doc(newTransactionId).set({...nonreoccurring});
-                    // reoccurringTransactionCollection.doc(transaction.reoccurringTransactionId).update({transactionDate: '1'});
                 }
             });
         });
@@ -84,6 +88,52 @@ export class ReoccurringTransactionService {
             observable: combinedTransfers
         };
 
+    }
+
+    private getNextOccurrence(date: Date, schedule: ReoccurringSchedules): Date {
+        // Copy the date object to not avoid manipulating the reference
+        date = new Date(date.getTime());
+
+        if (ReoccurringSchedules.Daily === schedule) {
+            this.nextDay(date);
+        }
+        else if (ReoccurringSchedules.Weekly === schedule) {
+            this.nextWeek(date);
+        }
+        else if (ReoccurringSchedules.EveryOtherWeek === schedule) {
+            this.everyOtherWeek(date);
+        }
+        else if (ReoccurringSchedules.Monthly === schedule) {
+            this.nextMonth(date);
+        }
+        else if (ReoccurringSchedules.Yearly === schedule) {
+            this.nextYear(date);
+        }
+        else {
+            throw new Error('Unable to find next reoccurring occurrence');
+        }
+
+        return date;
+    }
+
+    private nextDay(date: Date) {
+        date.setUTCDate(date.getUTCDate() + 1);
+    }
+
+    private nextWeek(date: Date) {
+        date.setUTCDate(date.getUTCDate() + 7);
+    }
+
+    private everyOtherWeek(date: Date) {
+        date.setUTCDate(date.getUTCDate() + 14);
+    }
+
+    private nextMonth(date: Date) {
+        date.setUTCMonth(date.getUTCMonth() + 1);
+    }
+
+    private nextYear(date: Date) {
+        date.setUTCFullYear(date.getUTCFullYear() + 1);
     }
 
 }

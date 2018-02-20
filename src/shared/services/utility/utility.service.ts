@@ -43,7 +43,7 @@ export class UtilityService {
             month = '0' + month;
         }
 
-        return `${month}-${day}-${year}`;
+        return `${year}-${month}-${day}`;
     }
 
     public combineLatestObj(obj: Object): Observable<any> {
