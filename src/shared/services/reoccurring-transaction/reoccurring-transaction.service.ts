@@ -2,14 +2,10 @@ import { Injectable } from '@angular/core';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 import { MapFirestoreDocumentIdService } from '@shared/services/map-firestore-document-id/map-firestore-docoument-id.service';
 import { CollectionResult } from '@models/collection-result.model';
-import {
-    ReoccurringTransaction, ReoccurringTransactionId, SplitTransaction,
-    Transaction
-} from '@models/transaction.model';
-import { ReoccurringTransfer, ReoccurringTransferId } from '@models/transfer-transaction.model';
+import { ReoccurringTransaction, ReoccurringTransactionId, Transaction } from '@models/transaction.model';
+import { ReoccurringTransfer, ReoccurringTransferId, Transfer } from '@models/transfer.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
-import { Reoccurring } from '@models/reoccuring.model';
 import { ReoccurringSchedules } from '@shared/enums/reoccurring-schedules.enum';
 
 @Injectable()
@@ -25,9 +21,10 @@ export class ReoccurringTransactionService {
         const transactionCollection = this.references.getTransactionCollectionRef(budgetId);
         let reoccurringTransactions$: Observable<ReoccurringTransactionId[]> = this.mapDocumentId.mapReoccurringTransactionIds(reoccurringTransactionCollection);
 
+
         reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
 
-            const now = new Date();
+            const now = this.utility.convertToUtc(new Date());
 
             reoccurringTransactions.map(reoccurringTransaction => {
                 if (reoccurringTransaction.transactionDate < now) {
@@ -62,7 +59,8 @@ export class ReoccurringTransactionService {
 
     public getReoccurringTransfers(budgetId: string, accountId: string): CollectionResult<ReoccurringTransfer, ReoccurringTransferId[]> {
 
-        const collection = this.references.getReoccurringTransferCollectionRef(budgetId);
+        const reoccurringTransferCollection = this.references.getReoccurringTransferCollectionRef(budgetId);
+        const transferCollection = this.references.getTransferCollectionRef(budgetId);
 
         const originCollection = this.references.getReoccurringTransferCollectionRef(budgetId, {
             accountId,
@@ -76,16 +74,44 @@ export class ReoccurringTransactionService {
         const origin$ = this.mapDocumentId.mapReoccurringTransferIds(originCollection);
         const destination$ = this.mapDocumentId.mapReoccurringTransferIds(destinationCollection);
 
-        const combinedTransfers = this.utility.combineLatestObj({
+        let transfers$: Observable<ReoccurringTransferId[]> = this.utility.combineLatestObj({
             origin: origin$,
             destination: destination$
         }).map(({origin, destination}) => {
             return [...origin, ...destination];
         });
 
+        transfers$ = transfers$.do(reoccurringTransfers => {
+            const now = this.utility.convertToUtc(new Date());
+
+            reoccurringTransfers.map(reoccurringTransfer => {
+                if (reoccurringTransfer.transactionDate < now) {
+                    const utcString = this.utility.utcToString(reoccurringTransfer.transactionDate);
+                    const newTransactionId = reoccurringTransfer.reoccurringTransferId + '_' + utcString;
+
+                    const nonreoccurring: Transfer = {
+                        transactionDate: reoccurringTransfer.transactionDate,
+                        originAccountId: reoccurringTransfer.originAccountId,
+                        destinationAccountId: reoccurringTransfer.destinationAccountId,
+                        memo: reoccurringTransfer.memo,
+                        amount: reoccurringTransfer.amount,
+                        clearedOrigin: reoccurringTransfer.clearedOrigin,
+                        clearedDestination: reoccurringTransfer.clearedDestination,
+                        lockedOrigin: reoccurringTransfer.lockedOrigin,
+                        lockedDestination: reoccurringTransfer.lockedDestination
+                    };
+
+                    const nextOccurrence = this.getNextOccurrence(reoccurringTransfer.transactionDate, reoccurringTransfer.reoccurringSchedule);
+
+                    reoccurringTransferCollection.doc(reoccurringTransfer.reoccurringTransferId).update({transactionDate: nextOccurrence});
+                    transferCollection.doc(newTransactionId).set({...nonreoccurring});
+                }
+            });
+        });
+
         return {
-            collection,
-            observable: combinedTransfers
+            collection: reoccurringTransferCollection,
+            observable: transfers$
         };
 
     }
@@ -94,20 +120,33 @@ export class ReoccurringTransactionService {
         // Copy the date object to not avoid manipulating the reference
         date = new Date(date.getTime());
 
+        // Convert local time to UTC because the transaction dates are in UTC
+        const now = this.utility.convertToUtc(new Date());
+
         if (ReoccurringSchedules.Daily === schedule) {
-            this.nextDay(date);
+            do {
+                this.nextDay(date);
+            } while (date <= now);
         }
         else if (ReoccurringSchedules.Weekly === schedule) {
-            this.nextWeek(date);
+            do {
+                this.nextWeek(date);
+            } while (date <= now);
         }
         else if (ReoccurringSchedules.EveryOtherWeek === schedule) {
-            this.everyOtherWeek(date);
+            do {
+                this.everyOtherWeek(date);
+            } while (date <= now);
         }
         else if (ReoccurringSchedules.Monthly === schedule) {
-            this.nextMonth(date);
+            do {
+                this.nextMonth(date);
+            } while (date <= now);
         }
         else if (ReoccurringSchedules.Yearly === schedule) {
-            this.nextYear(date);
+            do {
+                this.nextYear(date);
+            } while (date <= now);
         }
         else {
             throw new Error('Unable to find next reoccurring occurrence');

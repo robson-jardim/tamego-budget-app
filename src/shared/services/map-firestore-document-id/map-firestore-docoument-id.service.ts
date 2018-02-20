@@ -13,7 +13,7 @@ import {
 import {
     ReoccurringTransferId, Transfer,
     TransferId
-} from '@models/transfer-transaction.model';
+} from '@models/transfer.model';
 import { Payee, PayeeId } from '@models/payee.model';
 
 @Injectable()

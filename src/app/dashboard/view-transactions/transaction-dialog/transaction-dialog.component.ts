@@ -15,7 +15,7 @@ import { TransactionState } from '../shared/transaction_state.enum';
 import {
     instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransfer,
     Transfer
-} from '@models/transfer-transaction.model';
+} from '@models/transfer.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { TransactionFormNames } from '../shared/transaction-form-names.enum';
 import { EntityNames } from '@shared/enums/entity-names.enum';

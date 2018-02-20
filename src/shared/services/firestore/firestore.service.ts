@@ -18,7 +18,7 @@ import {
 import {
     ReoccurringTransfer, ReoccurringTransferId, Transfer,
     TransferId
-} from '@models/transfer-transaction.model';
+} from '@models/transfer.model';
 import { Payee, PayeeId } from '@models/payee.model';
 import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
 import { UtilityService } from '@shared/services/utility/utility.service';

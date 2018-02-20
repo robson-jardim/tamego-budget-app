@@ -6,7 +6,7 @@ import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { ReoccurringTransaction, Transaction } from '@models/transaction.model';
-import { ReoccurringTransfer, Transfer } from '@models/transfer-transaction.model';
+import { ReoccurringTransfer, Transfer } from '@models/transfer.model';
 import { Payee } from '@models/payee.model';
 
 interface TransferOptions {

@@ -9,6 +9,7 @@ import { TransactionId } from '@models/transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Subscription } from 'rxjs/Subscription';
 import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
+import 'rxjs/add/observable/timer';
 
 @Component({
     selector: 'app-budget',
@@ -33,7 +34,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             budgetId: this.getBudgetId(),
             accountId: this.getAccountId()
         });
-
 
         this.routeParamsSubscription = routeData$.subscribe(() => {
 
