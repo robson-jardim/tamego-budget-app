@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { ReoccurringSchedules } from '@shared/enums/reoccurring-schedules.enum';
 
 @Injectable()
-export class ReoccurringTransactionService {
+export class ReoccurringService {
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
                 private references: FirestoreReferenceService,
@@ -24,10 +24,10 @@ export class ReoccurringTransactionService {
 
         reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
 
-            const now = this.utility.convertToUtc(new Date());
+            const today = this.utility.convertToUtc(new Date());
 
             reoccurringTransactions.map(reoccurringTransaction => {
-                if (reoccurringTransaction.transactionDate < now) {
+                if (reoccurringTransaction.transactionDate <= today) {
                     const utcString = this.utility.utcToString(reoccurringTransaction.transactionDate);
                     const newTransactionId = reoccurringTransaction.reoccurringTransactionId + '_' + utcString;
 
@@ -66,6 +66,7 @@ export class ReoccurringTransactionService {
             accountId,
             findByAccountProperty: 'originAccountId'
         });
+
         const destinationCollection = this.references.getReoccurringTransferCollectionRef(budgetId, {
             accountId,
             findByAccountProperty: 'destinationAccountId'
@@ -81,11 +82,14 @@ export class ReoccurringTransactionService {
             return [...origin, ...destination];
         });
 
+
         transfers$ = transfers$.do(reoccurringTransfers => {
-            const now = this.utility.convertToUtc(new Date());
+
+            const today = this.utility.convertToUtc(new Date());
 
             reoccurringTransfers.map(reoccurringTransfer => {
-                if (reoccurringTransfer.transactionDate < now) {
+
+                if (reoccurringTransfer.transactionDate <= today) {
                     const utcString = this.utility.utcToString(reoccurringTransfer.transactionDate);
                     const newTransactionId = reoccurringTransfer.reoccurringTransferId + '_' + utcString;
 
@@ -117,36 +121,36 @@ export class ReoccurringTransactionService {
     }
 
     private getNextOccurrence(date: Date, schedule: ReoccurringSchedules): Date {
-        // Copy the date object to not avoid manipulating the reference
+        // Copy the date object to not avoid manipulating the original object reference
         date = new Date(date.getTime());
 
         // Convert local time to UTC because the transaction dates are in UTC
-        const now = this.utility.convertToUtc(new Date());
+        const today = this.utility.convertToUtc(new Date());
 
         if (ReoccurringSchedules.Daily === schedule) {
             do {
                 this.nextDay(date);
-            } while (date <= now);
+            } while (date <= today);
         }
         else if (ReoccurringSchedules.Weekly === schedule) {
             do {
                 this.nextWeek(date);
-            } while (date <= now);
+            } while (date <= today);
         }
         else if (ReoccurringSchedules.EveryOtherWeek === schedule) {
             do {
                 this.everyOtherWeek(date);
-            } while (date <= now);
+            } while (date <= today);
         }
         else if (ReoccurringSchedules.Monthly === schedule) {
             do {
                 this.nextMonth(date);
-            } while (date <= now);
+            } while (date <= today);
         }
         else if (ReoccurringSchedules.Yearly === schedule) {
             do {
                 this.nextYear(date);
-            } while (date <= now);
+            } while (date <= today);
         }
         else {
             throw new Error('Unable to find next reoccurring occurrence');

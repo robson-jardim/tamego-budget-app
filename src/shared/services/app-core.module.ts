@@ -11,7 +11,7 @@ import { AngularFireModule } from 'angularfire2';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
-import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
+import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.service';
 
 @NgModule({
     imports: [
@@ -24,7 +24,7 @@ import { ReoccurringTransactionService } from '@shared/services/reoccurring-tran
     ],
     providers: [
         FirestoreService,
-        ReoccurringTransactionService,
+        ReoccurringService,
 
         AuthService,
         AuthNotificationService,

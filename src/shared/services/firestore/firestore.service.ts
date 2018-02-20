@@ -20,7 +20,7 @@ import {
     TransferId
 } from '@models/transfer.model';
 import { Payee, PayeeId } from '@models/payee.model';
-import { ReoccurringTransactionService } from '@shared/services/reoccurring-transaction/reoccurring-transaction.service';
+import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class FirestoreService {
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
                 private references: FirestoreReferenceService,
                 private afs: AngularFirestore,
-                private reoccurring: ReoccurringTransactionService,
+                private reoccurring: ReoccurringService,
                 private utility: UtilityService) {
     }
 
