@@ -29,7 +29,7 @@ export class DemoComponent implements OnInit {
         }).flatMap(() => {
             return this.auth.user.first(x => x != null);
         }).do(() => {
-            this.router.navigate(['budgets']);
+            this.router.navigate(['budgets'], {replaceUrl: true});
         }).first().subscribe();
     }
 
