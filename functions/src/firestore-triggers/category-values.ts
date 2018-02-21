@@ -53,12 +53,17 @@ async function validateCategoryValue(event) {
         ...event.data.data()
     };
 
-    const valueIdDelimiter = categoryValue.categoryValueId.split('-');
-    const categoryId = valueIdDelimiter[0];
-    const year = Number(valueIdDelimiter[1]);
-    const month = Number(valueIdDelimiter[2]);
+    const valueIdDelimiter = categoryValue.categoryValueId.split('_');
 
-    if (valueIdDelimiter.length !== 3) {
+    const categoryId = valueIdDelimiter[0];
+    const date = valueIdDelimiter[1];
+
+    const dateDelimiter = date.split('-');
+
+    const year = Number(dateDelimiter[0]);
+    const month = Number(dateDelimiter[1]);
+
+    if (valueIdDelimiter.length !== 2 && dateDelimiter.length !== 2) {
         console.error('Invalid value ID structure');
         return false;
     }

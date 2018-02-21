@@ -14,8 +14,8 @@ export class DashboardViewService {
 
     public getBudgetView(budgetId: string): Observable<GroupWithCategoriesWithValues[]> {
 
-        const categoryValues$ = this.firestore.getCategoryValues(budgetId).observable;
         const groupsWithCategories$ = this.firestore.getGroupWithCategories(budgetId).observable;
+        const categoryValues$ = this.firestore.getCategoryValues(budgetId).observable;
 
         return this.utility.combineLatestObj({
             groups: groupsWithCategories$,

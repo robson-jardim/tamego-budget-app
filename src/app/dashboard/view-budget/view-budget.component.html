@@ -31,7 +31,8 @@
                 </div>
 
                 <div class="categories-table-header-options">
-                    <button mat-raised-button color="primary">
+                    <button mat-raised-button color="primary"
+                            (click)="createCategory(group)">
                         Add category
                     </button>
 
@@ -47,7 +48,9 @@
             <ng-container *ngIf="group.categories.length > 0; else noCategories">
                 <app-budget-categories-table
                     [categories]="group.categories"
-                    [viewMonth]="viewMonth">
+                    [viewMonth]="viewMonth"
+                    [budgetId]="getBudgetId() | async"
+                    [onChanges$]="onChanges$">
                 </app-budget-categories-table>
             </ng-container>
 

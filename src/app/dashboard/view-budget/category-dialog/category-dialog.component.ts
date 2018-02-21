@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
+import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
+import { TransactionFormNames } from '../../view-transactions/shared/transaction-form-names.enum';
+import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 
 
 @Component({
@@ -13,36 +15,16 @@ import { EntityNames } from '@shared/enums/entity-names.enum';
     templateUrl: './category-dialog.component.html',
     styleUrls: ['./category-dialog.component.scss']
 })
-export class EditCategoryDialogComponent implements OnInit {
+export class CategoryDialogComponent implements OnInit {
 
-    public saving = false;
     public categoryForm: FormGroup;
+    public DialogState = DialogState;
 
-    // Shared resources by all modes
-    public readonly mode: string; // Possible modes are CREATE/UPDATE
-    public readonly categoryCollection: AngularFirestoreCollection<Category>;
-
-    // UPDATE mode specific
-    public readonly category: any; // Altered version of the category entity that contains data about the current category value given the current budget view
-    public readonly categoryValueCollection: AngularFirestoreCollection<CategoryValue>;
-
-    // CREATE mode specific
-    public readonly group: any; // Altered version of the categoryGroup entity that contains an array of categories
-    public readonly nextCategoryPosition: number;
-
-    constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) private data: any,
+    constructor(private dialogRef: MatDialogRef<CategoryDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
-                private notifications: GeneralNotificationsService) {
-
-        this.mode = this.data.mode.toUpperCase();
-        this.categoryCollection = this.data.categoryCollection;
-
-        this.category = this.data.category;
-        this.categoryValueCollection = this.data.categoryValueCollection;
-
-        this.group = this.data.group;
-        this.nextCategoryPosition = this.data.nextCategoryPosition;
+                private notifications: GeneralNotificationsService,
+                private references: FirestoreReferenceService) {
     }
 
     ngOnInit() {
@@ -51,52 +33,65 @@ export class EditCategoryDialogComponent implements OnInit {
 
     private buildCategoryForm(): void {
 
-        if (this.mode === 'UPDATE') {
-            this.categoryForm = this.formBuilder.group({
-                categoryName: [this.category.categoryName, Validators.required],
-                budgeted: [this.category.desiredValue.budgeted, Validators.required],
-                offset: [this.category.desiredValue.offset, Validators.required]
-            });
+        const form = new Object();
+
+        if (DialogState.Create === this.data.state) {
+            form['categoryName'] = [null, Validators.required];
         }
-        else {
-            this.categoryForm = this.formBuilder.group({
-                categoryName: ['', Validators.required]
-            });
+        else if (DialogState.Update === this.data.state) {
+            form['categoryName'] = [this.data.categoryName, Validators.required];
+            form['budgeted'] = [this.data.desiredValue.budgeted || 0, Validators.required];
+            form['offset'] = [this.data.desiredValue.offset, Validators.required];
         }
+
+        this.categoryForm = this.formBuilder.group(form);
     }
 
     public saveChanges() {
 
-        this.saving = true;
-
-        if (this.mode === 'UPDATE') {
-            this.updateCategory();
-        }
-
-        if (this.mode === 'CREATE') {
+        if (DialogState.Create === this.data.state) {
             this.createCategory();
         }
-    }
+        else if (DialogState.Update === this.data.state) {
+            this.updateCategory();
+        }
+        else {
+            throw new Error('Unable to determine dialog state');
+        }
 
-    private close() {
+        this.sendCategoryNotification();
         this.dialogRef.close();
     }
 
-    private updateCategory() {
+    private createCategory() {
+        const data: Category = {
+            groupId: this.data.groupId,
+            categoryName: this.categoryForm.value.categoryName,
+            position: this.data.nextCategoryPosition
+        };
 
+        this.getCategoryCollection().add(data);
+    }
+
+    private updateCategory() {
         this.updateCategoryEntity();
         this.saveCategoryValueChanges();
+    }
 
-        this.notifications.sendUpdateNotification(EntityNames.Category);
-        this.close();
+    private updateCategoryEntity() {
+        const data = {
+            categoryName: this.categoryForm.value.categoryName
+        };
+
+        this.getCategoryCollection().doc(this.data.categoryId).update(data);
     }
 
     private saveCategoryValueChanges() {
 
-        const valueDocExists = () => this.category.desiredValue.exists;
+        const valueDocExists = () => this.data.desiredValue.exists;
         const categoryValuesAreZero = () => this.categoryForm.value.budgeted === 0 && this.categoryForm.value.offset === 0;
-        const getCategoryId = () => this.category.categoryId;
-        const getValueTime = () => this.category.desiredValue.budgetMonth;
+        const getCategoryId = () => this.data.categoryId;
+        const getValueTime = () => this.data.desiredValue.budgetMonth;
 
         const getBudgetedValue = () => {
             const budgeted = this.categoryForm.value.budgeted;
@@ -111,9 +106,9 @@ export class EditCategoryDialogComponent implements OnInit {
         };
 
         const generateValueId = () => {
-            let month = this.category.desiredValue.budgetMonth.getUTCMonth() + 1;
-            const year = this.category.desiredValue.budgetMonth.getUTCFullYear();
-            const categoryId = this.category.categoryId;
+            let month = this.data.desiredValue.budgetMonth.getUTCMonth() + 1;
+            const year = this.data.desiredValue.budgetMonth.getUTCFullYear();
+            const categoryId = this.data.categoryId;
 
             if (month < 10) {
                 // Formats months to always contain 2 characters
@@ -125,14 +120,13 @@ export class EditCategoryDialogComponent implements OnInit {
             // year and month. By putting both in the value ID, possible duplicates will overwrite each other,
             // which is the desired outcome for offline capabilities. The most recently made document is the one
             // that will persist in Firestore.
-            return `${categoryId}-${year}-${month}`;
+            return `${categoryId}_${year}-${month}`;
         };
-
 
         if (valueDocExists()) {
             if (categoryValuesAreZero()) {
                 // Delete empty values because delete operations are cheaper than continuing to read empty entities
-                this.categoryValueCollection.doc(generateValueId()).delete();
+                this.getCategoryValuesCollection().doc(generateValueId()).delete();
             }
             else {
                 const data = {
@@ -140,7 +134,7 @@ export class EditCategoryDialogComponent implements OnInit {
                     offset: getOffsetValue()
                 };
 
-                this.categoryValueCollection.doc(generateValueId()).update(data);
+                this.getCategoryValuesCollection().doc(generateValueId()).update(data);
             }
         }
         else {
@@ -152,31 +146,29 @@ export class EditCategoryDialogComponent implements OnInit {
                     categoryId: getCategoryId()
                 };
 
-                this.categoryValueCollection.doc(generateValueId()).set(data);
+                this.getCategoryValuesCollection().doc(generateValueId()).set(data);
             }
         }
 
     }
 
-    private updateCategoryEntity() {
-        const data = {
-            categoryName: this.categoryForm.value.categoryName
-        };
-
-        this.categoryCollection.doc(this.category.categoryId).update(data);
+    public getCategoryCollection() {
+        return this.references.getCategoriesCollectionRef(this.data.budgetId);
     }
 
-    private createCategory() {
-        const data: Category = {
-            groupId: this.group.groupId,
-            categoryName: this.categoryForm.value.categoryName,
-            position: this.nextCategoryPosition
-        };
-
-        this.categoryCollection.add(data);
-        this.notifications.sendCreateNotification(EntityNames.Category);
-        this.close();
+    public getCategoryValuesCollection() {
+        return this.references.getCategoryValuesCollectionRef(this.data.budgetId);
     }
 
-
+    private sendCategoryNotification() {
+        if (DialogState.Create === this.data.state) {
+            this.notifications.sendCreateNotification(EntityNames.Category);
+        }
+        else if (DialogState.Update === this.data.state) {
+            this.notifications.sendUpdateNotification(EntityNames.Category);
+        }
+        else if (DialogState.Delete === this.data.state) {
+            this.notifications.sendDeleteNotification(EntityNames.Category);
+        }
+    }
 }

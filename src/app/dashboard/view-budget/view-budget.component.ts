@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/skip';
-import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
-import { MatDialog } from '@angular/material';
-import { EditCategoryDialogComponent } from './category-dialog/category-dialog.component';
+import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 import { CategoryGroupDialogComponent } from './category-group-dialog/category-group-dialog.component';
-import 'rxjs/add/operator/do';
 import { CategoryGroupId } from '@models/category-group.model';
-import { CategoryId } from '@models/category.model';
 import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
@@ -22,82 +16,25 @@ import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
 export class ViewBudgetComponent implements OnInit {
 
     public groups$: Observable<GroupWithCategoriesWithValues[]>;
+    public onChanges$: Observable<any>;
+
     public viewMonth: Date;
-    public dataSources: CategoryDataSource[];
 
     constructor(private route: ActivatedRoute,
-                private dialog: MatDialog,
                 private dashboardViews: DashboardViewService,
-                private dialogService: CloseDialogService) {
+                private dialogService: CloseDialogService,
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
-        this.setLocalViewMonth();
+        this.setViewMonthToLocalMonth();
 
         this.groups$ = this.getBudgetId().flatMap(budgetId => {
             return this.dashboardViews.getBudgetView(budgetId);
         });
-    }
 
-    public buildDataSources(data) {
-
-        this.dataSources = data.groups.map(group => {
-
-            const formattedTableData = group.categories.map(category => {
-
-                const isOnOrBeforeViewMonth = (value) => {
-                    return value.budgetMonth <= this.viewMonth;
-                };
-
-                const isOnViewMonth = (value) => {
-                    // Does equality check on dates to make sure they are equal
-                    return value.budgetMonth <= this.viewMonth && value.budgetMonth >= this.viewMonth;
-                };
-
-                const sum = (prev, next) => {
-                    return prev + next;
-                };
-
-                const budgted = (value) => {
-                    return value.budgeted;
-                };
-
-                const offset = (value) => {
-                    return value.offset;
-                };
-
-                const first = (element) => {
-                    return !!element;
-                };
-
-                const offsetTotal = category.values.filter(isOnOrBeforeViewMonth).map(offset).reduce(sum, 0);
-                const budgetedTotal = category.values.filter(isOnOrBeforeViewMonth).map(budgted).reduce(sum, 0);
-                let [desiredValue] = category.values.filter(isOnViewMonth);
-
-                if (!desiredValue) {
-                    desiredValue = {
-                        categoryId: category.categoryId,
-                        budgeted: 0,
-                        offset: 0,
-                        budgetMonth: this.viewMonth,
-                        exists: false
-                    };
-                }
-                else {
-                    desiredValue.exists = true;
-                }
-
-                return {
-                    offsetTotal,
-                    budgetedTotal,
-                    desiredValue: {
-                        ...desiredValue,
-                    },
-                    ...category
-                };
-            });
-
-            return new CategoryDataSource(formattedTableData);
+        this.onChanges$ = this.groups$.map(x => {
+            return null;
         });
     }
 
@@ -106,7 +43,6 @@ export class ViewBudgetComponent implements OnInit {
             return params.budgetId;
         });
     }
-
 
     public trackGroup(index, group: CategoryGroupId) {
         return group ? group.groupId : undefined;
@@ -131,7 +67,7 @@ export class ViewBudgetComponent implements OnInit {
 
     public createCategoryDialog(budget, group, groupIndex) {
         const nextCategoryPosition = budget.groups[groupIndex].categories.length;
-        this.dialogService.openCreate(EditCategoryDialogComponent, {
+        this.dialogService.openCreate(CategoryDialogComponent, {
             data: {
                 categoryCollection: budget.collections.categories,
                 group: group,
@@ -140,7 +76,7 @@ export class ViewBudgetComponent implements OnInit {
         });
     }
 
-    private setLocalViewMonth() {
+    private setViewMonthToLocalMonth() {
         const today = new Date();
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
@@ -163,21 +99,18 @@ export class ViewBudgetComponent implements OnInit {
         this.viewMonth = dateCopy;
     }
 
-}
+    public createCategory(group: GroupWithCategoriesWithValues) {
+        const nextCategoryPosition = group.categories.length;
 
-export class CategoryDataSource extends DataSource<any> {
-
-    private data;
-
-    constructor(data) {
-        super();
-        this.data = data;
+        this.getBudgetId().subscribe(budgetId => {
+            this.dialogService.openCreate(CategoryDialogComponent, {
+                data: {
+                    budgetId,
+                    nextCategoryPosition,
+                    groupId: group.groupId
+                }
+            });
+        });
     }
 
-    connect(): Observable<any[]> {
-        return Observable.of(this.data);
-    }
-
-    disconnect() {
-    }
 }

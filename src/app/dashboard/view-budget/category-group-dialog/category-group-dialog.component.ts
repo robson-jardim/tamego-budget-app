@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { EditCategoryDialogComponent } from '../category-dialog/category-dialog.component';
+import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
 import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
@@ -23,7 +23,7 @@ export class CategoryGroupDialogComponent implements OnInit {
     public readonly mode: string;
     public readonly nextGroupPosition: number;
 
-    constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
+    constructor(private dialogRef: MatDialogRef<CategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: any,
                 private formBuilder: FormBuilder,
                 private notifications: GeneralNotificationsService) {

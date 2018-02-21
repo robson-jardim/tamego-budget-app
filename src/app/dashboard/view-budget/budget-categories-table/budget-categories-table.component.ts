@@ -1,38 +1,48 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CategoryId } from '@models/category.model';
-import { EditCategoryDialogComponent } from '../category-dialog/category-dialog.component';
-import { MatDialog } from '@angular/material';
-import { CategoryWithValues } from '@models/view-budget.model';
+import { CategoryWithValues, GroupWithCategoriesWithValues } from '@models/view-budget.model';
+import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
+import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-budget-categories-table',
     templateUrl: './budget-categories-table.component.html',
     styleUrls: ['./budget-categories-table.component.scss']
 })
-export class BudgetCategoriesTableComponent implements OnInit, OnChanges {
+export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() categories: CategoryWithValues[];
     @Input() viewMonth: Date;
+    @Input() budgetId: string;
 
-    public dataSource;
+    @Input() onChanges$;
+    private changeSubscription: Subscription;
 
-    public hoveredTableRow = -1;
     public columns = ['categoryName', 'budgeted', 'budgetedTotal', 'offset', 'offsetTotal', 'activity', 'exists', 'actions'];
+    public dataSource;
+    public hoveredTableRow = -1;
 
-    constructor(private dialog: MatDialog) {
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.categories) {
-            this.buildDataSource();
-        }
-        else if (changes.viewMonth) {
-            this.buildDataSource();
-        }
+    constructor(private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
+        // Angular change detection does not check deep nesting of objects,
+        // therefore changes must be listened to in order to show the most updated data
+        const changeSubscription = this.onChanges$.subscribe(() => {
+            this.buildDataSource();
+        });
+    }
 
+    ngOnDestroy() {
+        this.changeSubscription.unsubscribe();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.viewMonth) {
+            this.buildDataSource();
+        }
     }
 
     public trackCategories(index, category: CategoryId) {
@@ -63,7 +73,7 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges {
                 return prev + next;
             };
 
-            const budgted = (value) => {
+            const budgeted = (value) => {
                 return value.budgeted;
             };
 
@@ -71,12 +81,9 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges {
                 return value.offset;
             };
 
-            const first = (element) => {
-                return !!element;
-            };
-
             const offsetTotal = category.values.filter(isOnOrBeforeViewMonth).map(offset).reduce(sum, 0);
-            const budgetedTotal = category.values.filter(isOnOrBeforeViewMonth).map(budgted).reduce(sum, 0);
+            const budgetedTotal = category.values.filter(isOnOrBeforeViewMonth).map(budgeted).reduce(sum, 0);
+
             let [desiredValue]: any = category.values.filter(isOnViewMonth);
 
             if (!desiredValue) {
@@ -101,5 +108,19 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges {
                 ...category
             };
         });
+
+    }
+
+    public updateCategory(category: CategoryId) {
+        const nextCategoryPosition = this.categories.length;
+
+        this.dialogService.openUpdate(CategoryDialogComponent, {
+            data: {
+                ...category,
+                budgetId: this.budgetId,
+                nextCategoryPosition
+            }
+        });
     }
 }
+

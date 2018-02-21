@@ -5,7 +5,7 @@
 
         <button mat-raised-button color="primary" (click)="createTransactionDialog()">Add transaction</button>
 
-        <mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"
+        <mat-card *ngFor="let transaction of transactions" (click)="updateCategory(transaction)"
                   class="transaction-card">
 
             <ng-container *ngIf="transaction.transactionId || transaction.reoccurringTransactionId">
