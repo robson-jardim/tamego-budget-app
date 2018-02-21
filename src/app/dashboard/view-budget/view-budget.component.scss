@@ -10,6 +10,7 @@
 .view-budget-header {
     display: flex;
     align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .view-budget-month {
@@ -43,8 +44,9 @@
 .categories-table-header {
     display: flex;
     align-items: center;
-    padding: 7px;
-    box-shadow: 0 -1px 0 rgba(0,0,0,0.12) inset;
+    padding: 8px;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+    flex-wrap: wrap;
 }
 
 .group-name {
@@ -61,6 +63,10 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+}
+
+.categories-table-header-options .addCategory {
+    margin: 0 8px;
 }
 
 .no-categories {

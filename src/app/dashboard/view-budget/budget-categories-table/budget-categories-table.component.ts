@@ -20,7 +20,7 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
     @Input() onChanges$;
     private changeSubscription: Subscription;
 
-    public columns = ['categoryName', 'budgeted', 'budgetedTotal', 'offset', 'offsetTotal', 'activity', 'exists', 'actions'];
+    public columns = ['categoryName', 'budgeted', 'activity', 'available', 'actions'];
     public dataSource;
     public hoveredTableRow = -1;
 
