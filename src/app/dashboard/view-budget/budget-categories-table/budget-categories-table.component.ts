@@ -13,24 +13,25 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDestroy {
 
+
     @Input() categories: CategoryWithValues[];
     @Input() viewMonth: Date;
     @Input() budgetId: string;
 
     @Input() onChanges$;
-    private changeSubscription: Subscription;
 
     public columns = ['categoryName', 'budgeted', 'activity', 'available', 'actions'];
     public dataSource;
     public hoveredTableRow = -1;
+    public changeSubscription: Subscription;
 
     constructor(private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
-        // Angular change detection does not check deep nesting of objects,
-        // therefore changes must be listened to in order to show the most updated data
-        const changeSubscription = this.onChanges$.subscribe(() => {
+        // Angular change detection does not check deep nesting of objects (e.g. values inside categories).
+        // Changes must be listened to in order to show the most updated data
+        this.changeSubscription = this.onChanges$.subscribe(() => {
             this.buildDataSource();
         });
     }
@@ -38,6 +39,7 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
     ngOnDestroy() {
         this.changeSubscription.unsubscribe();
     }
+
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.viewMonth) {

@@ -4,9 +4,13 @@
 }
 
 .authenticate-card-container {
-    padding: 0;
-    width: 400px;
+    max-width: 400px;
     margin: 50px auto 0;
+}
+
+.authenticate-card-container .mat-card {
+    padding: 0;
+    margin: 0 16px;
 }
 
 .authenticate-card-content {

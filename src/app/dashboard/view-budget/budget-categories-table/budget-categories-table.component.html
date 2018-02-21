@@ -9,7 +9,7 @@
              [ngClass]="{'table-row-hovered': hoveredTableRow == row.categoryId}"
              (mouseenter)="highlight(row)"
              (mouseleave)="unhighlight(row)"
-            (click)="updateCategory(row)">
+             (click)="updateCategory(row)">
     </mat-row>
 
     <ng-container matColumnDef="categoryName">
@@ -19,7 +19,7 @@
 
     <ng-container matColumnDef="budgeted">
         <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
-        <mat-cell *matCellDef="let element">Budgeted</mat-cell>
+        <mat-cell *matCellDef="let element">{{element.desiredValue.budgeted}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="activity">

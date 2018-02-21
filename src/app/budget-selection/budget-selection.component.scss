@@ -4,8 +4,12 @@
 }
 
 .budget-selection-container {
+    max-width: 600px;
     margin: 25px auto;
-    width: 50%;
+}
+
+.budget-selection-container div {
+    margin: 0 16px;
 }
 
 .budget-card {

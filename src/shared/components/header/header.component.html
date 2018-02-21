@@ -4,48 +4,48 @@
         <mat-icon>menu</mat-icon>
     </button>
 
-    <div (click)="routeToHome()">
+    <div routerLink="/budgets">
         <h1>Tamego</h1>
     </div>
 
-    <span class="banner-spacer"></span>
+    <div class="header-options">
+        <ng-container *ngIf="!hideOptions">
 
-    <ng-container *ngIf="!hideOptions">
+            <ng-container *ngIf="auth.user | async as user">
+                <ng-container *ngIf="user.trial.isTrial">
+                    <p id="trialLength" class="mat-body-2">Trial ends in {{user.trial.trialEnd | daysUntil}} days</p>
+                </ng-container>
 
-        <ng-container *ngIf="auth.user | async as user">
-            <ng-container *ngIf="user.trial.isTrial">
-                <p class="mat-body-2">Trial ends in {{user.trial.trialEnd | daysUntil}} days</p>
+                <ng-container *ngIf="!user.email">
+                    <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn" id="signupButton">
+                        <span>Sign up</span>
+                    </button>
+                </ng-container>
             </ng-container>
 
-            <ng-container *ngIf="!user.email">
-                <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn">
-                    <span>Sign up</span>
+            <button mat-icon-button [matMenuTriggerFor]="userOptions" id="menuOptionsButton">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #userOptions="matMenu">
+
+                <button mat-menu-item routerLink="/settings">
+                    <mat-icon>settings</mat-icon>
+                    <span>Settings</span>
                 </button>
-            </ng-container>
+
+                <button mat-menu-item (click)="auth.signOut()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Sign out</span>
+                </button>
+            </mat-menu>
+
         </ng-container>
 
-        <button mat-icon-button [matMenuTriggerFor]="userOptions">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-
-        <mat-menu #userOptions="matMenu">
-
-            <button mat-menu-item (click)="routeToSettings()">
-                <mat-icon>settings</mat-icon>
-                <span>Settings</span>
-            </button>
-
-            <button mat-menu-item (click)="auth.signOut()">
-                <mat-icon>exit_to_app</mat-icon>
-                <span>Sign out</span>
-            </button>
-        </mat-menu>
-
-    </ng-container>
-
-    <ng-container *ngIf="showDemo">
-        <button mat-raised-button color="warn" routerLink="/demo">Try demo</button>
-    </ng-container>
+        <ng-container *ngIf="showDemo">
+            <button mat-raised-button color="warn" routerLink="/demo">Try demo</button>
+        </ng-container>
+    </div>
 
 </mat-toolbar>
 

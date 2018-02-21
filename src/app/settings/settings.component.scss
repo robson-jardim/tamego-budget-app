@@ -3,9 +3,13 @@
     height: 100vh;
 }
 
-.settings-container {
+.settings {
+    max-width: 800px;
     margin: 25px auto;
-    width: 50%;
+}
+
+.settings-container {
+    margin: 0 16px;
 }
 
 .settings-card {

@@ -23,7 +23,8 @@ export class SettingsComponent implements OnInit {
 
     public openLinkAnonymousAccountDialog() {
         this.dialogService.open(LinkAnonymousAccountDialogComponent, {
-            minWidth: 400
+            width: '400px',
+            maxWidth: '400px'
         });
     }
 

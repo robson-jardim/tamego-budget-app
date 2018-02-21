@@ -22,17 +22,10 @@ export class HeaderComponent implements OnInit {
     ngOnInit() {
     }
 
-    public routeToHome() {
-        this.route.navigate(['budgets']);
-    }
-
-    public routeToSettings() {
-        this.route.navigate(['settings']);
-    }
-
     public openLinkAnonymousAccountDialog() {
         this.dialogService.open(LinkAnonymousAccountDialogComponent, {
-            minWidth: 400
+            width: '400px',
+            maxWidth: '400px'
         });
     }
 

@@ -1,38 +1,34 @@
 <div class="container">
     <app-header [hideOptions]="true" [showDemo]="true"></app-header>
 
-    <ng-container *ngIf="authNotification.messageBroadcast | async as notification">
-        <mat-card class="authenticate-card-container" *ngIf="showAuthError">
-            <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
+    <div class="authenticate-card-container">
+        <mat-card>
+            <mat-card-title>
+                <nav mat-tab-nav-bar>
+                    <div class="nav-tabs">
+
+                        <a mat-tab-link routerLink="/signin"
+                           routerLinkActive
+                           #signin="routerLinkActive"
+                           [active]="signin.isActive">
+                            Sign in
+                        </a>
+                        <a mat-tab-link
+                           routerLink="/signup"
+                           routerLinkActive
+                           #signup="routerLinkActive"
+                           [active]="signup.isActive">
+                            Sign up
+                        </a>
+                    </div>
+
+                </nav>
+            </mat-card-title>
+
+            <div class="authenticate-card-content">
+                <router-outlet></router-outlet>
+            </div>
+
         </mat-card>
-    </ng-container>
-
-    <mat-card class="authenticate-card-container">
-        <mat-card-title>
-            <nav mat-tab-nav-bar>
-                <div class="nav-tabs">
-
-                    <a mat-tab-link routerLink="/signin"
-                       routerLinkActive
-                       #signin="routerLinkActive"
-                       [active]="signin.isActive">
-                        Sign in
-                    </a>
-                    <a mat-tab-link
-                       routerLink="/signup"
-                       routerLinkActive
-                       #signup="routerLinkActive"
-                       [active]="signup.isActive">
-                        Sign up
-                    </a>
-                </div>
-
-            </nav>
-        </mat-card-title>
-
-        <div class="authenticate-card-content">
-            <router-outlet></router-outlet>
-        </div>
-
-    </mat-card>
+    </div>
 </div>

@@ -2,17 +2,18 @@
     <app-header></app-header>
 
     <div class="budget-selection-container">
+        <div>
+            <h1 class="mat-headline">Budgets</h1>
 
-        <h1 class="mat-headline">Budgets</h1>
+            <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
+                <button mat-raised-button color="primary" (click)="openAddNewBudgetDialog()">Add new budget</button>
 
-        <ng-container *ngIf="budgets?.observable | async  as budgets; else loading">
-            <button mat-raised-button color="primary" (click)="openAddNewBudgetDialog()">Add new budget</button>
+                <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]">
+                    <p>{{budget.budgetName}}</p>
+                </mat-card>
 
-            <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]">
-                <p>{{budget.budgetName}}</p>
-            </mat-card>
-
-        </ng-container>
+            </ng-container>
+        </div>
     </div>
 
     <ng-template #loading>

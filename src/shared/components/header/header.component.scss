@@ -1,8 +1,21 @@
-.banner-spacer {
-    flex: 1 1 auto;
-}
 
 .toggleSidenav {
     margin-right: 8px;
 }
 
+.header-options {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#signupButton, #menuOptionsButton, #trialLength {
+    margin-left: 8px;
+}
+
+@media (max-width: 450px) {
+    #trialLength {
+        display: none;
+    }
+}

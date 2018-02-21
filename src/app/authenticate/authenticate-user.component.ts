@@ -11,8 +11,7 @@ import { AuthNotificationService } from '@shared/services/auth-notification/auth
 export class AuthenticateComponent implements OnInit {
 
     constructor(private auth: AuthService,
-                private router: Router,
-                public authNotification: AuthNotificationService) {
+                private router: Router) {
     }
 
     ngOnInit() {

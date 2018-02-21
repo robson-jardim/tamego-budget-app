@@ -2,56 +2,58 @@
 
     <app-header></app-header>
 
-    <div class="settings-container">
+    <div class="settings">
 
-        <h1 class="mat-headline">Settings</h1>
+        <div class="settings-container">
+            <h1 class="mat-headline">Settings</h1>
 
-        <mat-card class="settings-card">
+            <mat-card class="settings-card">
 
-            <h1 class="mat-headline">Account</h1>
+                <h1 class="mat-headline">Account</h1>
 
-            <ng-container *ngIf="auth.user | async as user">
+                <ng-container *ngIf="auth.user | async as user">
 
-                <ng-container *ngIf="user.email; else isAnonymous">
-                    <div class="mat-body-1">
-                        <span>Email: {{user.email}}</span>
+                    <ng-container *ngIf="user.email; else isAnonymous">
+                        <div class="mat-body-1">
+                            <span>Email: {{user.email}}</span>
+
+                            <ng-container *ngIf="!user.emailVerified">
+                                (unverified)
+                            </ng-container>
+                        </div>
 
                         <ng-container *ngIf="!user.emailVerified">
-                            (unverified)
-                        </ng-container>
-                    </div>
-
-                    <ng-container *ngIf="!user.emailVerified">
-                        <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
-                            Resend verification email
-                        </button>
-                        <!--<button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update-->
+                            <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
+                                Resend verification email
+                            </button>
+                            <!--<button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update-->
                             <!--verification status-->
-                        <!--</button>-->
+                            <!--</button>-->
+                        </ng-container>
+
                     </ng-container>
+
+                    <ng-template #isAnonymous>
+                        <div>
+                            <button mat-raised-button color="warn" (click)="openLinkAnonymousAccountDialog()">Sign up
+                            </button>
+                        </div>
+
+                    </ng-template>
 
                 </ng-container>
 
-                <ng-template #isAnonymous>
-                    <div>
-                        <button mat-raised-button color="warn" (click)="openLinkAnonymousAccountDialog()">Sign up
-                        </button>
-                    </div>
 
-                </ng-template>
+            </mat-card>
 
-            </ng-container>
+            <mat-card class="settings-card">
 
+                <h1 class="mat-headline">Billing</h1>
 
-        </mat-card>
+                <app-checkout>
 
-        <mat-card class="settings-card">
-
-            <h1 class="mat-headline">Billing</h1>
-
-            <app-checkout>
-
-            </app-checkout>
-        </mat-card>
+                </app-checkout>
+            </mat-card>
+        </div>
     </div>
 </div>
