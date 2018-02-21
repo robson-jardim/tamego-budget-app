@@ -11,12 +11,12 @@ import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocompl
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
 import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-datepicker.component';
 import { RepeatTransactionComponent } from './transaction-dialog/reoccurring-transaction/reoccurring-transaction.component';
+import { AppPipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
     declarations: [
         ViewTransactionsComponent,
         TransactionDialogComponent,
-        UtcDatePipe,
         PayeeAutocompleteComponent,
         CategoryAutocompleteComponent,
         UtcDatepickerComponent,
@@ -25,7 +25,8 @@ import { RepeatTransactionComponent } from './transaction-dialog/reoccurring-tra
     imports: [
         CommonModule,
         StandardMaterialModule,
-
+        AppPipesModule,
+        
         CustomMaterialFormsModule,
         MatAutocompleteModule,
         MatDatepickerModule,

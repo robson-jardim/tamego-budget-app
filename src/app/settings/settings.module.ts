@@ -6,6 +6,8 @@ import { SettingsComponent } from './settings.component';
 import { PaymentModule } from './payment/payment.module';
 import { MatInputModule } from '@angular/material';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
+import { DaysUntilPipe } from '@shared/pipes/days-until/days-until.pipe';
+import { AppPipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -13,10 +15,11 @@ import { CustomMaterialFormsModule } from '@shared/components/custom-material-fo
         AppHeaderModule,
         StandardMaterialModule,
         PaymentModule,
-        CustomMaterialFormsModule
+        CustomMaterialFormsModule,
+        AppPipesModule
     ],
     declarations: [
-        SettingsComponent
+        SettingsComponent,
     ]
 })
 export class SettingsModule {

@@ -5,7 +5,8 @@ import { MatButtonModule, MatMenuModule, MatToolbarModule } from '@angular/mater
 import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { RouterModule } from '@angular/router';
-import { DaysUntilPipe } from '@shared/components/header/days-until/days-until.pipe';
+import { DaysUntilPipe } from '@shared/pipes/days-until/days-until.pipe';
+import { AppPipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -13,11 +14,11 @@ import { DaysUntilPipe } from '@shared/components/header/days-until/days-until.p
         StandardMaterialModule,
         MatToolbarModule,
         RouterModule,
-        MatMenuModule
+        MatMenuModule,
+        AppPipesModule
     ],
     declarations: [
-        HeaderComponent,
-        DaysUntilPipe
+        HeaderComponent
     ],
     entryComponents: [
         LinkAnonymousAccountDialogComponent
