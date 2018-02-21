@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransferCategoryDialogComponent } from './transfer-category-dialog.component';
+import { BudgetCategoriesTableComponent } from './budget-categories-table.component';
 
-describe('TransferCategoryDialogComponent', () => {
-    let component: TransferCategoryDialogComponent;
-    let fixture: ComponentFixture<TransferCategoryDialogComponent>;
+describe('BudgetCategoriesTableComponent', () => {
+    let component: BudgetCategoriesTableComponent;
+    let fixture: ComponentFixture<BudgetCategoriesTableComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TransferCategoryDialogComponent]
+            declarations: [BudgetCategoriesTableComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(TransferCategoryDialogComponent);
+        fixture = TestBed.createComponent(BudgetCategoriesTableComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { MapFirestoreDocumentIdService } from '../map-firestore-document-id/map-firestore-docoument-id.service';
 import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
-import { CollectionResult } from '@models/collection-result.model';
+import { CollectionResult, CombinedCollectionResult } from '@models/collection-result.model';
 import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
 import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
 import { Category, CategoryId } from '@models/category.model';
-import { Budget, BudgetId } from '@models/budget.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
@@ -22,6 +21,8 @@ import {
 import { Payee, PayeeId } from '@models/payee.model';
 import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
+import { GroupWithCategories } from '@models/view-budget.model';
+import { Budget, BudgetId } from '@models/budget.model';
 
 @Injectable()
 export class FirestoreService {
@@ -117,6 +118,38 @@ export class FirestoreService {
         return this.reoccurring.getReoccurringTransfers(budgetId, accountId);
     }
 
+
+    public getGroupWithCategories(budgetId: string): CombinedCollectionResult<GroupWithCategories[]> {
+        const groupsResult = this.getGroups(budgetId);
+        const categoriesResult = this.getCategories(budgetId);
+
+        const combinedGroupsAndCategories$ = this.utility.combineLatestObj({
+            groups: groupsResult.observable,
+            categories: categoriesResult.observable
+        }).map(({groups, categories}) => {
+
+            return groups.map((group): GroupWithCategories => {
+                const getCategories = () => {
+                    return categories.filter(category => category.groupId === group.groupId && category);
+                };
+
+                return {
+                    ...group,
+                    categories: getCategories()
+                };
+
+            });
+
+        });
+
+        return {
+            collections: {
+                groups: groupsResult.collection,
+                categories: categoriesResult.collection
+            },
+            observable: combinedGroupsAndCategories$
+        };
+    }
 
     // TODO - add groups and categories view model
     public getGroupsAndCategories(budgetId: string) {

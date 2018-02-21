@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewBudgetComponent } from './view-budget.component';
-import { TransferCategoryDialogComponent } from './transfer-category-dialog/transfer-category-dialog.component';
 import { CategoryGroupDialogComponent } from './category-group-dialog/category-group-dialog.component';
 import { EditCategoryDialogComponent } from './category-dialog/category-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
-import { MatDialogModule, MatMenuModule, MatTableModule } from '@angular/material';
+import { MatMenuModule, MatTableModule } from '@angular/material';
+import { BudgetCategoriesTableComponent } from './budget-categories-table/budget-categories-table.component';
 
 @NgModule({
     imports: [
@@ -19,12 +19,11 @@ import { MatDialogModule, MatMenuModule, MatTableModule } from '@angular/materia
     ],
     declarations: [
         ViewBudgetComponent,
-        TransferCategoryDialogComponent,
         CategoryGroupDialogComponent,
-        EditCategoryDialogComponent
+        EditCategoryDialogComponent,
+        BudgetCategoriesTableComponent
     ],
     entryComponents: [
-        TransferCategoryDialogComponent,
         CategoryGroupDialogComponent,
         EditCategoryDialogComponent
     ]

@@ -8,3 +8,4 @@ export interface Budget {
 export interface BudgetId extends Budget {
     budgetId: string;
 }
+

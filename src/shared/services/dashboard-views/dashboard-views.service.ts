@@ -1,45 +1,37 @@
 import { Injectable } from '@angular/core';
-import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
-import { CollectionResult } from '@models/collection-result.model';
-import { CategoryValue, CategoryValueId } from '@models/category-value.model';
+import { CategoryGroupId } from '@models/category-group.model';
 import { Observable } from 'rxjs/Observable';
-import { Category, CategoryId } from '@models/category.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { UtilityService } from '@shared/services/utility/utility.service';
+import { GroupWithCategories, GroupWithCategoriesWithValues } from '@models/view-budget.model';
 
 @Injectable()
 export class DashboardViewService {
 
-    constructor(private firestore: FirestoreService) {
+    constructor(private firestore: FirestoreService,
+                private utility: UtilityService) {
     }
 
-    public getBudgetView(budgetId: string) {
-        const groupsResult: CollectionResult<CategoryGroup, CategoryGroupId[]> = this.firestore.getGroups(budgetId);
-        const categoriesResult: CollectionResult<Category, CategoryId[]> = this.firestore.getCategories(budgetId);
-        const categoryValuesResult: CollectionResult<CategoryValue, CategoryValueId[]> = this.firestore.getCategoryValues(budgetId);
+    public getBudgetView(budgetId: string): Observable<GroupWithCategoriesWithValues[]> {
 
-        const observables = [groupsResult.observable, categoriesResult.observable, categoryValuesResult.observable];
-        return Observable.combineLatest(observables, (groups, categories, categoryValues) => {
+        const categoryValues$ = this.firestore.getCategoryValues(budgetId).observable;
+        const groupsWithCategories$ = this.firestore.getGroupWithCategories(budgetId).observable;
 
-            const formattedData = groups.map((group: CategoryGroupId) => {
+        return this.utility.combineLatestObj({
+            groups: groupsWithCategories$,
+            values: categoryValues$
+        }).map(({groups, values}) => {
 
-                const getCategories = () => {
-                    return categories.filter(c => c.groupId === group.groupId).map(category => {
-                        category.values = categoryValues.filter(value => value.categoryId === category.categoryId);
-                        return category;
+            const addValuesToCategories = () => {
+                groups.map(group => {
+                    group.categories.map(category => {
+                        category.values = values.filter(value => value.categoryId === category.categoryId);
                     });
-                };
-
-                return {...group, categories: getCategories()};
-            });
-
-            return {
-                collections: {
-                    groups: groupsResult.collection,
-                    categories: categoriesResult.collection,
-                    categoryValues: categoryValuesResult.collection
-                },
-                groups: formattedData
+                });
             };
+
+            addValuesToCategories();
+            return groups;
         });
     }
 

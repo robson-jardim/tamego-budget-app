@@ -5,3 +5,8 @@ export class CollectionResult<CollectionType, ObservableType> {
     collection: AngularFirestoreCollection<CollectionType>;
     observable: Observable<ObservableType>;
 }
+
+export class CombinedCollectionResult<ObservableType> {
+    collections: Object;
+    observable: Observable<ObservableType>;
+}

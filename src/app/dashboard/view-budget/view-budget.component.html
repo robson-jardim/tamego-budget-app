@@ -1,40 +1,37 @@
 <div class="view-budget-container">
 
-    <ng-container *ngIf="budget | async as budget; else loading">
+    <ng-container *ngIf="groups$ | async as groups; else loading">
 
         <div class="view-budget-header">
             <div class="view-budget-month">
-                <h1 class="mat-headline">{{viewMonth}} {{viewYear}}</h1>
+                <h1 class="mat-headline">{{viewMonth | date:'LLLL yyyy'}}</h1>
 
                 <div>
-                    <button mat-button (click)="previousMonth(); buildDataSources(budget)">
+                    <button mat-button (click)="previousMonth()">
                         <mat-icon>keyboard_arrow_left</mat-icon>
                     </button>
-                    <button mat-button (click)="nextMonth(); buildDataSources(budget)">
+                    <button mat-button (click)="nextMonth()">
                         <mat-icon>keyboard_arrow_right</mat-icon>
                     </button>
                 </div>
             </div>
 
             <div class="view-budget-header-options">
-                <button mat-raised-button color="primary" (click)="createGroupDialog(budget)">
+                <button mat-raised-button color="primary">
                     Add category group
                 </button>
             </div>
         </div>
 
-        <mat-card *ngFor="let group of budget.groups; trackBy: trackGroup; let groupIndex=index" class="group-card">
+        <mat-card *ngFor="let group of groups; trackBy: trackGroup" class="categories-table-container">
 
-            <mat-card-header class="group-card-header group-card-grey"
-                             (click)="updateGroupDialog(budget,group)">
-
+            <mat-card-header class="categories-table-header categories-table-grey">
                 <div class="group-name">
                     <h1 class="mat-title">{{group.groupName}}</h1>
                 </div>
 
-                <div class="group-card-options">
-                    <button mat-raised-button color="primary"
-                            (click)="createCategoryDialog(budget, group, groupIndex); $event.stopPropagation()">
+                <div class="categories-table-header-options">
+                    <button mat-raised-button color="primary">
                         Add category
                     </button>
 
@@ -42,96 +39,26 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #options>
-                        <button mat-menu-item (click)="updateGroupDialog(budget,group)">
-                            Edit
-                        </button>
-                        <button mat-menu-item>Delete</button>
-                        <button mat-menu-item>Order categories</button>
-                        <button mat-menu-item>Hide</button>
+                        <button mat-menu-item>Edit</button>
                     </mat-menu>
                 </div>
-
             </mat-card-header>
 
+            <ng-container *ngIf="group.categories.length > 0; else noCategories">
+                <app-budget-categories-table
+                    [categories]="group.categories"
+                    [viewMonth]="viewMonth">
+                </app-budget-categories-table>
+            </ng-container>
 
-            <mat-card-content>
-
-                <mat-table *ngIf="group.categories.length > 0; else noCategories" #table
-                           [dataSource]="dataSources[groupIndex]"
-                           [trackBy]="trackCategories">
-
-                    <mat-header-row *matHeaderRowDef="categoryColumns" class="group-card-grey"></mat-header-row>
-
-                    <mat-row *matRowDef="let row; columns: categoryColumns;"
-                             [ngClass]="{'group-card-grey': selectedRowIndex == row.categoryId}"
-                             (mouseenter)="highlight(row)"
-                             (mouseleave)="unhighlight(row)"
-                             (click)="updateCategoryDialog(budget,row)">
-                    </mat-row>
-
-                    <ng-container matColumnDef="categoryName">
-                        <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.categoryName}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="budgeted">
-                        <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.desiredValue.budgeted}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="budgetedTotal">
-                        <mat-header-cell *matHeaderCellDef> Budgeted Total</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.budgetedTotal}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="offset">
-                        <mat-header-cell *matHeaderCellDef> Offset</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.desiredValue.offset}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="offsetTotal">
-                        <mat-header-cell *matHeaderCellDef> Offset Total</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.offsetTotal}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="activity">
-                        <mat-header-cell *matHeaderCellDef> Activity</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> N/A</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="exists">
-                        <mat-header-cell *matHeaderCellDef> Exists</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.desiredValue.exists}}</mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="actions">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-
-                            <button mat-icon-button [matMenuTriggerFor]="options" (click)="$event.stopPropagation()">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #options>
-                                <button mat-menu-item
-                                        (click)="updateCategoryDialog(budget,element)">Edit
-                                </button>
-                                <button mat-menu-item>Delete</button>
-                                <button mat-menu-item (click)="transferCategoryDialog(element, budget)">Transfer
-                                </button>
-                                <button mat-menu-item>Hide</button>
-                            </mat-menu>
-
-                        </mat-cell>
-                    </ng-container>
-                </mat-table>
-
-                <ng-template #noCategories>
-                    <div class="no-categories"><p>No categories</p></div>
-                </ng-template>
-
-            </mat-card-content>
+            <ng-template #noCategories>
+                <div class="no-categories">
+                    <p>No categories</p>
+                </div>
+            </ng-template>
 
         </mat-card>
+
     </ng-container>
 
     <ng-template #loading>

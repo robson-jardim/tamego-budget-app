@@ -5,7 +5,7 @@ export interface Transaction {
     accountId: string;
     payeeId: string | null;
     categoryId: string | null;
-    splits: Array<SplitTransaction>;
+    splits: SplitTransaction[];
     memo: string | null;
     amount: number | null;
     cleared: boolean;
