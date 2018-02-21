@@ -33,7 +33,7 @@ export class ViewBudgetComponent implements OnInit {
             return this.dashboardViews.getBudgetView(budgetId);
         });
 
-        this.onChanges$ = this.groups$.map(x => {
+        this.onChanges$ = this.groups$.map(() => {
             return null;
         });
     }
@@ -48,31 +48,27 @@ export class ViewBudgetComponent implements OnInit {
         return group ? group.groupId : undefined;
     }
 
-    public createGroupDialog(budget) {
-        const nextGroupPosition = budget.groups.length;
-        this.dialogService.openCreate(CategoryGroupDialogComponent, {
-            groupCollection: budget.collections.groups,
-            nextGroupPosition: nextGroupPosition
+    public createCategoryGroup(groups: GroupWithCategoriesWithValues[]) {
+        this.getBudgetId().subscribe(budgetId => {
+            const nextGroupPosition = groups.length;
+            this.dialogService.openCreate(CategoryGroupDialogComponent, {
+                data: {
+                    budgetId,
+                    nextGroupPosition
+                }
+            });
         });
     }
 
-    public updateGroupDialog(budget, group: CategoryGroupId) {
-        this.dialogService.openUpdate(CategoryGroupDialogComponent, {
-            data: {
-                groupCollection: budget.collections.groups,
-                group: group,
-            }
-        });
-    }
+    public updateCategoryGroup(group: GroupWithCategoriesWithValues) {
 
-    public createCategoryDialog(budget, group, groupIndex) {
-        const nextCategoryPosition = budget.groups[groupIndex].categories.length;
-        this.dialogService.openCreate(CategoryDialogComponent, {
-            data: {
-                categoryCollection: budget.collections.categories,
-                group: group,
-                nextCategoryPosition: nextCategoryPosition,
-            }
+        this.getBudgetId().subscribe(budgetId => {
+            this.dialogService.openUpdate(CategoryGroupDialogComponent, {
+                data: {
+                    budgetId,
+                    ...group
+                }
+            });
         });
     }
 

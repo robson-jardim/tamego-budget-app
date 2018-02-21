@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
-import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
+import { CategoryGroup } from '@models/category-group.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
+import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
+import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 
 @Component({
     selector: 'app-category-group-dialog',
@@ -15,22 +16,14 @@ import { EntityNames } from '@shared/enums/entity-names.enum';
 export class CategoryGroupDialogComponent implements OnInit {
 
     public groupForm: FormGroup;
-
-    public saving = false;
-
-    public readonly groupCollection: AngularFirestoreCollection<CategoryGroup>;
-    public readonly group: CategoryGroupId;
-    public readonly mode: string;
-    public readonly nextGroupPosition: number;
+    public DialogState = DialogState;
+    public saving: boolean;
 
     constructor(private dialogRef: MatDialogRef<CategoryDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) private data: any,
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private formBuilder: FormBuilder,
-                private notifications: GeneralNotificationsService) {
-        this.groupCollection = this.data.groupCollection;
-        this.group = this.data.group;
-        this.nextGroupPosition = this.data.nextGroupPosition;
-        this.mode = this.data.mode;
+                private notifications: GeneralNotificationsService,
+                private references: FirestoreReferenceService) {
     }
 
     ngOnInit() {
@@ -38,61 +31,68 @@ export class CategoryGroupDialogComponent implements OnInit {
     }
 
     private buildGroupForm(): void {
-
-        if (this.mode == 'UPDATE') {
-            this.groupForm = this.formBuilder.group({
-                groupName: [this.group.groupName, Validators.required]
-            });
-        }
-        else {
-            this.groupForm = this.formBuilder.group({
-                groupName: ['', Validators.required]
-            });
-        }
-
+        this.groupForm = this.formBuilder.group({
+            groupName: [this.data.groupName || null, Validators.required]
+        });
     }
 
     public saveChanges() {
         this.saving = true;
 
-        if (this.mode === 'UPDATE') {
-            this.editCategoryGroup();
+        if (DialogState.Create === this.data.state) {
+            this.createCategoryGroup();
+        }
+        else if (DialogState.Update === this.data.state) {
+            this.updateCategoryGroup();
+        }
+        else {
+            throw new Error('Unable to determine dialog state');
         }
 
-        if (this.mode === 'CREATE') {
-            this.addCategoryGroup();
-        }
-    }
-
-    private close() {
+        this.sendCategoryGroupNotification();
         this.dialogRef.close();
     }
 
+    private createCategoryGroup() {
+        this.getCategoryGroupCollection().add(this.getCategoryGroupData());
+    }
 
-    private addCategoryGroup() {
-        const data: CategoryGroup = {
+    private updateCategoryGroup() {
+        this.getCategoryGroupCollection().doc(this.data.groupId).update(this.getCategoryGroupData());
+    }
+
+    private getCategoryGroupData(): CategoryGroup {
+
+        const getPosition = () => {
+
+            if (this.data.position !== undefined) {
+                return this.data.position;
+            }
+            else {
+                return this.data.nextGroupPosition;
+            }
+        };
+
+        return {
             groupName: this.groupForm.value.groupName,
-            position: this.nextGroupPosition
+            position: getPosition()
         };
-
-        this.groupCollection.add(data);
-        this.notifications.sendCreateNotification(EntityNames.CategoryGroup);
-        this.close();
     }
 
-    private editCategoryGroup() {
+    private getCategoryGroupCollection() {
+        return this.references.getGroupsCollectionRef(this.data.budgetId);
+    }
 
-        if (this.groupForm.pristine) {
-            this.close();
-            return;
+    private sendCategoryGroupNotification() {
+        if (DialogState.Create === this.data.state) {
+            this.notifications.sendCreateNotification(EntityNames.CategoryGroup);
         }
-
-        const data = {
-            groupName: this.groupForm.value.groupName
-        };
-
-        this.groupCollection.doc(this.group.groupId).update(data);
-        this.notifications.sendUpdateNotification(EntityNames.CategoryGroup);
-        this.close();
+        else if (DialogState.Update === this.data.state) {
+            this.notifications.sendUpdateNotification(EntityNames.CategoryGroup);
+        }
+        else if (DialogState.Delete === this.data.state) {
+            this.notifications.sendDeleteNotification(EntityNames.CategoryGroup);
+        }
     }
+
 }

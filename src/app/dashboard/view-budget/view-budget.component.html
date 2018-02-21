@@ -17,7 +17,9 @@
             </div>
 
             <div class="view-budget-header-options">
-                <button mat-raised-button color="primary">
+                <button mat-raised-button
+                        color="primary"
+                        (click)="createCategoryGroup(groups)">
                     Add category group
                 </button>
             </div>
@@ -25,14 +27,17 @@
 
         <mat-card *ngFor="let group of groups; trackBy: trackGroup" class="categories-table-container">
 
-            <mat-card-header class="categories-table-header categories-table-grey">
+            <mat-card-header
+                class="categories-table-header categories-table-grey"
+                (click)="updateCategoryGroup(group)">
+
                 <div class="group-name">
                     <h1 class="mat-title">{{group.groupName}}</h1>
                 </div>
 
                 <div class="categories-table-header-options">
                     <button mat-raised-button color="primary"
-                            (click)="createCategory(group)"
+                            (click)="createCategory(group); $event.stopPropagation()"
                     class="addCategory">
                         Add category
                     </button>
@@ -41,7 +46,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #options>
-                        <button mat-menu-item>Edit</button>
+                        <button mat-menu-item (click)="updateCategoryGroup(group)">Edit</button>
                     </mat-menu>
                 </div>
             </mat-card-header>

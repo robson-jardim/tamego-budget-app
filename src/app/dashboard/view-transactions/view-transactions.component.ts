@@ -78,7 +78,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
         });
     }
 
-    public createTransactionDialog() {
+    public createTransaction() {
 
         this.utility.combineLatestObj({
             budgetId: this.getBudgetId(),

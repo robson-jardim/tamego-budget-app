@@ -1,7 +1,7 @@
-<form [formGroup]="groupForm" (ngSubmit)="groupForm.valid && saveChanges()">
+<form [formGroup]="groupForm" (ngSubmit)="saveChanges()">
 
-    <h1 *ngIf="mode === 'UPDATE'" mat-dialog-title>Edit category group</h1>
-    <h1 *ngIf="mode === 'CREATE'" mat-dialog-title>Add category group</h1>
+    <h1 *ngIf="DialogState.Create === data.state" mat-dialog-title>Add category group</h1>
+    <h1 *ngIf="DialogState.Update === data.state" mat-dialog-title>Edit category group</h1>
 
     <mat-dialog-content>
 
@@ -15,9 +15,12 @@
 
         <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
-        <button *ngIf="mode === 'UPDATE'" mat-raised-button color="primary" [disabled]="saving" type="submit">Save
-        </button>
-        <button *ngIf="mode === 'CREATE'" mat-raised-button color="primary" [disabled]="saving" type="submit">Add
+        <button mat-raised-button
+                color="primary"
+                [disabled]="!groupForm.valid || saving"
+                type="submit">
+            <span *ngIf="DialogState.Create === data.state">Add</span>
+            <span *ngIf="DialogState.Update === data.state">Save</span>
         </button>
 
     </mat-dialog-actions>

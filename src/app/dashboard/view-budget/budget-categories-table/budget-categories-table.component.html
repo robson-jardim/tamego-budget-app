@@ -40,7 +40,7 @@
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #options>
-                <button mat-menu-item>Edit</button>
+                <button mat-menu-item (click)="updateCategory(element)">Edit</button>
             </mat-menu>
 
         </mat-cell>

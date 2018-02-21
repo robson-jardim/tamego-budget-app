@@ -3,7 +3,7 @@
 
         <h1 class="mat-headline">Accounts</h1>
 
-        <button mat-raised-button color="primary" (click)="createTransactionDialog()">Add transaction</button>
+        <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
 
         <mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"
                   class="transaction-card">
