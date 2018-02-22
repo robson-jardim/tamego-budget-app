@@ -2,9 +2,7 @@
     "short_name": "Tamego",
     "name": "Tamego",
     "start_url": "/",
-
     "background_color": "#fafafa",
-
     "display": "standalone",
     "icons": [
         {

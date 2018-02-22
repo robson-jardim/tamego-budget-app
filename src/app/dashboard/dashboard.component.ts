@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private afs: AngularFirestore,
                 private changeDetectorRef: ChangeDetectorRef,
                 private media: MediaMatcher) {
-        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this.mobileQuery = media.matchMedia('(max-width: 900px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
         this.initialSidenavState = this.mobileQuery.matches ? false : true;

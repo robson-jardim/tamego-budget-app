@@ -8,9 +8,6 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!--Stripe-->
-    <script src="https://checkout.stripe.com/checkout.js"></script>
-
     <!--Progressive web app-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,5 +20,19 @@
 </head>
 <body>
     <app-root></app-root>
+
+    <!--Stripe-->
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114582228-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-114582228-2');
+    </script>
+
 </body>
 </html>
