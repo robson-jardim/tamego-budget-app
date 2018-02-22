@@ -1,9 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { User } from '@models/user.model';
-import { createStripeCustomer } from '../stripe';
-import { createStripeSubscription } from '../stripe';
+import { createStripeCustomer, createStripeSubscription } from '../stripe';
 import { Subscription } from '../stripe/create-subscription';
+import { User } from '@models/user.model';
 
 const db = admin.firestore();
 

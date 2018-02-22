@@ -4,7 +4,6 @@ import * as middleware from './middleware';
 import * as express from 'express';
 
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 
 const app = express();
 

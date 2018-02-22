@@ -3,7 +3,6 @@ import * as express from 'express';
 
 const router = express.Router();
 const db = admin.firestore();
-const auth = admin.auth();
 
 // POST: api/verifyUser
 router.post('/', async (request: any, response) => {

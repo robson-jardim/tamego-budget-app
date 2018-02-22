@@ -26,7 +26,7 @@ import { AppPipesModule } from '@shared/pipes/pipes.module';
         CommonModule,
         StandardMaterialModule,
         AppPipesModule,
-        
+
         CustomMaterialFormsModule,
         MatAutocompleteModule,
         MatDatepickerModule,
