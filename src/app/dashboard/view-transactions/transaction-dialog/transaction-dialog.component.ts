@@ -254,7 +254,6 @@ export class TransactionDialogComponent implements OnInit {
 
             const newPayee: Payee = {
                 payeeName: <string>payeeField,
-                belongToCategoryId: null
             };
 
             const payeeCollection: AngularFirestoreCollection<Payee> = this.firestore.getPayees(this.data.budgetId).collection;
