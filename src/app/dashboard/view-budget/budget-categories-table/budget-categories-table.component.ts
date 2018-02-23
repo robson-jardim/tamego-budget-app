@@ -1,10 +1,20 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CategoryId } from '@models/category.model';
-import { CategoryWithValues, GroupWithCategoriesWithValues } from '@models/view-budget.model';
+import { CategoryWithValues } from '@models/view-budget.model';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { CategoryValueId } from '@models/category-value.model';
+
+export interface DesiredValue extends CategoryValueId {
+    exists: boolean;
+}
+
+export interface CategoryWithDesiredValue extends CategoryWithValues {
+    offsetTotalToDate: number;
+    budgetedTotalToDate: number;
+    desiredValue: DesiredValue;
+}
 
 @Component({
     selector: 'app-budget-categories-table',
@@ -19,9 +29,8 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
     @Input() budgetId: string;
 
     @Input() onChanges$;
-
     public columns = ['categoryName', 'budgeted', 'activity', 'available', 'actions'];
-    public dataSource;
+    public dataSource: CategoryWithDesiredValue[];
     public hoveredTableRow = -1;
     public changeSubscription: Subscription;
 
@@ -60,6 +69,7 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
     }
 
     private buildDataSource() {
+
         this.dataSource = this.categories.map(category => {
 
             const isOnOrBeforeViewMonth = (value) => {
@@ -83,34 +93,36 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
                 return value.offset;
             };
 
-            const offsetTotal = category.values.filter(isOnOrBeforeViewMonth).map(offset).reduce(sum, 0);
-            const budgetedTotal = category.values.filter(isOnOrBeforeViewMonth).map(budgeted).reduce(sum, 0);
+            const offsetTotalToDate = category.values.filter(isOnOrBeforeViewMonth).map(offset).reduce(sum, 0);
+            const budgetedTotalToDate = category.values.filter(isOnOrBeforeViewMonth).map(budgeted).reduce(sum, 0);
 
-            let [desiredValue]: any = category.values.filter(isOnViewMonth);
+            const [currentCategoryValue]: CategoryValueId[] = category.values.filter(isOnViewMonth);
+            let desiredValue: DesiredValue;
 
-            if (!desiredValue) {
+            if (!currentCategoryValue) {
                 desiredValue = {
+                    categoryValueId: null,
+                    exists: false,
                     categoryId: category.categoryId,
                     budgeted: 0,
                     offset: 0,
                     budgetMonth: this.viewMonth,
-                    exists: false
                 };
             }
             else {
-                desiredValue.exists = true;
+                desiredValue = {
+                    ...currentCategoryValue,
+                    exists: true
+                };
             }
 
             return {
-                offsetTotal,
-                budgetedTotal,
-                desiredValue: {
-                    ...desiredValue,
-                },
+                offsetTotalToDate,
+                budgetedTotalToDate,
+                desiredValue,
                 ...category
             };
         });
-
     }
 
     public updateCategory(category: CategoryId) {
@@ -125,4 +137,6 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
         });
     }
 }
+
+
 

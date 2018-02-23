@@ -21,7 +21,6 @@ export class ReoccurringService {
         const transactionCollection = this.references.getTransactionCollectionRef(budgetId);
         let reoccurringTransactions$: Observable<ReoccurringTransactionId[]> = this.mapDocumentId.mapReoccurringTransactionIds(reoccurringTransactionCollection);
 
-
         reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
 
             const today = this.utility.convertToUtc(new Date());

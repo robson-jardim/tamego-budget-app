@@ -98,7 +98,7 @@ export class CategoryDialogComponent implements OnInit {
         const valueDocExists = () => this.data.desiredValue.exists;
         const categoryValuesAreZero = () => this.categoryForm.value.budgeted === 0 && this.categoryForm.value.offset === 0;
         const getCategoryId = () => this.data.categoryId;
-        const getValueTime = () => this.data.desiredValue.budgetMonth;
+        const getValueBudgetMonth = () => this.data.desiredValue.budgetMonth;
 
         const getBudgetedValue = () => {
             const budgeted = this.categoryForm.value.budgeted;
@@ -149,7 +149,7 @@ export class CategoryDialogComponent implements OnInit {
                 const data: CategoryValue = {
                     budgeted: getBudgetedValue(),
                     offset: getOffsetValue(),
-                    budgetMonth: getValueTime(),
+                    budgetMonth: getValueBudgetMonth(),
                     categoryId: getCategoryId()
                 };
 

@@ -35,7 +35,7 @@ export class DashboardViewService {
         });
     }
 
-    public getTransactionView(budgetId: string, accountIds: string[]) {
+    public getTransactionView(budgetId: string, accountIds: string[], options?: Object) {
 
         if (accountIds.length === 0) {
             return Observable.of([]);

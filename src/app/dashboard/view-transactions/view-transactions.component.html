@@ -1,7 +1,7 @@
 <div class="view-transaction-container">
     <ng-container *ngIf="transactions$ | async as transactions; else loading">
 
-        <h1 class="mat-headline">Accounts</h1>
+        <h1 class="mat-headline">Transactions</h1>
 
         <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
 

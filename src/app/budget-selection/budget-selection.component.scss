@@ -4,14 +4,12 @@
 }
 
 .budget-selection-container {
-    max-width: 800px;
-    margin: 25px auto;
+    max-width: 936px;
+    margin: 24px auto 0;
+    padding: 0 24px;
 }
 
-.budget-selection-container div {
-    margin: 0 16px;
+.budget-selection-container .mat-card {
+    margin: 24px 0;
 }
 
-.budget-card {
-    margin: 20px auto;
-}

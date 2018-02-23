@@ -16,10 +16,10 @@
     <mat-dialog-actions>
 
         <button mat-button [mat-dialog-close]>Cancel</button>
-        <button
-            mat-button
-            [disabled]="!budgetForm.valid ||saving"
-            type="submit">
+        <button mat-raised-button
+                color="primary"
+                [disabled]="!budgetForm.valid ||saving"
+                type="submit">
             <span *ngIf="DialogState.Create === data.state">Add</span>
             <span *ngIf="DialogState.Update === data.state">Save</span>
         </button>

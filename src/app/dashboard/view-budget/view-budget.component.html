@@ -4,16 +4,16 @@
 
         <div class="view-budget-header">
             <div class="view-budget-month">
+
+                <button mat-button (click)="previousMonth()" class="month-navigation">
+                    <mat-icon>keyboard_arrow_left</mat-icon>
+                </button>
+
                 <h1 class="mat-headline">{{viewMonth | date:'LLLL yyyy'}}</h1>
 
-                <div>
-                    <button mat-button (click)="previousMonth()">
-                        <mat-icon>keyboard_arrow_left</mat-icon>
-                    </button>
-                    <button mat-button (click)="nextMonth()">
-                        <mat-icon>keyboard_arrow_right</mat-icon>
-                    </button>
-                </div>
+                <button mat-button (click)="nextMonth()" class="month-navigation">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
             </div>
 
             <div class="view-budget-header-options">
@@ -38,7 +38,7 @@
                 <div class="categories-table-header-options">
                     <button mat-raised-button color="primary"
                             (click)="createCategory(group); $event.stopPropagation()"
-                    class="addCategory">
+                            class="addCategory">
                         Add category
                     </button>
 
