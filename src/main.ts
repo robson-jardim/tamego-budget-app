@@ -28,7 +28,7 @@ window['isUpdateAvailable'] = new Promise(function (resolve, reject) {
     if ('serviceWorker' in navigator) {
 
         navigator.serviceWorker.register('/service-worker.js').then(registration => {
-            console.log('[SW Registered]');
+            console.log('[SW] Registered');
             registration.onupdatefound = () => {
                 const installingWorker = registration.installing;
                 installingWorker.onstatechange = () => {
@@ -47,7 +47,7 @@ window['isUpdateAvailable'] = new Promise(function (resolve, reject) {
                 };
             };
         }).catch(error => {
-            console.error('[SW Error]', error);
+            console.error('[SW] Error', error);
         });
     }
 });

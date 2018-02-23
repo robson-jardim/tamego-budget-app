@@ -32,9 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.checkForUpdates();
         this.enableGlobalAppNotifications();
-        console.log('Update test2');
-        const x = 5;
-        const y = x + 2;
     }
 
     private isAuthenticatePage(): Observable<boolean> {
