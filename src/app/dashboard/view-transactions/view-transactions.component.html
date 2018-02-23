@@ -1,9 +1,10 @@
 <div class="view-transaction-container">
     <ng-container *ngIf="transactions$ | async as transactions; else loading">
 
-        <h1 class="mat-headline">Transactions</h1>
-
-        <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
+        <div class="header">
+            <h1 class="mat-headline">Transactions</h1>
+            <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
+        </div>
 
         <mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"
                   class="transaction-card">

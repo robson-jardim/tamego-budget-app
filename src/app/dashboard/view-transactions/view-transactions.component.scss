@@ -7,3 +7,18 @@
 .transaction-card {
     margin: 24px 0;
 }
+
+.header {
+    display: flex;
+    margin-top: -24px;
+    flex-wrap: wrap;
+}
+
+.header h1 {
+    flex: 1;
+    margin: 24px 0 0;
+}
+
+.header button {
+    margin-top: 24px;
+}

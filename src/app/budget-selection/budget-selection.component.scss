@@ -13,3 +13,22 @@
     margin: 24px 0;
 }
 
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-top: -24px;
+}
+
+.header h1 {
+    flex: 1;
+    margin: 24px 0 0;
+}
+
+.header button {
+    margin-top: 24px;
+}
+
+
+
+
