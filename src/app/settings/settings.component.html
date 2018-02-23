@@ -22,7 +22,7 @@
                             </ng-container>
                         </div>
 
-                        <p id="trialLength" class="mat-body-2">Trial ends in {{user.trial.trialEnd | daysUntil}} days</p>
+                        <p id="trialLength" class="mat-body-2">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
 
                         <ng-container *ngIf="!user.emailVerified">
                             <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">

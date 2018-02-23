@@ -19,17 +19,17 @@
 
     <ng-container matColumnDef="budgeted">
         <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.desiredValue.budgeted}}</mat-cell>
+        <mat-cell *matCellDef="let element">$ {{element.desiredValue.budgeted}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="activity">
         <mat-header-cell *matHeaderCellDef>Activity</mat-header-cell>
-        <mat-cell *matCellDef="let element">Activity</mat-cell>
+        <mat-cell *matCellDef="let element">$ {{element.desiredValue.offset}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="available">
         <mat-header-cell *matHeaderCellDef>Available</mat-header-cell>
-        <mat-cell *matCellDef="let element">Available</mat-cell>
+        <mat-cell *matCellDef="let element">$ {{element.budgetedTotalToDate}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">

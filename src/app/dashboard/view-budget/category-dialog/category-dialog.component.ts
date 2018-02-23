@@ -86,7 +86,7 @@ export class CategoryDialogComponent implements OnInit {
 
     private getCategoryData(): Category {
         const getPosition = () => {
-            if (this.data.position) {
+            if (this.data.position !== undefined) {
                 return this.data.position;
             }
             else {

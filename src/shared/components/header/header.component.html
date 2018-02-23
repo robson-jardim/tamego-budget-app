@@ -13,7 +13,7 @@
 
             <ng-container *ngIf="auth.user | async as user">
                 <ng-container *ngIf="user.trial.isTrial">
-                    <p id="trialLength" class="mat-body-2">Trial ends in {{user.trial.trialEnd | daysUntil}} days</p>
+                    <p id="trialLength" class="mat-body-2">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
                 </ng-container>
 
                 <ng-container *ngIf="!user.email">
