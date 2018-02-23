@@ -1,5 +1,5 @@
 <ng-container *ngIf="dropdowns$ | async as dropdowns; else loading">
-    <form [formGroup]="transactionForm" (ngSubmit)="transactionForm.valid && saveChanges()">
+    <form [formGroup]="transactionForm" (ngSubmit)="saveChanges()">
 
         <h1 mat-dialog-title *ngIf="DialogState.Create === data.state">Add transaction</h1>
         <h1 mat-dialog-title *ngIf="DialogState.Update === data.state">Edit transaction</h1>
@@ -56,13 +56,16 @@
         </mat-dialog-content>
 
         <mat-dialog-actions>
+
             <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
-            <button mat-button *ngIf="data.state === 'CREATE'" [disabled]="saving" type="submit" mat-raised-button
-                    color="primary">Add
-            </button>
-            <button mat-button *ngIf="data.state === 'UPDATE'" [disabled]="saving" type="submit" mat-raised-button
-                    color="primary">Save
+            <button [disabled]="!transactionForm.valid || saving"
+                    type="submit"
+                    color="primary"
+                    mat-raised-button>
+                <span *ngIf="DialogState.Create === data.state">Add</span>
+                <span *ngIf="DialogState.Update === data.state">Save</span>
+
             </button>
         </mat-dialog-actions>
 

@@ -7,3 +7,8 @@
     text-transform: uppercase;
     //font-size: 13px !important;
 }
+
+.mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+}

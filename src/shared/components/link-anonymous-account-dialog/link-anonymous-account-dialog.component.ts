@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddBudgetDialogComponent } from '../../../app/budget-selection/add-budget-dialog/add-budget-dialog.component';
+import { BudgetDialogComponent } from '../../../app/budget-selection/budget-dialog/budget-dialog.component';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class LinkAnonymousAccountDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<AddBudgetDialogComponent>) {
+    constructor(public dialogRef: MatDialogRef<BudgetDialogComponent>) {
     }
 
     ngOnInit() {

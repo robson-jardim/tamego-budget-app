@@ -4,7 +4,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
-import { CollectionResult } from '@models/collection-result.model';
+import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
+import { EntityNames } from '@shared/enums/entity-names.enum';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 
 enum AccountFormNames {
     AccountName = 'accountName'
@@ -20,11 +22,14 @@ export class AccountDialogComponent implements OnInit {
     public accountForm: FormGroup;
     public AccountFormNames = AccountFormNames;
     public DialogState = DialogState;
+    public saving: boolean;
 
     constructor(private dialogRef: MatDialogRef<AccountDialogComponent>,
                 private formBuilder: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public data: any,
-                private firestore: FirestoreService) {
+                private references: FirestoreReferenceService,
+                private firestore: FirestoreService,
+                private notifications: GeneralNotificationsService) {
     }
 
     ngOnInit() {
@@ -34,45 +39,59 @@ export class AccountDialogComponent implements OnInit {
     private buildAccountForm() {
         const form = new Object();
         form[AccountFormNames.AccountName] = [this.data.accountName, Validators.required];
-
         this.accountForm = this.formBuilder.group(form);
     }
 
     public saveChanges() {
+        this.saving = true;
+
         if (DialogState.Create === this.data.state) {
-            this.createAccount();
+            const newAccountId = this.createAccount();
+            this.dialogRef.close(newAccountId);
         }
         else if (DialogState.Update === this.data.state) {
             this.updateAccount();
+            this.dialogRef.close();
         }
+        else {
+            throw new Error('Unable to determine dialog state');
+        }
+
+        this.sendAccountNotification();
     }
 
     private createAccount() {
-        const accountsCollection = this.getAccounts().collection;
-
-        const data: BudgetAccount = {
-            accountName: this.accountForm.value.accountName,
-            createdAt: new Date()
-        };
-
         const newAccountId = this.firestore.generateId();
-        accountsCollection.doc(newAccountId).set(data);
-        this.dialogRef.close(newAccountId);
+        this.getAccounts().doc(newAccountId).set(this.getAccountData());
+        return newAccountId;
     }
 
     private updateAccount() {
-        const accountsCollection = this.getAccounts().collection;
+        this.getAccounts().doc(this.data.budgetAccountId).update(this.getAccountData());
 
-        const data: any = {
-            accountName: this.accountForm.value[AccountFormNames.AccountName]
-        };
-
-        accountsCollection.doc(this.data.budgetAccountId).update(data);
-        this.dialogRef.close();
     }
 
-    private getAccounts(): CollectionResult<BudgetAccount, BudgetAccountId[]> {
-        return this.firestore.getAccounts(this.data.budgetId);
+    private getAccountData(): BudgetAccount {
+        return {
+            accountName: this.accountForm.value[AccountFormNames.AccountName],
+            createdAt: this.data.createdAtAt || new Date()
+        };
+    }
+
+    private getAccounts() {
+        return this.references.getAccountsCollectionRef(this.data.budgetId);
+    }
+
+    private sendAccountNotification() {
+        if (DialogState.Create === this.data.state) {
+            this.notifications.sendCreateNotification(EntityNames.Account);
+        }
+        else if (DialogState.Update === this.data.state) {
+            this.notifications.sendUpdateNotification(EntityNames.Account);
+        }
+        else if (DialogState.Delete === this.data.state) {
+            this.notifications.sendDeleteNotification(EntityNames.Account);
+        }
     }
 
 }

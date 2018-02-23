@@ -6,9 +6,7 @@ import { CategoryValue } from '@models/category-value.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
-import { TransactionFormNames } from '../../view-transactions/shared/transaction-form-names.enum';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
-
 
 @Component({
     selector: 'app-edit-category-dialog',
@@ -19,6 +17,7 @@ export class CategoryDialogComponent implements OnInit {
 
     public categoryForm: FormGroup;
     public DialogState = DialogState;
+    public saving: boolean;
 
     constructor(private dialogRef: MatDialogRef<CategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
@@ -48,12 +47,13 @@ export class CategoryDialogComponent implements OnInit {
     }
 
     public saveChanges() {
+        this.saving = true;
 
         if (DialogState.Create === this.data.state) {
             this.createCategory();
         }
         else if (DialogState.Update === this.data.state) {
-            this.updateCategory();
+            this.updateCategoryAndValue();
         }
         else {
             throw new Error('Unable to determine dialog state');
@@ -64,29 +64,36 @@ export class CategoryDialogComponent implements OnInit {
     }
 
     private createCategory() {
-        const data: Category = {
-            groupId: this.data.groupId,
-            categoryName: this.categoryForm.value.categoryName,
-            position: this.data.nextCategoryPosition
-        };
+        this.getCategoryCollection().add(this.getCategoryData());
+    }
 
-        this.getCategoryCollection().add(data);
+    private updateCategoryAndValue() {
+        this.updateCategory();
+        this.saveCategoryValue();
     }
 
     private updateCategory() {
-        this.updateCategoryEntity();
-        this.saveCategoryValueChanges();
+        this.getCategoryCollection().doc(this.data.categoryId).update(this.getCategoryData());
     }
 
-    private updateCategoryEntity() {
-        const data = {
-            categoryName: this.categoryForm.value.categoryName
+    private getCategoryData(): Category {
+        const getPosition = () => {
+            if (this.data.position) {
+                return this.data.position;
+            }
+            else {
+                return this.data.nextCategoryPosition;
+            }
         };
 
-        this.getCategoryCollection().doc(this.data.categoryId).update(data);
+        return {
+            groupId: this.data.groupId,
+            categoryName: this.categoryForm.value.categoryName,
+            position: getPosition()
+        };
     }
 
-    private saveCategoryValueChanges() {
+    private saveCategoryValue() {
 
         const valueDocExists = () => this.data.desiredValue.exists;
         const categoryValuesAreZero = () => this.categoryForm.value.budgeted === 0 && this.categoryForm.value.offset === 0;
@@ -149,7 +156,6 @@ export class CategoryDialogComponent implements OnInit {
                 this.getCategoryValuesCollection().doc(generateValueId()).set(data);
             }
         }
-
     }
 
     public getCategoryCollection() {

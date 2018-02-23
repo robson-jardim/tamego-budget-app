@@ -1,12 +1,14 @@
 <form [formGroup]="groupForm" (ngSubmit)="saveChanges()">
 
-    <h1 *ngIf="DialogState.Create === data.state" mat-dialog-title>Add category group</h1>
-    <h1 *ngIf="DialogState.Update === data.state" mat-dialog-title>Edit category group</h1>
+    <h1 mat-dialog-title>
+        <span *ngIf="DialogState.Create === data.state">Add category group</span>
+        <span *ngIf="DialogState.Update === data.state">Edit category group</span>
+    </h1>
 
     <mat-dialog-content>
 
         <mat-form-field>
-            <input matInput formControlName="groupName" placeholder="Group name" type="text">
+            <input matInput formControlName="{{GroupFormNames.GroupName}}" placeholder="Group name" type="text">
         </mat-form-field>
 
     </mat-dialog-content>

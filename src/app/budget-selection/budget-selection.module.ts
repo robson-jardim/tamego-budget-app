@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { BudgetSelectionComponent } from './budget-selection.component';
-import { AddBudgetDialogComponent } from './add-budget-dialog/add-budget-dialog.component';
+import { BudgetDialogComponent } from './budget-dialog/budget-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { RouterModule } from '@angular/router';
@@ -17,10 +17,10 @@ import { RouterModule } from '@angular/router';
     ],
     declarations: [
         BudgetSelectionComponent,
-        AddBudgetDialogComponent,
+        BudgetDialogComponent,
     ],
     entryComponents: [
-        AddBudgetDialogComponent
+        BudgetDialogComponent
     ]
 })
 export class BudgetSelectionModule {

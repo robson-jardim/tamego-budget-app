@@ -1,7 +1,9 @@
 <form [formGroup]="categoryForm" (ngSubmit)="saveChanges()">
 
-    <h1 *ngIf="DialogState.Create === data.state" mat-dialog-title>Add category</h1>
-    <h1 *ngIf="DialogState.Update === data.state" mat-dialog-title>Edit category</h1>
+    <h1 mat-dialog-title="">
+        <span *ngIf="DialogState.Create === data.state">Add category</span>
+        <span *ngIf="DialogState.Update === data.state">Edit category</span>
+    </h1>
 
     <mat-dialog-content>
 
@@ -25,11 +27,12 @@
 
         <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
-        <button *ngIf="DialogState.Update === data.state" mat-raised-button color="primary" [disabled]="!categoryForm.valid" type="submit">
-            Save
-        </button>
-        <button *ngIf="DialogState.Create === data.state" mat-raised-button color="primary" [disabled]="!categoryForm.valid" type="submit">
-            Add
+        <button mat-raised-button
+                color="primary"
+                [disabled]="!categoryForm.valid || saving"
+                type="submit">
+            <span *ngIf="DialogState.Update === data.state">Save</span>
+            <span *ngIf="DialogState.Create === data.state">Add</span>
         </button>
 
     </mat-dialog-actions>

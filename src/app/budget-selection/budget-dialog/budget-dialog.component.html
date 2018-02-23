@@ -1,0 +1,28 @@
+<form [formGroup]="budgetForm" (ngSubmit)="saveChanges()">
+
+    <h1 mat-dialog-title>
+        <span *ngIf="DialogState.Create === data.state">Add budget</span>
+        <span *ngIf="DialogState.Update === data.state">Edit budget</span>
+    </h1>
+
+    <mat-dialog-content>
+
+        <mat-form-field>
+            <input matInput formControlName="{{BudgetFormNames.BudgetName}}" placeholder="Budget name" type="text">
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+
+        <button mat-button [mat-dialog-close]>Cancel</button>
+        <button
+            mat-button
+            [disabled]="!budgetForm.valid ||saving"
+            type="submit">
+            <span *ngIf="DialogState.Create === data.state">Add</span>
+            <span *ngIf="DialogState.Update === data.state">Save</span>
+        </button>
+
+    </mat-dialog-actions>
+</form>

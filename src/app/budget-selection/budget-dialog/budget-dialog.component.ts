@@ -2,48 +2,49 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
-import { CollectionResult } from '@models/collection-result.model';
 import { Budget, BudgetId } from '@models/budget.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { first, retryWhen } from 'rxjs/operators';
-import { timer } from 'rxjs/observable/timer';
+import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
+import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
+import { EntityNames } from '@shared/enums/entity-names.enum';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+
+enum BudgetFormNames {
+    BudgetName = 'budgetName'
+}
 
 @Component({
     selector: 'app-add-budget-dialog',
-    templateUrl: './add-budget-dialog.component.html',
-    styleUrls: ['./add-budget-dialog.component.scss']
+    templateUrl: './budget-dialog.component.html',
+    styleUrls: ['./budget-dialog.component.scss']
 })
-export class AddBudgetDialogComponent implements OnInit {
+export class BudgetDialogComponent implements OnInit {
 
     public budgetForm: FormGroup;
-
-    private budgets: CollectionResult<Budget, BudgetId[]>;
-    private userId: string;
-
     public saving = false;
+    public DialogState = DialogState;
+    public BudgetFormNames = BudgetFormNames;
 
-    constructor(private dialogRef: MatDialogRef<AddBudgetDialogComponent>,
+    constructor(private dialogRef: MatDialogRef<BudgetDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: any,
+                @Inject(MAT_DIALOG_DATA) public data: any,
                 private firestore: FirestoreService,
-                private afs: AngularFirestore) {
-        this.budgets = data.budgets;
-        this.userId = data.userId;
+                private references: FirestoreReferenceService,
+                private notifications: GeneralNotificationsService) {
     }
 
     ngOnInit() {
         this.buildBudgetForm();
     }
 
-    private buildBudgetForm(): void {
-        this.budgetForm = this.formBuilder.group({
-            budgetName: ['', Validators.required]
-        });
+    private buildBudgetForm() {
+        const form = new Object();
+        form[BudgetFormNames.BudgetName] = [null, Validators.required];
+        this.budgetForm = this.formBuilder.group(form);
     }
 
-    public async addBudget() {
+    public saveChanges() {
 
         this.saving = true;
         const currentTime = new Date();
@@ -55,7 +56,7 @@ export class AddBudgetDialogComponent implements OnInit {
             lastVisited: currentTime
         };
 
-        const budgets = this.budgets.collection;
+        const budgets = this.getBudgetCollection();
         const budgetId = this.firestore.generateId();
         budgets.doc(budgetId).set(data);
 
@@ -70,6 +71,7 @@ export class AddBudgetDialogComponent implements OnInit {
             first()
         ).subscribe(() => {
             this.onBudgetAdded(budgetId);
+            this.sendBudgetNotification();
         });
 
         function permissionDenied(errors) {
@@ -77,7 +79,23 @@ export class AddBudgetDialogComponent implements OnInit {
         }
     }
 
+    private getBudgetCollection() {
+        return this.references.getBudgetCollectionRef(this.data.userId);
+    }
+
     private onBudgetAdded(budgetId: string): void {
         this.dialogRef.close(budgetId);
+    }
+
+    private sendBudgetNotification() {
+        if (DialogState.Create === this.data.state) {
+            this.notifications.sendCreateNotification(EntityNames.Budget);
+        }
+        else if (DialogState.Update === this.data.state) {
+            this.notifications.sendUpdateNotification(EntityNames.Budget);
+        }
+        else if (DialogState.Delete === this.data.state) {
+            this.notifications.sendDeleteNotification(EntityNames.Budget);
+        }
     }
 }

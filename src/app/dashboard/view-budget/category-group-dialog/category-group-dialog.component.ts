@@ -8,6 +8,10 @@ import { EntityNames } from '@shared/enums/entity-names.enum';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 
+enum GroupFormNames {
+    GroupName = 'groupName'
+}
+
 @Component({
     selector: 'app-category-group-dialog',
     templateUrl: './category-group-dialog.component.html',
@@ -16,8 +20,10 @@ import { FirestoreReferenceService } from '@shared/services/firestore-reference/
 export class CategoryGroupDialogComponent implements OnInit {
 
     public groupForm: FormGroup;
-    public DialogState = DialogState;
     public saving: boolean;
+
+    public GroupFormNames = GroupFormNames;
+    public DialogState = DialogState;
 
     constructor(private dialogRef: MatDialogRef<CategoryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
@@ -31,9 +37,9 @@ export class CategoryGroupDialogComponent implements OnInit {
     }
 
     private buildGroupForm(): void {
-        this.groupForm = this.formBuilder.group({
-            groupName: [this.data.groupName || null, Validators.required]
-        });
+        const form = new Object();
+        form[GroupFormNames.GroupName] = [this.data.groupName || null, Validators.required];
+        this.groupForm = this.formBuilder.group(form);
     }
 
     public saveChanges() {
@@ -64,7 +70,6 @@ export class CategoryGroupDialogComponent implements OnInit {
     private getCategoryGroupData(): CategoryGroup {
 
         const getPosition = () => {
-
             if (this.data.position !== undefined) {
                 return this.data.position;
             }
@@ -74,7 +79,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         };
 
         return {
-            groupName: this.groupForm.value.groupName,
+            groupName: this.groupForm.value[GroupFormNames.GroupName],
             position: getPosition()
         };
     }
