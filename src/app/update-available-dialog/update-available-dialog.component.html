@@ -4,7 +4,8 @@
 
 </mat-dialog-content>
 
-<mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="acceptUpdates()" [disabled]="disableReload">Update now</button>
+<mat-dialog-actions class="options">
+    <button mat-raised-button color="primary" (click)="acceptUpdates()" [disabled]="disableReload">Update now
+    </button>
     <button mat-button type="button" (click)="declineUpdates()">Update later</button>
 </mat-dialog-actions>

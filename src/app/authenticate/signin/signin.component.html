@@ -21,8 +21,13 @@
         <mat-icon matSuffix (click)="hideSigninPassword  = !hideSigninPassword">
             {{hideSigninPassword ? 'visibility_off' : 'visibility'}}
         </mat-icon>
+
+        <mat-hint id="forgot-password" routerLink="/password_reset">
+            <p>Forgot password?</p>
+        </mat-hint>
+
     </mat-form-field>
 
-    <button mat-raised-button color="primary" mat-button type="submit" [disabled]="saving">Sign in</button>
+    <button mat-raised-button color="primary" mat-button type="submit" [disabled]="saving" id="signin-button">Sign in</button>
 
 </form>

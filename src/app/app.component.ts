@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { GeneralNotificationsService, Notification } from '@shared/services/general-notifications/general-notifications.service';
+import {
+    GeneralNotificationsService,
+    Notification
+} from '@shared/services/general-notifications/general-notifications.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { Observable } from 'rxjs/Observable';
@@ -31,27 +34,21 @@ export class AppComponent implements OnInit, OnDestroy {
         this.enableGlobalAppNotifications();
     }
 
-    ngOnDestroy() {
-        this.notificationSubscription.unsubscribe();
-    }
-
     private isAuthenticatePage(): Observable<boolean> {
         return this.router.events.filter((event: any) => {
             return event instanceof NavigationEnd;
         }).map(event => {
-            return event.url === '/signin' || event.url === '/signup';
+            return event.url === '/signin' || event.url === '/signup' || event.url === '/password_reset';
         });
     }
 
+    ngOnDestroy() {
+        this.notificationSubscription.unsubscribe();
+    }
+
     private isUpdatesAvailable(): Observable<boolean> {
-        // Service worker is not enabled in development, so update check
-        // is not defined
-        if (window['isUpdateAvailable']) {
-            return Observable.fromPromise(window['isUpdateAvailable']);
-        }
-        else {
-            return Observable.of(false);
-        }
+        // Service worker is not enabled in development, so isUpdateAvailable promise not resolve during development
+        return Observable.fromPromise(window['isUpdateAvailable']);
     }
 
     private showSnapbar(notification: Notification) {
@@ -73,7 +70,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private openUpdateAvailableDialog() {
         this.dialogService.open(UpdateAvailableDialogComponent, {
-            disableClose: true
+            disableClose: true,
+            minWidth: '210px',
         });
     }
 

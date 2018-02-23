@@ -23,35 +23,31 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 // because isUpdateAvailable promise needs to be set on window during registration
     .catch(err => console.log(err));
 
-registerServiceWorker();
-
 // Taken from: https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
-function registerServiceWorker() {
-    window['isUpdateAvailable'] = new Promise(function (resolve, reject) {
-        if ('serviceWorker' in navigator) {
+window['isUpdateAvailable'] = new Promise(function (resolve, reject) {
+    if ('serviceWorker' in navigator) {
 
-            navigator.serviceWorker.register('/service-worker.js').then(registration => {
-                console.log('[SW Registered]');
-                registration.onupdatefound = () => {
-                    const installingWorker = registration.installing;
-                    installingWorker.onstatechange = () => {
-                        switch (installingWorker.state) {
-                            case 'installed':
-                                if (navigator.serviceWorker.controller) {
-                                    // new update available
-                                    console.log('[SW] Updates available');
-                                    resolve(true);
-                                } else {
-                                    // no update available
-                                    resolve(false);
-                                }
-                                break;
-                        }
-                    };
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('[SW Registered]');
+            registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = () => {
+                    switch (installingWorker.state) {
+                        case 'installed':
+                            if (navigator.serviceWorker.controller) {
+                                // new update available
+                                console.log('[SW] Updates available');
+                                resolve(true);
+                            } else {
+                                // no update available
+                                resolve(false);
+                            }
+                            break;
+                    }
                 };
-            }).catch(error => {
-                console.error('[SW Error]', error);
-            });
-        }
-    });
-}
+            };
+        }).catch(error => {
+            console.error('[SW Error]', error);
+        });
+    }
+});

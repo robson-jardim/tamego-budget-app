@@ -16,6 +16,7 @@ import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account
 import { SigninComponent } from './authenticate/signin/signin.component';
 import { SignupComponent } from './authenticate/signup/signup.component';
 import { AuthenticateComponent } from './authenticate/authenticate-user.component';
+import { PasswordResetComponent } from './authenticate/password-reset/password-reset.component';
 
 const routes: Routes = [
     {
@@ -69,6 +70,10 @@ const routes: Routes = [
             {
                 path: 'signup',
                 component: SignupComponent
+            },
+            {
+                path: 'password_reset',
+                component: PasswordResetComponent
             },
             {
                 path: '**',

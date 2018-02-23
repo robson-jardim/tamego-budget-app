@@ -2,3 +2,13 @@
     display: flex;
     flex-direction: column;
 }
+
+#forgot-password {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#signin-button {
+    margin-top: 20px;
+}

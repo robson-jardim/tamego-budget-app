@@ -8,6 +8,7 @@ import { CustomMaterialFormsModule } from '@shared/components/custom-material-fo
 import { MatTabsModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { AuthenticateComponent } from './authenticate-user.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { AuthenticateComponent } from './authenticate-user.component';
     declarations: [
         AuthenticateComponent,
         SigninComponent,
-        SignupComponent
+        SignupComponent,
+        PasswordResetComponent
     ],
     exports: [
         SigninComponent,

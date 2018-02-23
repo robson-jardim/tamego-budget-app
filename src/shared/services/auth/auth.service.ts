@@ -169,6 +169,10 @@ export class AuthService {
         }
     }
 
+    public sendResetPasswordResetEmail(email: string) {
+        return Observable.fromPromise(this.afAuth.auth.sendPasswordResetEmail(email));
+    }
+
     public async signOut() {
         try {
             await this.afAuth.auth.signOut();

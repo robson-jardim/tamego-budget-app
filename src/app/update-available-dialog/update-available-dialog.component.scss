@@ -1,0 +1,10 @@
+@media (max-width: 410px) {
+    .options {
+        flex-direction: column;
+    }
+
+    .options .mat-raised-button {
+        margin-bottom: 8px;
+    }
+}
+
