@@ -25,7 +25,7 @@
                        (click)="sidenavSelection()"
                         class="sidenav-account-item">
 
-            <p>{{account.accountName}}</p>
+            <p class="truncate">{{account.accountName}}</p>
 
             <div class="account-options">
                 <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">

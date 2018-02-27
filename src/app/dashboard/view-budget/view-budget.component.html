@@ -31,7 +31,9 @@
                 class="categories-table-header categories-table-grey"
                 (click)="updateCategoryGroup(group)">
 
-                <h1 class="mat-title group-name">{{group.groupName}}</h1>
+                <div class="group-name">
+                    <h1 class="mat-title truncate">{{group.groupName}}</h1>
+                </div>
 
                 <div class="categories-table-header-options">
                     <button mat-raised-button color="primary"

@@ -12,7 +12,7 @@
         <ng-container *ngIf="budgets$ | async  as budgets; else loading">
 
             <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]" class="bottom-margin">
-                <p>{{budget.budgetName}}</p>
+                <p class="truncate">{{budget.budgetName}}</p>
             </mat-card>
 
         </ng-container>
