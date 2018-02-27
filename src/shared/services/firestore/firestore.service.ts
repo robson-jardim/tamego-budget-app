@@ -35,8 +35,12 @@ export class FirestoreService {
     }
 
 
-    public generateId(): string {
+    public createId(): string {
         return this.afs.createId();
+    }
+
+    public batch() {
+        return this.afs.firestore.batch();
     }
 
     public getBudgets(userId): CollectionResult<Budget, BudgetId[]> {

@@ -17,10 +17,7 @@ import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.ser
     imports: [
         AngularFireAuthModule,
         AngularFirestoreModule,
-        AngularFireModule.initializeApp(environment.firebase),
-
-        // TODO - conditionally enable persistence if user is premium
-        AngularFirestoreModule.enablePersistence(),
+        AngularFireModule.initializeApp(environment.firebase)
     ],
     providers: [
         FirestoreService,

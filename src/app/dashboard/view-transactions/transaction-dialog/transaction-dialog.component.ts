@@ -250,7 +250,7 @@ export class TransactionDialogComponent implements OnInit {
             return (<BudgetAccountId>payeeField).budgetAccountId;
         }
         else if (typeof payeeField === 'string') {
-            const newPayeeId = this.firestore.generateId();
+            const newPayeeId = this.firestore.createId();
 
             const newPayee: Payee = {
                 payeeName: <string>payeeField,

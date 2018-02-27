@@ -30,22 +30,6 @@ export class UtilityService {
         return utcDate;
     }
 
-    public utcToString(date: Date) {
-        const year = date.getUTCFullYear();
-        let day: any = date.getUTCDate();
-        let month: any = date.getUTCMonth() + 1;
-
-        if (day < 10) {
-            day = '0' + day;
-        }
-
-        if (month < 10) {
-            month = '0' + month;
-        }
-
-        return `${year}-${month}-${day}`;
-    }
-
     public combineLatestObj(obj: Object): Observable<any> {
 
         const sources = [];

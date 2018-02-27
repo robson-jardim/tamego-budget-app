@@ -7,13 +7,15 @@ import { ReoccurringTransfer, ReoccurringTransferId, Transfer } from '@models/tr
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
 import { ReoccurringSchedules } from '@shared/enums/reoccurring-schedules.enum';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 @Injectable()
 export class ReoccurringService {
 
     constructor(private mapDocumentId: MapFirestoreDocumentIdService,
                 private references: FirestoreReferenceService,
-                private utility: UtilityService) {
+                private utility: UtilityService,
+                private afs: AngularFirestore) {
     }
 
     public getReoccurringTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransaction, ReoccurringTransactionId[]> {
@@ -27,9 +29,6 @@ export class ReoccurringService {
 
             reoccurringTransactions.map(reoccurringTransaction => {
                 if (reoccurringTransaction.transactionDate <= today) {
-                    const utcString = this.utility.utcToString(reoccurringTransaction.transactionDate);
-                    const newTransactionId = reoccurringTransaction.reoccurringTransactionId + '_' + utcString;
-
                     const nonreoccurring: Transaction = {
                         transactionDate: reoccurringTransaction.transactionDate,
                         accountId: reoccurringTransaction.accountId,
@@ -42,10 +41,18 @@ export class ReoccurringService {
                         locked: reoccurringTransaction.locked
                     };
 
-                    const nextOccurrence = this.getNextOccurrence(reoccurringTransaction.transactionDate, reoccurringTransaction.reoccurringSchedule);
+                    const batch = this.afs.firestore.batch();
 
-                    reoccurringTransactionCollection.doc(reoccurringTransaction.reoccurringTransactionId).update({transactionDate: nextOccurrence});
-                    transactionCollection.doc(newTransactionId).set({...nonreoccurring});
+                    const reoccurringDocRef = reoccurringTransactionCollection.doc(reoccurringTransaction.reoccurringTransactionId).ref;
+                    const nextOccurrence = this.getNextOccurrence(reoccurringTransaction.transactionDate, reoccurringTransaction.reoccurringSchedule);
+                    batch.update(reoccurringDocRef, {transactionDate: nextOccurrence});
+
+                    const newTransacitonId = this.afs.createId();
+                    const newTransactionDocRef = transactionCollection.doc(newTransacitonId).ref;
+
+                    batch.set(newTransactionDocRef, {...nonreoccurring});
+
+                    batch.commit();
                 }
             });
         });
@@ -89,8 +96,6 @@ export class ReoccurringService {
             reoccurringTransfers.map(reoccurringTransfer => {
 
                 if (reoccurringTransfer.transactionDate <= today) {
-                    const utcString = this.utility.utcToString(reoccurringTransfer.transactionDate);
-                    const newTransactionId = reoccurringTransfer.reoccurringTransferId + '_' + utcString;
 
                     const nonreoccurring: Transfer = {
                         transactionDate: reoccurringTransfer.transactionDate,
@@ -104,10 +109,18 @@ export class ReoccurringService {
                         lockedDestination: reoccurringTransfer.lockedDestination
                     };
 
-                    const nextOccurrence = this.getNextOccurrence(reoccurringTransfer.transactionDate, reoccurringTransfer.reoccurringSchedule);
+                    const batch = this.afs.firestore.batch();
 
-                    reoccurringTransferCollection.doc(reoccurringTransfer.reoccurringTransferId).update({transactionDate: nextOccurrence});
-                    transferCollection.doc(newTransactionId).set({...nonreoccurring});
+                    const reoccurringDocRef = reoccurringTransferCollection.doc(reoccurringTransfer.reoccurringTransferId).ref;
+                    const nextOccurrence = this.getNextOccurrence(reoccurringTransfer.transactionDate, reoccurringTransfer.reoccurringSchedule);
+                    batch.update(reoccurringDocRef, {transactionDate: nextOccurrence});
+
+                    const newTransferId = this.afs.createId();
+                    const newTransferRef = transferCollection.doc(newTransferId).ref;
+
+                    batch.set(newTransferRef, {...nonreoccurring});
+
+                    batch.commit();
                 }
             });
         });

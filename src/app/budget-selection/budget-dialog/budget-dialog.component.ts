@@ -44,12 +44,12 @@ export class BudgetDialogComponent implements OnInit {
         this.budgetForm = this.formBuilder.group(form);
     }
 
-    public saveChanges() {
+    public async saveChanges() {
 
         this.saving = true;
         const currentTime = new Date();
 
-        const data: Budget = {
+        const budgetData: Budget = {
             userId: this.data.userId,
             budgetName: this.budgetForm.value.budgetName,
             timeCreated: currentTime,
@@ -57,26 +57,8 @@ export class BudgetDialogComponent implements OnInit {
         };
 
         const budgets = this.getBudgetCollection();
-        const budgetId = this.firestore.generateId();
-        budgets.doc(budgetId).set(data);
-
-        // This is a work around for an issue with get() inside the Firestore security rules.
-        // The bug occurs when trying to access sub-collections on newly created documents.
-        // Retry query sub-collections until they emit a value successfully. Only
-        // then is is safe to query sub-collections without getting a permission denied error.
-        // LINK: https://stackoverflow.com/questions/47818878/firestore-rule-failing-while-using-get-on-newly-created-documents
-        const groups = this.firestore.getGroups(budgetId).collection.valueChanges();
-        groups.pipe(
-            retryWhen(permissionDenied),
-            first()
-        ).subscribe(() => {
-            this.onBudgetAdded(budgetId);
-            this.sendBudgetNotification();
-        });
-
-        function permissionDenied(errors) {
-            return errors;
-        }
+        const budget = await budgets.add(budgetData);
+        this.onBudgetAdded(budget.id);
     }
 
     private getBudgetCollection() {

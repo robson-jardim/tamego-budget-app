@@ -42,11 +42,11 @@ export class AccountDialogComponent implements OnInit {
         this.accountForm = this.formBuilder.group(form);
     }
 
-    public saveChanges() {
+    public async saveChanges() {
         this.saving = true;
 
         if (DialogState.Create === this.data.state) {
-            const newAccountId = this.createAccount();
+            const newAccountId = await this.createAccount();
             this.dialogRef.close(newAccountId);
         }
         else if (DialogState.Update === this.data.state) {
@@ -60,10 +60,9 @@ export class AccountDialogComponent implements OnInit {
         this.sendAccountNotification();
     }
 
-    private createAccount() {
-        const newAccountId = this.firestore.generateId();
-        this.getAccounts().doc(newAccountId).set(this.getAccountData());
-        return newAccountId;
+    private async createAccount() {
+        const account = await this.getAccounts().add(this.getAccountData());
+        return account.id;
     }
 
     private updateAccount() {

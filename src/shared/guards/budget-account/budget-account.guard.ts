@@ -19,7 +19,10 @@ export class BudgetAccountGuard implements CanActivate {
         return accountDocument.snapshotChanges().map(doc => {
             return doc.payload.exists;
         }).catch(error => {
-            // Firebase: missing or insufficient permissions
+            if (error.code !== 'permission-denied') {
+                console.log(error);
+            }
+
             return Observable.of(false);
         }).do(ownsBudgetAccount => {
             if (!ownsBudgetAccount) {
