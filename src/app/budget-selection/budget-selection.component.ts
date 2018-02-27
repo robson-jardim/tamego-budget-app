@@ -19,7 +19,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class BudgetSelectionComponent implements OnInit {
 
-    public budgets$: Observable<BudgetId[]>
+    public budgets$: Observable<BudgetId[]>;
 
     constructor(private firestore: FirestoreService,
                 private router: Router,

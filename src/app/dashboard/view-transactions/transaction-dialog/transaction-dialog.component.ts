@@ -264,7 +264,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    };
+    }
 
     private readonly getCategoryId = () => {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
@@ -275,7 +275,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    };
+    }
 
     private getTransactionData(): Transaction {
         return {

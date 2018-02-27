@@ -3,6 +3,20 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
 import { AuthService } from '@shared/services/auth/auth.service';
 
+class PasswordValidation {
+
+    static MatchPassword(control: AbstractControl) {
+        const password = control.get('password').value; // to get value in input tag
+        const confirmPassword = control.get('confirmPassword').value; // to get value in input tag
+        if (password !== confirmPassword) {
+            control.get('confirmPassword').setErrors({matchPassword: true});
+        } else {
+            return null;
+        }
+    }
+}
+
+
 @Component({
     selector: 'app-signup',
     templateUrl: './signup.component.html',
@@ -76,17 +90,4 @@ export class SignupComponent implements OnInit {
         }
     }
 
-}
-
-class PasswordValidation {
-
-    static MatchPassword(control: AbstractControl) {
-        const password = control.get('password').value; // to get value in input tag
-        const confirmPassword = control.get('confirmPassword').value; // to get value in input tag
-        if (password !== confirmPassword) {
-            control.get('confirmPassword').setErrors({matchPassword: true});
-        } else {
-            return null;
-        }
-    }
 }
