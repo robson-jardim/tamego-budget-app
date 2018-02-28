@@ -5,6 +5,9 @@ import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.s
 import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
 import { Subscription } from 'rxjs/Subscription';
 import { CategoryValueId } from '@models/category-value.model';
+import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
+import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
+import { Observable } from 'rxjs/Observable';
 
 export interface DesiredValue extends CategoryValueId {
     exists: boolean;
@@ -23,12 +26,13 @@ export interface CategoryWithDesiredValue extends CategoryWithValues {
 })
 export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDestroy {
 
-
+    @Input() transactions: Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>;
     @Input() categories: CategoryWithValues[];
-    @Input() viewMonth: Date;
     @Input() budgetId: string;
 
+    @Input() viewMonth: Date;
     @Input() onChanges$;
+
     public columns = ['categoryName', 'budgeted', 'activity', 'available', 'actions'];
     public dataSource: CategoryWithDesiredValue[];
     public hoveredTableRow = -1;
@@ -43,6 +47,8 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
         this.changeSubscription = this.onChanges$.subscribe(() => {
             this.buildDataSource();
         });
+
+        console.log(this.transactions);
     }
 
     ngOnDestroy() {

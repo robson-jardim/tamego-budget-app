@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CategoryGroupId } from '@models/category-group.model';
 import { Observable } from 'rxjs/Observable';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
-import { GroupWithCategories, GroupWithCategoriesWithValues } from '@models/view-budget.model';
+import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
+import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
+import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
 
 @Injectable()
 export class DashboardViewService {
@@ -35,7 +36,7 @@ export class DashboardViewService {
         });
     }
 
-    public getTransactionView(budgetId: string, accountIds: string[], options?: Object) {
+    public getTransactionView(budgetId: string, accountIds: string[], options?: Object): Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>> {
 
         if (accountIds.length === 0) {
             return Observable.of([]);

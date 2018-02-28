@@ -7,6 +7,10 @@ import { CategoryGroupId } from '@models/category-group.model';
 import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
+import { FirestoreService } from '@shared/services/firestore/firestore.service';
+import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
+import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Component({
     selector: 'app-budget',
@@ -15,26 +19,36 @@ import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
 })
 export class ViewBudgetComponent implements OnInit {
 
-    public groups$: Observable<GroupWithCategoriesWithValues[]>;
+    public data$: Observable<Object>;
     public onChanges$: Observable<any>;
-
     public viewMonth: Date;
 
     constructor(private route: ActivatedRoute,
                 private dashboardViews: DashboardViewService,
                 private dialogService: CloseDialogService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private firestore: FirestoreService,
+                private utility: UtilityService) {
     }
 
     ngOnInit() {
         this.setViewMonthToLocalMonth();
 
-        this.groups$ = this.getBudgetId().flatMap(budgetId => {
-            return this.dashboardViews.getBudgetView(budgetId);
+        // Change detection does not traverse nested objects like array. This is required to allow for updates to
+        // category values to update in the UI
+        this.onChanges$ = this.getBudgetGroups().map(() => {
+            return null;
         });
 
-        this.onChanges$ = this.groups$.map(() => {
-            return null;
+        this.data$ = this.utility.combineLatestObj({
+            groups: this.getBudgetGroups(),
+            budgetId: this.getBudgetId(),
+            transactions: this.getTransactions()
+        });
+    }
+
+    public getBudgetGroups(): Observable<GroupWithCategoriesWithValues[]> {
+        return this.getBudgetId().flatMap(budgetId => {
+            return this.dashboardViews.getBudgetView(budgetId);
         });
     }
 
@@ -109,4 +123,14 @@ export class ViewBudgetComponent implements OnInit {
         });
     }
 
+    private getTransactions(): Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>> {
+        let budgetId;
+
+        return this.getBudgetId().flatMap(id => {
+            budgetId = id;
+            return this.firestore.getAllAccountIdsForBudget(id);
+        }).flatMap((accountIds: string[]) => {
+            return this.dashboardViews.getTransactionView(budgetId, accountIds);
+        });
+    }
 }

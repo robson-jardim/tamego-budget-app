@@ -29,8 +29,8 @@ export class BudgetSelectionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.auth.user.first().subscribe(user => {
-            this.budgets$ = this.firestore.getBudgets(user.userId).observable;
+        this.budgets$ = this.auth.user.first().flatMap(user => {
+            return this.firestore.getBudgets(user.userId).observable;
         });
     }
 
@@ -44,7 +44,7 @@ export class BudgetSelectionComponent implements OnInit {
                 }
             });
 
-            addBudgetDialogRef.beforeClose().subscribe( newBudgetId => {
+            addBudgetDialogRef.beforeClose().subscribe(newBudgetId => {
                 if (newBudgetId) {
                     this.router.navigate([newBudgetId], {relativeTo: this.route});
                 }

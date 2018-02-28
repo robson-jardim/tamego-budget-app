@@ -2,14 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
-import { BudgetAccountId } from '@models/budget-account.model';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
-import { TransactionId } from '@models/transaction.model';
+import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Subscription } from 'rxjs/Subscription';
 import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 import 'rxjs/add/observable/timer';
+import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
 
 @Component({
     selector: 'app-budget',
@@ -18,7 +18,7 @@ import 'rxjs/add/observable/timer';
 })
 export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
-    public transactions$;
+    public transactions$: Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>>;
     private routeParamsSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
@@ -40,7 +40,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
 
                 const budgetId$: Observable<string> = Observable.of(budgetId);
-                const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.getAllAccountIdsForBudget(budgetId);
+                const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.firestore.getAllAccountIdsForBudget(budgetId);
 
                 return this.utility.combineLatestObj({
                     budgetId: budgetId$,
@@ -57,13 +57,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.routeParamsSubscription.unsubscribe();
-    }
-
-    private getAllAccountIdsForBudget(budgetId: string) {
-        return this.firestore.getAccounts(budgetId).observable.first()
-            .map((accounts: BudgetAccountId[]) => {
-                return accounts.map(x => x.budgetAccountId);
-            });
     }
 
     private getAccountId(): Observable<string> {

@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private afs: AngularFirestore,
                 private changeDetectorRef: ChangeDetectorRef,
                 private media: MediaMatcher) {
+
         this.mobileQuery = media.matchMedia('(max-width: 920px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
@@ -43,6 +44,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
+
+    test(x) {
+        console.log(x);
     }
 
 }

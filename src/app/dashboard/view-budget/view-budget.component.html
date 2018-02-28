@@ -1,6 +1,6 @@
-<div class="view-budget-container">
+<ng-container *ngIf="data$ | async as data; else loading">
 
-    <ng-container *ngIf="groups$ | async as groups; else loading">
+    <div class="view-budget-container">
 
         <div class="view-budget-header">
             <div class="view-budget-month">
@@ -19,13 +19,13 @@
             <div class="view-budget-header-options">
                 <button mat-raised-button
                         color="primary"
-                        (click)="createCategoryGroup(groups)">
+                        (click)="createCategoryGroup(data.groups)">
                     Add category group
                 </button>
             </div>
         </div>
 
-        <mat-card *ngFor="let group of groups; trackBy: trackGroup" class="categories-table-container">
+        <mat-card *ngFor="let group of data.groups; trackBy: trackGroup" class="categories-table-container">
 
             <mat-card-header
                 class="categories-table-header categories-table-grey"
@@ -54,8 +54,9 @@
             <ng-container *ngIf="group.categories.length > 0; else noCategories">
                 <app-budget-categories-table
                     [categories]="group.categories"
+                    [transactions]="data.transactions"
                     [viewMonth]="viewMonth"
-                    [budgetId]="getBudgetId() | async"
+                    [budgetId]="data.budgetId"
                     [onChanges$]="onChanges$">
                 </app-budget-categories-table>
             </ng-container>
@@ -67,11 +68,12 @@
             </ng-template>
 
         </mat-card>
+    </div>
+</ng-container>
 
-    </ng-container>
+<ng-template #loading>
+    <div class="progress-spinner">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+</ng-template>
 
-    <ng-template #loading>
-        <mat-spinner></mat-spinner>
-    </ng-template>
-
-</div>

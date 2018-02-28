@@ -2,16 +2,16 @@
 
     <app-header></app-header>
 
-    <div class="settings">
+    <ng-container *ngIf="auth.user | async as user; else loading">
 
-        <div class="settings-container">
-            <h1 class="mat-headline">Settings</h1>
+        <div class="settings">
 
-            <mat-card class="settings-card">
+            <div class="settings-container">
+                <h1 class="mat-headline">Settings</h1>
 
-                <h1 class="mat-headline">Account</h1>
+                <mat-card class="settings-card">
 
-                <ng-container *ngIf="auth.user | async as user">
+                    <h1 class="mat-headline">Account</h1>
 
                     <ng-container *ngIf="user.email; else isAnonymous">
                         <div class="mat-body-1">
@@ -28,9 +28,6 @@
                             <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
                                 Resend verification email
                             </button>
-                            <!--<button mat-button (click)="auth.verifyUser(forceRefreshToken, showOfflinePopups)">Force update-->
-                            <!--verification status-->
-                            <!--</button>-->
                         </ng-container>
 
                     </ng-container>
@@ -43,20 +40,25 @@
 
                     </ng-template>
 
-                </ng-container>
+                </mat-card>
 
+                <mat-card class="settings-card">
 
-            </mat-card>
+                    <h1 class="mat-headline">Billing</h1>
 
-            <mat-card class="settings-card">
+                    <app-checkout>
 
-                <h1 class="mat-headline">Billing</h1>
-
-                <app-checkout>
-
-                </app-checkout>
-            </mat-card>
+                    </app-checkout>
+                </mat-card>
+            </div>
         </div>
-    </div>
+
+    </ng-container>
+
+    <ng-template #loading>
+        <div class="progress-spinner height-minus-header">
+            <mat-spinner diameter="60"></mat-spinner>
+        </div>
+    </ng-template>
 </div>
 

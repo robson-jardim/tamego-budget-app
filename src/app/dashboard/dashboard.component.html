@@ -1,23 +1,26 @@
-<div class="container" [class.is-mobile]="mobileQuery.matches">
+<div class="container">
 
     <mat-sidenav-container class="sidenav-container">
         <mat-sidenav #sidenav
                      [mode]="mobileQuery.matches ? 'over' : 'side'"
-                     [opened]="initialSidenavState"
-                     [fixedInViewport]="mobileQuery.matches">
+                     [opened]="initialSidenavState">
 
             <app-sidenav (onSidenavSelection)="mobileQuery.matches && sidenav.toggle()"></app-sidenav>
         </mat-sidenav>
 
-        <mat-sidenav-content [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav-content>
 
-            <div class="toolbar">
-                <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>
-            </div>
+                <div class="header" #header>
+                    <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>
+                </div>
 
-            <router-outlet></router-outlet>
+                <div class="dashboard-content" (click)="test(header.offsetHeight)">
+                    <router-outlet></router-outlet>
+                </div>
+
         </mat-sidenav-content>
 
     </mat-sidenav-container>
+
 </div>
 

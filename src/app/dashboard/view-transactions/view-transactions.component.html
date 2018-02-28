@@ -1,5 +1,6 @@
-<div class="view-transaction-container">
-    <ng-container *ngIf="transactions$ | async as transactions; else loading">
+<ng-container *ngIf="transactions$ | async as transactions; else loading">
+
+    <div class="view-transaction-container">
 
         <div class="header">
             <h1 class="mat-headline">Transactions</h1>
@@ -41,10 +42,12 @@
             </ng-container>
 
         </mat-card>
-    </ng-container>
+    </div>
 
+</ng-container>
 
-    <ng-template #loading>
-        <mat-spinner></mat-spinner>
-    </ng-template>
-</div>
+<ng-template #loading>
+    <div class="progress-spinner">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+</ng-template>

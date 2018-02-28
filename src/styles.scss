@@ -12,3 +12,23 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.progress-spinner {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.height-minus-header {
+    height: calc(100% - 64px);
+}
+
+@media (max-width: 600px) {
+
+    .height-minus-header {
+        height: calc(100% - 56px);
+
+    }
+}

@@ -114,6 +114,13 @@ export class FirestoreService {
         };
     }
 
+    public getAllAccountIdsForBudget(budgetId: string): Observable<string[]> {
+        return this.getAccounts(budgetId).observable.first()
+            .map((accounts: BudgetAccountId[]) => {
+                return accounts.map(x => x.budgetAccountId);
+            });
+    }
+
     public getReoccurringTransactions(budgetId: string, accountId: string): CollectionResult<ReoccurringTransaction, ReoccurringTransactionId[]> {
         return this.reoccurring.getReoccurringTransactions(budgetId, accountId);
     }

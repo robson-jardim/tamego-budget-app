@@ -1,25 +1,30 @@
 <div class="container">
+
     <app-header></app-header>
 
-    <div class="budget-selection-container">
+    <ng-container *ngIf="budgets$ | async  as budgets; else loading">
+        <div class="budget-selection-container">
 
-        <div class="bottom-margin header">
-            <h1 class="mat-headline">Budgets</h1>
+            <div class="bottom-margin header">
+                <h1 class="mat-headline">Budgets</h1>
 
-            <button mat-raised-button color="primary" (click)="createBudget()">Add budget</button>
-        </div>
+                <button mat-raised-button color="primary" (click)="createBudget()">Add budget</button>
+            </div>
 
-        <ng-container *ngIf="budgets$ | async  as budgets; else loading">
 
-            <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]" class="bottom-margin">
+            <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
+                      class="bottom-margin">
                 <p class="truncate">{{budget.budgetName}}</p>
             </mat-card>
+        </div>
+    </ng-container>
 
-        </ng-container>
-
-        <ng-template #loading>
-            <mat-spinner></mat-spinner>
-        </ng-template>
-    </div>
+    <ng-template #loading>
+        <div class="progress-spinner height-minus-header">
+            <mat-spinner diameter="60"></mat-spinner>
+        </div>
+    </ng-template>
 
 </div>
+
+
