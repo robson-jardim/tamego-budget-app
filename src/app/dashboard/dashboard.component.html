@@ -10,13 +10,13 @@
 
         <mat-sidenav-content>
 
-                <div class="header" #header>
-                    <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>
-                </div>
+            <div class="header" #header>
+                <app-header [showSidenavToggle]="true" (onSidenavToggle)="sidenav.toggle()"></app-header>
+            </div>
 
-                <div class="dashboard-content" (click)="test(header.offsetHeight)">
-                    <router-outlet></router-outlet>
-                </div>
+            <div class="height-minus-header">
+                <router-outlet></router-outlet>
+            </div>
 
         </mat-sidenav-content>
 

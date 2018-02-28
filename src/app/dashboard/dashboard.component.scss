@@ -28,13 +28,14 @@
     flex: 1 0 auto;
 }
 
-.dashboard-content {
+
+.test {
     height: calc(100% - 64px);
 }
 
 @media (max-width: 600px) {
 
-    .dashboard-content {
+    .test {
         height: calc(100% - 56px);
 
     }
