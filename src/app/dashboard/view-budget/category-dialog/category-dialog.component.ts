@@ -44,11 +44,16 @@ export class CategoryDialogComponent implements OnInit {
 
         if (DialogState.Create === this.data.state) {
             form[CategoryFormNames.CategoryName] = [null, Validators.required];
+            form[CategoryFormNames.Budgeted] = [0];
+            form[CategoryFormNames.Offset] = [0];
         }
         else if (DialogState.Update === this.data.state) {
             form[CategoryFormNames.CategoryName] = [this.data.categoryName, Validators.required];
-            form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted || 0, Validators.required];
-            form[CategoryFormNames.Offset] = [this.data.desiredValue.offset, Validators.required];
+            form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted];
+            form[CategoryFormNames.Offset] = [this.data.desiredValue.offset];
+        }
+        else {
+            throw new Error('Unable to determine dialog state');
         }
 
         this.categoryForm = this.formBuilder.group(form);
@@ -109,13 +114,13 @@ export class CategoryDialogComponent implements OnInit {
         const getValueBudgetMonth = () => this.data.desiredValue.budgetMonth;
 
         const getBudgetedValue = () => {
-            const budgeted = this.categoryForm.value[CategoryFormNames.Budgeted];
+            const budgeted = this.categoryForm.value[CategoryFormNames.Budgeted] || 0;
             // Sets precision to 2 decimal places
             return Number(budgeted.toFixed(2));
         };
 
         const getOffsetValue = () => {
-            const offset = this.categoryForm.value[CategoryFormNames.Offset];
+            const offset = this.categoryForm.value[CategoryFormNames.Offset] || 0;
             // Sets precision to 2 decimal places
             return Number(offset.toFixed(2));
         };

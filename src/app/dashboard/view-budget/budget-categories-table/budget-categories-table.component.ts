@@ -6,8 +6,7 @@ import { CategoryDialogComponent } from '../category-dialog/category-dialog.comp
 import { Subscription } from 'rxjs/Subscription';
 import { CategoryValueId } from '@models/category-value.model';
 import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
-import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
-import { Observable } from 'rxjs/Observable';
+import { instanceOfTransactionId, ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
 
 export interface DesiredValue extends CategoryValueId {
     exists: boolean;
@@ -47,8 +46,6 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
         this.changeSubscription = this.onChanges$.subscribe(() => {
             this.buildDataSource();
         });
-
-        console.log(this.transactions);
     }
 
     ngOnDestroy() {
@@ -122,13 +119,18 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
                 };
             }
 
+
+            const activity = this.getActivity(category);
+
             return {
                 offsetTotalToDate,
                 budgetedTotalToDate,
                 desiredValue,
+                activity,
                 ...category
             };
         });
+
     }
 
     public updateCategory(category: CategoryId) {
@@ -142,7 +144,21 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
             }
         });
     }
+
+    private getActivity(category: CategoryWithValues): Activity {
+
+        const nextViewMonth = new Date(this.viewMonth.getTime());
+        nextViewMonth.setMonth(nextViewMonth.getMonth() + 1);
+
+        return this.transactions
+            .filter(instanceOfTransactionId)
+            .filter(x => category.categoryId === (<TransactionId>x).categoryId)
+            .filter(x => x.transactionDate >= this.viewMonth && x.transactionDate < nextViewMonth)
+            .reduce((activity, transaction) => activity + transaction.amount, 0);
+    }
 }
+
+type Activity = number;
 
 
 

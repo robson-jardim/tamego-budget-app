@@ -24,12 +24,21 @@
 
     <ng-container matColumnDef="activity">
         <mat-header-cell *matHeaderCellDef>Activity</mat-header-cell>
-        <mat-cell *matCellDef="let element">$ {{element.desiredValue.offset}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <span [ngClass]="{'font-red': element.activity < 0, 'font-green' : element.activity > 0}">
+                $ {{element.activity}}
+            </span>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="available">
         <mat-header-cell *matHeaderCellDef>Available</mat-header-cell>
-        <mat-cell *matCellDef="let element">$ {{element.budgetedTotalToDate}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <span
+                [ngClass]="{'font-red':element.budgetedTotalToDate + element.activity < 0, 'font-green' : element.budgetedTotalToDate + element.activity > 0}">
+                 $ {{element.budgetedTotalToDate + element.activity}}
+            </span>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
