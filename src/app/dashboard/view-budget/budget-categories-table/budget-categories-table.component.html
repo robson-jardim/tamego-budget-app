@@ -19,13 +19,20 @@
 
     <ng-container matColumnDef="budgeted">
         <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
-        <mat-cell *matCellDef="let element">$ {{element.desiredValue.budgeted}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <span [ngClass]="{
+                'font-red':element.desiredValue.budgeted < 0,
+                'font-green' : element.desiredValue.budgeted > 0
+            }">$ {{element.desiredValue.budgeted}}</span>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="activity">
         <mat-header-cell *matHeaderCellDef>Activity</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <span [ngClass]="{'font-red': element.activity < 0, 'font-green' : element.activity > 0}">
+            <span [ngClass]="{
+                'font-red': element.activity < 0, 'font-green' : element.activity > 0
+            }">
                 $ {{element.activity}}
             </span>
         </mat-cell>
@@ -34,9 +41,11 @@
     <ng-container matColumnDef="available">
         <mat-header-cell *matHeaderCellDef>Available</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <span
-                [ngClass]="{'font-red':element.budgetedTotalToDate + element.activity < 0, 'font-green' : element.budgetedTotalToDate + element.activity > 0}">
-                 $ {{element.budgetedTotalToDate + element.activity}}
+            <span [ngClass]="{
+                'font-red':element.budgetedTotalToDate + element.activity + element.pastActivityTotal < 0,
+                'font-green' : element.budgetedTotalToDate + element.activity + element.pastActivityTotal > 0
+            }">
+                 $ {{element.budgetedTotalToDate + element.activity + element.pastActivityTotal}}
             </span>
         </mat-cell>
     </ng-container>

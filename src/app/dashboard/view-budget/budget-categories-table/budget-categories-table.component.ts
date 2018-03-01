@@ -8,11 +8,16 @@ import { CategoryValueId } from '@models/category-value.model';
 import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
 import { instanceOfTransactionId, ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
 
+type Activity = number;
+type PastActivity = number;
+
 export interface DesiredValue extends CategoryValueId {
     exists: boolean;
 }
 
 export interface CategoryWithDesiredValue extends CategoryWithValues {
+    activity: Activity;
+    pastActivityTotal: PastActivity;
     offsetTotalToDate: number;
     budgetedTotalToDate: number;
     desiredValue: DesiredValue;
@@ -121,12 +126,14 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
 
 
             const activity = this.getActivity(category);
+            const pastActivityTotal = this.getPastActivity(category);
 
             return {
                 offsetTotalToDate,
                 budgetedTotalToDate,
                 desiredValue,
                 activity,
+                pastActivityTotal,
                 ...category
             };
         });
@@ -146,19 +153,20 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
     }
 
     private getActivity(category: CategoryWithValues): Activity {
-
-        const nextViewMonth = new Date(this.viewMonth.getTime());
-        nextViewMonth.setMonth(nextViewMonth.getMonth() + 1);
+        const nextViewMonth = new Date(Date.UTC(this.viewMonth.getUTCFullYear(), this.viewMonth.getUTCMonth() + 1));
 
         return this.transactions
             .filter(instanceOfTransactionId)
             .filter(x => category.categoryId === (<TransactionId>x).categoryId)
-            .filter(x => x.transactionDate >= this.viewMonth && x.transactionDate < nextViewMonth)
+            .filter(x => this.viewMonth <= x.transactionDate && x.transactionDate < nextViewMonth)
+            .reduce((activity, transaction) => activity + transaction.amount, 0);
+    }
+
+    private getPastActivity(category: CategoryWithValues): PastActivity {
+        return this.transactions
+            .filter(instanceOfTransactionId)
+            .filter(x => category.categoryId === (<TransactionId>x).categoryId)
+            .filter(x => x.transactionDate < this.viewMonth)
             .reduce((activity, transaction) => activity + transaction.amount, 0);
     }
 }
-
-type Activity = number;
-
-
-

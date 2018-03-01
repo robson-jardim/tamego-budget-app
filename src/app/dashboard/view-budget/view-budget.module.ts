@@ -7,6 +7,7 @@ import { CustomMaterialFormsModule } from '@shared/components/custom-material-fo
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { MatMenuModule, MatTableModule } from '@angular/material';
 import { BudgetCategoriesTableComponent } from './budget-categories-table/budget-categories-table.component';
+import { AppPipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { BudgetCategoriesTableComponent } from './budget-categories-table/budget
 
         CustomMaterialFormsModule,
         StandardMaterialModule,
+        AppPipesModule,
         MatTableModule,
         MatMenuModule,
     ],

@@ -88,25 +88,19 @@ export class ViewBudgetComponent implements OnInit {
 
     private setViewMonthToLocalMonth() {
         const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
-        this.viewMonth = new Date(currentYear, currentMonth, 1);
+        this.viewMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
     }
 
     public nextMonth() {
         // Date pipes are pure, therefore a copy has to be
         // assigned in order for the viewMonth to update properly in the template
-        const dateCopy = new Date(this.viewMonth.getTime());
-        dateCopy.setMonth(dateCopy.getMonth() + 1);
-        this.viewMonth = dateCopy;
+        this.viewMonth = new Date(Date.UTC(this.viewMonth.getUTCFullYear(), this.viewMonth.getUTCMonth() + 1));
     }
 
     public previousMonth() {
         // Date pipes are pure, therefore a copy has to be
         // assigned in order for the viewMonth to update properly in the template
-        const dateCopy = new Date(this.viewMonth.getTime());
-        dateCopy.setMonth(dateCopy.getMonth() - 1);
-        this.viewMonth = dateCopy;
+        this.viewMonth = new Date(Date.UTC(this.viewMonth.getUTCFullYear(), this.viewMonth.getUTCMonth() - 1));
     }
 
     public createCategory(group: GroupWithCategoriesWithValues) {
