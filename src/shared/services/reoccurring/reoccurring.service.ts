@@ -25,7 +25,8 @@ export class ReoccurringService {
 
         reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
 
-            const today = this.utility.convertToUtc(new Date());
+            let today = new Date();
+            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
 
             reoccurringTransactions.map(reoccurringTransaction => {
                 if (reoccurringTransaction.transactionDate <= today) {
@@ -91,7 +92,8 @@ export class ReoccurringService {
 
         transfers$ = transfers$.do(reoccurringTransfers => {
 
-            const today = this.utility.convertToUtc(new Date());
+            let today = new Date();
+            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
 
             reoccurringTransfers.map(reoccurringTransfer => {
 
@@ -132,43 +134,43 @@ export class ReoccurringService {
 
     }
 
-    private getNextOccurrence(date: Date, schedule: ReoccurringSchedules): Date {
+    private getNextOccurrence(utcDate: Date, schedule: ReoccurringSchedules): Date {
         // Copy the date object to not avoid manipulating the original object reference
-        date = new Date(date.getTime());
+        utcDate = new Date(utcDate.getTime());
 
         // Convert local time to UTC because the transaction dates are in UTC
         const today = this.utility.convertToUtc(new Date());
 
         if (ReoccurringSchedules.Daily === schedule) {
             do {
-                this.nextDay(date);
-            } while (date <= today);
+                this.nextDay(utcDate);
+            } while (utcDate <= today);
         }
         else if (ReoccurringSchedules.Weekly === schedule) {
             do {
-                this.nextWeek(date);
-            } while (date <= today);
+                this.nextWeek(utcDate);
+            } while (utcDate <= today);
         }
         else if (ReoccurringSchedules.EveryOtherWeek === schedule) {
             do {
-                this.everyOtherWeek(date);
-            } while (date <= today);
+                this.everyOtherWeek(utcDate);
+            } while (utcDate <= today);
         }
         else if (ReoccurringSchedules.Monthly === schedule) {
             do {
-                this.nextMonth(date);
-            } while (date <= today);
+                this.nextMonth(utcDate);
+            } while (utcDate <= today);
         }
         else if (ReoccurringSchedules.Yearly === schedule) {
             do {
-                this.nextYear(date);
-            } while (date <= today);
+                this.nextYear(utcDate);
+            } while (utcDate <= today);
         }
         else {
             throw new Error('Unable to find next reoccurring occurrence');
         }
 
-        return date;
+        return utcDate;
     }
 
     private nextDay(date: Date) {
