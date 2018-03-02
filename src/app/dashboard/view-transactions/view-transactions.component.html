@@ -1,4 +1,4 @@
-<ng-container *ngIf="transactions$ | async as transactions; else loading">
+<ng-container *ngIf="combined$ | async as combined; else loading">
 
     <div class="view-transaction-container">
 
@@ -7,41 +7,59 @@
             <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
         </div>
 
-        <mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"
-                  class="transaction-card">
+        <mat-card class="transaction-table">
+            <mat-card-header>
+                <p>Transactions</p>
+            </mat-card-header>
 
-            <ng-container *ngIf="transaction.transactionId || transaction.reoccurringTransactionId">
-
-                <strong *ngIf="transaction.transactionId"><p>Transaction</p></strong>
-                <strong *ngIf="transaction.reoccurringTransactionId"><p>Reoccurring: Transaction</p></strong>
-
-                <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
-                <p>AccountId: {{transaction.accountId}}</p>
-                <p *ngIf="transaction.payeeId">Payee ID: {{transaction.payeeId}}</p>
-                <p *ngIf="transaction.categoryId">Category ID: {{transaction.categoryId}}</p>
-                <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
-                <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
-                <p>Splits: {{transaction.splits | json}}</p>
-                <p>Cleared: {{transaction.cleared}}</p>
-                <p>Locked: {{transaction.locked}}</p>
-            </ng-container>
-
-            <ng-container *ngIf="transaction.transferId || transaction.reoccurringTransferId">
-                <strong *ngIf="transaction.transferId"><p>Transfer</p></strong>
-                <strong *ngIf="transaction.reoccurringTransferId"><p>Reoccurring: Transfer</p></strong>
-
-                <p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>
-                <p>Origin: {{transaction.originAccountId}}</p>
-                <p>Destination: {{transaction.destinationAccountId}}</p>
-                <p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>
-                <p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>
-                <p>Cleared origin: {{transaction.clearedOrigin}}</p>
-                <p>Cleared destination: {{transaction.clearedDestination}}</p>
-                <p>Locked origin: {{transaction.lockedOrigin}}</p>
-                <p>Locked destination: {{transaction.lockedDestination}}</p>
-            </ng-container>
+            <mat-card-content>
+                <app-transaction-table
+                    [transactions]="combined.transactions"
+                    [payees]="combined.viewData.payees"
+                    [accounts]="combined.viewData.accounts"
+                    [groups]="combined.viewData.groups"
+                    [budgetId]="combined.budgetId">
+                </app-transaction-table>
+            </mat-card-content>
 
         </mat-card>
+
+        <!--<mat-card *ngFor="let transaction of transactions" (click)="updateTransaction(transaction)"-->
+        <!--class="transaction-card">-->
+
+        <!--<ng-container *ngIf="transaction.transactionId || transaction.reoccurringTransactionId">-->
+
+        <!--<strong *ngIf="transaction.transactionId"><p>Transaction</p></strong>-->
+        <!--<strong *ngIf="transaction.reoccurringTransactionId"><p>Reoccurring: Transaction</p></strong>-->
+
+        <!--<p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>-->
+        <!--<p>AccountId: {{transaction.accountId}}</p>-->
+        <!--<p *ngIf="transaction.payeeId">Payee ID: {{transaction.payeeId}}</p>-->
+        <!--<p *ngIf="transaction.categoryId">Category ID: {{transaction.categoryId}}</p>-->
+        <!--<p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>-->
+        <!--<p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>-->
+        <!--<p>Splits: {{transaction.splits | json}}</p>-->
+        <!--<p>Cleared: {{transaction.cleared}}</p>-->
+        <!--<p>Locked: {{transaction.locked}}</p>-->
+        <!--</ng-container>-->
+
+        <!--<ng-container *ngIf="transaction.transferId || transaction.reoccurringTransferId">-->
+        <!--<strong *ngIf="transaction.transferId"><p>Transfer</p></strong>-->
+        <!--<strong *ngIf="transaction.reoccurringTransferId"><p>Reoccurring: Transfer</p></strong>-->
+
+        <!--<p>Date: {{transaction.transactionDate | utcDate | date: 'MM/dd/yyyy'}}</p>-->
+        <!--<p>Origin: {{transaction.originAccountId}}</p>-->
+        <!--<p>Destination: {{transaction.destinationAccountId}}</p>-->
+        <!--<p *ngIf="transaction.amount">Amount: {{transaction.amount}}</p>-->
+        <!--<p *ngIf="transaction.memo">Memo: {{transaction.memo}}</p>-->
+        <!--<p>Cleared origin: {{transaction.clearedOrigin}}</p>-->
+        <!--<p>Cleared destination: {{transaction.clearedDestination}}</p>-->
+        <!--<p>Locked origin: {{transaction.lockedOrigin}}</p>-->
+        <!--<p>Locked destination: {{transaction.lockedDestination}}</p>-->
+        <!--</ng-container>-->
+
+        <!--</mat-card>-->
+
     </div>
 
 </ng-container>

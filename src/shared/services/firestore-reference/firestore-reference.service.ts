@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Budget } from '@models/budget.model';
-import { BudgetAccount } from '@models/budget-account.model';
+import { Account } from '@models/budget-account.model';
 import { CategoryGroup } from '@models/category-group.model';
 import { Category } from '@models/category.model';
 import { CategoryValue } from '@models/category-value.model';
@@ -26,8 +26,8 @@ export class FirestoreReferenceService {
                 .orderBy('lastVisited', 'desc'));
     }
 
-    public getAccountsCollectionRef(budgetId: string): AngularFirestoreCollection<BudgetAccount> {
-        return this.afs.collection<BudgetAccount>(`budgets/${budgetId}/accounts`);
+    public getAccountsCollectionRef(budgetId: string): AngularFirestoreCollection<Account> {
+        return this.afs.collection<Account>(`budgets/${budgetId}/accounts`);
     }
 
     public getGroupsCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {

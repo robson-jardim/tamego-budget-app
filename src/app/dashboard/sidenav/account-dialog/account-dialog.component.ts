@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { Account, AccountId } from '@models/budget-account.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
@@ -66,11 +66,11 @@ export class AccountDialogComponent implements OnInit {
     }
 
     private updateAccount() {
-        this.getAccounts().doc(this.data.budgetAccountId).update(this.getAccountData());
+        this.getAccounts().doc(this.data.accountId).update(this.getAccountData());
 
     }
 
-    private getAccountData(): BudgetAccount {
+    private getAccountData(): Account {
         return {
             accountName: this.accountForm.value[AccountFormNames.AccountName],
             createdAt: this.data.createdAtAt || new Date()

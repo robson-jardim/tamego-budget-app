@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { MapFirestoreDocumentIdService } from '../map-firestore-document-id/map-firestore-docoument-id.service';
 import { FirestoreReferenceService } from '../firestore-reference/firestore-reference.service';
 import { CollectionResult, CombinedCollectionResult } from '@models/collection-result.model';
-import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { Account, AccountId } from '@models/budget-account.model';
 import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
 import { Category, CategoryId } from '@models/category.model';
 import { Observable } from 'rxjs/Observable';
@@ -48,7 +48,7 @@ export class FirestoreService {
         return {collection, observable};
     }
 
-    public getAccounts(budgetId: string): CollectionResult<BudgetAccount, BudgetAccountId[]> {
+    public getAccounts(budgetId: string): CollectionResult<Account, AccountId[]> {
         const collection = this.references.getAccountsCollectionRef(budgetId);
         const observable = this.mapDocumentId.mapBudgetAccountIds(collection);
         return {collection, observable};
@@ -115,8 +115,8 @@ export class FirestoreService {
 
     public getAllAccountIdsForBudget(budgetId: string): Observable<string[]> {
         return this.getAccounts(budgetId).observable.first()
-            .map((accounts: BudgetAccountId[]) => {
-                return accounts.map(x => x.budgetAccountId);
+            .map((accounts: AccountId[]) => {
+                return accounts.map(x => x.accountId);
             });
     }
 
@@ -160,37 +160,5 @@ export class FirestoreService {
             observable: combinedGroupsAndCategories$
         };
     }
-
-    // TODO - add groups and categories view model
-    public getGroupsAndCategories(budgetId: string) {
-
-        const categoriesResult = this.getCategories(budgetId);
-        const groupsResult = this.getGroups(budgetId);
-
-        const observables = [groupsResult.observable, categoriesResult.observable];
-
-        return Observable.combineLatest(observables, (groups: CategoryGroupId[], categories: CategoryId[]) => {
-
-            const formattedData = groups.map(group => {
-                const getCategories = () => {
-                    return categories.filter(category => category.groupId === group.groupId);
-                };
-
-                return {
-                    ...group,
-                    categories: getCategories()
-                };
-            });
-
-            return {
-                collections: {
-                    groups: groupsResult.collection,
-                    categories: categoriesResult.collection
-                },
-                data: formattedData
-            };
-        });
-    }
-
 
 }

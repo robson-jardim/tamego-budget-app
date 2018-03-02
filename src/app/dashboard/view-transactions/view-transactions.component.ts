@@ -18,8 +18,10 @@ import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
 })
 export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
-    public transactions$: Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>>;
     private routeParamsSubscription: Subscription;
+    public transactions$: Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>>;
+    private viewData$;
+    public combined$;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -53,6 +55,19 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
         });
 
+        this.viewData$ = this.utility.combineLatestObj({
+            accounts: this.getAccounts(),
+            payees: this.getPayees(),
+            groups: this.getGroups()
+        });
+
+        this.combined$ = this.utility.combineLatestObj({
+            viewData: this.viewData$,
+            transactions: this.transactions$,
+            budgetId: this.getBudgetId()
+        }).map(obj => {
+            return obj;
+        })
     }
 
     ngOnDestroy() {
@@ -65,7 +80,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getBudgetId(): Observable<string> {
+    public getBudgetId(): Observable<string> {
         return this.route.parent.params.map(params => {
             return params.budgetId;
         });
@@ -95,6 +110,24 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
                     ...transaction
                 }
             });
+        });
+    }
+
+    private getAccounts() {
+        return this.getBudgetId().flatMap(budgetId => {
+            return this.firestore.getAccounts(budgetId).observable;
+        });
+    }
+
+    private getPayees() {
+        return this.getBudgetId().flatMap(budgetId => {
+            return this.firestore.getPayees(budgetId).observable;
+        });
+    }
+
+    private getGroups() {
+        return this.getBudgetId().flatMap(budgetId => {
+            return this.firestore.getGroupWithCategories(budgetId).observable;
         });
     }
 }

@@ -3,7 +3,7 @@ import { AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/f
 import { Observable } from 'rxjs/Observable';
 import { CategoryGroup, CategoryGroupId } from '@models/category-group.model';
 import { Category, CategoryId } from '@models/category.model';
-import { BudgetAccount, BudgetAccountId } from '@models/budget-account.model';
+import { Account, AccountId } from '@models/budget-account.model';
 import { BudgetId, Budget } from '@models/budget.model';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
 import {
@@ -40,11 +40,11 @@ export class MapFirestoreDocumentIdService {
         });
     }
 
-    public mapBudgetAccountIds(collection: AngularFirestoreCollection<BudgetAccount>): Observable<BudgetAccountId[]> {
+    public mapBudgetAccountIds(collection: AngularFirestoreCollection<Account>): Observable<AccountId[]> {
         return collection.snapshotChanges().map(actions => {
             return actions.map(a => {
-                const account: BudgetAccountId = this.getDocData<BudgetAccountId>(a);
-                account.budgetAccountId = this.getDocId(a);
+                const account: AccountId = this.getDocData<AccountId>(a);
+                account.accountId = this.getDocId(a);
                 return account;
             });
         });

@@ -20,7 +20,7 @@
         <mat-divider></mat-divider>
 
         <mat-list-item *ngFor="let account of accounts$ | async"
-                       [routerLink]="['accounts', account.budgetAccountId]"
+                       [routerLink]="['accounts', account.accountId]"
                        routerLinkActive="active"
                        (click)="sidenavSelection()"
                         class="sidenav-account-item">

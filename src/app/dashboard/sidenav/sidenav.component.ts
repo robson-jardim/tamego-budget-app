@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AccountDialogComponent } from './account-dialog/account-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BudgetAccountId } from '@models/budget-account.model';
+import { AccountId } from '@models/budget-account.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class SidenavComponent implements OnInit {
 
-    public accounts$: Observable<BudgetAccountId[]>;
+    public accounts$: Observable<AccountId[]>;
 
     @Output() onSidenavSelection: EventEmitter<any> = new EventEmitter<any>();
 
@@ -37,7 +37,7 @@ export class SidenavComponent implements OnInit {
         }).first();
     }
 
-    private getAccounts(budgetId: string): Observable<BudgetAccountId[]> {
+    private getAccounts(budgetId: string): Observable<AccountId[]> {
         return this.firestore.getAccounts(budgetId).observable;
     }
 
@@ -67,7 +67,7 @@ export class SidenavComponent implements OnInit {
         }
     }
 
-    public updateAccount(account: BudgetAccountId) {
+    public updateAccount(account: AccountId) {
         this.getBudgetId().subscribe(budgetId => {
 
             const dialogRef = this.dialogService.openUpdate(AccountDialogComponent, {

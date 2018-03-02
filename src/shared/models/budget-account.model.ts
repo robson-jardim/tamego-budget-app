@@ -1,15 +1,15 @@
-export interface BudgetAccount {
+export interface Account {
     accountName: string;
     createdAt: Date;
 }
 
-export interface BudgetAccountId extends BudgetAccount {
-    budgetAccountId: string;
+export interface AccountId extends Account {
+    accountId: string;
 }
 
-export function instanceOfBudgetAccountId(obj: Object) {
+export function instanceOfAccountId(obj: Object) {
     return obj && obj instanceof Object
-        && 'budgetAccountId' in obj
+        && 'accountId' in obj
         && 'accountName' in obj
         && 'createdAt' in obj;
 }

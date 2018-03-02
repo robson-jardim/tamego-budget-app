@@ -10,7 +10,7 @@ import {
 } from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
-import { BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
+import { AccountId, instanceOfAccountId } from '@models/budget-account.model';
 import { TransactionState } from '../shared/transaction_state.enum';
 import {
     instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransfer,
@@ -71,7 +71,7 @@ export class TransactionDialogComponent implements OnInit {
     }
 
     private getGroups() {
-        return this.firestore.getGroupsAndCategories(this.data.budgetId).map(x => x.data);
+        return this.firestore.getGroupWithCategories(this.data.budgetId).observable;
     }
 
     private buildTransactionForm() {
@@ -123,8 +123,8 @@ export class TransactionDialogComponent implements OnInit {
 
     public get transactionState(): TransactionState {
 
-        const entity: PayeeId | BudgetAccountId = this.transactionForm.value[TransactionFormNames.Payee];
-        const isTransfer = () => instanceOfBudgetAccountId(entity);
+        const entity: PayeeId | AccountId = this.transactionForm.value[TransactionFormNames.Payee];
+        const isTransfer = () => instanceOfAccountId(entity);
         const isReoccurring = () => this.isReoccurringTransaction();
 
 
@@ -241,13 +241,13 @@ export class TransactionDialogComponent implements OnInit {
         // string: regular transaction with a new Payee
         // null: Payee field was left empty
 
-        const payeeField: PayeeId | BudgetAccountId | string | null = this.transactionForm.value[TransactionFormNames.Payee];
+        const payeeField: PayeeId | AccountId | string | null = this.transactionForm.value[TransactionFormNames.Payee];
 
         if (instanceOfPayeeId(payeeField)) {
             return (<PayeeId>payeeField).payeeId;
         }
-        else if (instanceOfBudgetAccountId(payeeField)) {
-            return (<BudgetAccountId>payeeField).budgetAccountId;
+        else if (instanceOfAccountId(payeeField)) {
+            return (<AccountId>payeeField).accountId;
         }
         else if (typeof payeeField === 'string') {
             const newPayeeId = this.firestore.createId();
@@ -337,16 +337,16 @@ export class TransactionDialogComponent implements OnInit {
         return this.references.getTransferCollectionRef(this.data.budgetId);
     }
 
-    public isAccountSelectedAsDestination(account: BudgetAccountId) {
+    public isAccountSelectedAsDestination(account: AccountId) {
 
-        let payee: BudgetAccountId | PayeeId | string = this.transactionForm.controls[TransactionFormNames.Payee].value;
+        let payee: AccountId | PayeeId | string = this.transactionForm.controls[TransactionFormNames.Payee].value;
 
-        if (!instanceOfBudgetAccountId(payee)) {
+        if (!instanceOfAccountId(payee)) {
             return false;
         }
 
-        payee = payee as BudgetAccountId;
-        return payee.budgetAccountId === account.budgetAccountId;
+        payee = payee as AccountId;
+        return payee.accountId === account.accountId;
     }
 
     private getReoccurringTransactionData(): ReoccurringTransaction {

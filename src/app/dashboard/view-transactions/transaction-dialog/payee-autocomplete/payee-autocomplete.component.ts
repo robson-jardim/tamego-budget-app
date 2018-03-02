@@ -3,7 +3,7 @@ import { ControlContainer, FormGroup } from '@angular/forms';
 import { instanceOfPayeeId, PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
-import { BudgetAccount, BudgetAccountId, instanceOfBudgetAccountId } from '@models/budget-account.model';
+import { Account, AccountId, instanceOfAccountId } from '@models/budget-account.model';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 
 @Component({
@@ -16,7 +16,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
     public TransactionFormNames = TransactionFormNames;
     @Input() transactionForm: FormGroup;
     @Input() payees: PayeeId[];
-    @Input() accounts: BudgetAccountId[];
+    @Input() accounts: AccountId[];
     @Input() selectedPayeeId: string;
 
     // TODO - make filteredAccounts$, filter separately from payees
@@ -27,7 +27,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         const [payee] = this.payees.filter(x => x.payeeId === this.selectedPayeeId);
-        const [account] = this.accounts.filter(x => x.budgetAccountId === this.selectedPayeeId);
+        const [account] = this.accounts.filter(x => x.accountId === this.selectedPayeeId);
 
         const initialPayeeValue = new Object;
         initialPayeeValue[this.TransactionFormNames.Payee] = payee ? payee : account;
@@ -46,7 +46,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
                     if (instanceOfPayeeId(input)) {
                         return input.payeeName;
                     }
-                    else if (instanceOfBudgetAccountId(input)) {
+                    else if (instanceOfAccountId(input)) {
                         return input.accountName;
                     }
                     else {
@@ -61,7 +61,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
         if (instanceOfPayeeId(entity)) {
             return entity.payeeName;
         }
-        else if (instanceOfBudgetAccountId(entity)) {
+        else if (instanceOfAccountId(entity)) {
             return entity.accountName;
         }
         else {
@@ -75,8 +75,8 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
         });
     }
 
-    public isAccountSelectedAsOrigin(account: BudgetAccountId) {
-        return this.transactionForm.controls[TransactionFormNames.AccountId].value === account.budgetAccountId;
+    public isAccountSelectedAsOrigin(account: AccountId) {
+        return this.transactionForm.controls[TransactionFormNames.AccountId].value === account.accountId;
     }
 }
 

@@ -1,0 +1,38 @@
+<mat-table #table [dataSource]="dataSource">
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    <ng-container matColumnDef="accountId">
+        <mat-header-cell *matHeaderCellDef> Account</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.viewData.accountName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="transactionDate">
+        <mat-header-cell *matHeaderCellDef> Date</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.rawData.transactionDate | utcDate | date: 'MM/dd/yyyy'}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="payeeId">
+        <mat-header-cell *matHeaderCellDef> Payee</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.viewData.payeeName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="categoryId">
+        <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.viewData.categoryName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef> Amount</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.rawData.amount}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="memo">
+        <mat-header-cell *matHeaderCellDef> Memo</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.rawData.memo}}</mat-cell>
+    </ng-container>
+
+</mat-table>
