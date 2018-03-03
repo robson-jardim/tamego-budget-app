@@ -5,7 +5,7 @@ import { SignupComponent } from './signup/signup.component';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { MatTabsModule } from '@angular/material';
+import { MatDividerModule, MatTabsModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { AuthenticateComponent } from './authenticate-user.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';

@@ -32,3 +32,9 @@ mat-list-item * {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.mat-list-item:focus {
+    outline: none;
+    border: 0;
+}
+

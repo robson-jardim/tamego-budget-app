@@ -1,8 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
-import { instanceOfReoccurringTransactionId, instanceOfTransactionId } from '@models/transaction.model';
-import { instanceOfReoccurringTransferId, instanceOfTransferId } from '@models/transfer.model';
+import {
+    instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransactionId,
+    TransactionId
+} from '@models/transaction.model';
+import {
+    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransferId,
+    TransferId
+} from '@models/transfer.model';
+import { TransactionDialogComponent } from '../transaction-dialog/transaction-dialog.component';
+import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 
 @Component({
     selector: 'app-transaction-table',
@@ -22,7 +30,8 @@ export class TransactionTableComponent implements OnInit {
     public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo'];
 
     constructor(private firestore: FirestoreService,
-                private utility: UtilityService) {
+                private utility: UtilityService,
+                private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
@@ -55,17 +64,18 @@ export class TransactionTableComponent implements OnInit {
 
             const getCategoryName = () => {
 
-                const [fullName] = this.groups.map(group => {
-                    const [name] = group.categories
+                const [categoryField] = this.groups.map(group => {
+                    const [categoryName] = group.categories
                         .filter(x => t.categoryId === x.categoryId)
                         .map(x => x.categoryName);
 
-                    if (name) {
-                        return group.groupName + ': ' + name;
+                    if (categoryName) {
+                        // return group.groupName + ': ' + categoryName;
+                        return categoryName;
                     }
                 });
 
-                return fullName;
+                return categoryField;
 
             };
 
@@ -92,4 +102,12 @@ export class TransactionTableComponent implements OnInit {
         return this.firestore.getGroupWithCategories(this.budgetId).observable;
     }
 
+    public updateTransaction(transaction: TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId) {
+        this.dialogService.openUpdate(TransactionDialogComponent, {
+            data: {
+                budgetId: this.budgetId,
+                ...transaction
+            }
+        });
+    }
 }

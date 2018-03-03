@@ -1,7 +1,7 @@
 <mat-table #table [dataSource]="dataSource">
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="updateTransaction(row.rawData)"></mat-row>
 
     <ng-container matColumnDef="accountId">
         <mat-header-cell *matHeaderCellDef> Account</mat-header-cell>
