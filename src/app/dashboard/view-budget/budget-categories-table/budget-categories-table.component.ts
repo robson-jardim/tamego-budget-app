@@ -68,14 +68,6 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
         return category ? category.categoryId : undefined;
     }
 
-    public highlight(row) {
-        this.hoveredTableRow = row.categoryId;
-    }
-
-    public unhighlight(row) {
-        this.hoveredTableRow = -1;
-    }
-
     private buildDataSource() {
 
         this.dataSource = this.categories.map(category => {

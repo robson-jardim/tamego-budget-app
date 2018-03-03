@@ -27,7 +27,12 @@
 
     <ng-container matColumnDef="amount">
         <mat-header-cell *matHeaderCellDef> Amount</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.rawData.amount}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <app-money-value-chip
+                [value]="element.rawData.amount"
+                [currencyType]="'USD'">
+            </app-money-value-chip>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="memo">

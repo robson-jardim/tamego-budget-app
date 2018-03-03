@@ -8,10 +8,12 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { MatMenuModule, MatTableModule } from '@angular/material';
 import { BudgetCategoriesTableComponent } from './budget-categories-table/budget-categories-table.component';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
+import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-value-chip.module';
 
 @NgModule({
     imports: [
         CommonModule,
+        MoneyValueChipModule,
 
         CustomMaterialFormsModule,
         StandardMaterialModule,

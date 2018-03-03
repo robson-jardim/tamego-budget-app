@@ -3,50 +3,47 @@
     [trackBy]="trackCategories"
     #table>
 
-    <mat-header-row *matHeaderRowDef="columns" class="table-column-header"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
 
     <mat-row *matRowDef="let row; columns: columns;"
              [ngClass]="{'table-row-hovered': hoveredTableRow == row.categoryId}"
-             (mouseenter)="highlight(row)"
-             (mouseleave)="unhighlight(row)"
              (click)="updateCategory(row)">
     </mat-row>
 
     <ng-container matColumnDef="categoryName">
         <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.categoryName}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.categoryName}}
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="budgeted">
         <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <span [ngClass]="{
-                'font-red':element.desiredValue.budgeted < 0,
-                'font-green' : element.desiredValue.budgeted > 0
-            }">$ {{element.desiredValue.budgeted}}</span>
+            <app-money-value-chip
+                [value]="element.desiredValue.budgeted "
+                [currencyType]="'USD'">
+            </app-money-value-chip>
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="activity">
         <mat-header-cell *matHeaderCellDef>Activity</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <span [ngClass]="{
-                'font-red': element.activity < 0, 'font-green' : element.activity > 0
-            }">
-                $ {{element.activity}}
-            </span>
+            <app-money-value-chip
+                [value]="element.activity"
+                [currencyType]="'USD'">
+            </app-money-value-chip>
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="available">
         <mat-header-cell *matHeaderCellDef>Available</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <span [ngClass]="{
-                'font-red':element.budgetedTotalToDate + element.activity + element.pastActivityTotal < 0,
-                'font-green' : element.budgetedTotalToDate + element.activity + element.pastActivityTotal > 0
-            }">
-                 $ {{element.budgetedTotalToDate + element.activity + element.pastActivityTotal}}
-            </span>
+            <app-money-value-chip
+                [value]="element.budgetedTotalToDate + element.activity + element.pastActivityTotal"
+                [currencyType]="'USD'">
+            </app-money-value-chip>
         </mat-cell>
     </ng-container>
 

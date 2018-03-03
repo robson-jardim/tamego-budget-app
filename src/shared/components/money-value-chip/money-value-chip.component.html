@@ -1,0 +1,14 @@
+<mat-chip-list *ngIf="value !== null && value !== undefined; else noValue">
+    <mat-chip
+        [disabled]="true"
+        [selected]="value !== 0"
+        [color]="color">
+        {{ value | currency: currencyType}}
+    </mat-chip>
+</mat-chip-list>
+
+<ng-template #noValue>
+    <mat-chip>
+        No value
+    </mat-chip>
+</ng-template>

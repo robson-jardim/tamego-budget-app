@@ -67,7 +67,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             budgetId: this.getBudgetId()
         }).map(obj => {
             return obj;
-        })
+        });
     }
 
     ngOnDestroy() {

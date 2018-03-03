@@ -6,7 +6,7 @@ import { ViewTransactionsComponent } from './view-transactions.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import {
-    MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule,
+    MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule, MatMenuModule, MatNativeDateModule,
     MatTableModule
 } from '@angular/material';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
@@ -15,6 +15,7 @@ import { UtcDatepickerComponent } from './transaction-dialog/utc-datepicker/utc-
 import { RepeatTransactionComponent } from './transaction-dialog/reoccurring-transaction/reoccurring-transaction.component';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { TransactionTableComponent } from './transaction-table/transaction-table.component';
+import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-value-chip.module';
 
 @NgModule({
     declarations: [
@@ -36,7 +37,9 @@ import { TransactionTableComponent } from './transaction-table/transaction-table
         MatDatepickerModule,
         MatNativeDateModule,
         MatCheckboxModule,
-        MatTableModule
+        MatTableModule,
+        MatMenuModule,
+        MoneyValueChipModule
     ],
     entryComponents: [
         TransactionDialogComponent

@@ -23,3 +23,13 @@
 .header button {
     margin-top: 24px;
 }
+
+#table-header-name {
+    margin: 0;
+}
+
+.transactions-table-header-options {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
