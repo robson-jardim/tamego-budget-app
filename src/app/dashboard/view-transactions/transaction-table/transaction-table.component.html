@@ -28,16 +28,22 @@
     <ng-container matColumnDef="amount">
         <mat-header-cell *matHeaderCellDef> Amount</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <app-money-value-chip
-                [value]="element.rawData.amount"
-                [currencyType]="'USD'">
-            </app-money-value-chip>
+
+            <ng-container *ngIf="element.rawData.amount">
+                <app-money-value-chip
+                    [value]="element.rawData.amount"
+                    [currencyType]="'USD'">
+                </app-money-value-chip>
+            </ng-container>
+
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="memo">
         <mat-header-cell *matHeaderCellDef> Memo</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.rawData.memo}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.rawData.memo}}
+        </mat-cell>
     </ng-container>
 
 </mat-table>

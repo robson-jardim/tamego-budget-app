@@ -39,7 +39,6 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
 
     public columns = ['categoryName', 'budgeted', 'activity', 'available', 'actions'];
     public dataSource: CategoryWithDesiredValue[];
-    public hoveredTableRow = -1;
     public changeSubscription: Subscription;
 
     constructor(private dialogService: CloseDialogService) {

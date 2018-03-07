@@ -6,7 +6,6 @@
     <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
 
     <mat-row *matRowDef="let row; columns: columns;"
-             [ngClass]="{'table-row-hovered': hoveredTableRow == row.categoryId}"
              (click)="updateCategory(row)">
     </mat-row>
 
@@ -20,20 +19,14 @@
     <ng-container matColumnDef="budgeted">
         <mat-header-cell *matHeaderCellDef>Budgeted</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <app-money-value-chip
-                [value]="element.desiredValue.budgeted "
-                [currencyType]="'USD'">
-            </app-money-value-chip>
+            <span>{{element.desiredValue.budgeted | currency: 'USD'}}</span>
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="activity">
         <mat-header-cell *matHeaderCellDef>Activity</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <app-money-value-chip
-                [value]="element.activity"
-                [currencyType]="'USD'">
-            </app-money-value-chip>
+            <span>{{element.activity | currency: 'USD'}}</span>
         </mat-cell>
     </ng-container>
 
@@ -52,7 +45,7 @@
         <mat-cell *matCellDef="let element">
 
             <button mat-icon-button [matMenuTriggerFor]="options" (click)="$event.stopPropagation()">
-                <mat-icon>more_vert</mat-icon>
+                <mat-icon class="black-thirty-eight">more_vert</mat-icon>
             </button>
             <mat-menu #options>
                 <button mat-menu-item (click)="updateCategory(element)">Edit</button>
