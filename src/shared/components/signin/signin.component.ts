@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@shared/services/auth/auth.service';
-import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
+import { AuthService } from 'shared/services/auth/auth.service';
+import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
 
 @Component({
     selector: 'app-signin',

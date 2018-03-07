@@ -5,28 +5,25 @@ import { BudgetSelectionComponent } from './budget-selection/budget-selection.co
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewTransactionsComponent } from './dashboard/view-transactions/view-transactions.component';
 import { ViewBudgetComponent } from './dashboard/view-budget/view-budget.component';
-import { SettingsComponent } from './settings/settings.component';
-import { DemoComponent } from './demo/demo.component';
 
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
 import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
 import { PremiumGuard } from '@shared/guards/premium/premium.guard';
 import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
-import { SigninComponent } from './authenticate/signin/signin.component';
-import { SignupComponent } from './authenticate/signup/signup.component';
+import { SigninComponent } from '@shared/components/signin/signin.component';
+import { SignupComponent } from '@shared/components/signup/signup.component';
 import { AuthenticateComponent } from './authenticate/authenticate-user.component';
 import { PasswordResetComponent } from './authenticate/password-reset/password-reset.component';
 
 const routes: Routes = [
     {
         path: 'demo',
-        component: DemoComponent
+        loadChildren: './demo/demo.module#DemoModule'
     },
     {
         path: 'settings',
-        component: SettingsComponent,
-        canActivate: [AuthGuard]
+        loadChildren: './settings/settings.module#SettingsModule'
     },
     {
         path: 'budgets',

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthNotificationService } from '@shared/services/auth-notification/auth-notification.service';
-import { AuthService } from '@shared/services/auth/auth.service';
+import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
+import { AuthService } from 'shared/services/auth/auth.service';
 
 class PasswordValidation {
 

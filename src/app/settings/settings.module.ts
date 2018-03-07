@@ -4,10 +4,18 @@ import { AppHeaderModule } from '@shared/components/header/header.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { SettingsComponent } from './settings.component';
 import { PaymentModule } from './payment/payment.module';
-import { MatInputModule } from '@angular/material';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { DaysUntilPipe } from '@shared/pipes/days-until/days-until.pipe';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@shared/guards/auth/auth.guard';
+
+const routes: Routes = [
+    {
+        path: '',
+        component: SettingsComponent,
+        canActivate: [AuthGuard]
+    },
+];
 
 @NgModule({
     imports: [
@@ -16,10 +24,11 @@ import { AppPipesModule } from '@shared/pipes/pipes.module';
         StandardMaterialModule,
         PaymentModule,
         CustomMaterialFormsModule,
-        AppPipesModule
+        AppPipesModule,
+        RouterModule.forChild(routes)
     ],
     declarations: [
-        SettingsComponent,
+        SettingsComponent
     ]
 })
 export class SettingsModule {

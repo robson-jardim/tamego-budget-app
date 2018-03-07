@@ -14,7 +14,6 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
-import { DemoComponent } from './demo/demo.component';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { AuthenticateUserModule } from './authenticate/authenticate-user.module';
@@ -34,15 +33,13 @@ import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-ac
         LinkAnonymousAccountModule,
 
         AuthenticateUserModule,
-        SettingsModule,
         BudgetSelectionModule,
         DashboardModule,
         AppRoutingModule
     ],
     declarations: [
         AppComponent,
-        UpdateAvailableDialogComponent,
-        DemoComponent
+        UpdateAvailableDialogComponent
     ],
     entryComponents: [
         UpdateAvailableDialogComponent
