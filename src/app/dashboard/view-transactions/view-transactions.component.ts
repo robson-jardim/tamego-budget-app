@@ -20,8 +20,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     private routeParamsSubscription: Subscription;
     public transactions$: Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>>;
-    private viewData$;
-    public onTransactionsChange$;
+    public onTransactionEntitiesChange$;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -55,18 +54,16 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
         });
 
-        this.viewData$ = this.utility.combineLatestObj({
+        const viewData$ = this.utility.combineLatestObj({
             accounts: this.getAccounts(),
             payees: this.getPayees(),
             groups: this.getGroups()
         });
 
-        this.onTransactionsChange$ = this.utility.combineLatestObj({
-            viewData: this.viewData$,
+        this.onTransactionEntitiesChange$ = this.utility.combineLatestObj({
+            viewData: viewData$,
             transactions: this.transactions$,
             budgetId: this.getBudgetId()
-        }).map(obj => {
-            return obj;
         });
     }
 

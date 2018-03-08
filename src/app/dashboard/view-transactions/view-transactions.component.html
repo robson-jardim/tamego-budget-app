@@ -1,4 +1,4 @@
-<ng-container *ngIf="onTransactionsChange$ | async as combined; else loading">
+<ng-container *ngIf="onTransactionEntitiesChange$ | async as entities; else loading">
 
     <div class="view-transaction-container">
 
@@ -16,14 +16,24 @@
             </mat-card-header>
 
             <mat-card-content>
-                <app-transaction-table
-                    [transactions]="combined.transactions"
-                    [payees]="combined.viewData.payees"
-                    [accounts]="combined.viewData.accounts"
-                    [groups]="combined.viewData.groups"
-                    [budgetId]="combined.budgetId"
-                    [onChange]="onTransactionsChange$">
-                </app-transaction-table>
+
+                <ng-container *ngIf="entities.transactions.length > 0; else noTransactions">
+                    <app-transaction-table
+                        [transactions]="entities.transactions"
+                        [payees]="entities.viewData.payees"
+                        [accounts]="entities.viewData.accounts"
+                        [groups]="entities.viewData.groups"
+                        [budgetId]="entities.budgetId"
+                        [onChange]="onTransactionEntitiesChange$">
+                    </app-transaction-table>
+                </ng-container>
+
+                <ng-template #noTransactions>
+                    <div class="no-content">
+                        <p>No transactions</p>
+                    </div>
+                </ng-template>
+
             </mat-card-content>
 
         </mat-card>

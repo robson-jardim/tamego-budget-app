@@ -38,6 +38,8 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.buildDataSource();
+
         this.onChangeSubscription = this.onChange.subscribe(() => {
             this.buildDataSource();
         });
@@ -66,7 +68,18 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
         this.dataSource = this.transactions.map(t => {
 
             const getAccountName = () => {
-                const [accountName] = this.accounts.filter(x => x.accountId === t.accountId).map(x => x.accountName);
+                let accountName;
+
+                if (instanceOfTransactionId(t) || instanceOfReoccurringTransactionId(t)) {
+                    [accountName] = this.accounts.filter(x => x.accountId === t.accountId).map(x => x.accountName);
+                }
+                else if (instanceOfTransferId(t) || instanceOfReoccurringTransferId(t)) {
+                    [accountName] = this.accounts.filter(x => x.originAccountId === t.accountName).map(x => x.accountName);
+                }
+                else {
+                    throw new Error('Unable to determine transaction type');
+                }
+
                 return accountName;
             };
 

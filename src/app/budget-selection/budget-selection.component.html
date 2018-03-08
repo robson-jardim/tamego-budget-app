@@ -12,10 +12,23 @@
             </div>
 
 
-            <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
-                      class="bottom-margin">
-                <p class="truncate">{{budget.budgetName}}</p>
-            </mat-card>
+            <ng-container *ngIf="budgets.length > 0; else noBudgets">
+                <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
+                          class="bottom-margin">
+                    <p class="truncate">{{budget.budgetName}}</p>
+                </mat-card>
+
+            </ng-container>
+
+            <ng-template #noBudgets>
+                <mat-card style="padding: 0">
+                    <mat-card-content>
+                        <div class="no-content">
+                            <p>No Budgets</p>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </ng-template>
         </div>
     </ng-container>
 

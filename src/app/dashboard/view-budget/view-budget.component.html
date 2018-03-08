@@ -25,49 +25,63 @@
             </div>
         </div>
 
-        <mat-card *ngFor="let group of data.groups; trackBy: trackGroup" class="categories-table-container">
+        <ng-container *ngIf="data.groups.length > 0; else noGroups">
 
-            <mat-card-header
-                class="material-table-header material-table-grey"
-                (click)="updateCategoryGroup(group)">
+            <mat-card *ngFor="let group of data.groups; trackBy: trackGroup" class="categories-table-container">
 
-                <div class="group-name">
-                    <h1 class="mat-title truncate">{{group.groupName}}</h1>
-                </div>
+                <mat-card-header
+                    class="material-table-header material-table-grey"
+                    (click)="updateCategoryGroup(group)">
 
-                <div class="categories-table-header-options">
-                    <button mat-raised-button color="primary"
-                            (click)="createCategory(group); $event.stopPropagation()"
-                            class="addCategory">
-                        Add category
-                    </button>
+                    <div class="group-name">
+                        <h1 class="mat-title truncate">{{group.groupName}}</h1>
+                    </div>
 
-                    <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #options>
-                        <button mat-menu-item (click)="updateCategoryGroup(group)">Edit</button>
-                    </mat-menu>
-                </div>
-            </mat-card-header>
+                    <div class="categories-table-header-options">
+                        <button mat-raised-button color="primary"
+                                (click)="createCategory(group); $event.stopPropagation()"
+                                class="addCategory">
+                            Add category
+                        </button>
 
-            <ng-container *ngIf="group.categories.length > 0; else noCategories">
-                <app-budget-categories-table
-                    [categories]="group.categories"
-                    [transactions]="data.transactions"
-                    [viewMonth]="viewMonth"
-                    [budgetId]="data.budgetId"
-                    [onChanges$]="onChanges$">
-                </app-budget-categories-table>
-            </ng-container>
+                        <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #options>
+                            <button mat-menu-item (click)="updateCategoryGroup(group)">Edit</button>
+                        </mat-menu>
+                    </div>
+                </mat-card-header>
 
-            <ng-template #noCategories>
-                <div class="no-categories">
-                    <p>No categories</p>
-                </div>
-            </ng-template>
+                <ng-container *ngIf="group.categories.length > 0; else noCategories">
+                    <app-budget-categories-table
+                        [categories]="group.categories"
+                        [transactions]="data.transactions"
+                        [viewMonth]="viewMonth"
+                        [budgetId]="data.budgetId"
+                        [onChanges$]="onChanges$">
+                    </app-budget-categories-table>
+                </ng-container>
 
-        </mat-card>
+                <ng-template #noCategories>
+                    <div class="no-content">
+                        <p>No categories</p>
+                    </div>
+                </ng-template>
+
+            </mat-card>
+        </ng-container>
+
+        <ng-template #noGroups>
+            <mat-card style="padding: 0">
+                <mat-card-content>
+                    <div class="no-content">
+                        <p>No category groups</p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </ng-template>
+
     </div>
 </ng-container>
 
