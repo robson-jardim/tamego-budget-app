@@ -56,7 +56,6 @@ export class BudgetCategoriesTableComponent implements OnInit, OnChanges, OnDest
         this.changeSubscription.unsubscribe();
     }
 
-
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.viewMonth) {
             this.buildDataSource();

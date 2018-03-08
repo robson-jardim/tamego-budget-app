@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import {
@@ -11,13 +11,14 @@ import {
 } from '@models/transfer.model';
 import { TransactionDialogComponent } from '../transaction-dialog/transaction-dialog.component';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-transaction-table',
     templateUrl: './transaction-table.component.html',
     styleUrls: ['./transaction-table.component.scss']
 })
-export class TransactionTableComponent implements OnInit {
+export class TransactionTableComponent implements OnInit, OnDestroy {
 
     @Input() transactions;
     @Input() budgetId;
@@ -29,15 +30,21 @@ export class TransactionTableComponent implements OnInit {
     public dataSource;
     public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance'];
 
+    private onChangeSubscription: Subscription;
+
     constructor(private firestore: FirestoreService,
                 private utility: UtilityService,
                 private dialogService: CloseDialogService) {
     }
 
     ngOnInit() {
-        this.onChange.subscribe(() => {
+        this.onChangeSubscription = this.onChange.subscribe(() => {
             this.buildDataSource();
         });
+    }
+
+    ngOnDestroy() {
+        this.onChangeSubscription.unsubscribe();
     }
 
     public trackTransactions(index, transaction: TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId) {
