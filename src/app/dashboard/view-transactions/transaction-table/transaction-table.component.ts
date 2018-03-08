@@ -24,10 +24,10 @@ export class TransactionTableComponent implements OnInit {
     @Input() accounts;
     @Input() payees;
     @Input() groups;
+    @Input() onChange;
 
     public dataSource;
-
-    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo'];
+    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance'];
 
     constructor(private firestore: FirestoreService,
                 private utility: UtilityService,
@@ -35,10 +35,27 @@ export class TransactionTableComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.buildDataSource();
+        this.onChange.subscribe(() => {
+            this.buildDataSource();
+        });
+    }
+
+    public trackTransactions(index, transaction: TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId) {
+        if (transaction) {
+            return (<TransactionId>transaction).transactionId ||
+                (<TransferId>transaction).transferId ||
+                (<ReoccurringTransactionId>transaction).reoccurringTransactionId ||
+                (<ReoccurringTransferId>transaction).reoccurringTransferId;
+        }
+        else {
+            return undefined;
+        }
     }
 
     private buildDataSource() {
+
+        let totalRunningBalance = this.transactions.map(x => x.amount).reduce((total, amount) => total + amount, 0);
+
         this.dataSource = this.transactions.map(t => {
 
             const getAccountName = () => {
@@ -79,12 +96,16 @@ export class TransactionTableComponent implements OnInit {
 
             };
 
+            const transactionRunningBalance = totalRunningBalance;
+            totalRunningBalance -= t.amount;
+
             return {
                 rawData: t,
                 viewData: {
                     accountName: getAccountName(),
                     payeeName: getPayeeName(),
-                    categoryName: getCategoryName()
+                    categoryName: getCategoryName(),
+                    runningBalance: transactionRunningBalance
                 }
             };
         });

@@ -1,4 +1,4 @@
-<ng-container *ngIf="combined$ | async as combined; else loading">
+<ng-container *ngIf="onTransactionsChange$ | async as combined; else loading">
 
     <div class="view-transaction-container">
 
@@ -21,7 +21,8 @@
                     [payees]="combined.viewData.payees"
                     [accounts]="combined.viewData.accounts"
                     [groups]="combined.viewData.groups"
-                    [budgetId]="combined.budgetId">
+                    [budgetId]="combined.budgetId"
+                    [onChange]="onTransactionsChange$">
                 </app-transaction-table>
             </mat-card-content>
 

@@ -1,4 +1,5 @@
-<mat-table #table [dataSource]="dataSource">
+<mat-table [dataSource]="dataSource"
+           [trackBy]="trackTransactions">
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="updateTransaction(row.rawData)"></mat-row>
@@ -43,6 +44,13 @@
         <mat-header-cell *matHeaderCellDef> Memo</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.rawData.memo}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="runningBalance">
+        <mat-header-cell *matHeaderCellDef> Running Balance </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.viewData.runningBalance | currency: 'USD'}}
         </mat-cell>
     </ng-container>
 
