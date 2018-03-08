@@ -11,32 +11,34 @@
             <mat-icon class="sidenav-list-icon">attach_money</mat-icon>
             <p>All Accounts</p>
         </mat-list-item>
-        <mat-list-item>
-            <button mat-button (click)="createAccount(); sidenavSelection()">
-                <span>Add account</span>
-            </button>
-        </mat-list-item>
 
-        <mat-divider></mat-divider>
-
-        <mat-list-item *ngFor="let account of accounts$ | async"
-                       [routerLink]="['accounts', account.accountId]"
-                       routerLinkActive="active"
-                       (click)="sidenavSelection()"
-                        class="sidenav-account-item">
-
-            <p class="truncate">{{account.accountName}}</p>
-
-            <div class="account-options">
-                <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
-                    <mat-icon>more_vert</mat-icon>
+        <ng-container *ngIf="accounts$ | async as accounts">
+            <mat-list-item>
+                <button mat-button (click)="createAccount(accounts); sidenavSelection()">
+                    <span>Add account</span>
                 </button>
-                <mat-menu #accountOptions>
-                    <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
-                </mat-menu>
+            </mat-list-item>
 
-            </div>
+            <mat-list-item *ngFor="let account of accounts"
+                           [routerLink]="['accounts', account.accountId]"
+                           routerLinkActive="active"
+                           (click)="sidenavSelection()"
+                           class="sidenav-account-item">
 
-        </mat-list-item>
+                <p class="truncate">{{account.accountName}}</p>
+
+                <div class="account-options">
+                    <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #accountOptions>
+                        <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
+                    </mat-menu>
+
+                </div>
+
+            </mat-list-item>
+        </ng-container>
+
     </mat-list>
 </div>

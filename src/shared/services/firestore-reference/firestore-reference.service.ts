@@ -27,7 +27,9 @@ export class FirestoreReferenceService {
     }
 
     public getAccountsCollectionRef(budgetId: string): AngularFirestoreCollection<Account> {
-        return this.afs.collection<Account>(`budgets/${budgetId}/accounts`);
+        return this.afs.collection<Account>(`budgets/${budgetId}/accounts`, ref =>
+            ref.orderBy('position', 'asc'
+        ));
     }
 
     public getGroupsCollectionRef(budgetId: string): AngularFirestoreCollection<CategoryGroup> {

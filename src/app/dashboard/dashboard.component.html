@@ -3,7 +3,8 @@
     <mat-sidenav-container class="sidenav-container">
         <mat-sidenav #sidenav
                      [mode]="mobileQuery.matches ? 'over' : 'side'"
-                     [opened]="initialSidenavState">
+                     [opened]="initialSidenavState"
+                     [fixedInViewport]="mobileQuery.matches">
 
             <app-sidenav (onSidenavSelection)="mobileQuery.matches && sidenav.toggle()"></app-sidenav>
         </mat-sidenav>

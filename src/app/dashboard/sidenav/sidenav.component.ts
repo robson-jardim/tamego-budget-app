@@ -41,12 +41,15 @@ export class SidenavComponent implements OnInit {
         return this.firestore.getAccounts(budgetId).observable;
     }
 
-    public createAccount() {
+    public createAccount(accounts) {
+        const nextAccountPosition = accounts.length;
+
         this.getBudgetId().flatMap(budgetId => {
 
             const dialogRef = this.dialogService.openCreate(AccountDialogComponent, {
                 data: {
-                    budgetId
+                    budgetId,
+                    nextAccountPosition
                 }
             });
 

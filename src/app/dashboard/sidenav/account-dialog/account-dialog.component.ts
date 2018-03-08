@@ -71,9 +71,20 @@ export class AccountDialogComponent implements OnInit {
     }
 
     private getAccountData(): Account {
+        const isNumber = (num) => !isNaN(num);
+        const getPosition = () => {
+            if (isNumber(this.data.position)) {
+                return this.data.position;
+            }
+            else {
+                return this.data.nextAccountPosition;
+            }
+        };
+
         return {
             accountName: this.accountForm.value[AccountFormNames.AccountName],
-            createdAt: this.data.createdAtAt || new Date()
+            createdAt: this.data.createdAtAt || new Date(),
+            position: getPosition()
         };
     }
 
