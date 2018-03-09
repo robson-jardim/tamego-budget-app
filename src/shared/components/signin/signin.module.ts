@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { CustomMaterialFormsModule } from 'shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from 'shared/components/standard-material.module';
 import { SigninComponent } from './signin.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
         CommonModule,
         CustomMaterialFormsModule,
-        StandardMaterialModule
+        StandardMaterialModule,
+        RouterModule
     ],
     declarations: [
         SigninComponent
