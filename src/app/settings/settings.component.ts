@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from '@shared/services/auth/auth.service';
 import { LinkAnonymousAccountDialogComponent } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account-dialog.component';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';

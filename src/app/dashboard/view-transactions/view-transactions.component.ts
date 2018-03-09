@@ -37,9 +37,7 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
         });
 
         this.routeParamsSubscription = routeData$.subscribe(() => {
-
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
-
                 const budgetId$: Observable<string> = Observable.of(budgetId);
                 const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.firestore.getAllAccountIdsForBudget(budgetId);
 
@@ -51,7 +49,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             }).flatMap(({budgetId, accountIds}) => {
                 return this.dashboardViews.getTransactionView(budgetId, accountIds);
             });
-
         });
 
         const viewData$ = this.utility.combineLatestObj({

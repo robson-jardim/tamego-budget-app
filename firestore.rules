@@ -76,6 +76,14 @@ service cloud.firestore {
             function isPremium() {
                 return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true;
             }
+
+            function existingData() {
+                return resource.dat;
+            }
+
+            function incomingData() {
+                return request.resource.data;
+            }
         }
     }
 }

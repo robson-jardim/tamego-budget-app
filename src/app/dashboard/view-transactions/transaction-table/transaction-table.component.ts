@@ -25,7 +25,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     @Input() accounts;
     @Input() payees;
     @Input() groups;
-    @Input() onChange;
+    @Input() onChange$;
 
     public dataSource;
     public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance'];
@@ -40,7 +40,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.buildDataSource();
 
-        this.onChangeSubscription = this.onChange.subscribe(() => {
+        this.onChangeSubscription = this.onChange$.subscribe(() => {
             this.buildDataSource();
         });
     }
