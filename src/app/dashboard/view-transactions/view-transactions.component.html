@@ -2,10 +2,10 @@
 
     <div class="view-transaction-container">
 
-        <div id="reconcile-button" *ngIf="isSingleAccountView">
+        <div id="reconcile-button" *ngIf="entities.accountId">
             <app-reconcile-transactions
                 [budgetId]="entities.budgetId"
-                [accountId]="'Bir1QMOS6EvnFh7KsBoU'">
+                [accountId]="entities.accountId">
             </app-reconcile-transactions>
         </div>
 

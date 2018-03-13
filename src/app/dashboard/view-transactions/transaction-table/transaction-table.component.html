@@ -51,12 +51,24 @@
         <mat-header-cell *matHeaderCellDef> Running Balance</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.viewData.runningBalance | currency: 'USD'}}
+        </mat-cell>
+    </ng-container>
 
-            <span>
-                {{element.rawData.cleared}}
-                {{element.rawData.clearedOrigin && element.rawData.clearedDestination}}
-            </span>
+    <ng-container matColumnDef="cleared">
+        <mat-header-cell *matHeaderCellDef>Cleared</mat-header-cell>
+        <mat-cell *matCellDef="let element">
 
+            <ng-container *ngIf="isCleared(element.rawData)">
+                <ng-container *ngIf="isLocked(element.rawData); then locked else unlocked">
+                </ng-container>
+
+                <ng-template #unlocked>
+                    <mat-icon>done</mat-icon>
+                </ng-template>
+                <ng-template #locked>
+                    <mat-icon>lock_outline</mat-icon>
+                </ng-template>
+            </ng-container>
         </mat-cell>
     </ng-container>
 

@@ -21,7 +21,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
     private routeParamsSubscription: Subscription;
     public transactions$: Observable<Array<TransactionId | TransferId | ReoccurringTransactionId | ReoccurringTransferId>>;
     public onTransactionEntitiesChange$;
-    public isSingleAccountView: boolean;
 
     constructor(private route: ActivatedRoute,
                 private firestore: FirestoreService,
@@ -39,13 +38,6 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
         this.routeParamsSubscription = routeData$.subscribe(() => {
             this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
-
-                if (accountId) {
-                    this.isSingleAccountView = true;
-                }
-                else {
-                    this.isSingleAccountView = false;
-                }
 
                 const budgetId$: Observable<string> = Observable.of(budgetId);
                 const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.firestore.getAllAccountIdsForBudget(budgetId);
@@ -69,7 +61,8 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
         this.onTransactionEntitiesChange$ = this.utility.combineLatestObj({
             viewData: viewData$,
             transactions: this.transactions$,
-            budgetId: this.getBudgetId()
+            budgetId: this.getBudgetId(),
+            accountId: this.getAccountId()
         });
     }
 

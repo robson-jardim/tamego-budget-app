@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import {
     instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransactionId, TransactionId,
     TransactionType
@@ -10,7 +9,6 @@ import {
     TransferId
 } from '@models/transfer.model';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AccountDialogComponent } from '../../../sidenav/account-dialog/account-dialog.component';
 
 @Component({
     selector: 'app-reconcile-dialog',

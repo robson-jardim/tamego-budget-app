@@ -5,7 +5,7 @@ import {
     instanceOfReoccurringTransactionId,
     instanceOfTransactionId,
     ReoccurringTransactionId,
-    TransactionId
+    TransactionId, TransactionType
 } from '@models/transaction.model';
 import {
     instanceOfReoccurringTransferId,
@@ -32,7 +32,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     @Input() onChange$;
 
     public dataSource;
-    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance'];
+    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance', 'cleared'];
 
     private onChangeSubscription: Subscription;
 
@@ -155,4 +155,13 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    public isCleared(transaction: any) {
+        return transaction.cleared || (transaction.clearedOrigin && transaction.clearedDestination);
+    }
+
+    public isLocked(transaction: any) {
+        return transaction.locked || (transaction.lockedOrigin && transaction.lockedDestination);
+    }
+
 }
