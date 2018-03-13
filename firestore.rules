@@ -7,18 +7,159 @@ service cloud.firestore {
 
         match /budgets/{budgetId} {
 
-            // Cannot use get() when referencing the current document, therefore, isBudgetOwner() is
-            // unable to be used right here
+            allow read: if
+                            isSignedIn() &&
+                            existingData().userId == request.auth.uid &&
+                            isPremium();
 
-            allow read: if resource.data.userId == request.auth.uid && isPremium();
-            allow create, update, delete: if request.auth.uid == request.resource.data.userId && isPremium();
+            allow create: if
+                            isSignedIn() &&
+                            incomingData().userId == request.auth.uid &&
+                            validateBudgetSchema() &&
+                            isPremium();
+
+            allow update: if
+                            isSignedIn() &&
+                            incomingData().userId == existingData().userId &&
+                            validateBudgetSchema() &&
+                            isPremium();
+
+            allow delete: if false;
+
+            function validateBudgetSchema() {
+                return incomingData().keys().hasAll(['userId', 'budgetName', 'currencyCode', 'timeCreated', 'lastVisited']) &&
+                    incomingData().size() == 5 &&
+                    incomingData().userId is string &&
+                    incomingData().budgetName is string &&
+                    incomingData().currencyCode is string &&
+                    incomingData().timeCreated is timestamp &&
+                    incomingData().lastVisited is timestamp;
+            }
 
             match /payees/{payeeId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                allow read: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validatePayeeSchema() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow delete: if false;
+
+                function validatePayeeSchema() {
+                    return incomingData().keys().hasAll(['payeeName']) &&
+                        incomingData().size() == 1 &&
+                        incomingData().payeeName is string;
+                }
             }
 
             match /accounts/{accountId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                allow read: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateAccountSchema() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow delete: if false;
+
+                function validateAccountSchema() {
+                    return incomingData().keys().hasAll(['accountName', 'createdAt', 'position']) &&
+                        incomingData().size() == 3 &&
+                        incomingData().accountName is string &&
+                        incomingData().position is int &&
+                        incomingData().createdAt is timestamp;
+                }
+            }
+
+            match /categoryGroups/{groupId} {
+                allow read: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateGroupSchema() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow delete: if false;
+
+                function validateGroupSchema() {
+                    return incomingData().keys().hasAll(['groupName', 'position']) &&
+                        incomingData().size() == 2 &&
+                        incomingData().groupName is string &&
+                        incomingData().position is int;
+                }
+            }
+
+            match /categories/{categoryId} {
+                allow read: if
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateCategoriesSchema() &&
+                                groupIdExists(incomingData().groupId) &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow delete: if false;
+
+                function validateCategoriesSchema() {
+                    return incomingData().keys().hasAll(['groupId', 'categoryName', 'position']) &&
+                        incomingData().size() == 3 &&
+                        incomingData().groupId is string &&
+                        incomingData().categoryName is string &&
+                        incomingData().position is int
+                }
+            }
+
+            match /categoryValues/{categoryValueId} {
+                allow read: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create: if
+                                isSignedIn() &&
+                                validateValuesSchema() &&
+                                categoryIdExists(incomingData().categoryId) &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow update: if
+                                isSignedIn() &&
+                                validateValuesSchema() &&
+                                incomingData().budgetMonth == existingData().budgetMonth &&
+                                incomingData().categoryId == existingData().categoryId &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow delete: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                function validateValuesSchema() {
+                    return incomingData().keys().hasAll(['categoryId', 'budgeted', 'offset', 'budgetMonth']) &&
+                        incomingData().size() == 4 &&
+                        incomingData().categoryId is string &&
+                        incomingData().budgeted is number &&
+                        incomingData().offset is number &&
+                        incomingData().budgetMonth is timestamp
+                }
             }
 
             match /transactions/{transactionId} {
@@ -37,48 +178,29 @@ service cloud.firestore {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 
-            match /categoryGroups/{groupId} {
-                allow read, write: if isBudgetOwner() && isPremium();
-            }
 
-            match /categories/{categoryId} {
-                allow read, write: if isBudgetOwner() && isPremium();
-            }
-
-            match /categoryValues/{categoryValueId} {
-                allow read: if isBudgetOwner() && isPremium();
-                allow create: if isBudgetOwner() && isPremium() && validateValueSchema();
-                allow update: if isBudgetOwner() && isPremium() && validateValueSchema() && !isEditingTime() && !isEditingCategoryId();
-                allow delete: if isBudgetOwner() && isPremium();
-
-                function isEditingTime() {
-                    return request.resource.data.budgetMonth != resource.data.budgetMonth;
-                }
-
-                function isEditingCategoryId() {
-                    return request.resource.data.categoryId != resource.data.categoryId;
-                }
-
-                function validateValueSchema() {
-                    return request.resource.data.keys().hasAll(['budgeted', 'offset', 'categoryId', 'budgetMonth'])
-                        && request.resource.data.size() == 4
-                        && request.resource.data.budgeted is number
-                        && request.resource.data.offset is number
-                        && request.resource.data.categoryId is string
-                        && request.resource.data.budgetMonth is timestamp
-                }
-            }
-
-            function isBudgetOwner() {
-                return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+            function isSignedIn() {
+                return request.auth != null;
             }
 
             function isPremium() {
                 return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true;
             }
 
+            function isBudgetOwner() {
+                return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
+            }
+
+            function groupIdExists(groupId) {
+                return exists(/databases/$(database)/documents/budgets/$(budgetId)/categoryGroups/$(groupId));
+            }
+
+            function categoryIdExists(categoryId) {
+                return exists(/databases/$(database)/documents/budgets/$(budgetId)/categories/$(categoryId));
+            }
+
             function existingData() {
-                return resource.dat;
+                return resource.data;
             }
 
             function incomingData() {
