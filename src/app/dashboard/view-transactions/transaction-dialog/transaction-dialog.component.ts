@@ -360,6 +360,8 @@ export class TransactionDialogComponent implements OnInit {
         return {
             reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
             ...transactionData,
+            cleared: false,
+            locked: false
         };
     }
 
@@ -369,6 +371,10 @@ export class TransactionDialogComponent implements OnInit {
         return {
             reoccurringSchedule: this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value,
             ...transferData,
+            clearedOrigin: false,
+            clearedDestination: false,
+            lockedOrigin: false,
+            lockedDestination: false
         };
     }
 

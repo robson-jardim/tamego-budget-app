@@ -45,11 +45,9 @@
 
             </app-repeat-transaction>
 
-            <mat-checkbox
-                color="primary"
-                formControlName="{{TransactionFormNames.Cleared}}">
-                Cleared
-            </mat-checkbox>
+            <app-cleared-checkbox
+                [transactionForm]="transactionForm">
+            </app-cleared-checkbox>
 
             <mat-form-field>
                 <input matInput placeholder="Memo" type="text"

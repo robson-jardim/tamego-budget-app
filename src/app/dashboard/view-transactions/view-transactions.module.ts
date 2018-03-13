@@ -22,6 +22,7 @@ import { TransactionTableComponent } from './transaction-table/transaction-table
 import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-value-chip.module';
 import { ReconcileTransactionsComponent } from './view-transaction/reconcile-transactions/reconcile-transactions.component';
 import { ReconcileConfirmDialogComponent } from './view-transaction/reconcile-dialog/reconcile-dialog.component';
+import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/cleared-checkbox.component';
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import { ReconcileConfirmDialogComponent } from './view-transaction/reconcile-di
         RepeatTransactionComponent,
         TransactionTableComponent,
         ReconcileTransactionsComponent,
-        ReconcileConfirmDialogComponent
+        ReconcileConfirmDialogComponent,
+        ClearedCheckboxComponent
     ],
     imports: [
         CommonModule,

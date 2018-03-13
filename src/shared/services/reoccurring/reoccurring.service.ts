@@ -26,7 +26,7 @@ export class ReoccurringService {
         reoccurringTransactions$ = reoccurringTransactions$.do(reoccurringTransactions => {
 
             let today = new Date();
-            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
+            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
             reoccurringTransactions.map(reoccurringTransaction => {
                 if (reoccurringTransaction.transactionDate <= today) {
@@ -93,11 +93,10 @@ export class ReoccurringService {
             return [...origin, ...destination];
         });
 
-
         transfers$ = transfers$.do(reoccurringTransfers => {
 
             let today = new Date();
-            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
+            today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
             reoccurringTransfers.map(reoccurringTransfer => {
 
