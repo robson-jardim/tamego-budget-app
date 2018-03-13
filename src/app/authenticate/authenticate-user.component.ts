@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@shared/services/auth/auth.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/merge';
-import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Component({
     selector: 'app-authenticate',

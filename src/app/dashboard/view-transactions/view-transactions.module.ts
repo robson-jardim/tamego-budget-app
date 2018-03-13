@@ -6,7 +6,11 @@ import { ViewTransactionsComponent } from './view-transactions.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import {
-    MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule, MatMenuModule, MatNativeDateModule,
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatMenuModule,
+    MatNativeDateModule,
     MatTableModule
 } from '@angular/material';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';

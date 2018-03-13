@@ -11,7 +11,6 @@ import { AppGuardsModule } from '@shared/guards/app-guards.module';
 
 import { BudgetSelectionModule } from './budget-selection/budget-selection.module';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
-import { SettingsModule } from './settings/settings.module';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { AppHeaderModule } from '@shared/components/header/header.module';

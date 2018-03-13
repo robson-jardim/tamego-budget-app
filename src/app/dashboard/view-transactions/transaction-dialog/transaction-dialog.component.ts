@@ -5,7 +5,9 @@ import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Observable } from 'rxjs/Observable';
 import {
-    instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransaction,
+    instanceOfReoccurringTransactionId,
+    instanceOfTransactionId,
+    ReoccurringTransaction,
     Transaction
 } from '@models/transaction.model';
 import { instanceOfPayeeId, Payee, PayeeId } from '@models/payee.model';
@@ -13,7 +15,9 @@ import { DialogState } from '@shared/services/close-dialog/close-dialog.service'
 import { AccountId, instanceOfAccountId } from '@models/budget-account.model';
 import { TransactionState } from '../shared/transaction_state.enum';
 import {
-    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransfer,
+    instanceOfReoccurringTransferId,
+    instanceOfTransferId,
+    ReoccurringTransfer,
     Transfer
 } from '@models/transfer.model';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';

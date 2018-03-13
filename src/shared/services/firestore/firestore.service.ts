@@ -11,13 +11,12 @@ import 'rxjs/add/observable/combineLatest';
 import { CategoryValue, CategoryValueId } from '@models/category-value.model';
 import 'rxjs/add/operator/skip';
 import {
-    ReoccurringTransaction, ReoccurringTransactionId, Transaction,
+    ReoccurringTransaction,
+    ReoccurringTransactionId,
+    Transaction,
     TransactionId
 } from '@models/transaction.model';
-import {
-    ReoccurringTransfer, ReoccurringTransferId, Transfer,
-    TransferId
-} from '@models/transfer.model';
+import { ReoccurringTransfer, ReoccurringTransferId, Transfer, TransferId } from '@models/transfer.model';
 import { Payee, PayeeId } from '@models/payee.model';
 import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.service';
 import { UtilityService } from '@shared/services/utility/utility.service';

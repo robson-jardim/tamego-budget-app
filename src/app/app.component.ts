@@ -7,7 +7,7 @@ import {
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 import { Observable } from 'rxjs/Observable';
-import { Event, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '@shared/services/auth/auth.service';

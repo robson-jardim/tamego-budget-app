@@ -2,11 +2,15 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import {
-    instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransactionId,
+    instanceOfReoccurringTransactionId,
+    instanceOfTransactionId,
+    ReoccurringTransactionId,
     TransactionId
 } from '@models/transaction.model';
 import {
-    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransferId,
+    instanceOfReoccurringTransferId,
+    instanceOfTransferId,
+    ReoccurringTransferId,
     TransferId
 } from '@models/transfer.model';
 import { TransactionDialogComponent } from '../transaction-dialog/transaction-dialog.component';

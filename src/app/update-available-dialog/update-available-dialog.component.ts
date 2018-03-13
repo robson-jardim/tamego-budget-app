@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { AccountDialogComponent } from '../dashboard/sidenav/account-dialog/account-dialog.component';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'app-update-available-dialog',

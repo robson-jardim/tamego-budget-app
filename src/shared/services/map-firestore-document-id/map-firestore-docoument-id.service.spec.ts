@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { MapFirestoreDocumentIdService } from './map-firestore-docoument-id.service';
 
 describe('FormatFirebaseDataService', () => {
