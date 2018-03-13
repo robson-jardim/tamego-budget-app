@@ -50,7 +50,7 @@ export class BudgetDialogComponent implements OnInit {
 
         const budgetData: Budget = {
             userId: this.data.userId,
-            budgetName: this.budgetForm.value.budgetName,
+            budgetName: this.budgetForm.value.budgetName.trim(),
             currencyCode: 'USD',
             timeCreated: currentTime,
             lastVisited: currentTime

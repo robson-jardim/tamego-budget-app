@@ -79,7 +79,7 @@ export class CategoryGroupDialogComponent implements OnInit {
         };
 
         return {
-            groupName: this.groupForm.value[GroupFormNames.GroupName],
+            groupName: this.groupForm.value[GroupFormNames.GroupName].trim(),
             position: getPosition()
         };
     }

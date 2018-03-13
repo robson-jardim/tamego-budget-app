@@ -257,7 +257,7 @@ export class TransactionDialogComponent implements OnInit {
             const newPayeeId = this.firestore.createId();
 
             const newPayee: Payee = {
-                payeeName: <string>payeeField,
+                payeeName: <string>payeeField.trim(),
             };
 
             const payeeCollection: AngularFirestoreCollection<Payee> = this.firestore.getPayees(this.data.budgetId).collection;
@@ -289,7 +289,7 @@ export class TransactionDialogComponent implements OnInit {
             categoryId: this.getCategoryId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             splits: [],
-            memo: this.transactionForm.value[TransactionFormNames.Memo],
+            memo: this.transactionForm.value[TransactionFormNames.Memo].trim(),
             cleared: this.transactionForm.value[TransactionFormNames.Cleared],
             locked: (this.data.locked && this.transactionForm.value[TransactionFormNames.Cleared]) || false
         };
@@ -301,7 +301,7 @@ export class TransactionDialogComponent implements OnInit {
             originAccountId: this.transactionForm.value[TransactionFormNames.AccountId],
             destinationAccountId: this.getPayeeId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
-            memo: this.transactionForm.value[TransactionFormNames.Memo],
+            memo: this.transactionForm.value[TransactionFormNames.Memo].trim(),
             clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false,
             clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false,
 

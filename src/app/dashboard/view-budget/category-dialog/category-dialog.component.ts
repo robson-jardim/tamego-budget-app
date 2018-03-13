@@ -101,7 +101,7 @@ export class CategoryDialogComponent implements OnInit {
 
         return {
             groupId: this.data.groupId,
-            categoryName: this.categoryForm.value[CategoryFormNames.CategoryName],
+            categoryName: this.categoryForm.value[CategoryFormNames.CategoryName].trim(),
             position: getPosition()
         };
     }

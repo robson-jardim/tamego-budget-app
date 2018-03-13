@@ -16,12 +16,16 @@ service cloud.firestore {
                             isSignedIn() &&
                             incomingData().userId == request.auth.uid &&
                             validateBudgetSchema() &&
+                            validCurrencyCode(incomingData().currencyCode) &&
+                            noLeadingOrTrailingSpaces(incomingData().budgetName) &&
                             isPremium();
 
             allow update: if
                             isSignedIn() &&
                             incomingData().userId == existingData().userId &&
                             validateBudgetSchema() &&
+                            validCurrencyCode(incomingData().currencyCode) &&
+                            noLeadingOrTrailingSpaces(incomingData().budgetName) &&
                             isPremium();
 
             allow delete: if false;
@@ -36,6 +40,10 @@ service cloud.firestore {
                     incomingData().lastVisited is timestamp;
             }
 
+            function validCurrencyCode(code) {
+                return code in ['USD'];
+            }
+
             match /payees/{payeeId} {
                 allow read: if
                                 isSignedIn() &&
@@ -45,6 +53,7 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validatePayeeSchema() &&
+                                noLeadingOrTrailingSpaces(incomingData().payeeName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -66,6 +75,7 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateAccountSchema() &&
+                                noLeadingOrTrailingSpaces(incomingData().accountName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -89,6 +99,7 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateGroupSchema() &&
+                                noLeadingOrTrailingSpaces(incomingData().groupName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -111,7 +122,8 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateCategoriesSchema() &&
-                                groupIdExists(incomingData().groupId) &&
+                                groupExists(incomingData().groupId) &&
+                                noLeadingOrTrailingSpaces(incomingData().categoryName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -135,7 +147,7 @@ service cloud.firestore {
                 allow create: if
                                 isSignedIn() &&
                                 validateValuesSchema() &&
-                                categoryIdExists(incomingData().categoryId) &&
+                                categoryExists(incomingData().categoryId) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -178,7 +190,6 @@ service cloud.firestore {
                 allow read, write: if isBudgetOwner() && isPremium();
             }
 
-
             function isSignedIn() {
                 return request.auth != null;
             }
@@ -191,12 +202,28 @@ service cloud.firestore {
                 return get(/databases/$(database)/documents/budgets/$(budgetId)).data.userId == request.auth.uid;
             }
 
-            function groupIdExists(groupId) {
+            function groupExists(groupId) {
                 return exists(/databases/$(database)/documents/budgets/$(budgetId)/categoryGroups/$(groupId));
             }
 
-            function categoryIdExists(categoryId) {
+            function categoryExists(categoryId) {
                 return exists(/databases/$(database)/documents/budgets/$(budgetId)/categories/$(categoryId));
+            }
+
+            function accountExists(accountId) {
+                return exists(/databases/$(database)/documents/budgets/$(budgetId)/accounts/$(accountId));
+            }
+
+            function payeeExists(payeeId) {
+                return exists(/databases/$(database)/documents/budgets/$(budgetId)/payees/$(payeeId));
+            }
+
+            function validSchedule(schedule) {
+                return schedule in ['DAILY', 'WEEKLY', 'EVERY_OTHER_WEEK', 'MONTHLY', 'YEARLY'];
+            }
+
+            function noLeadingOrTrailingSpaces(str) {
+                return str.size() == str.trim().size();
             }
 
             function existingData() {
@@ -206,6 +233,7 @@ service cloud.firestore {
             function incomingData() {
                 return request.resource.data;
             }
+
         }
     }
 }

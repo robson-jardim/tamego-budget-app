@@ -82,7 +82,7 @@ export class AccountDialogComponent implements OnInit {
         };
 
         return {
-            accountName: this.accountForm.value[AccountFormNames.AccountName],
+            accountName: this.accountForm.value[AccountFormNames.AccountName].trim(),
             createdAt: this.data.createdAtAt || new Date(),
             position: getPosition()
         };
