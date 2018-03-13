@@ -1,0 +1,22 @@
+<mat-dialog-content>
+    <p class="mat-body-1">Is your current account balance:</p>
+
+    <app-money-value-chip
+        id="account-balance"
+        [value]="accountBalance"
+        [currencyType]="'USD'">
+    </app-money-value-chip>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-button type="button" [mat-dialog-close]>Cancel</button>
+
+    <button mat-button
+            (click)="lockedClearedTransactions()"
+            mat-raised-button
+            color="primary">
+        Confirm
+    </button>
+
+</mat-dialog-actions>

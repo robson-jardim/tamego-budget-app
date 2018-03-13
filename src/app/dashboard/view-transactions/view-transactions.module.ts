@@ -20,6 +20,8 @@ import { RepeatTransactionComponent } from './transaction-dialog/reoccurring-tra
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { TransactionTableComponent } from './transaction-table/transaction-table.component';
 import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-value-chip.module';
+import { ReconcileTransactionsComponent } from './view-transaction/reconcile-transactions/reconcile-transactions.component';
+import { ReconcileConfirmDialogComponent } from './view-transaction/reconcile-dialog/reconcile-dialog.component';
 
 @NgModule({
     declarations: [
@@ -30,6 +32,8 @@ import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-
         UtcDatepickerComponent,
         RepeatTransactionComponent,
         TransactionTableComponent,
+        ReconcileTransactionsComponent,
+        ReconcileConfirmDialogComponent
     ],
     imports: [
         CommonModule,
@@ -46,7 +50,8 @@ import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-
         MoneyValueChipModule
     ],
     entryComponents: [
-        TransactionDialogComponent
+        TransactionDialogComponent,
+        ReconcileConfirmDialogComponent
     ]
 })
 export class ViewTransactionsModule {

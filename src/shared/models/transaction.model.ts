@@ -1,4 +1,7 @@
 import { Reoccurring } from '@models/reoccuring.model';
+import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
+
+export type TransactionType = TransactionId | ReoccurringTransactionId | TransferId | ReoccurringTransferId;
 
 export interface Transaction {
     transactionDate: Date;

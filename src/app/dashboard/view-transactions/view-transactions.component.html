@@ -2,7 +2,12 @@
 
     <div class="view-transaction-container">
 
-        <button mat-raised-button color="primary">Reconcile</button>
+        <div id="reconcile-button" *ngIf="isSingleAccountView">
+            <app-reconcile-transactions
+                [budgetId]="entities.budgetId"
+                [accountId]="'Bir1QMOS6EvnFh7KsBoU'">
+            </app-reconcile-transactions>
+        </div>
 
         <mat-card class="transaction-table">
 

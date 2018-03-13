@@ -48,9 +48,15 @@
     </ng-container>
 
     <ng-container matColumnDef="runningBalance">
-        <mat-header-cell *matHeaderCellDef> Running Balance </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> Running Balance</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.viewData.runningBalance | currency: 'USD'}}
+
+            <span>
+                {{element.rawData.cleared}}
+                {{element.rawData.clearedOrigin && element.rawData.clearedDestination}}
+            </span>
+
         </mat-cell>
     </ng-container>
 
