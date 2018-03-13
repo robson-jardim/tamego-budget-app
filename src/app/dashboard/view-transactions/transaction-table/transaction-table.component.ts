@@ -32,7 +32,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     @Input() onChange$;
 
     public dataSource;
-    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'amount', 'memo', 'runningBalance', 'cleared'];
+    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'memo', 'amount', 'runningBalance', 'cleared'];
 
     private onChangeSubscription: Subscription;
 

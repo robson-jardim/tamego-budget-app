@@ -6,7 +6,11 @@
 
     <ng-container matColumnDef="accountId">
         <mat-header-cell *matHeaderCellDef> Account</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.viewData.accountName}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <div class="truncate">
+                {{element.viewData.accountName}}
+            </div>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="transactionDate">
@@ -18,12 +22,20 @@
 
     <ng-container matColumnDef="payeeId">
         <mat-header-cell *matHeaderCellDef> Payee</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.viewData.payeeName}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <div class="truncate">
+                {{element.viewData.payeeName}}
+            </div>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="categoryId">
         <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.viewData.categoryName}}</mat-cell>
+        <mat-cell *matCellDef="let element">
+            <div class="truncate">
+                {{element.viewData.categoryName}}
+            </div>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="amount">
@@ -43,12 +55,12 @@
     <ng-container matColumnDef="memo">
         <mat-header-cell *matHeaderCellDef> Memo</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            {{element.rawData.memo}}
+            <div class="truncate">{{element.rawData.memo}}</div>
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="runningBalance">
-        <mat-header-cell *matHeaderCellDef> Running Balance</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> Balance</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.viewData.runningBalance | currency: 'USD'}}
         </mat-cell>

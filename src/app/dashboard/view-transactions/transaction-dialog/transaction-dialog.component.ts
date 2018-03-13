@@ -90,7 +90,7 @@ export class TransactionDialogComponent implements OnInit {
         form[TransactionFormNames.Category] = [null]; // Object set within autocomplete component
         form[TransactionFormNames.Memo] = [this.data.memo];
         form[TransactionFormNames.Amount] = [this.data.amount];
-        form[TransactionFormNames.Cleared] = [this.data.cleared];
+        form[TransactionFormNames.Cleared] = [this.data.cleared || (this.data.clearedOrigin && this.data.clearedDestination) || false];
         form[TransactionFormNames.ReoccurringSchedule] = [this.data.reoccurringSchedule];
 
         this.transactionForm = this.formBuilder.group(form);
@@ -290,8 +290,8 @@ export class TransactionDialogComponent implements OnInit {
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             splits: [],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
-            cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false, // Default value is false
-            locked: this.data.locked || false // Keep original value, otherwise false if changing from transfer to transaction
+            cleared: this.transactionForm.value[TransactionFormNames.Cleared],
+            locked: (this.data.locked && this.transactionForm.value[TransactionFormNames.Cleared]) || false
         };
     }
 
@@ -302,10 +302,12 @@ export class TransactionDialogComponent implements OnInit {
             destinationAccountId: this.getPayeeId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             memo: this.transactionForm.value[TransactionFormNames.Memo],
-            clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false, // Default value is false
-            clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false, // Default value is false
-            lockedOrigin: this.data.lockedOrigin || false, // Keep original value, otherwise false if changing from transaction to transfer
-            lockedDestination: this.data.lockedDestination || false // Keep original value, otherwise false if changing from transaction to transfer
+            clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+            clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false,
+
+            // Set locked values to false if cleared has been set to false
+            lockedOrigin: (this.data.lockedOrigin && this.transactionForm.value[TransactionFormNames.Cleared]) || false,
+            lockedDestination: (this.data.lockedDestination && this.transactionForm.value[TransactionFormNames.Cleared]) || false
         };
     }
 

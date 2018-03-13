@@ -38,15 +38,19 @@ export class ReoccurringService {
                         splits: reoccurringTransaction.splits,
                         memo: reoccurringTransaction.memo,
                         amount: reoccurringTransaction.amount,
-                        cleared: reoccurringTransaction.cleared,
-                        locked: reoccurringTransaction.locked
+                        cleared: false,
+                        locked: false
                     };
 
                     const batch = this.afs.firestore.batch();
 
                     const reoccurringDocRef = reoccurringTransactionCollection.doc(reoccurringTransaction.reoccurringTransactionId).ref;
                     const nextOccurrence = this.getNextOccurrence(reoccurringTransaction.transactionDate, reoccurringTransaction.reoccurringSchedule);
-                    batch.update(reoccurringDocRef, {transactionDate: nextOccurrence});
+                    batch.update(reoccurringDocRef, {
+                        transactionDate: nextOccurrence,
+                        cleared: false,
+                        locked: false
+                    });
 
                     const newTransacitonId = this.afs.createId();
                     const newTransactionDocRef = transactionCollection.doc(newTransacitonId).ref;
@@ -105,21 +109,26 @@ export class ReoccurringService {
                         destinationAccountId: reoccurringTransfer.destinationAccountId,
                         memo: reoccurringTransfer.memo,
                         amount: reoccurringTransfer.amount,
-                        clearedOrigin: reoccurringTransfer.clearedOrigin,
-                        clearedDestination: reoccurringTransfer.clearedDestination,
-                        lockedOrigin: reoccurringTransfer.lockedOrigin,
-                        lockedDestination: reoccurringTransfer.lockedDestination
+                        clearedOrigin: false,
+                        clearedDestination: false,
+                        lockedOrigin: false,
+                        lockedDestination: false
                     };
 
                     const batch = this.afs.firestore.batch();
 
                     const reoccurringDocRef = reoccurringTransferCollection.doc(reoccurringTransfer.reoccurringTransferId).ref;
                     const nextOccurrence = this.getNextOccurrence(reoccurringTransfer.transactionDate, reoccurringTransfer.reoccurringSchedule);
-                    batch.update(reoccurringDocRef, {transactionDate: nextOccurrence});
+                    batch.update(reoccurringDocRef, {
+                        transactionDate: nextOccurrence,
+                        clearedOrigin: false,
+                        clearedDestination: false,
+                        lockedOrigin: false,
+                        lockedDestination: false
+                    });
 
                     const newTransferId = this.afs.createId();
                     const newTransferRef = transferCollection.doc(newTransferId).ref;
-
                     batch.set(newTransferRef, {...nonreoccurring});
 
                     batch.commit();

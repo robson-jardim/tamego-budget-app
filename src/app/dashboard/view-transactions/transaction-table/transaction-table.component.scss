@@ -1,3 +1,15 @@
+.mat-column-cleared {
+    flex: 0 42px;
+}
+
 .black-thirty-eight {
     color: hsl(0, 0%, 62%);
+}
+
+.truncate {
+    margin: 0;
+    width: calc(100% - 8px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
