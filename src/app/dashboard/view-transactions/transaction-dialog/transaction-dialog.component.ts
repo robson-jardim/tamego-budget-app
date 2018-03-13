@@ -281,6 +281,17 @@ export class TransactionDialogComponent implements OnInit {
         }
     }
 
+    private readonly getMemo = () => {
+        const memo = this.transactionForm.value[TransactionFormNames.Memo];
+
+        if (memo && memo.length > 0) {
+            return memo.trim();
+        }
+        else {
+            return null;
+        }
+    }
+
     private getTransactionData(): Transaction {
         return {
             transactionDate: this.transactionForm.value[TransactionFormNames.TransactionDate],
@@ -289,7 +300,7 @@ export class TransactionDialogComponent implements OnInit {
             categoryId: this.getCategoryId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
             splits: [],
-            memo: this.transactionForm.value[TransactionFormNames.Memo].trim(),
+            memo: this.getMemo(),
             cleared: this.transactionForm.value[TransactionFormNames.Cleared],
             locked: (this.data.locked && this.transactionForm.value[TransactionFormNames.Cleared]) || false
         };
@@ -301,7 +312,7 @@ export class TransactionDialogComponent implements OnInit {
             originAccountId: this.transactionForm.value[TransactionFormNames.AccountId],
             destinationAccountId: this.getPayeeId(),
             amount: this.transactionForm.value[TransactionFormNames.Amount],
-            memo: this.transactionForm.value[TransactionFormNames.Memo].trim(),
+            memo: this.getMemo(),
             clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false,
             clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false,
 
