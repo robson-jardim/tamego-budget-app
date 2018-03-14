@@ -30,6 +30,17 @@ export class UtilityService {
         return utcDate;
     }
 
+    public dateToString(date: Date) {
+        const day = date.getUTCDate();
+        const month = date.getUTCMonth() + 1;
+        const year = date.getUTCFullYear();
+
+        // Makes sure month and day fills 2 spaces
+        const formattedDay = ('0' + day).slice(-2);
+        const formattedMonth = ('0' + month).slice(-2);
+
+        return year + '-' + formattedMonth + '-' + formattedDay;
+    }
     public combineLatestObj(obj: Object): Observable<any> {
 
         const sources = [];

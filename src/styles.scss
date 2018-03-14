@@ -3,6 +3,9 @@
     margin: 0;
 }
 
+$material-design-icons-font-path: '~material-design-icons-iconfont/dist/fonts/';
+@import '~material-design-icons-iconfont/dist/material-design-icons';
+
 .mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
     text-transform: uppercase;
     letter-spacing: .01em;

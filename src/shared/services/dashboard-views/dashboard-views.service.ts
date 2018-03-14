@@ -3,8 +3,15 @@ import { Observable } from 'rxjs/Observable';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
-import { ReoccurringTransactionId, TransactionId } from '@models/transaction.model';
-import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
+import {
+    instanceOfReoccurringTransactionId,
+    instanceOfTransactionId, ReoccurringTransactionId, TransactionId,
+    TransactionType
+} from '@models/transaction.model';
+import {
+    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransferId,
+    TransferId
+} from '@models/transfer.model';
 
 @Injectable()
 export class DashboardViewService {
@@ -61,11 +68,47 @@ export class DashboardViewService {
 
             let data = [...observablesData];
             data = flatten(data);
+            data = removeDuplicateTransfers(data);
             orderByDate(data);
             return data;
 
             function flatten(array: Array<any>) {
                 return array.reduce((a, b) => a.concat(b), []);
+            }
+
+            function removeDuplicateTransfers(transactions: TransactionType[]) {
+                const ids = new Set();
+
+                return transactions.filter(transaction => {
+
+                    let currentId;
+
+                    if (instanceOfTransactionId(transaction)) {
+                        transaction = transaction as TransactionId;
+                        currentId = transaction.transactionId;
+                    }
+                    else if (instanceOfReoccurringTransactionId(transaction)) {
+                        transaction = transaction as ReoccurringTransactionId;
+                        currentId = transaction.reoccurringTransactionId;
+                    }
+                    else if (instanceOfTransferId(transaction)) {
+                        transaction = transaction as TransferId;
+                        currentId = transaction.transferId;
+                    }
+                    else if (instanceOfReoccurringTransferId(transaction)) {
+                        transaction = transaction as ReoccurringTransferId;
+                        currentId = transaction.reoccurringTransferId;
+                    }
+
+                    if (ids.has(currentId)) {
+                        return false;
+                    }
+                    else {
+                        ids.add(currentId);
+                        return true;
+                    }
+                });
+
             }
 
             function orderByDate(array: Array<any>) {
