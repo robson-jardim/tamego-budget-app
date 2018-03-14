@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
         return Observable.fromPromise(window['isUpdateAvailable']);
     }
 
-    private showSnapbar(notification: Notification) {
+    private showSnackbar(notification: Notification) {
         this.snackBar.open(notification.message, notification.action, {
             duration: notification.duration
         });
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private enableGlobalAppNotifications() {
         this.notificationSubscription = this.notifications.broadcast.subscribe(notification => {
-            this.showSnapbar(notification);
+            this.showSnackbar(notification);
         });
     }
 

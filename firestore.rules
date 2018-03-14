@@ -183,9 +183,13 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateTransactionSchema() &&
+
+                                // Succeeds when these rules are left out.
+                                // These rules succeed on their own, but not when combined with others
+                                // (incomingData().categoryId == null || categoryExists(incomingData().categoryId)) &&
+                                // (incomingData().payeeId == null || payeeExists(incomingData().payeeId)) &&
+
                                 accountExists(incomingData().accountId) &&
-                                ( incomingData().payeeId == null || payeeExists(incomingData().payeeId) ) &&
-                                ( incomingData().categoryId == null || categoryExists(incomingData().categoryId) ) &&
                                 isBudgetOwner() &&
                                 isPremium();
 

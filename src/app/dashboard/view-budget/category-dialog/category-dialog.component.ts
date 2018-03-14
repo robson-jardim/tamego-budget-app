@@ -178,7 +178,7 @@ export class CategoryDialogComponent implements OnInit {
     public getCategoryValuesCollection() {
         return this.references.getCategoryValuesCollectionRef(this.data.budgetId);
     }
-
+    
     private sendCategoryNotification() {
         if (DialogState.Create === this.data.state) {
             this.notifications.sendCreateNotification(EntityNames.Category);
