@@ -5,7 +5,7 @@ import {
     instanceOfReoccurringTransactionId,
     instanceOfTransactionId,
     ReoccurringTransactionId,
-    TransactionId, TransactionType
+    TransactionId
 } from '@models/transaction.model';
 import {
     instanceOfReoccurringTransferId,
@@ -32,7 +32,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     @Input() onChange$;
 
     public dataSource;
-    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'memo', 'amount', 'runningBalance', 'cleared'];
+    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'memo', 'amount', 'balance', 'status'];
 
     private onChangeSubscription: Subscription;
 
@@ -78,7 +78,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
                     [accountName] = this.accounts.filter(x => x.accountId === t.accountId).map(x => x.accountName);
                 }
                 else if (instanceOfTransferId(t) || instanceOfReoccurringTransferId(t)) {
-                    [accountName] = this.accounts.filter(x => x.originAccountId === t.accountName).map(x => x.accountName);
+                    [accountName] = this.accounts.filter(x => x.accountId === t.originAccountId).map(x => x.accountName);
                 }
                 else {
                     throw new Error('Unable to determine transaction type');
@@ -132,6 +132,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
                     runningBalance: transactionRunningBalance
                 }
             };
+
         });
     }
 
@@ -162,6 +163,16 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
 
     public isLocked(transaction: any) {
         return transaction.locked || (transaction.lockedOrigin && transaction.lockedDestination);
+    }
+
+    public isReoccurring(transaction: any) {
+        return instanceOfReoccurringTransactionId(transaction) || instanceOfReoccurringTransferId(transaction);
+    }
+
+    public isFutureDate(date: Date) {
+        const today = new Date();
+        const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+        return date > utcToday;
     }
 
 }

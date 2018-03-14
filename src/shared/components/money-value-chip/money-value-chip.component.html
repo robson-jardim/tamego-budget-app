@@ -10,6 +10,6 @@
 <ng-template #noValue>
     <mat-chip
         [disabled]="true">
-        No value
+        {{ 0 | currency: currencyType}}
     </mat-chip>
 </ng-template>

@@ -268,7 +268,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private readonly getCategoryId = () => {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
@@ -279,7 +279,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private readonly getMemo = () => {
         const memo = this.transactionForm.value[TransactionFormNames.Memo];
@@ -290,7 +290,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    }
+    };
 
     private getTransactionData(): Transaction {
         return {
@@ -298,10 +298,10 @@ export class TransactionDialogComponent implements OnInit {
             accountId: this.transactionForm.value[TransactionFormNames.AccountId],
             payeeId: this.getPayeeId(),
             categoryId: this.getCategoryId(),
-            amount: this.transactionForm.value[TransactionFormNames.Amount],
+            amount: this.transactionForm.value[TransactionFormNames.Amount] || 0,
             splits: [],
             memo: this.getMemo(),
-            cleared: this.transactionForm.value[TransactionFormNames.Cleared],
+            cleared: this.transactionForm.value[TransactionFormNames.Cleared] || false,
             locked: (this.data.locked && this.transactionForm.value[TransactionFormNames.Cleared]) || false
         };
     }
@@ -311,7 +311,7 @@ export class TransactionDialogComponent implements OnInit {
             transactionDate: this.transactionForm.value[TransactionFormNames.TransactionDate],
             originAccountId: this.transactionForm.value[TransactionFormNames.AccountId],
             destinationAccountId: this.getPayeeId(),
-            amount: this.transactionForm.value[TransactionFormNames.Amount],
+            amount: this.transactionForm.value[TransactionFormNames.Amount] || 0,
             memo: this.getMemo(),
             clearedOrigin: this.transactionForm.value[TransactionFormNames.Cleared] || false,
             clearedDestination: this.transactionForm.value[TransactionFormNames.Cleared] || false,

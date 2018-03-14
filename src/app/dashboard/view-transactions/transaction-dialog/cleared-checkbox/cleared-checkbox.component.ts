@@ -3,6 +3,7 @@ import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 import { FormGroup } from '@angular/forms';
 import { filter, map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 @Component({
     selector: 'app-cleared-checkbox',
@@ -13,23 +14,31 @@ export class ClearedCheckboxComponent implements OnInit, OnDestroy {
 
     @Input() transactionForm: FormGroup;
     public TransactionFormNames = TransactionFormNames;
-    private checkboxSubscription: Subscription;
 
-    constructor() {
+    private reoccurringSubscription: Subscription;
+    private transactionDateSubscription: Subscription;
+
+    constructor(private utility: UtilityService) {
     }
 
     ngOnInit() {
-
-        const reoccurringSchedule = this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value;
-
-        if (!!reoccurringSchedule) {
+        if (this.isReoccurring()) {
             this.disableCheckbox();
         }
 
-        this.checkboxSubscription = this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].valueChanges
+        if (this.isTransactionDateInFuture()) {
+            this.disableCheckbox();
+        }
+
+        this.watchReoccurringChanges();
+        this.watchTransactionDateChanges();
+    }
+
+    private watchTransactionDateChanges() {
+        this.transactionDateSubscription = this.transactionForm.controls[TransactionFormNames.TransactionDate].valueChanges
             .pipe(
-                tap(schedule => {
-                    if (!!schedule) {
+                tap(() => {
+                    if (this.isTransactionDateInFuture()) {
                         this.disableCheckbox();
                     }
                     else {
@@ -39,8 +48,35 @@ export class ClearedCheckboxComponent implements OnInit, OnDestroy {
             ).subscribe();
     }
 
+    private watchReoccurringChanges() {
+        this.reoccurringSubscription = this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].valueChanges
+            .pipe(
+                tap(() => {
+                    if (this.isReoccurring()) {
+                        this.disableCheckbox();
+                    }
+                    else {
+                        this.enableCheckbox();
+                    }
+                })
+            ).subscribe();
+    }
+
+    private isTransactionDateInFuture() {
+        const today = this.utility.utcToday();
+        const transactionDate = this.transactionForm.controls[TransactionFormNames.TransactionDate].value;
+
+        return transactionDate > today;
+    }
+
+    private isReoccurring() {
+        const reoccurringSchedule = this.transactionForm.controls[TransactionFormNames.ReoccurringSchedule].value;
+        return !!reoccurringSchedule;
+    }
+
     ngOnDestroy() {
-        this.checkboxSubscription.unsubscribe();
+        this.reoccurringSubscription.unsubscribe();
+        this.transactionDateSubscription.unsubscribe();
     }
 
 

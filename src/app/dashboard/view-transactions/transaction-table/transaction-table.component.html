@@ -2,7 +2,9 @@
            [trackBy]="trackTransactions">
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="updateTransaction(row.rawData)"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"
+             (click)="updateTransaction(row.rawData)"
+             [ngClass]="{'futureTransaction': isFutureDate(row.rawData.transactionDate)}"></mat-row>
 
     <ng-container matColumnDef="accountId">
         <mat-header-cell *matHeaderCellDef> Account</mat-header-cell>
@@ -42,12 +44,10 @@
         <mat-header-cell *matHeaderCellDef> Amount</mat-header-cell>
         <mat-cell *matCellDef="let element">
 
-            <ng-container *ngIf="element.rawData.amount">
-                <app-money-value-chip
-                    [value]="element.rawData.amount"
-                    [currencyType]="'USD'">
-                </app-money-value-chip>
-            </ng-container>
+            <app-money-value-chip
+                [value]="element.rawData.amount"
+                [currencyType]="'USD'">
+            </app-money-value-chip>
 
         </mat-cell>
     </ng-container>
@@ -59,15 +59,15 @@
         </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="runningBalance">
+    <ng-container matColumnDef="balance">
         <mat-header-cell *matHeaderCellDef> Balance</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.viewData.runningBalance | currency: 'USD'}}
         </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="cleared">
-        <mat-header-cell *matHeaderCellDef>Cleared</mat-header-cell>
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let element">
 
             <ng-container *ngIf="isCleared(element.rawData)">
@@ -80,6 +80,10 @@
                 <ng-template #locked>
                     <mat-icon>lock_outline</mat-icon>
                 </ng-template>
+            </ng-container>
+
+            <ng-container *ngIf="isReoccurring(element.rawData)">
+                <mat-icon>cached</mat-icon>
             </ng-container>
         </mat-cell>
     </ng-container>

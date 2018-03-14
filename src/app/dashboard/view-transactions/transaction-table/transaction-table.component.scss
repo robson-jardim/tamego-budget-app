@@ -1,5 +1,5 @@
-.mat-column-cleared {
-    flex: 0 42px;
+.mat-column-status {
+    flex: 0 24px;
 }
 
 .black-thirty-eight {
@@ -12,4 +12,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.futureTransaction {
+    background-color: #F5F5F5;
+}
+
+.futureTransaction:hover {
+    background-color: #EEEEEE;
 }

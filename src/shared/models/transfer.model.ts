@@ -5,7 +5,7 @@ export interface Transfer {
     originAccountId: string;
     destinationAccountId: string;
     memo: string | null;
-    amount: number | null;
+    amount: number;
     clearedOrigin: boolean;
     clearedDestination: boolean;
     lockedOrigin: boolean;

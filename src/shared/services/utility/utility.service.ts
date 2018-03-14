@@ -41,6 +41,13 @@ export class UtilityService {
 
         return year + '-' + formattedMonth + '-' + formattedDay;
     }
+
+    public utcToday(): Date {
+        const today = new Date();
+        const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+        return utcToday;
+    }
+
     public combineLatestObj(obj: Object): Observable<any> {
 
         const sources = [];

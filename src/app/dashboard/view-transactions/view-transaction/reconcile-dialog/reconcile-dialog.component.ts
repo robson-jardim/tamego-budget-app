@@ -39,8 +39,12 @@ export class ReconcileConfirmDialogComponent implements OnInit {
         const batch = this.afs.firestore.batch();
         const budgetPath = this.afs.doc(`budgets/${this.data.budgetId}`).ref.path;
 
+        const today = new Date();
+        const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+
         const validTransactions: Array<TransactionType> = this.data.transactions
-            .filter(this.isCleared);
+            .filter(this.isCleared)
+            .filter(x => x.transactionDate <= utcToday);
 
         validTransactions.forEach(transaction => {
 

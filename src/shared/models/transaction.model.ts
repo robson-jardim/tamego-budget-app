@@ -10,7 +10,7 @@ export interface Transaction {
     categoryId: string | null;
     splits: SplitTransaction[];
     memo: string | null;
-    amount: number | null;
+    amount: number;
     cleared: boolean;
     locked: boolean;
 }

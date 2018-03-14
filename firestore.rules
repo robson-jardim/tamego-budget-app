@@ -175,7 +175,33 @@ service cloud.firestore {
             }
 
             match /transactions/{transactionId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                allow read, delete: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateTransactionSchema() &&
+                                accountExists(incomingData().accountId) &&
+                                ( incomingData().payeeId == null || payeeExists(incomingData().payeeId) ) &&
+                                ( incomingData().categoryId == null || categoryExists(incomingData().categoryId) ) &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                function validateTransactionSchema() {
+                    return incomingData().keys().hasAll(['transactionDate', 'accountId', 'payeeId', 'categoryId', 'splits', 'memo', 'amount', 'cleared', 'locked']) &&
+                                            incomingData().size() == 9 &&
+                                            incomingData().transactionDate is timestamp &&
+                                            incomingData().accountId is string &&
+                                            (incomingData().payeeId == null || incomingData().payeeId is string) &&
+                                            (incomingData().categoryId == null || incomingData().categoryId is string) &&
+                                            incomingData().splits is list &&
+                                            (incomingData().memo == null || incomingData().memo is string) &&
+                                            incomingData().amount is number &&
+                                            incomingData().cleared is bool &&
+                                            incomingData().locked is bool;
+                }
             }
 
             match /reoccurringTransactions/{reoccurringTransactionsId} {
