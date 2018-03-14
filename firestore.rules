@@ -16,16 +16,13 @@ service cloud.firestore {
                             isSignedIn() &&
                             incomingData().userId == request.auth.uid &&
                             validateBudgetSchema() &&
-                            validCurrencyCode(incomingData().currencyCode) &&
-                            noLeadingOrTrailingSpaces(incomingData().budgetName) &&
                             isPremium();
 
             allow update: if
                             isSignedIn() &&
                             incomingData().userId == existingData().userId &&
+                            incomingData().timeCreated == existingData().timeCreated &&
                             validateBudgetSchema() &&
-                            validCurrencyCode(incomingData().currencyCode) &&
-                            noLeadingOrTrailingSpaces(incomingData().budgetName) &&
                             isPremium();
 
             allow delete: if false;
@@ -34,8 +31,8 @@ service cloud.firestore {
                 return incomingData().keys().hasAll(['userId', 'budgetName', 'currencyCode', 'timeCreated', 'lastVisited']) &&
                     incomingData().size() == 5 &&
                     incomingData().userId is string &&
-                    incomingData().budgetName is string &&
-                    incomingData().currencyCode is string &&
+                    (incomingData().budgetName is string && noLeadingOrTrailingSpaces(incomingData().budgetName) && notEmptyString(incomingData().budgetName)) &&
+                    (incomingData().currencyCode is string && validCurrencyCode(incomingData().currencyCode)) &&
                     incomingData().timeCreated is timestamp &&
                     incomingData().lastVisited is timestamp;
             }
@@ -53,7 +50,6 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validatePayeeSchema() &&
-                                noLeadingOrTrailingSpaces(incomingData().payeeName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -62,7 +58,7 @@ service cloud.firestore {
                 function validatePayeeSchema() {
                     return incomingData().keys().hasAll(['payeeName']) &&
                         incomingData().size() == 1 &&
-                        incomingData().payeeName is string;
+                        (incomingData().payeeName is string && noLeadingOrTrailingSpaces(incomingData().payeeName) && notEmptyString(incomingData().payeeName));
                 }
             }
 
@@ -75,18 +71,16 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateAccountSchema() &&
-                                noLeadingOrTrailingSpaces(incomingData().accountName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
                 allow delete: if false;
 
                 function validateAccountSchema() {
-                    return incomingData().keys().hasAll(['accountName', 'createdAt', 'position']) &&
-                        incomingData().size() == 3 &&
-                        incomingData().accountName is string &&
-                        incomingData().position is int &&
-                        incomingData().createdAt is timestamp;
+                    return incomingData().keys().hasAll(['accountName', 'position']) &&
+                        incomingData().size() == 2 &&
+                        (incomingData().accountName is string && noLeadingOrTrailingSpaces(incomingData().accountName) && notEmptyString(incomingData().accountName)) &&
+                        (incomingData().position is int && incomingData().position >= 0);
                 }
             }
 
@@ -99,7 +93,6 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateGroupSchema() &&
-                                noLeadingOrTrailingSpaces(incomingData().groupName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -108,8 +101,8 @@ service cloud.firestore {
                 function validateGroupSchema() {
                     return incomingData().keys().hasAll(['groupName', 'position']) &&
                         incomingData().size() == 2 &&
-                        incomingData().groupName is string &&
-                        incomingData().position is int;
+                        (incomingData().groupName is string && noLeadingOrTrailingSpaces(incomingData().groupName) && notEmptyString(incomingData().groupName)) &&
+                        (incomingData().position is int && incomingData().position >= 0);
                 }
             }
 
@@ -123,7 +116,6 @@ service cloud.firestore {
                                 isSignedIn() &&
                                 validateCategoriesSchema() &&
                                 groupExists(incomingData().groupId) &&
-                                noLeadingOrTrailingSpaces(incomingData().categoryName) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
@@ -133,8 +125,8 @@ service cloud.firestore {
                     return incomingData().keys().hasAll(['groupId', 'categoryName', 'position']) &&
                         incomingData().size() == 3 &&
                         incomingData().groupId is string &&
-                        incomingData().categoryName is string &&
-                        incomingData().position is int
+                        (incomingData().categoryName is string && noLeadingOrTrailingSpaces(incomingData().categoryName) && notEmptyString(incomingData().categoryName)) &&
+                        (incomingData().position is int && incomingData().position >= 0);
                 }
             }
 
@@ -183,41 +175,121 @@ service cloud.firestore {
                 allow create, update: if
                                 isSignedIn() &&
                                 validateTransactionSchema() &&
-
-                                // Succeeds when these rules are left out.
-                                // These rules succeed on their own, but not when combined with others
-                                // (incomingData().categoryId == null || categoryExists(incomingData().categoryId)) &&
-                                // (incomingData().payeeId == null || payeeExists(incomingData().payeeId)) &&
-
-                                accountExists(incomingData().accountId) &&
                                 isBudgetOwner() &&
                                 isPremium();
 
+                                // Firestore security rules allow for only 3 get() / exists() function calls.
+                                // Checking if foreign keys exists must be done inside Firestore triggers for
+                                // lazy validation
+
                 function validateTransactionSchema() {
                     return incomingData().keys().hasAll(['transactionDate', 'accountId', 'payeeId', 'categoryId', 'splits', 'memo', 'amount', 'cleared', 'locked']) &&
-                                            incomingData().size() == 9 &&
-                                            incomingData().transactionDate is timestamp &&
-                                            incomingData().accountId is string &&
-                                            (incomingData().payeeId == null || incomingData().payeeId is string) &&
-                                            (incomingData().categoryId == null || incomingData().categoryId is string) &&
-                                            incomingData().splits is list &&
-                                            (incomingData().memo == null || incomingData().memo is string) &&
-                                            incomingData().amount is number &&
-                                            incomingData().cleared is bool &&
-                                            incomingData().locked is bool;
+                        incomingData().size() == 9 &&
+                        incomingData().transactionDate is timestamp &&
+                        incomingData().accountId is string &&
+                        (incomingData().payeeId == null || incomingData().payeeId is string) &&
+                        (incomingData().categoryId == null || incomingData().categoryId is string) &&
+                        (incomingData().splits is list && incomingData().splits.size() == 0) &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        incomingData().amount is number &&
+                        incomingData().cleared is bool &&
+                        incomingData().locked is bool;
                 }
             }
 
             match /reoccurringTransactions/{reoccurringTransactionsId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                 allow read, delete: if
+                                 isSignedIn() &&
+                                 isBudgetOwner() &&
+                                 isPremium();
+
+                 allow create, update: if
+                                 isSignedIn() &&
+                                 validateReoccurringTransactionSchema() &&
+                                 isBudgetOwner() &&
+                                 isPremium();
+
+                                 // Firestore security rules allow for only 3 get() / exists() function calls.
+                                 // Checking if foreign keys exists must be done inside Firestore triggers for
+                                 // lazy validation
+
+                 function validateReoccurringTransactionSchema() {
+                     return incomingData().keys().hasAll(['transactionDate', 'accountId', 'payeeId', 'categoryId', 'splits', 'memo', 'amount', 'cleared', 'locked', 'reoccurringSchedule']) &&
+                         incomingData().size() == 10 &&
+                         incomingData().transactionDate is timestamp &&
+                         incomingData().accountId is string &&
+                         (incomingData().payeeId == null || incomingData().payeeId is string) &&
+                         (incomingData().categoryId == null || incomingData().categoryId is string) &&
+                         (incomingData().splits is list && incomingData().splits.size() == 0) &&
+                         (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                         incomingData().amount is number &&
+                         (incomingData().cleared is bool && incomingData().cleared == false) &&
+                         (incomingData().locked is bool && incomingData().locked == false) &&
+                         (incomingData().reoccurringSchedule is string && validSchedule(incomingData().reoccurringSchedule));
+                 }
             }
 
             match /transfers/{transferId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                allow read, delete: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateTransferSchema() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                                // Firestore security rules allow for only 3 get() / exists() function calls.
+                                // Checking if foreign keys exists must be done inside Firestore triggers for
+                                // lazy validation
+
+                function validateTransferSchema() {
+                    return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination']) &&
+                        incomingData().size() == 9 &&
+                        incomingData().transactionDate is timestamp &&
+                        incomingData().originAccountId is string &&
+                        incomingData().destinationAccountId is string &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        incomingData().amount is number &&
+                        incomingData().clearedOrigin is bool &&
+                        incomingData().clearedDestination is bool &&
+                        incomingData().lockedOrigin is bool &&
+                        incomingData().lockedDestination is bool;
+                }
             }
 
             match /reoccurringTransfers/{reoccurringTransferId} {
-                allow read, write: if isBudgetOwner() && isPremium();
+                allow read, delete: if
+                                isSignedIn() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                allow create, update: if
+                                isSignedIn() &&
+                                validateReoccurringTransferSchema() &&
+                                isBudgetOwner() &&
+                                isPremium();
+
+                                // Firestore security rules allow for only 3 get() / exists() function calls.
+                                // Checking if foreign keys exists must be done inside Firestore triggers for
+                                // lazy validation
+
+                function validateReoccurringTransferSchema() {
+                    return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination', 'reoccurringSchedule']) &&
+                        incomingData().size() == 10 &&
+                        incomingData().transactionDate is timestamp &&
+                        incomingData().originAccountId is string &&
+                        incomingData().destinationAccountId is string &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        incomingData().amount is number &&
+                        (incomingData().clearedOrigin is bool && incomingData().clearedOrigin == false) &&
+                        (incomingData().clearedDestination is bool && incomingData().clearedDestination == false) &&
+                        (incomingData().lockedOrigin is bool && incomingData().lockedOrigin == false) &&
+                        (incomingData().lockedDestination is bool && incomingData().lockedDestination == false) &&
+                        (incomingData().reoccurringSchedule is string && validSchedule(incomingData().reoccurringSchedule));
+                }
             }
 
             function isSignedIn() {
@@ -254,6 +326,10 @@ service cloud.firestore {
 
             function noLeadingOrTrailingSpaces(str) {
                 return str.size() == str.trim().size();
+            }
+
+            function notEmptyString(str) {
+                return str.size() > 0;
             }
 
             function existingData() {
