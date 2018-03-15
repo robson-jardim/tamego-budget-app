@@ -39,7 +39,7 @@ export class AccountDialogComponent implements OnInit {
 
     private buildAccountForm() {
         const form = new Object();
-        form[AccountFormNames.AccountName] = [this.data.accountName, [Validators.required, StringValidation.NoWhitespaceValidator]];
+        form[AccountFormNames.AccountName] = [this.data.accountName, [Validators.required, StringValidation.NotEmptyStringValidator]];
         this.accountForm = this.formBuilder.group(form);
     }
 

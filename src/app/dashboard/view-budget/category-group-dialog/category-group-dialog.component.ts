@@ -39,7 +39,7 @@ export class CategoryGroupDialogComponent implements OnInit {
 
     private buildGroupForm(): void {
         const form = new Object();
-        form[GroupFormNames.GroupName] = [this.data.groupName || null, [Validators.required, StringValidation.NoWhitespaceValidator]];
+        form[GroupFormNames.GroupName] = [this.data.groupName || null, [Validators.required, StringValidation.NotEmptyStringValidator]];
         this.groupForm = this.formBuilder.group(form);
     }
 

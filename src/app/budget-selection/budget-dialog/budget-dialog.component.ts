@@ -40,7 +40,7 @@ export class BudgetDialogComponent implements OnInit {
 
     private buildBudgetForm() {
         const form = new Object();
-        form[BudgetFormNames.BudgetName] = [null, [Validators.required, StringValidation.NoWhitespaceValidator]];
+        form[BudgetFormNames.BudgetName] = [null, [Validators.required, StringValidation.NotEmptyStringValidator]];
         this.budgetForm = this.formBuilder.group(form);
     }
 

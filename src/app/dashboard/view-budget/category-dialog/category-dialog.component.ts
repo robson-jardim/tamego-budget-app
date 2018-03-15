@@ -49,7 +49,7 @@ export class CategoryDialogComponent implements OnInit {
             form[CategoryFormNames.Offset] = [0];
         }
         else if (DialogState.Update === this.data.state) {
-            form[CategoryFormNames.CategoryName] = [this.data.categoryName, [Validators.required, StringValidation.NoWhitespaceValidator]];
+            form[CategoryFormNames.CategoryName] = [this.data.categoryName, [Validators.required, StringValidation.NotEmptyStringValidator]];
             form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted];
             form[CategoryFormNames.Offset] = [this.data.desiredValue.offset];
         }
