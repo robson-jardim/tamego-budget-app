@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.checkForUpdates();
+        // this.checkForUpdates();
         this.enableGlobalAppNotifications();
     }
 
