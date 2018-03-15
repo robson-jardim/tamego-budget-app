@@ -7,6 +7,7 @@ import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { StringValidation } from '@shared/validators/string-validation';
 
 enum AccountFormNames {
     AccountName = 'accountName'
@@ -38,7 +39,7 @@ export class AccountDialogComponent implements OnInit {
 
     private buildAccountForm() {
         const form = new Object();
-        form[AccountFormNames.AccountName] = [this.data.accountName, Validators.required];
+        form[AccountFormNames.AccountName] = [this.data.accountName, [Validators.required, StringValidation.NoWhitespaceValidator]];
         this.accountForm = this.formBuilder.group(form);
     }
 

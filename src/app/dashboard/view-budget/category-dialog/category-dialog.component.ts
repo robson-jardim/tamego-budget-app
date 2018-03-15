@@ -7,6 +7,7 @@ import { GeneralNotificationsService } from '@shared/services/general-notificati
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
+import { StringValidation } from '@shared/validators/string-validation';
 
 enum CategoryFormNames {
     CategoryName = 'categoryName',
@@ -48,7 +49,7 @@ export class CategoryDialogComponent implements OnInit {
             form[CategoryFormNames.Offset] = [0];
         }
         else if (DialogState.Update === this.data.state) {
-            form[CategoryFormNames.CategoryName] = [this.data.categoryName, Validators.required];
+            form[CategoryFormNames.CategoryName] = [this.data.categoryName, [Validators.required, StringValidation.NoWhitespaceValidator]];
             form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted];
             form[CategoryFormNames.Offset] = [this.data.desiredValue.offset];
         }
@@ -178,7 +179,7 @@ export class CategoryDialogComponent implements OnInit {
     public getCategoryValuesCollection() {
         return this.references.getCategoryValuesCollectionRef(this.data.budgetId);
     }
-    
+
     private sendCategoryNotification() {
         if (DialogState.Create === this.data.state) {
             this.notifications.sendCreateNotification(EntityNames.Category);

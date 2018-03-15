@@ -8,22 +8,22 @@ service cloud.firestore {
         match /budgets/{budgetId} {
 
             allow read: if
-                            isSignedIn() &&
-                            existingData().userId == request.auth.uid &&
-                            isPremium();
+                        isSignedIn() &&
+                        existingData().userId == request.auth.uid &&
+                        isPremium();
 
             allow create: if
-                            isSignedIn() &&
-                            incomingData().userId == request.auth.uid &&
-                            validateBudgetSchema() &&
-                            isPremium();
+                        isSignedIn() &&
+                        incomingData().userId == request.auth.uid &&
+                        validateBudgetSchema() &&
+                        isPremium();
 
             allow update: if
-                            isSignedIn() &&
-                            incomingData().userId == existingData().userId &&
-                            incomingData().timeCreated == existingData().timeCreated &&
-                            validateBudgetSchema() &&
-                            isPremium();
+                        isSignedIn() &&
+                        incomingData().userId == existingData().userId &&
+                        incomingData().timeCreated == existingData().timeCreated &&
+                        validateBudgetSchema() &&
+                        isPremium();
 
             allow delete: if false;
 
@@ -43,15 +43,15 @@ service cloud.firestore {
 
             match /payees/{payeeId} {
                 allow read: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow create, update: if
-                                isSignedIn() &&
-                                validatePayeeSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validatePayeeSchema() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow delete: if false;
 
@@ -64,15 +64,15 @@ service cloud.firestore {
 
             match /accounts/{accountId} {
                 allow read: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow create, update: if
-                                isSignedIn() &&
-                                validateAccountSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateAccountSchema() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow delete: if false;
 
@@ -86,15 +86,15 @@ service cloud.firestore {
 
             match /categoryGroups/{groupId} {
                 allow read: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow create, update: if
-                                isSignedIn() &&
-                                validateGroupSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateGroupSchema() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow delete: if false;
 
@@ -113,11 +113,11 @@ service cloud.firestore {
                             isPremium();
 
                 allow create, update: if
-                                isSignedIn() &&
-                                validateCategoriesSchema() &&
-                                groupExists(incomingData().groupId) &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateCategoriesSchema() &&
+                            groupExists(incomingData().groupId) &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow delete: if false;
 
@@ -132,29 +132,29 @@ service cloud.firestore {
 
             match /categoryValues/{categoryValueId} {
                 allow read: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow create: if
-                                isSignedIn() &&
-                                validateValuesSchema() &&
-                                categoryExists(incomingData().categoryId) &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateValuesSchema() &&
+                            categoryExists(incomingData().categoryId) &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow update: if
-                                isSignedIn() &&
-                                validateValuesSchema() &&
-                                incomingData().budgetMonth == existingData().budgetMonth &&
-                                incomingData().categoryId == existingData().categoryId &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateValuesSchema() &&
+                            incomingData().budgetMonth == existingData().budgetMonth &&
+                            incomingData().categoryId == existingData().categoryId &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow delete: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 function validateValuesSchema() {
                     return incomingData().keys().hasAll(['categoryId', 'budgeted', 'offset', 'budgetMonth']) &&
@@ -168,19 +168,19 @@ service cloud.firestore {
 
             match /transactions/{transactionId} {
                 allow read, delete: if
-                                isSignedIn() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
                 allow create, update: if
-                                isSignedIn() &&
-                                validateTransactionSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+                            isSignedIn() &&
+                            validateTransactionSchema() &&
+                            isBudgetOwner() &&
+                            isPremium();
 
-                                // Firestore security rules allow for only 3 get() / exists() function calls.
-                                // Checking if foreign keys exists must be done inside Firestore triggers for
-                                // lazy validation
+                            // Firestore security rules allow for only 3 get() / exists() function calls.
+                            // Checking if foreign keys exists must be done inside Firestore triggers for
+                            // lazy validation
 
                 function validateTransactionSchema() {
                     return incomingData().keys().hasAll(['transactionDate', 'accountId', 'payeeId', 'categoryId', 'splits', 'memo', 'amount', 'cleared', 'locked']) &&
@@ -190,7 +190,7 @@ service cloud.firestore {
                         (incomingData().payeeId == null || incomingData().payeeId is string) &&
                         (incomingData().categoryId == null || incomingData().categoryId is string) &&
                         (incomingData().splits is list && incomingData().splits.size() == 0) &&
-                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
                         incomingData().amount is number &&
                         incomingData().cleared is bool &&
                         incomingData().locked is bool;
@@ -199,19 +199,19 @@ service cloud.firestore {
 
             match /reoccurringTransactions/{reoccurringTransactionsId} {
                  allow read, delete: if
-                                 isSignedIn() &&
-                                 isBudgetOwner() &&
-                                 isPremium();
+                             isSignedIn() &&
+                             isBudgetOwner() &&
+                             isPremium();
 
                  allow create, update: if
-                                 isSignedIn() &&
-                                 validateReoccurringTransactionSchema() &&
-                                 isBudgetOwner() &&
-                                 isPremium();
+                             isSignedIn() &&
+                             validateReoccurringTransactionSchema() &&
+                             isBudgetOwner() &&
+                             isPremium();
 
-                                 // Firestore security rules allow for only 3 get() / exists() function calls.
-                                 // Checking if foreign keys exists must be done inside Firestore triggers for
-                                 // lazy validation
+                             // Firestore security rules allow for only 3 get() / exists() function calls.
+                             // Checking if foreign keys exists must be done inside Firestore triggers for
+                             // lazy validation
 
                  function validateReoccurringTransactionSchema() {
                      return incomingData().keys().hasAll(['transactionDate', 'accountId', 'payeeId', 'categoryId', 'splits', 'memo', 'amount', 'cleared', 'locked', 'reoccurringSchedule']) &&
@@ -221,7 +221,7 @@ service cloud.firestore {
                          (incomingData().payeeId == null || incomingData().payeeId is string) &&
                          (incomingData().categoryId == null || incomingData().categoryId is string) &&
                          (incomingData().splits is list && incomingData().splits.size() == 0) &&
-                         (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                         (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
                          incomingData().amount is number &&
                          (incomingData().cleared is bool && incomingData().cleared == false) &&
                          (incomingData().locked is bool && incomingData().locked == false) &&
@@ -251,7 +251,7 @@ service cloud.firestore {
                         incomingData().transactionDate is timestamp &&
                         incomingData().originAccountId is string &&
                         incomingData().destinationAccountId is string &&
-                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
                         incomingData().amount is number &&
                         incomingData().clearedOrigin is bool &&
                         incomingData().clearedDestination is bool &&
@@ -282,7 +282,7 @@ service cloud.firestore {
                         incomingData().transactionDate is timestamp &&
                         incomingData().originAccountId is string &&
                         incomingData().destinationAccountId is string &&
-                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo))) &&
+                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
                         incomingData().amount is number &&
                         (incomingData().clearedOrigin is bool && incomingData().clearedOrigin == false) &&
                         (incomingData().clearedDestination is bool && incomingData().clearedDestination == false) &&

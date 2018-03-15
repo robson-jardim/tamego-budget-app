@@ -1,21 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
 import { AuthService } from 'shared/services/auth/auth.service';
-
-class PasswordValidation {
-
-    static MatchPassword(control: AbstractControl) {
-        const password = control.get('password').value; // to get value in input tag
-        const confirmPassword = control.get('confirmPassword').value; // to get value in input tag
-        if (password !== confirmPassword) {
-            control.get('confirmPassword').setErrors({matchPassword: true});
-        } else {
-            return null;
-        }
-    }
-}
-
+import { PasswordValidation } from '@shared/validators/password-validation';
 
 @Component({
     selector: 'app-signup',

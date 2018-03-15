@@ -75,15 +75,15 @@
                 </ng-container>
 
                 <ng-template #unlocked>
-                    <mat-icon>done</mat-icon>
+                    <mat-icon matTooltip="Cleared transaction">done</mat-icon>
                 </ng-template>
                 <ng-template #locked>
-                    <mat-icon>lock_outline</mat-icon>
+                    <mat-icon matTooltip="Locked transaction">lock_outline</mat-icon>
                 </ng-template>
             </ng-container>
 
             <ng-container *ngIf="isReoccurring(element.rawData)">
-                <mat-icon>cached</mat-icon>
+                <mat-icon matTooltip="Reoccurring transaction">cached</mat-icon>
             </ng-container>
         </mat-cell>
     </ng-container>

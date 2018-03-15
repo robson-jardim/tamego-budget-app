@@ -8,6 +8,7 @@ import { FirestoreReferenceService } from '@shared/services/firestore-reference/
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { StringValidation } from '@shared/validators/string-validation';
 
 enum BudgetFormNames {
     BudgetName = 'budgetName'
@@ -39,7 +40,7 @@ export class BudgetDialogComponent implements OnInit {
 
     private buildBudgetForm() {
         const form = new Object();
-        form[BudgetFormNames.BudgetName] = [null, Validators.required];
+        form[BudgetFormNames.BudgetName] = [null, [Validators.required, StringValidation.NoWhitespaceValidator]];
         this.budgetForm = this.formBuilder.group(form);
     }
 

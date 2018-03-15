@@ -11,7 +11,7 @@ import {
     MatDatepickerModule,
     MatMenuModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule, MatTooltipModule
 } from '@angular/material';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';
@@ -41,6 +41,7 @@ import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/
         CommonModule,
         StandardMaterialModule,
         AppPipesModule,
+        MoneyValueChipModule,
 
         CustomMaterialFormsModule,
         MatAutocompleteModule,
@@ -49,7 +50,7 @@ import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/
         MatCheckboxModule,
         MatTableModule,
         MatMenuModule,
-        MoneyValueChipModule
+        MatTooltipModule
     ],
     entryComponents: [
         TransactionDialogComponent,

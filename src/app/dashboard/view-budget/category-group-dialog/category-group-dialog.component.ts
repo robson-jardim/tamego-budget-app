@@ -7,6 +7,7 @@ import { GeneralNotificationsService } from '@shared/services/general-notificati
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
+import { StringValidation } from '@shared/validators/string-validation';
 
 enum GroupFormNames {
     GroupName = 'groupName'
@@ -38,7 +39,7 @@ export class CategoryGroupDialogComponent implements OnInit {
 
     private buildGroupForm(): void {
         const form = new Object();
-        form[GroupFormNames.GroupName] = [this.data.groupName || null, Validators.required];
+        form[GroupFormNames.GroupName] = [this.data.groupName || null, [Validators.required, StringValidation.NoWhitespaceValidator]];
         this.groupForm = this.formBuilder.group(form);
     }
 
