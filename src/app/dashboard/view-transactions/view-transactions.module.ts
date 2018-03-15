@@ -7,7 +7,7 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import {
     MatAutocompleteModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatChipsModule,
     MatDatepickerModule,
     MatMenuModule,
     MatNativeDateModule,
@@ -50,7 +50,8 @@ import { ClearedCheckboxComponent } from './transaction-dialog/cleared-checkbox/
         MatCheckboxModule,
         MatTableModule,
         MatMenuModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatChipsModule
     ],
     entryComponents: [
         TransactionDialogComponent,

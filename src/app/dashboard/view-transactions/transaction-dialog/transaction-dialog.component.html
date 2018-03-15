@@ -8,51 +8,55 @@
 
         <mat-dialog-content>
 
-            <mat-form-field>
-                <mat-select placeholder="Account" formControlName="{{TransactionFormNames.AccountId}}" required>
-                    <mat-option *ngFor="let account of dropdowns.accounts" [value]="account.accountId"
-                                [disabled]="isAccountSelectedAsDestination(account)">
-                        {{account.accountName}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div>
+                <app-utc-datepicker
+                    [transactionDate]="data.transactionDate">
+                </app-utc-datepicker>
 
-            <app-utc-datepicker
-                [transactionDate]="data.transactionDate">
-            </app-utc-datepicker>
+                <mat-form-field>
+                    <mat-select placeholder="Account" formControlName="{{TransactionFormNames.AccountId}}" required>
+                        <mat-option *ngFor="let account of dropdowns.accounts" [value]="account.accountId"
+                                    [disabled]="isAccountSelectedAsDestination(account)">
+                            {{account.accountName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-            <app-payee-autocomplete
-                [payees]="dropdowns.payees"
-                [accounts]="dropdowns.accounts"
-                [selectedPayeeId]="data.payeeId || data.destinationAccountId"
-                [transactionForm]="transactionForm">
-            </app-payee-autocomplete>
+                <app-payee-autocomplete
+                    [payees]="dropdowns.payees"
+                    [accounts]="dropdowns.accounts"
+                    [selectedPayeeId]="data.payeeId || data.destinationAccountId"
+                    [transactionForm]="transactionForm">
+                </app-payee-autocomplete>
 
-            <app-category-autocomplete
-                [groups]="dropdowns.groups"
-                [selectedCategoryId]="data.categoryId"
-                [disabled]="transactionState === TransactionState.Transfer || transactionState === TransactionState.ReoccurringTransfer"
-                [transactionForm]="transactionForm">
-            </app-category-autocomplete>
+                <app-category-autocomplete
+                    [groups]="dropdowns.groups"
+                    [selectedCategoryId]="data.categoryId"
+                    [disabled]="transactionState === TransactionState.Transfer || transactionState === TransactionState.ReoccurringTransfer"
+                    [transactionForm]="transactionForm">
+                </app-category-autocomplete>
 
-            <mat-form-field>
-                <span matPrefix>$ &nbsp;</span>
-                <input matInput placeholder="Amount" type="number" formControlName="{{TransactionFormNames.Amount}}">
-            </mat-form-field>
+                <mat-form-field>
+                    <span matPrefix>$ &nbsp;</span>
+                    <input matInput placeholder="Amount" type="number"
+                           formControlName="{{TransactionFormNames.Amount}}">
+                </mat-form-field>
 
-            <app-repeat-transaction
-                [transactionForm]="transactionForm">
+                <app-cleared-checkbox
+                    [transactionForm]="transactionForm">
+                </app-cleared-checkbox>
+            </div>
 
-            </app-repeat-transaction>
+            <div>
+                <app-repeat-transaction
+                    [transactionForm]="transactionForm">
+                </app-repeat-transaction>
 
-            <app-cleared-checkbox
-                [transactionForm]="transactionForm">
-            </app-cleared-checkbox>
-
-            <mat-form-field>
-                <input matInput placeholder="Memo" type="text"
-                          formControlName="{{TransactionFormNames.Memo}}">
-            </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Memo" type="text"
+                           formControlName="{{TransactionFormNames.Memo}}">
+                </mat-form-field>
+            </div>
 
         </mat-dialog-content>
 

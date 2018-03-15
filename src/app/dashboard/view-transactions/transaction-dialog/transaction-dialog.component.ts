@@ -284,6 +284,10 @@ export class TransactionDialogComponent implements OnInit {
     private readonly getMemo = () => {
         const memo = this.transactionForm.value[TransactionFormNames.Memo];
 
+        if (!memo) {
+            return null;
+        }
+
         const trimmedMemo = memo.trim();
 
         if (trimmedMemo.length > 0) {
@@ -292,6 +296,7 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
+
     };
 
     private getTransactionData(): Transaction {

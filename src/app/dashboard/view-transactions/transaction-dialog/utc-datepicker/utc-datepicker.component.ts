@@ -39,6 +39,7 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
                 this.patchMasterForm(localDate);
             }
         });
+
     }
 
     ngOnDestroy() {
@@ -53,14 +54,22 @@ export class UtcDatepickerComponent implements OnInit, OnDestroy {
 
     private buildLocalDateForm() {
 
-        let localDate: Date;
+        let localTransactionDate: Date;
+        let localToday: Date;
 
         if (this.transactionDate) {
-            localDate = this.utility.convertToLocal(this.transactionDate);
+            localTransactionDate = this.utility.convertToLocal(this.transactionDate);
+        }
+        else {
+            localToday = new Date();
+            const utcToday = new Date(Date.UTC(localToday.getUTCFullYear(), localToday.getUTCMonth(), localToday.getUTCDate()));
+            this.patchMasterForm(utcToday);
         }
 
         this.localDateForm = this.formBuilder.group({
-            transactionDate: [localDate, Validators.required]
+            transactionDate: [localTransactionDate || localToday, Validators.required]
         });
+
     }
+
 }

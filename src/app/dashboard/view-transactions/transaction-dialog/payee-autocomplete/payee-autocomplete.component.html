@@ -3,7 +3,7 @@
         <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete"
                formControlName="{{TransactionFormNames.Payee}}">
 
-        <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName">
+        <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName" [autoActiveFirstOption]="true">
 
             <mat-optgroup [label]="'Transfers'">
                 <mat-option *ngFor="let account of accounts"

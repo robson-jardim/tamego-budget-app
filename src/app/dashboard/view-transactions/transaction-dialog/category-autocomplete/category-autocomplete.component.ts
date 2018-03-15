@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
-import { CategoryId } from '@models/category.model';
+import { CategoryId, instanceOfCategoryId } from '@models/category.model';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
+import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material';
 
 @Component({
     selector: 'app-category-autocomplete',
@@ -19,6 +20,7 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     public TransactionFormNames = TransactionFormNames;
 
     public filteredGroups$: Observable<any>;
+    @ViewChild(MatAutocompleteTrigger) matAutocompleteTrigger: MatAutocompleteTrigger;
 
     constructor() {
     }
@@ -58,12 +60,12 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
     }
 
     private filterAutocompleteOptions() {
+
         this.filteredGroups$ = this.transactionForm.controls[TransactionFormNames.Category].valueChanges
             .pipe(
                 startWith(null),
                 map(input => {
-                    if (input && input.categoryName) {
-                        // Defines the case that the input is currently a CategoryId object
+                    if (instanceOfCategoryId(input)) {
                         return input.categoryName;
                     }
                     else {
@@ -113,4 +115,15 @@ export class CategoryAutocompleteComponent implements OnInit, OnChanges {
             return category;
         }
     }
+
+    public autoSelectActiveOption(userInput) {
+
+        const isOptionActive = this.matAutocompleteTrigger.activeOption;
+
+        if (isOptionActive && userInput.length > 0) {
+            const category: CategoryId | string = this.matAutocompleteTrigger.activeOption.value;
+            this.transactionForm.controls[TransactionFormNames.Category].patchValue(category);
+        }
+    }
+
 }

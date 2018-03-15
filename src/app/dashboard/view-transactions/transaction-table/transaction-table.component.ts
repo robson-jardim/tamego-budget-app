@@ -32,7 +32,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
     @Input() onChange$;
 
     public dataSource;
-    public displayedColumns = ['accountId', 'transactionDate', 'payeeId', 'categoryId', 'memo', 'amount', 'balance', 'status'];
+    public displayedColumns = ['transactionDate', 'accountId', 'payeeId', 'categoryId', 'amount', 'balance', 'status'];
 
     private onChangeSubscription: Subscription;
 
@@ -175,4 +175,7 @@ export class TransactionTableComponent implements OnInit, OnDestroy {
         return date > utcToday;
     }
 
+    public isTransfer(transaction: any) {
+        return transaction.originAccountId && transaction.destinationAccountId;
+    }
 }

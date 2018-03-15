@@ -35,7 +35,24 @@
         <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="truncate">
-                {{element.viewData.categoryName}}
+
+                <ng-container *ngIf="isTransfer(element.rawData); else isTransaction">
+                    <mat-chip-list>
+                        <mat-chip>Category not needed</mat-chip>
+                    </mat-chip-list>
+                </ng-container>
+
+                <ng-template #isTransaction>
+                    <ng-container *ngIf="element.viewData.categoryName; else noCategory">
+                        {{element.viewData.categoryName}}
+                    </ng-container>
+
+                    <ng-template #noCategory>
+                        <mat-chip-list>
+                            <mat-chip>Needs category</mat-chip>
+                        </mat-chip-list>
+                    </ng-template>
+                </ng-template>
             </div>
         </mat-cell>
     </ng-container>
