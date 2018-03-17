@@ -235,29 +235,29 @@ service cloud.firestore {
                                 isBudgetOwner() &&
                                 isPremium();
 
-                allow create, update: if
-                                isSignedIn() &&
-                                validateTransferSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+//                 allow create, update: if
+//                                 isSignedIn() &&
+//                                 validateTransferSchema() &&
+//                                 isBudgetOwner() &&
+//                                 isPremium();
 
-                                // Firestore security rules allow for only 3 get() / exists() function calls.
-                                // Checking if foreign keys exists must be done inside Firestore triggers for
-                                // lazy validation
+//                                 // Firestore security rules allow for only 3 get() / exists() function calls.
+//                                 // Checking if foreign keys exists must be done inside Firestore triggers for
+//                                 // lazy validation
 
-                function validateTransferSchema() {
-                    return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination']) &&
-                        incomingData().size() == 9 &&
-                        incomingData().transactionDate is timestamp &&
-                        incomingData().originAccountId is string &&
-                        incomingData().destinationAccountId is string &&
-                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
-                        incomingData().amount is number &&
-                        incomingData().clearedOrigin is bool &&
-                        incomingData().clearedDestination is bool &&
-                        incomingData().lockedOrigin is bool &&
-                        incomingData().lockedDestination is bool;
-                }
+//                 function validateTransferSchema() {
+//                     return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination']) &&
+//                         incomingData().size() == 9 &&
+//                         incomingData().transactionDate is timestamp &&
+//                         incomingData().originAccountId is string &&
+//                         incomingData().destinationAccountId is string &&
+//                         (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
+//                         incomingData().amount is number &&
+//                         incomingData().clearedOrigin is bool &&
+//                         incomingData().clearedDestination is bool &&
+//                         incomingData().lockedOrigin is bool &&
+//                         incomingData().lockedDestination is bool;
+//                 }
             }
 
             match /reoccurringTransfers/{reoccurringTransferId} {
@@ -266,30 +266,30 @@ service cloud.firestore {
                                 isBudgetOwner() &&
                                 isPremium();
 
-                allow create, update: if
-                                isSignedIn() &&
-                                validateReoccurringTransferSchema() &&
-                                isBudgetOwner() &&
-                                isPremium();
+//                 allow create, update: if
+//                                 isSignedIn() &&
+//                                 validateReoccurringTransferSchema() &&
+//                                 isBudgetOwner() &&
+//                                 isPremium();
 
-                                // Firestore security rules allow for only 3 get() / exists() function calls.
-                                // Checking if foreign keys exists must be done inside Firestore triggers for
-                                // lazy validation
+//                                 // Firestore security rules allow for only 3 get() / exists() function calls.
+//                                 // Checking if foreign keys exists must be done inside Firestore triggers for
+//                                 // lazy validation
 
-                function validateReoccurringTransferSchema() {
-                    return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination', 'reoccurringSchedule']) &&
-                        incomingData().size() == 10 &&
-                        incomingData().transactionDate is timestamp &&
-                        incomingData().originAccountId is string &&
-                        incomingData().destinationAccountId is string &&
-                        (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
-                        incomingData().amount is number &&
-                        (incomingData().clearedOrigin is bool && incomingData().clearedOrigin == false) &&
-                        (incomingData().clearedDestination is bool && incomingData().clearedDestination == false) &&
-                        (incomingData().lockedOrigin is bool && incomingData().lockedOrigin == false) &&
-                        (incomingData().lockedDestination is bool && incomingData().lockedDestination == false) &&
-                        (incomingData().reoccurringSchedule is string && validSchedule(incomingData().reoccurringSchedule));
-                }
+//                 function validateReoccurringTransferSchema() {
+//                     return incomingData().keys().hasAll(['transactionDate', 'originAccountId', 'destinationAccountId', 'memo', 'amount', 'clearedOrigin', 'clearedDestination', 'lockedOrigin', 'lockedDestination', 'reoccurringSchedule']) &&
+//                         incomingData().size() == 10 &&
+//                         incomingData().transactionDate is timestamp &&
+//                         incomingData().originAccountId is string &&
+//                         incomingData().destinationAccountId is string &&
+//                         (incomingData().memo == null || (incomingData().memo is string && noLeadingOrTrailingSpaces(incomingData().memo) && notEmptyString(incomingData().memo)) && incomingData().memo.size() < 255) &&
+//                         incomingData().amount is number &&
+//                         (incomingData().clearedOrigin is bool && incomingData().clearedOrigin == false) &&
+//                         (incomingData().clearedDestination is bool && incomingData().clearedDestination == false) &&
+//                         (incomingData().lockedOrigin is bool && incomingData().lockedOrigin == false) &&
+//                         (incomingData().lockedDestination is bool && incomingData().lockedDestination == false) &&
+//                         (incomingData().reoccurringSchedule is string && validSchedule(incomingData().reoccurringSchedule));
+//                 }
             }
 
             function isSignedIn() {
