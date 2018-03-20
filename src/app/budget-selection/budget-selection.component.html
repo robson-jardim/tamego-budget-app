@@ -16,7 +16,7 @@
                 <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
                           class="budget-card bottom-margin">
 
-                    <h1 class="mat-title truncate budget-name"> {{budget.budgetName}}</h1>
+                    <h1 class="mat-subheading-2 truncate budget-name"> {{budget.budgetName}}</h1>
 
                     <div>
                         <button mat-icon-button (click)="$event.stopPropagation()"
