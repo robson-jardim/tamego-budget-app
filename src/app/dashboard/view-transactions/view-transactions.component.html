@@ -22,7 +22,6 @@
                 </div>
             </mat-card-header>
 
-
             <mat-card-content>
 
                 <ng-container *ngIf="entities.transactions.length > 0; else noTransactions">
@@ -37,9 +36,16 @@
                 </ng-container>
 
                 <ng-template #noTransactions>
-                    <div class="no-content">
-                        <p>No transactions</p>
-                    </div>
+                    <mat-card style="padding: 0">
+                        <mat-card-content>
+                            <div class="no-data-card">
+                                <div class="no-data-card-content">
+                                    <p>You don't have any transactions</p>
+                                    <button mat-raised-button (click)="createTransaction()">Create your first transaction</button>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
                 </ng-template>
 
             </mat-card-content>

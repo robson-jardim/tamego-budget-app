@@ -6,7 +6,7 @@
         <div class="budget-selection-container">
 
             <div class="bottom-margin header">
-                <h1 class="mat-headline">Budgets</h1>
+                <h1 class="mat-title">Budgets</h1>
 
                 <button mat-raised-button color="primary" (click)="createBudget()">Add budget</button>
             </div>
@@ -14,8 +14,19 @@
 
             <ng-container *ngIf="budgets.length > 0; else noBudgets">
                 <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
-                          class="bottom-margin">
-                    <p class="truncate">{{budget.budgetName}}</p>
+                          class="budget-card bottom-margin">
+
+                    <h1 class="mat-title truncate budget-name"> {{budget.budgetName}}</h1>
+
+                    <div>
+                        <button mat-icon-button (click)="$event.stopPropagation()"
+                                [matMenuTriggerFor]="budgetOptions">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #budgetOptions>
+                            <button mat-menu-item>Edit</button>
+                        </mat-menu>
+                    </div>
                 </mat-card>
 
             </ng-container>
@@ -23,8 +34,11 @@
             <ng-template #noBudgets>
                 <mat-card style="padding: 0">
                     <mat-card-content>
-                        <div class="no-content">
-                            <p>No Budgets</p>
+                        <div class="no-data-card">
+                            <div class="no-data-card-content">
+                                <p>You don't have any budgets</p>
+                                <button mat-raised-button (click)="createBudget()">Create your first budget</button>
+                            </div>
                         </div>
                     </mat-card-content>
                 </mat-card>

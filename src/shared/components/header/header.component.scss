@@ -1,4 +1,3 @@
-
 .toggleSidenav {
     margin-right: 8px;
 }
@@ -12,6 +11,10 @@
 
 #signupButton, #menuOptionsButton, #trialLength {
     margin-left: 8px;
+}
+
+#app-title:focus {
+    outline: 0;
 }
 
 @media (max-width: 450px) {

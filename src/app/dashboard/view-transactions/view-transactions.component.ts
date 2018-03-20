@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DashboardViewService } from '@shared/services/dashboard-views/dashboard-views.service';
 import 'rxjs/add/observable/timer';
 import { ReoccurringTransferId, TransferId } from '@models/transfer.model';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'app-budget',
@@ -31,25 +32,22 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        const routeData$ = this.utility.combineLatestObj({
+        const transactionRouteChange$ = this.utility.combineLatestObj({
             budgetId: this.getBudgetId(),
             accountId: this.getAccountId()
         });
 
-        this.routeParamsSubscription = routeData$.subscribe(() => {
-            this.transactions$ = routeData$.flatMap(({budgetId, accountId}) => {
+        this.transactions$ = transactionRouteChange$.flatMap(({ budgetId, accountId }) => {
+            const budgetId$: Observable<string> = Observable.of(budgetId);
+            const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.firestore.getAllAccountIdsForBudget(budgetId);
 
-                const budgetId$: Observable<string> = Observable.of(budgetId);
-                const accountIds$: Observable<string[]> = accountId ? Observable.of([accountId]) : this.firestore.getAllAccountIdsForBudget(budgetId);
-
-                return this.utility.combineLatestObj({
-                    budgetId: budgetId$,
-                    accountIds: accountIds$
-                });
-
-            }).flatMap(({budgetId, accountIds}) => {
-                return this.dashboardViews.getTransactionView(budgetId, accountIds);
+            return this.utility.combineLatestObj({
+                budgetId: budgetId$,
+                accountIds: accountIds$
             });
+
+        }).flatMap(({ budgetId, accountIds }) => {
+            return this.dashboardViews.getTransactionView(budgetId, accountIds);
         });
 
         const viewData$ = this.utility.combineLatestObj({
@@ -58,11 +56,13 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             groups: this.getGroups()
         });
 
-        this.onTransactionEntitiesChange$ = this.utility.combineLatestObj({
-            viewData: viewData$,
-            transactions: this.transactions$,
-            budgetId: this.getBudgetId(),
-            accountId: this.getAccountId()
+        this.routeParamsSubscription = transactionRouteChange$.subscribe(() => {
+            this.onTransactionEntitiesChange$ = this.utility.combineLatestObj({
+                viewData: viewData$,
+                transactions: this.transactions$,
+                budgetId: this.getBudgetId(),
+                accountId: this.getAccountId()
+            });
         });
     }
 
@@ -88,13 +88,13 @@ export class ViewTransactionsComponent implements OnInit, OnDestroy {
             budgetId: this.getBudgetId(),
             accountId: this.getAccountId()
         }).first().subscribe(response => {
-            const {budgetId, accountId} = response;
+            const { budgetId, accountId } = response;
             const data = {
                 budgetId,
                 accountId
             };
 
-            this.dialogService.openCreate(TransactionDialogComponent, {data});
+            this.dialogService.openCreate(TransactionDialogComponent, { data });
         });
     }
 

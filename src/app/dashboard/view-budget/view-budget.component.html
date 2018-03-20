@@ -64,7 +64,7 @@
                 </ng-container>
 
                 <ng-template #noCategories>
-                    <div class="no-content">
+                    <div class="no-categories-card">
                         <p>No categories</p>
                     </div>
                 </ng-template>
@@ -75,11 +75,15 @@
         <ng-template #noGroups>
             <mat-card style="padding: 0">
                 <mat-card-content>
-                    <div class="no-content">
-                        <p>No category groups</p>
+                    <div class="no-data-card">
+                        <div class="no-data-card-content">
+                            <p>You don't have any category groups</p>
+                            <button mat-raised-button (click)="createCategoryGroup(data.groups)">Create your first category group</button>
+                        </div>
                     </div>
                 </mat-card-content>
             </mat-card>
+
         </ng-template>
 
     </div>

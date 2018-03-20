@@ -38,7 +38,7 @@
 
                 <ng-container *ngIf="isTransfer(element.rawData); else isTransaction">
                     <mat-chip-list>
-                        <mat-chip>Category not needed</mat-chip>
+                        <mat-chip [disabled]="true">Category not needed</mat-chip>
                     </mat-chip-list>
                 </ng-container>
 
@@ -49,7 +49,7 @@
 
                     <ng-template #noCategory>
                         <mat-chip-list>
-                            <mat-chip>Needs category</mat-chip>
+                            <mat-chip [disabled]="true">No category</mat-chip>
                         </mat-chip-list>
                     </ng-template>
                 </ng-template>

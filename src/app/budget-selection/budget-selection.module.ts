@@ -6,6 +6,7 @@ import { BudgetDialogComponent } from './budget-dialog/budget-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { RouterModule } from '@angular/router';
+import { MatMenuModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -13,7 +14,9 @@ import { RouterModule } from '@angular/router';
         AppHeaderModule,
         CustomMaterialFormsModule,
         StandardMaterialModule,
-        RouterModule
+        RouterModule,
+
+        MatMenuModule
     ],
     declarations: [
         BudgetSelectionComponent,

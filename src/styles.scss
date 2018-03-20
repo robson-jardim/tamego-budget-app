@@ -66,8 +66,31 @@ $material-design-icons-font-path: '~material-design-icons-iconfont/dist/fonts/';
     align-items: center;
 }
 
-.no-content {
+.mat-chip-list:focus {
+    outline: none;
+    border: 0;
+}
+
+.no-data-card {
     display: flex;
+    align-items: center;
     justify-content: center;
     padding: 24px;
+    height: 468px;
 }
+
+.no-data-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-data-card-content p {
+    text-align: center;
+}
+
+.no-data-card-content button {
+    white-space: normal;
+    margin: 16px 0;
+}
+
