@@ -26,16 +26,16 @@ router.post('/', async (request: any, response) => {
     if ('invoice.payment_succeeded' === hook) {
         // Occurs whenever an invoice payment attempt succeeds.
         // TODO - finish webhook
-        return response.json(event);
+        return response.json(`Received: ${hook}`);
     }
     else if ('invoice.payment_failed' === hook) {
         // Occurs whenever an invoice payment attempt fails, either due to a declined payment or the lack of a stored payment method.
         // TODO - finish webhook
-        return response.json(event);
+        return response.json(`Received: ${hook}`);
     }
     else if ('customer.subscription.updated' === hook) {
         // Occurs whenever a subscription changes (e.g., switching from one plan to another or changing the status from trial to active).
-        return response.json(event);
+        return response.json(`Received: ${hook}`);
     }
 
     response.status(500).send('Not a matching webhook');
