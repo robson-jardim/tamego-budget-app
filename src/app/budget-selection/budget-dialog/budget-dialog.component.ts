@@ -9,6 +9,7 @@ import { DialogState } from '@shared/services/close-dialog/close-dialog.service'
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { StringValidation } from '@shared/validators/string-validation';
+import * as firebase from 'firebase';
 
 enum BudgetFormNames {
     BudgetName = 'budgetName'
@@ -47,7 +48,7 @@ export class BudgetDialogComponent implements OnInit {
     public async saveChanges() {
 
         this.saving = true;
-        const currentTime = new Date();
+        const currentTime: Date = firebase.firestore.FieldValue.serverTimestamp() as any;
 
         const budgetData: Budget = {
             userId: this.data.userId,

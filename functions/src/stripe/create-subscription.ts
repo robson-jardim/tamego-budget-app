@@ -4,7 +4,6 @@ import * as admin from 'firebase-admin';
 const stripe = require('stripe')(functions.config().stripe.secret_key);
 const db = admin.firestore();
 
-
 export interface Subscription {
     subscriptionId: string;
     trial: {
