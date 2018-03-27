@@ -37,7 +37,6 @@ after_success:
         firebase functions:config:set stripe.webhooks_secret=$STAGING_STRIPE_WEBHOOKS_SECRET;
         firebase deploy --project staging --token $FIREBASE_TOKEN;
       fi
-    - npm run loc:frontend;
-    - npm run loc:backend;
+    - npm run loc;
 
 
