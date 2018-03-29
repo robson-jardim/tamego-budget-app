@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as express from 'express';
-import { Validator, ValidationError } from 'express-json-validator-middleware';
+import { Validator } from 'express-json-validator-middleware';
 import { User } from '@models/user.model';
 import { setCustomerPaymentSource } from '../../stripe/stripe-customer';
 import { PaymentToken } from '../../stripe';
@@ -33,13 +33,14 @@ router.post('/', validate({ body: paymentTokenSchema }), async (request: any, re
     }
 
     const userId = request.user.uid;
-    const userDoc = await db.doc('users/' + userId);
+    const userDocRef = db.doc('users/' + userId);
 
     let user: User;
 
     try {
-        const userDoc = await db.doc('users/' + userId).get();
-        user = userDoc.data() as User;
+        const userDoc = await userDocRef.get();
+        const userData: any = userDoc.data();
+        user = userData as User;
     } catch (error) {
         console.error(error);
         return response.status(500).json({
@@ -58,7 +59,7 @@ router.post('/', validate({ body: paymentTokenSchema }), async (request: any, re
     }
 
     try {
-        await userDoc.update(user);
+        await userDocRef.update(user);
         return response.status(200).json({
             message: `Successfully added card: ${user.creditCardId}`
         });

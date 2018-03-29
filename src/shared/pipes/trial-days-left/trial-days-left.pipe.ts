@@ -14,7 +14,7 @@ export class TrialDaysLeftPipe implements PipeTransform {
         if (diffDays < 0) {
             return 0;
         }
-        else if(diffDays > 30) {
+        else if (diffDays > 30) {
             return 30;
         }
         else {

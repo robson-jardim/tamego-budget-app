@@ -27,6 +27,8 @@ import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { CategoryId, instanceOfCategoryId } from '@models/category.model';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 
+// noinspection UnterminatedStatementJS
+// noinspection UnterminatedStatementJS
 @Component({
     selector: 'app-transaction-dialog',
     templateUrl: './transaction-dialog.component.html',
@@ -236,7 +238,7 @@ export class TransactionDialogComponent implements OnInit {
         }
     }
 
-    private readonly getPayeeId = () => {
+    private getPayeeId() {
 
         // Payee field type meanings
         // ---------------------------
@@ -268,9 +270,9 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    };
+    }
 
-    private readonly getCategoryId = () => {
+    private getCategoryId() {
         const category: CategoryId | null = this.transactionForm.value[TransactionFormNames.Category];
 
         if (instanceOfCategoryId(category)) {
@@ -279,9 +281,9 @@ export class TransactionDialogComponent implements OnInit {
         else {
             return null;
         }
-    };
+    }
 
-    private readonly getMemo = () => {
+    private getMemo() {
         const memo = this.transactionForm.value[TransactionFormNames.Memo];
 
         if (!memo) {
@@ -297,9 +299,10 @@ export class TransactionDialogComponent implements OnInit {
             return null;
         }
 
-    };
+    }
 
     private getTransactionData(): Transaction {
+
         return {
             transactionDate: this.transactionForm.value[TransactionFormNames.TransactionDate],
             accountId: this.transactionForm.value[TransactionFormNames.AccountId],
