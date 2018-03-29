@@ -13,7 +13,7 @@ export class CheckoutComponent implements OnInit {
 
     handler: any;
 
-    constructor(private paymentService: PaymentService, private auth: AuthService) {
+    constructor(private paymentService: PaymentService, public auth: AuthService) {
     }
 
     ngOnInit() {
