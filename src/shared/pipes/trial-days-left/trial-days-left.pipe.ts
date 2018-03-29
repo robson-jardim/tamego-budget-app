@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
     name: 'daysUntil'
 })
-export class DaysUntilPipe implements PipeTransform {
+export class TrialDaysLeftPipe implements PipeTransform {
 
     transform(endDate: Date, args?: any): any {
         const now = new Date();
@@ -13,6 +13,9 @@ export class DaysUntilPipe implements PipeTransform {
 
         if (diffDays < 0) {
             return 0;
+        }
+        else if(diffDays > 30) {
+            return 30;
         }
         else {
             return diffDays;

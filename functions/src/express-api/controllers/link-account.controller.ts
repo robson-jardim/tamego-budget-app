@@ -11,7 +11,7 @@ const db = admin.firestore();
 // POST: api/linkAnonymousAccount
 router.post('/', async (request: any, response) => {
 
-    const {isAnonymous} = request.user;
+    const isAnonymous = request.user.firebase.sign_in_provider === 'anonymous';
     const {uid} = request.user;
     const {email} = request.user;
 

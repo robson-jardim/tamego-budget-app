@@ -5,7 +5,6 @@
 }
 
 .transaction-table {
-    margin: 24px 0;
     padding: 0;
 }
 
@@ -37,4 +36,5 @@
 #reconcile-button {
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 24px;
 }

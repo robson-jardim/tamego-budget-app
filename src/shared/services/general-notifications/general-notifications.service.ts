@@ -25,10 +25,7 @@ export class GeneralNotificationsService {
             message: `${entity} updated`,
             duration: this.defaultDuration
         };
-
-        setTimeout(() => {
-            this.notificationSource.next(notification);
-        }, this.messageDelay);
+        this.send(notification);
     }
 
     public sendCreateNotification(entity: EntityNames) {
@@ -36,10 +33,7 @@ export class GeneralNotificationsService {
             message: `${entity} added`,
             duration: this.defaultDuration
         };
-
-        setTimeout(() => {
-            this.notificationSource.next(notification);
-        }, this.messageDelay);
+        this.send(notification);
     }
 
     public sendDeleteNotification(entity: EntityNames) {
@@ -47,10 +41,7 @@ export class GeneralNotificationsService {
             message: `${entity} deleted`,
             duration: this.defaultDuration
         };
-
-        setTimeout(() => {
-            this.notificationSource.next(notification);
-        }, this.messageDelay);
+        this.send(notification);
     }
 
     public sendErrorNotification() {
@@ -58,9 +49,19 @@ export class GeneralNotificationsService {
             message: `Error`,
             duration: this.defaultDuration
         };
+        this.send(notification);
+    }
 
-        setTimeout(() => {
-            this.notificationSource.next(notification);
-        }, this.messageDelay);
+    public sendGeneralNotification(message: string) {
+        const notification: Notification = {
+            message: message,
+            duration: this.defaultDuration
+        };
+        this.send(notification);
+    }
+
+    private send(notification: Notification) {
+        this.notificationSource.next(notification);
+
     }
 }

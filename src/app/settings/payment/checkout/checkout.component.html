@@ -1,1 +1,16 @@
-<button mat-button (click)="handlePayment()">Add credit card</button>
+<div *ngIf="auth.user | async as user" class="container">
+
+    <p *ngIf="!user.email">Sign up in order to add payment information</p>
+
+    <div class="buttons">
+
+        <button mat-raised-button color="primary" [disabled]="!user.email" (click)="handlePayment()">
+            <ng-container *ngIf="user.creditCardId; else noPaymentSource">Update credit card</ng-container>
+            <ng-template #noPaymentSource>Add credit card</ng-template>
+        </button>
+
+        <button mat-button [disabled]=true *ngIf="user.creditCardId">Cancel subscription</button>
+
+    </div>
+
+</div>

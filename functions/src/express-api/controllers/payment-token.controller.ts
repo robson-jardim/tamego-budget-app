@@ -24,6 +24,14 @@ const paymentTokenSchema = {
 // POST: api/paymentToken
 router.post('/', validate({ body: paymentTokenSchema }), async (request: any, response) => {
 
+    const isAnonymous = request.user.firebase.sign_in_provider === 'anonymous';
+
+    if(isAnonymous) {
+        return response.status(400).json({
+            message: 'Unable to add payment method to anonymous account'
+        });
+    }
+
     const userId = request.user.uid;
     const userDoc = await db.doc('users/' + userId);
 

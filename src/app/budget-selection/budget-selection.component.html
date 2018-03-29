@@ -24,7 +24,7 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #budgetOptions>
-                            <button mat-menu-item>Edit</button>
+                            <button [disabled]="true" mat-menu-item>Edit</button>
                         </mat-menu>
                     </div>
                 </mat-card>
@@ -32,16 +32,23 @@
             </ng-container>
 
             <ng-template #noBudgets>
-                <mat-card style="padding: 0">
-                    <mat-card-content>
-                        <div class="no-data-card">
+
+                <mat-card style="padding: 0;">
+
+                    <mat-card-header style="padding: 26px" class="material-level-two">
+                    </mat-card-header>
+
+                    <mat-card-content style="padding: 24px">
+                        <div class="no-data-card" style="padding: 0">
                             <div class="no-data-card-content">
                                 <p>You don't have any budgets</p>
-                                <button mat-raised-button (click)="createBudget()">Create your first budget</button>
+                                <button mat-button (click)="createBudget()">Create your first budget</button>
                             </div>
                         </div>
                     </mat-card-content>
+
                 </mat-card>
+
             </ng-template>
         </div>
     </ng-container>

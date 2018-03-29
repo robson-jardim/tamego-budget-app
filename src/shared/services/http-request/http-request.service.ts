@@ -20,7 +20,7 @@ export class HttpRequestService {
             if (error.status === 0 && showOfflinePopup) {
                 this.openOfflineDialog();
             }
-            return Observable.of(error);
+            throw error;
         });
     }
 

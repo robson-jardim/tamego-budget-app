@@ -8,6 +8,7 @@ import { CustomMaterialFormsModule } from '@shared/components/custom-material-fo
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
+import { MatTooltipModule } from '@angular/material';
 
 const routes: Routes = [
     {
@@ -25,6 +26,7 @@ const routes: Routes = [
         PaymentModule,
         CustomMaterialFormsModule,
         AppPipesModule,
+        MatTooltipModule,
         RouterModule.forChild(routes)
     ],
     declarations: [

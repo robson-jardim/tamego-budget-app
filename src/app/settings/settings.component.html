@@ -14,15 +14,14 @@
                     <h1 class="mat-headline">Account</h1>
 
                     <ng-container *ngIf="user.email; else isAnonymous">
-                        <div class="mat-body-1">
-                            <span>Email: {{user.email}}</span>
+                        <div id="email">
+                            <p>Email: {{user.email}}</p>
 
-                            <ng-container *ngIf="!user.emailVerified">
-                                (unverified)
+                            <ng-container *ngIf="user.emailVerified">
+                                <mat-icon matTooltip="Verified account" color="accent" [matTooltipPosition]="'right'">check_circle</mat-icon>
                             </ng-container>
                         </div>
 
-                        <p id="trialLength" class="mat-body-2">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
 
                         <ng-container *ngIf="!user.emailVerified">
                             <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
@@ -31,6 +30,9 @@
                         </ng-container>
 
                     </ng-container>
+
+                    <p *ngIf="!user.creditCardId">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
+
 
                     <ng-template #isAnonymous>
                         <div>

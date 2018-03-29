@@ -11,7 +11,7 @@
 
         <mat-card class="transaction-table">
 
-            <mat-card-header class="material-table-header material-table-grey">
+            <mat-card-header class="material-table-header material-level-two">
 
                 <div>
                     <h1 id="table-header-name" class="mat-title">Transactions</h1>
@@ -36,16 +36,12 @@
                 </ng-container>
 
                 <ng-template #noTransactions>
-                    <mat-card style="padding: 0">
-                        <mat-card-content>
-                            <div class="no-data-card">
-                                <div class="no-data-card-content">
-                                    <p>You don't have any transactions</p>
-                                    <button mat-raised-button (click)="createTransaction()">Create your first transaction</button>
-                                </div>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
+                    <div class="no-data-card">
+                        <div class="no-data-card-content">
+                            <p>You don't have any transactions</p>
+                            <button mat-button (click)="createTransaction()">Create your first transaction</button>
+                        </div>
+                    </div>
                 </ng-template>
 
             </mat-card-content>

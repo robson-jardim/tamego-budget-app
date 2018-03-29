@@ -14,12 +14,12 @@
             <!--</mat-optgroup>-->
 
             <ng-container *ngIf="filteredPayees$ | async as filteredPayees">
-                <mat-optgroup [label]="'Payees'" *ngIf="filteredPayees.length > 0">
+                <!--<mat-optgroup [label]="'Payees'" *ngIf="filteredPayees.length > 0">-->
                     <mat-option *ngFor="let payee of filteredPayees"
                                 [value]="payee">
                         {{payee.payeeName}}
                     </mat-option>
-                </mat-optgroup>
+                <!--</mat-optgroup>-->
             </ng-container>
 
         </mat-autocomplete>

@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { createStripeCustomer, createStripeSubscription } from '../stripe';
 import { Subscription } from '../stripe/stripe-subscription';
 import { User } from '@models/user.model';
+import { Customer } from '@models/customer.model';
 
 const db = admin.firestore();
 
@@ -51,12 +52,12 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         const userDocRef = db.doc(`users/${userData.userId}`);
         batch.set(userDocRef, userData);
 
-        const customerUserRef = db.doc('customerUsers/' + userData.customerId);
-        const data = {
+        const customerUserRef = db.doc('customers/' + userData.customerId);
+        const customer: Customer = {
             userId: userData.userId,
             customerId: userData.customerId
         };
-        batch.set(customerUserRef, data);
+        batch.set(customerUserRef, customer);
 
         await batch.commit();
         console.log('User added: ' + userData.userId);

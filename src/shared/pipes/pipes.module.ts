@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DaysUntilPipe } from '@shared/pipes/days-until/days-until.pipe';
+import { TrialDaysLeftPipe } from '@shared/pipes/trial-days-left/trial-days-left.pipe';
 import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
 
 @NgModule({
@@ -8,11 +8,11 @@ import { UtcDatePipe } from '@shared/pipes/utc-date/utc-date.pipe';
         CommonModule,
     ],
     declarations: [
-        DaysUntilPipe,
+        TrialDaysLeftPipe,
         UtcDatePipe
     ],
     exports: [
-        DaysUntilPipe,
+        TrialDaysLeftPipe,
         UtcDatePipe
     ]
 })

@@ -10,7 +10,7 @@
         <ng-container *ngIf="!hideOptions">
 
             <ng-container *ngIf="auth.user | async as user">
-                <ng-container *ngIf="user.trial.isTrial">
+                <ng-container *ngIf="!user.creditCardId && user.trial.isTrial">
                     <p id="trialLength" class="mat-body-2">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
                 </ng-container>
 

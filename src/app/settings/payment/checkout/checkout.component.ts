@@ -13,10 +13,7 @@ export class CheckoutComponent implements OnInit {
 
     handler: any;
 
-    constructor(private paymentService: PaymentService, private auth: AuthService, private requestService: HttpRequestService) {
-        this.requestService.post(`api/paymentToken`, { paymentToken: 'tok_mastercard' }).subscribe(x => {
-            console.log(x);
-        });
+    constructor(private paymentService: PaymentService, private auth: AuthService) {
     }
 
     ngOnInit() {

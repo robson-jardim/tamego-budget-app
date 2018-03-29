@@ -30,7 +30,7 @@
             <mat-card *ngFor="let group of data.groups; trackBy: trackGroup" class="categories-table-container">
 
                 <mat-card-header
-                    class="material-table-header material-table-grey"
+                    class="material-table-header material-level-two"
                     (click)="updateCategoryGroup(group)">
 
                     <div class="group-name">
@@ -73,15 +73,22 @@
         </ng-container>
 
         <ng-template #noGroups>
-            <mat-card style="padding: 0">
-                <mat-card-content>
-                    <div class="no-data-card">
+            <mat-card style="padding: 0;">
+
+                <mat-card-header style="padding: 26px" class="material-level-two">
+                </mat-card-header>
+
+                <mat-card-content style="padding: 24px">
+                    <div class="no-data-card" style="padding: 0">
                         <div class="no-data-card-content">
                             <p>You don't have any category groups</p>
-                            <button mat-raised-button (click)="createCategoryGroup(data.groups)">Create your first category group</button>
+                            <button mat-button (click)="createCategoryGroup(data.groups)">Create your first category
+                                group
+                            </button>
                         </div>
                     </div>
                 </mat-card-content>
+
             </mat-card>
 
         </ng-template>
