@@ -5,6 +5,7 @@ export interface User {
     emailVerified: boolean;
     isPremium: boolean;
     customerId: string;
+    creditCardId: string | null;
     subscriptionId: string;
     trial: {
         isTrial: boolean;

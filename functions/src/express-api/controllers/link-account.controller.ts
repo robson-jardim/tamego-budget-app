@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as express from 'express';
-import { updateCustomerEmail } from '../../stripe/create-customer';
+import { updateCustomerEmail } from '../../stripe/stripe-customer';
 
 const router = express.Router();
 const db = admin.firestore();

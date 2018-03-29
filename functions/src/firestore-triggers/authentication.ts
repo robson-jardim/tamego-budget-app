@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { createStripeCustomer, createStripeSubscription } from '../stripe';
-import { Subscription } from '../stripe/create-subscription';
+import { Subscription } from '../stripe/stripe-subscription';
 import { User } from '@models/user.model';
 
 const db = admin.firestore();
@@ -17,6 +17,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         emailVerified: false,
         customerId: null,
         subscriptionId: null,
+        creditCardId: null,
         isPremium: false,
         trial: {
             isTrial: false,
@@ -28,7 +29,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         userData.customerId = await createStripeCustomer(userData.email);
     }
     catch (error) {
-        console.error('[Stripe] Unable to add stripe customer');
+        console.error('[Stripe] Unable to add customer');
         console.error(error);
         throw error;
     }
@@ -39,7 +40,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         userData.trial = subscription.trial;
         userData.isPremium = true;
     } catch (error) {
-        console.error('[Stripe] Unable to add stripe subscription');
+        console.error('[Stripe] Unable to add subscription');
         console.error(error);
         throw error;
     }

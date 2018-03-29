@@ -107,7 +107,9 @@ export class AuthService {
                 return;
             }
 
-            this.requestService.post('api/verifyUser', showOfflinePopups).subscribe(
+            const noData = {};
+
+            this.requestService.post('api/verifyUser', noData, showOfflinePopups).subscribe(
                 response => {
                     // Unsubscribes to the verified watcher because once the user document changes
                     // the observable will emit a value continuing to enter verify user

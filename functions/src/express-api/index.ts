@@ -2,7 +2,6 @@ import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as middleware from './middleware';
 import * as express from 'express';
-
 import * as functions from 'firebase-functions';
 
 const app = express();
@@ -16,7 +15,7 @@ const whitelist = [
 ];
 
 const corsOptions = {
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -32,9 +31,11 @@ app.use(middleware.authenticate);
 // Controllers
 import { linkAnonymousAccountController } from './controllers/link-account.controller';
 import { verifyUserController } from './controllers/verify-user.controller';
+import { paymentTokenController } from './controllers/payment-token.controller';
 
 app.use('/linkAnonymousAccount', linkAnonymousAccountController);
 app.use('/verifyUser', verifyUserController);
+app.use('/paymentToken', paymentTokenController);
 
 // Error handler
 app.use((error, request, response, next) => {

@@ -15,7 +15,7 @@ export class HttpRequestService {
                 private afAuth: AngularFireAuth) {
     }
 
-    public post(endpoint: string, showOfflinePopup = false, data = {}) {
+    public post(endpoint: string, data = {}, showOfflinePopup = false) {
         return this.http.post(environment.functions + endpoint, data).catch(error => {
             if (error.status === 0 && showOfflinePopup) {
                 this.openOfflineDialog();

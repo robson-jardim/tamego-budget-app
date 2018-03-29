@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { PaymentService } from '../payment.service';
 import { environment } from '@environments/environment';
 import { AuthService } from '@shared/services/auth/auth.service';
+import { HttpRequestService } from '@shared/services/http-request/http-request.service';
 
 @Component({
     selector: 'app-checkout',
@@ -12,7 +13,10 @@ export class CheckoutComponent implements OnInit {
 
     handler: any;
 
-    constructor(private paymentService: PaymentService, private auth: AuthService) {
+    constructor(private paymentService: PaymentService, private auth: AuthService, private requestService: HttpRequestService) {
+        this.requestService.post(`api/paymentToken`, { paymentToken: 'tok_mastercard' }).subscribe(x => {
+            console.log(x);
+        });
     }
 
     ngOnInit() {
