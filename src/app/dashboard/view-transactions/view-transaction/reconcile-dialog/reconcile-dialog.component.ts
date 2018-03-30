@@ -1,11 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import {
-    instanceOfReoccurringTransactionId, instanceOfTransactionId, ReoccurringTransactionId, TransactionId,
+    instanceOfReoccurringTransactionId,
+    instanceOfTransactionId,
+    ReoccurringTransactionId,
+    TransactionId,
     TransactionType
 } from '@models/transaction.model';
 import {
-    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransferId,
+    instanceOfReoccurringTransferId,
+    instanceOfTransferId,
+    ReoccurringTransferId,
     TransferId
 } from '@models/transfer.model';
 import { AngularFirestore } from 'angularfire2/firestore';

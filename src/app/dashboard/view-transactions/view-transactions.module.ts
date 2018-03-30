@@ -7,11 +7,13 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import {
     MatAutocompleteModule,
-    MatCheckboxModule, MatChipsModule,
+    MatCheckboxModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatMenuModule,
     MatNativeDateModule,
-    MatTableModule, MatTooltipModule
+    MatTableModule,
+    MatTooltipModule
 } from '@angular/material';
 import { PayeeAutocompleteComponent } from './transaction-dialog/payee-autocomplete/payee-autocomplete.component';
 import { CategoryAutocompleteComponent } from './transaction-dialog/category-autocomplete/category-autocomplete.component';

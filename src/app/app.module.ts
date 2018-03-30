@@ -15,7 +15,6 @@ import { UpdateAvailableDialogComponent } from './update-available-dialog/update
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
-import { AuthenticateUserModule } from './authenticate/authenticate-user.module';
 import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account.module';
 
 @NgModule({
@@ -31,7 +30,6 @@ import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-ac
         OfflineClientModule,
         LinkAnonymousAccountModule,
 
-        AuthenticateUserModule,
         BudgetSelectionModule,
         DashboardModule,
         AppRoutingModule

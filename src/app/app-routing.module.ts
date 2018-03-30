@@ -7,14 +7,9 @@ import { ViewTransactionsComponent } from './dashboard/view-transactions/view-tr
 import { ViewBudgetComponent } from './dashboard/view-budget/view-budget.component';
 
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
-import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
 import { PremiumGuard } from '@shared/guards/premium/premium.guard';
 import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
-import { SigninComponent } from '@shared/components/signin/signin.component';
-import { SignupComponent } from '@shared/components/signup/signup.component';
-import { AuthenticateComponent } from './authenticate/authenticate-user.component';
-import { PasswordResetComponent } from './authenticate/password-reset/password-reset.component';
 
 const routes: Routes = [
     {
@@ -57,31 +52,11 @@ const routes: Routes = [
     },
     {
         path: '',
-        component: AuthenticateComponent,
-        canActivate: [SignedOutGuard],
-        children: [
-            {
-                path: 'signin',
-                component: SigninComponent
-            },
-            {
-                path: 'signup',
-                component: SignupComponent
-            },
-            {
-                path: 'password_reset',
-                component: PasswordResetComponent
-            },
-            {
-                path: '**',
-                redirectTo: 'signin', // Redirects to sign in page
-                pathMatch: 'full'
-            }
-        ]
+        loadChildren: './authenticate/authenticate-user.module#AuthenticateUserModule'
     },
     {
         path: '**',
-        redirectTo: 'signin', // Redirects to sign in page
+        redirectTo: '',
         pathMatch: 'full'
     }
 ];

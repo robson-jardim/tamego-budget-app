@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
 import { FormGroup } from '@angular/forms';
-import { filter, map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { UtilityService } from '@shared/services/utility/utility.service';
 

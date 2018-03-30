@@ -1,4 +1,4 @@
-import { AbstractControl, FormControl } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 
 export class StringValidation {
 

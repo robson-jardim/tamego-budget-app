@@ -5,11 +5,15 @@ import { UtilityService } from '@shared/services/utility/utility.service';
 import { GroupWithCategoriesWithValues } from '@models/view-budget.model';
 import {
     instanceOfReoccurringTransactionId,
-    instanceOfTransactionId, ReoccurringTransactionId, TransactionId,
+    instanceOfTransactionId,
+    ReoccurringTransactionId,
+    TransactionId,
     TransactionType
 } from '@models/transaction.model';
 import {
-    instanceOfReoccurringTransferId, instanceOfTransferId, ReoccurringTransferId,
+    instanceOfReoccurringTransferId,
+    instanceOfTransferId,
+    ReoccurringTransferId,
     TransferId
 } from '@models/transfer.model';
 
