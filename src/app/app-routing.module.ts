@@ -15,6 +15,9 @@ import { SigninComponent } from '@shared/components/signin/signin.component';
 import { SignupComponent } from '@shared/components/signup/signup.component';
 import { AuthenticateComponent } from './authenticate/authenticate-user.component';
 import { PasswordResetComponent } from './authenticate/password-reset/password-reset.component';
+import { BudgetSelectionModule } from './budget-selection/budget-selection.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AuthenticateUserModule } from './authenticate/authenticate-user.module';
 
 const routes: Routes = [
     {
@@ -27,61 +30,19 @@ const routes: Routes = [
     },
     {
         path: 'budgets',
-        component: BudgetSelectionComponent,
-        canActivate: [AuthGuard, PremiumGuard]
+        loadChildren: './budget-selection/budget-selection.module#BudgetSelectionModule'
     },
     {
         path: 'budgets/:budgetId',
-        component: DashboardComponent,
-        canActivate: [AuthGuard, PremiumGuard, BudgetGuard],
-        children: [
-            {
-                path: '',
-                redirectTo: 'budget',
-                pathMatch: 'full'
-            },
-            {
-                path: 'budget',
-                component: ViewBudgetComponent,
-            },
-            {
-                path: 'accounts',
-                component: ViewTransactionsComponent,
-            },
-            {
-                path: 'accounts/:accountId',
-                component: ViewTransactionsComponent,
-                canActivate: [BudgetAccountGuard]
-            }
-        ]
+        loadChildren: './dashboard/dashboard.module#DashboardModule'
     },
     {
         path: '',
-        component: AuthenticateComponent,
-        canActivate: [SignedOutGuard],
-        children: [
-            {
-                path: 'signin',
-                component: SigninComponent
-            },
-            {
-                path: 'signup',
-                component: SignupComponent
-            },
-            {
-                path: 'password_reset',
-                component: PasswordResetComponent
-            },
-            {
-                path: '**',
-                redirectTo: 'signin', // Redirects to sign in page
-                pathMatch: 'full'
-            }
-        ]
+        loadChildren: './authenticate/authenticate-user.module#AuthenticateUserModule'
     },
     {
         path: '**',
-        redirectTo: 'signin', // Redirects to sign in page
+        redirectTo: '',
         pathMatch: 'full'
     }
 ];

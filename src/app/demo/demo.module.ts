@@ -17,7 +17,6 @@ const routes: Routes = [
         CommonModule,
         StandardMaterialModule,
         AppHeaderModule,
-
         RouterModule.forChild(routes)
     ],
     declarations: [

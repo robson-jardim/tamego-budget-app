@@ -5,8 +5,19 @@ import { BudgetSelectionComponent } from './budget-selection.component';
 import { BudgetDialogComponent } from './budget-dialog/budget-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { MatMenuModule } from '@angular/material';
+import { AuthGuard } from '@shared/guards/auth/auth.guard';
+import { PremiumGuard } from '@shared/guards/premium/premium.guard';
+import { DemoComponent } from '../demo/demo.component';
+
+const routes: Routes = [
+    {
+        path: '',
+        component: BudgetSelectionComponent,
+        canActivate: [AuthGuard, PremiumGuard]
+    }
+];
 
 @NgModule({
     imports: [
@@ -16,7 +27,8 @@ import { MatMenuModule } from '@angular/material';
         StandardMaterialModule,
         RouterModule,
 
-        MatMenuModule
+        MatMenuModule,
+        RouterModule.forChild(routes)
     ],
     declarations: [
         BudgetSelectionComponent,
