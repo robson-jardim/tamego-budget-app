@@ -31,6 +31,9 @@ import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-ac
         OfflineClientModule,
         LinkAnonymousAccountModule,
 
+        AuthenticateUserModule,
+        BudgetSelectionModule,
+        DashboardModule,
         AppRoutingModule
     ],
     declarations: [

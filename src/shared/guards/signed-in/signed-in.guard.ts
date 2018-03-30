@@ -4,7 +4,6 @@ import { AuthService } from '../../services/auth/auth.service';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/first';
 
 @Injectable()
 export class SignedOutGuard implements CanActivate {
