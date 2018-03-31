@@ -11,6 +11,7 @@ export const environment = {
     functions: 'http://localhost:5000/budget-app-dev/us-central1/',
     stripe: {
         public_key: 'pk_test_vEuDGivFhI5XdcM9an40FIL4'
-    }
+    },
+    appLogo: 'https://firebasestorage.googleapis.com/v0/b/budget-app-prod.appspot.com/o/public-tamego-images%2Ftamego-app-logo.png?alt=media&token=4e8037ba-4a44-45c1-bc35-eaba157ae4d0'
 };
 

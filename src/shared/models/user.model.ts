@@ -5,10 +5,20 @@ export interface User {
     emailVerified: boolean;
     isPremium: boolean;
     customerId: string;
-    creditCardId: string | null;
+    cardDetails: null | CardDetails;
     subscriptionId: string;
     trial: {
         isTrial: boolean;
         trialEnd: Date | null;
     };
 }
+
+export interface CardDetails {
+    cardId: string;
+    brand: string;
+    expirationMonth: string;
+    expirationYear: string;
+    lastFour: string;
+}
+
+

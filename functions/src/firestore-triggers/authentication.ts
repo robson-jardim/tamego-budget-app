@@ -18,7 +18,7 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
         emailVerified: false,
         customerId: null,
         subscriptionId: null,
-        creditCardId: null,
+        cardDetails: null,
         isPremium: false,
         trial: {
             isTrial: false,

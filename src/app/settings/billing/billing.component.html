@@ -1,0 +1,19 @@
+<div class="container">
+    <p *ngIf="!user.email">Sign up in order to add payment information</p>
+
+    <p *ngIf="user.cardDetails">
+        {{user.cardDetails.brand}} ending in {{user.cardDetails.lastFour}} - Expires
+        {{user.cardDetails.expirationMonth}}/{{user.cardDetails.expirationYear}}
+    </p>
+
+    <div class="buttons">
+
+        <app-handle-payment-button
+            [color]="'primary'"
+            [text]="user.cardDetails ? 'Update credit card' : 'Go premium'"
+            [disabled]="!user.email">
+        </app-handle-payment-button>
+
+        <button mat-button (click)="cancelSubscription()" [disabled]="processingUnsubscription" *ngIf="user.cardDetails">Cancel subscription</button>
+    </div>
+</div>

@@ -1,15 +1,19 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { PaymentService } from '../payment.service';
-import { environment } from '@environments/environment';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '@shared/services/auth/auth.service';
-import { HttpRequestService } from '@shared/services/http-request/http-request.service';
+import { PaymentService } from '../payment/payment.service';
+import { environment } from '@environments/environment';
+import 'rxjs/add/operator/first';
 
 @Component({
-    selector: 'app-checkout',
-    templateUrl: './checkout.component.html',
-    styleUrls: ['./checkout.component.scss']
+    selector: 'app-handle-payment-button',
+    templateUrl: './handle-payment-button.component.html',
+    styleUrls: ['./handle-payment-button.component.scss']
 })
-export class CheckoutComponent implements OnInit {
+export class HandlePaymentButtonComponent implements OnInit {
+
+    @Input() color = '';
+    @Input() text = '';
+    @Input() disabled = false;
 
     handler: any;
 
@@ -26,12 +30,15 @@ export class CheckoutComponent implements OnInit {
     }
 
     public handlePayment() {
-
         this.auth.user.first().subscribe(user => {
             this.handler.open({
                 name: 'Tamego',
                 description: 'Premium',
-                email: user.email
+                amount: 500,
+                email: user.email,
+                image: environment.appLogo,
+                panelLabel: 'Subscribe',
+                allowRememberMe: false
             });
         });
     }

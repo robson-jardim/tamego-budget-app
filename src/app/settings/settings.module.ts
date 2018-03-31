@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { SettingsComponent } from './settings.component';
-import { PaymentModule } from './payment/payment.module';
+import { BillingModule } from './billing/billing.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { RouterModule, Routes } from '@angular/router';
@@ -23,7 +23,7 @@ const routes: Routes = [
         CommonModule,
         AppHeaderModule,
         StandardMaterialModule,
-        PaymentModule,
+        BillingModule,
         CustomMaterialFormsModule,
         AppPipesModule,
         MatTooltipModule,

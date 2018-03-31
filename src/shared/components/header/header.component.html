@@ -14,11 +14,23 @@
                     <p id="trialLength" class="mat-body-2">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
                 </ng-container>
 
+                <ng-container *ngIf="user.email && !user.cardDetails">
+                    <app-handle-payment-button
+                        [text]="'Go premium'"
+                        color="warn"
+                        id="upgrade-button">
+                    </app-handle-payment-button>
+                </ng-container>
+
                 <ng-container *ngIf="!user.email">
-                    <button mat-raised-button (click)="openLinkAnonymousAccountDialog()" color="warn" id="signupButton">
+                    <button mat-raised-button
+                            (click)="openLinkAnonymousAccountDialog()"
+                            color="warn"
+                            id="signupButton">
                         <span>Sign up</span>
                     </button>
                 </ng-container>
+
             </ng-container>
 
             <button mat-icon-button [matMenuTriggerFor]="userOptions" id="menuOptionsButton">
@@ -43,6 +55,8 @@
         <ng-container *ngIf="showDemo">
             <button mat-raised-button color="warn" routerLink="/demo">Try demo</button>
         </ng-container>
+
+
     </div>
 
 </mat-toolbar>

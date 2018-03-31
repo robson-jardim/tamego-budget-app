@@ -12,7 +12,8 @@
         "build:dev": "ng build --prod --env=dev && npm run pwa",
         "build:staging": "ng build --prod --env=staging && npm run pwa",
         "build:prod": "ng build --prod --env=prod && npm run pwa",
-        "loc": "cloc functions/src src/app src/shared --exclude-ext=spec.ts"
+        "loc": "cloc functions/src src/app src/shared --exclude-ext=spec.ts",
+        "dev:local": "ng serve --evn=dev:local"
     },
     "private": true,
     "dependencies": {

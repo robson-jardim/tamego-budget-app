@@ -24,12 +24,12 @@ router.post('/', async (request: any, response) => {
     console.log(`Stripe web hook: ${hook}`);
 
     if ('invoice.payment_succeeded' === hook) {
-        // Occurs whenever an invoice payment attempt succeeds.
+        // Occurs whenever an invoice billing attempt succeeds.
         // TODO - finish webhook
         return response.json(`Received: ${hook}`);
     }
     else if ('invoice.payment_failed' === hook) {
-        // Occurs whenever an invoice payment attempt fails, either due to a declined payment or the lack of a stored payment method.
+        // Occurs whenever an invoice billing attempt fails, either due to a declined billing or the lack of a stored billing method.
         // TODO - finish webhook
         return response.json(`Received: ${hook}`);
     }

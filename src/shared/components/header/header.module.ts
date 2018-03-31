@@ -6,6 +6,7 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { RouterModule } from '@angular/router';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account.module';
+import { BillingModule } from '../../../app/settings/billing/billing.module';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-ac
         RouterModule,
         MatMenuModule,
         AppPipesModule,
-        LinkAnonymousAccountModule
+        LinkAnonymousAccountModule,
+        BillingModule
     ],
     declarations: [
         HeaderComponent

@@ -29,13 +29,15 @@ app.use(bodyParser.json());
 app.use(middleware.authenticate);
 
 // Controllers
-import { linkAnonymousAccountController } from './controllers/link-account.controller';
+import { linkAnonymousAccountController } from './controllers/link-anonymous-account.controller';
 import { verifyUserController } from './controllers/verify-user.controller';
 import { paymentTokenController } from './controllers/payment-token.controller';
+import { cancelSubscriptionController } from './controllers/cancel-subscription.controller';
 
 app.use('/linkAnonymousAccount', linkAnonymousAccountController);
 app.use('/verifyUser', verifyUserController);
 app.use('/paymentToken', paymentTokenController);
+app.use('/cancelSubscription', cancelSubscriptionController);
 
 // Error handler
 app.use((error, request, response, next) => {

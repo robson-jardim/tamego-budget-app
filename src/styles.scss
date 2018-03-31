@@ -76,7 +76,6 @@ $material-design-icons-font-path: '~material-design-icons-iconfont/dist/fonts/';
     align-items: center;
     justify-content: center;
     padding: 24px;
-    height: 200px;
 }
 
 .no-data-card-content {
@@ -91,6 +90,6 @@ $material-design-icons-font-path: '~material-design-icons-iconfont/dist/fonts/';
 
 .no-data-card-content button {
     white-space: normal;
-    margin: 16px 0;
+    margin-top: 16px;
 }
 

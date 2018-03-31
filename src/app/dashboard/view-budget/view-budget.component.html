@@ -64,9 +64,15 @@
                 </ng-container>
 
                 <ng-template #noCategories>
-                    <div class="no-categories-card">
-                        <p>No categories</p>
-                    </div>
+                    <mat-card-content style="padding: 24px">
+                        <div class="no-data-card" style="padding: 0">
+                            <div class="no-data-card-content">
+                                <p>You don't have any categories</p>
+                                <button mat-button (click)="createCategory(group); $event.stopPropagation()">Create your first category</button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+
                 </ng-template>
 
             </mat-card>

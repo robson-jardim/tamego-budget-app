@@ -15,7 +15,7 @@ router.post('/', async (request: any, response) => {
     const {uid} = request.user;
     const {email} = request.user;
 
-    if (isAnonymous) {
+    if (isAnonymous || !email) {
         return response.status(400).json({
             message: 'Unable to link because no email has been associated with the given account'
         });

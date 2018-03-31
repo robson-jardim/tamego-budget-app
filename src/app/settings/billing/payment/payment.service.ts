@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '@shared/services/auth/auth.service';
-import { HttpRequestService } from '@shared/services/http-request/http-request.service';
-import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { AuthService } from 'shared/services/auth/auth.service';
+import { HttpRequestService } from 'shared/services/http-request/http-request.service';
+import { GeneralNotificationsService } from 'shared/services/general-notifications/general-notifications.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -16,8 +16,10 @@ export class PaymentService {
         const data = { paymentToken: tokenId };
 
         this.auth.user.first()
-            .map(user => !!user.creditCardId)
+            .map(user => !!user.cardDetails)
             .flatMap(isUpdatingCreditCard => {
+                this.notificationsService.sendGeneralNotification('Processing...');
+
                 return this.requestService.post(`api/paymentToken`, data).map(() => {
                     if (isUpdatingCreditCard) {
                         this.notificationsService.sendGeneralNotification('Updated credit card');
@@ -30,4 +32,5 @@ export class PaymentService {
                 return Observable.of(null);
             }).subscribe();
     }
+
 }
