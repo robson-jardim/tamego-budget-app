@@ -25,7 +25,7 @@ export class BillingComponent implements OnInit {
 
     public cancelSubscription() {
         this.processingUnsubscription = true;
-        this.notificationsService.sendGeneralNotification('Processing...');
+        this.notificationsService.sendProcessingNotification();
 
         this.requestService.post('api/cancelSubscription').subscribe(
             success => {

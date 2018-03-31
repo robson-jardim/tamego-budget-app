@@ -6,54 +6,66 @@
 
 .budget-selection-container {
     max-width: 936px;
-    margin: 24px auto 0;
+    margin: 48px auto 0;
     padding: 0 24px;
 }
 
-.budget-selection-container .mat-card {
-    margin: 24px 0;
+.budget-selection {
+    padding: 0;
 }
 
-.header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    margin-top: -24px;
-}
-
-.header h1 {
+.title-container {
     flex: 1;
-    margin: 24px 0 0;
 }
 
-.header button {
-    margin-top: 24px;
-}
-
-.budget-card {
-    display: flex;
-    align-items: center;
-}
-
-.budget-card:focus {
-    outline: 0;
-}
-
-.budget-card:hover {
-    background-color: #f5f5f5;
-}
-
-.budget-name {
-    flex: 1;
+.title-container h1 {
     margin: 0;
 }
 
-.truncate {
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+#add-budget-button {
+    margin-right: 4px;
 }
+
+//.header {
+//    display: flex;
+//    flex-wrap: wrap;
+//    align-items: flex-start;
+//    margin-top: -24px;
+//}
+//
+//.header h1 {
+//    flex: 1;
+//    margin: 24px 0 0;
+//}
+//
+//.header button {
+//    margin-top: 24px;
+//}
+//
+//.budget-card {
+//    display: flex;
+//    align-items: center;
+//}
+//
+//.budget-card:focus {
+//    outline: 0;
+//}
+//
+//.budget-card:hover {
+//    background-color: #f5f5f5;
+//}
+//
+//.budget-name {
+//    flex: 1;
+//    margin: 0;
+//}
+//
+//.truncate {
+//    width: 100%;
+//    white-space: nowrap;
+//    overflow: hidden;
+//    text-overflow: ellipsis;
+//}
 
 
 

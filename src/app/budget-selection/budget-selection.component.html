@@ -3,54 +3,88 @@
     <app-header></app-header>
 
     <ng-container *ngIf="budgets$ | async  as budgets; else loading">
+
         <div class="budget-selection-container">
+            <mat-card class="budget-selection">
+                <mat-card-header class="material-table-header material-level-two">
 
-            <div class="bottom-margin header">
-                <h1 class="mat-title">Budgets</h1>
-
-                <button mat-raised-button color="primary" (click)="createBudget()">Add budget</button>
-            </div>
-
-
-            <ng-container *ngIf="budgets.length > 0; else noBudgets">
-                <mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"
-                          class="budget-card bottom-margin">
-
-                    <h1 class="mat-subheading-2 truncate budget-name"> {{budget.budgetName}}</h1>
-
-                    <div>
-                        <button mat-icon-button (click)="$event.stopPropagation()"
-                                [matMenuTriggerFor]="budgetOptions">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #budgetOptions>
-                            <button [disabled]="true" mat-menu-item>Edit</button>
-                        </mat-menu>
+                    <div class="title-container">
+                        <h1 class="mat-title">Budgets</h1>
                     </div>
-                </mat-card>
 
-            </ng-container>
+                    <button id="add-budget-button" mat-raised-button color="primary" (click)="createBudget()">Add
+                        budget
+                    </button>
+                </mat-card-header>
 
-            <ng-template #noBudgets>
+                <mat-card-content>
 
-                <mat-card style="padding: 0;">
+                    <ng-container *ngIf="budgets.length > 0; else noBudgets">
+                        <div *ngFor="let b of budgets">
+                            <p> {{b.budgetName}}</p>
+                        </div>
+                    </ng-container>
 
-                    <mat-card-header style="padding: 26px" class="material-level-two">
-                    </mat-card-header>
-
-                    <mat-card-content style="padding: 24px">
-                        <div class="no-data-card" style="padding: 0">
+                    <ng-template #noBudgets>
+                        <div class="no-data-card">
                             <div class="no-data-card-content">
                                 <p>You don't have any budgets</p>
                                 <button mat-button (click)="createBudget()">Create your first budget</button>
                             </div>
                         </div>
-                    </mat-card-content>
-
-                </mat-card>
-
-            </ng-template>
+                    </ng-template>
+                </mat-card-content>
+            </mat-card>
         </div>
+
+        <!--<div class="budget-selection-container">-->
+
+        <!--<div class="bottom-margin header">-->
+        <!--<h1 class="mat-title">Budgets</h1>-->
+
+        <!--<button mat-raised-button color="primary" (click)="createBudget()">Add budget</button>-->
+        <!--</div>-->
+
+
+        <!--<ng-container *ngIf="budgets.length > 0; else noBudgets">-->
+        <!--<mat-card *ngFor="let budget of budgets" class="budget-card" [routerLink]="[budget.budgetId]"-->
+        <!--class="budget-card bottom-margin">-->
+
+        <!--<h1 class="mat-subheading-2 truncate budget-name"> {{budget.budgetName}}</h1>-->
+
+        <!--<div>-->
+        <!--<button mat-icon-button (click)="$event.stopPropagation()"-->
+        <!--[matMenuTriggerFor]="budgetOptions">-->
+        <!--<mat-icon>more_vert</mat-icon>-->
+        <!--</button>-->
+        <!--<mat-menu #budgetOptions>-->
+        <!--<button [disabled]="true" mat-menu-item>Edit</button>-->
+        <!--</mat-menu>-->
+        <!--</div>-->
+        <!--</mat-card>-->
+
+        <!--</ng-container>-->
+
+        <!--<ng-template #noBudgets>-->
+
+        <!--<mat-card style="padding: 0;">-->
+
+        <!--<mat-card-header style="padding: 26px" class="material-level-two">-->
+        <!--</mat-card-header>-->
+
+        <!--<mat-card-content style="padding: 24px">-->
+        <!--<div class="no-data-card" style="padding: 0">-->
+        <!--<div class="no-data-card-content">-->
+        <!--<p>You don't have any budgets</p>-->
+        <!--<button mat-button (click)="createBudget()">Create your first budget</button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</mat-card-content>-->
+
+        <!--</mat-card>-->
+
+        <!--</ng-template>-->
+        <!--</div>-->
     </ng-container>
 
     <ng-template #loading>
