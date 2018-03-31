@@ -14,7 +14,7 @@
                     <p id="trialLength" class="mat-body-2">Trial: {{user.premium.trialEnd | daysUntil}} days left</p>
                 </ng-container>
 
-                <ng-container *ngIf="user.email && !user.cardDetails">
+                <ng-container *ngIf="user.email && !user.cardDetails && user.premium.isTrial">
                     <app-handle-payment-button
                         [text]="'Go premium'"
                         color="warn"

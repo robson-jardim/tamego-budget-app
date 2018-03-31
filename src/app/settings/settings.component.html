@@ -7,6 +7,15 @@
         <div class="settings">
 
             <div class="settings-container">
+
+                <mat-card *ngIf="!user.premium.active" class="settings-card premium-ended">
+                    <mat-card-header>
+                        <ng-container *ngIf="user.cardDetails; else trialEnded">Premium subscription ended
+                        </ng-container>
+                        <ng-template #trialEnded>Premium trial ended</ng-template>
+                    </mat-card-header>
+                </mat-card>
+
                 <h1 class="mat-headline">Settings</h1>
 
                 <mat-card class="settings-card">
@@ -18,7 +27,9 @@
                             <p>Email: {{user.email}}</p>
 
                             <ng-container *ngIf="user.emailVerified">
-                                <mat-icon matTooltip="Verified account" color="accent" [matTooltipPosition]="'right'">check_circle</mat-icon>
+                                <mat-icon matTooltip="Verified account" color="accent" [matTooltipPosition]="'right'">
+                                    check_circle
+                                </mat-icon>
                             </ng-container>
                         </div>
 
@@ -31,7 +42,8 @@
 
                     </ng-container>
 
-                    <p *ngIf="!user.cardDetails">Trial: {{user.premium.trialEnd | daysUntil}} days left</p>
+                    <p *ngIf="!user.cardDetails && user.premium.isTrial">Trial: {{user.premium.trialEnd | daysUntil}}
+                        days left</p>
 
 
                     <ng-template #isAnonymous>

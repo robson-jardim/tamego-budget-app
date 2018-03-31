@@ -7,6 +7,8 @@ export class CurrencyValidation {
         const value = control.value;
         const num = Number(value);
 
+        // Disable rule to allow for type coercion
+        /* tslint:disable-next-line:triple-equals */
         if (value == num.toFixed(2)) {
             return null;
         }

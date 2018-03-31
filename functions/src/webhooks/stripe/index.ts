@@ -48,31 +48,55 @@ router.post('/', async (request: any, response) => {
         try {
             user.premium.active = true;
             await userDocRef.update(user);
-            response.status(200).send(`Set premium status to active for user: ${user.userId}`);
+            return response.status(200).send(`Set premium status to active for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
             console.error('Unable to set premium to active');
-            response.status(400).send('Unable to set premium to active');
+            return response.status(400).send('Unable to set premium to active');
         }
     }
     else if ('invoice.payment_failed' === hook) {
         try {
             user.premium.active = false;
             await userDocRef.update(user);
-            response.status(200).send(`Set premium status to inactive for user: ${user.userId}`);
+            return response.status(200).send(`Set premium status to inactive for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
             console.error('Unable to set premium to inactive');
-            response.status(400).send('Unable to set premium to inactive');
+            return response.status(400).send('Unable to set premium to inactive');
         }
     }
     else if ('customer.subscription.updated' === hook) {
         // Occurs whenever a subscription changes (e.g., switching from one plan to another or changing the status from trial to active).
-        return response.json(`Received: ${hook}`);
-    }
 
-    response.status(400).send('Not a matching webhook');
-    throw new Error(`${hook}:  not a matching webhook`);
+        if (!data.trial_end) {
+            return response.status(200).send('No changes made');
+        }
+
+        const now = new Date();
+        const trialEnd = new Date(data.trial_end * 1000);
+
+        if (trialEnd < now) {
+            user.premium.isTrial = false;
+            user.premium.trialEnd = null;
+
+            try {
+                await userDocRef.update(user);
+                return response.status(200).send('Successfully ended user premium trial');
+            } catch (error) {
+                console.error(error);
+                console.error('Unable to end premium trial');
+                return response.status(400).send('Unable to end premium trial');
+            }
+        }
+        else {
+            return response.status(200).send('No changes made');
+        }
+    }
+    else {
+        response.status(400).send('Not a matching webhook');
+        throw new Error(`${hook}:  not a matching webhook`);
+    }
 });
 
 export const stripeWebhooks = router;

@@ -13,16 +13,16 @@
 
 
 .mat-column-name {
-    flex: 3
+    flex: 4
 }
 
 .mat-column-lastModified {
     flex: 1;
-    min-width: 83px;
 }
 
 .truncate {
-    width: 100%;
+    margin: 0;
+    width: calc(100% - 8px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

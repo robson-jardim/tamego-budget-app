@@ -43,8 +43,10 @@ export class BillingComponent implements OnInit {
     public confirmCancellation() {
         const dialog = this.dialogService.open(ConfirmCancellationDialogComponent);
 
-        dialog.beforeClose().subscribe(() => {
-            this.cancelSubscription();
+        dialog.beforeClose().subscribe(userConfirmed => {
+            if (userConfirmed) {
+                this.cancelSubscription();
+            }
         });
     }
 }
