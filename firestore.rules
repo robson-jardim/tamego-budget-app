@@ -28,13 +28,13 @@ service cloud.firestore {
             allow delete: if false;
 
             function validateBudgetSchema() {
-                return incomingData().keys().hasAll(['userId', 'budgetName', 'currencyCode', 'timeCreated', 'lastVisited']) &&
+                return incomingData().keys().hasAll(['userId', 'budgetName', 'currencyCode', 'timeCreated', 'lastModified']) &&
                     incomingData().size() == 5 &&
                     incomingData().userId is string &&
                     (incomingData().budgetName is string && noLeadingOrTrailingSpaces(incomingData().budgetName) && notEmptyString(incomingData().budgetName)) &&
                     (incomingData().currencyCode is string && validCurrencyCode(incomingData().currencyCode)) &&
                     incomingData().timeCreated is timestamp &&
-                    incomingData().lastVisited is timestamp;
+                    incomingData().lastModified is timestamp;
             }
 
             function validCurrencyCode(code) {

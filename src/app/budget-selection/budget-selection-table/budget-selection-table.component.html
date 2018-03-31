@@ -17,7 +17,7 @@
 
     <ng-container matColumnDef="lastModified">
         <mat-header-cell *matHeaderCellDef> Last modified</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.lastVisited | date: 'MMM d, yyyy'}}</mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.lastModified | date: 'MMM d, yyyy'}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
@@ -31,7 +31,7 @@
             </button>
 
             <mat-menu #options>
-                <button mat-menu-item>Edit</button>
+                <button (click)="updateBudget(element)" mat-menu-item>Edit</button>
             </mat-menu>
 
         </mat-cell>

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { Budget } from '@models/budget.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -37,17 +38,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private updateBudgetVisitDate(budgetId: string) {
         const currentTime = new Date();
-        this.afs.doc(`budgets/${budgetId}`).update({
-            lastVisited: currentTime
+        this.afs.doc<Budget>(`budgets/${budgetId}`).update({
+            lastModified: currentTime
         });
     }
 
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
-    test(x) {
-        console.log(x);
     }
 
 }

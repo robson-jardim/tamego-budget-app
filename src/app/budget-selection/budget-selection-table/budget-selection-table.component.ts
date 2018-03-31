@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BudgetId } from '@models/budget.model';
 import { CategoryId } from '@models/category.model';
+import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
+import { BudgetDialogComponent } from '../budget-dialog/budget-dialog.component';
 
 @Component({
     selector: 'app-budget-selection-table',
@@ -12,7 +14,7 @@ export class BudgetSelectionTableComponent implements OnInit {
     @Input() budgets: BudgetId[];
     displayedColumns = ['name', 'lastModified', 'actions'];
 
-    constructor() {
+    constructor(private diaglogService: CloseDialogService) {
     }
 
     ngOnInit() {
@@ -20,5 +22,13 @@ export class BudgetSelectionTableComponent implements OnInit {
 
     public trackBudget(index, budget: BudgetId) {
         return budget ? budget.budgetId : undefined;
+    }
+
+    public updateBudget(budget: BudgetId) {
+        this.diaglogService.openUpdate(BudgetDialogComponent, {
+            data: {
+                ...budget
+            }
+        });
     }
 }

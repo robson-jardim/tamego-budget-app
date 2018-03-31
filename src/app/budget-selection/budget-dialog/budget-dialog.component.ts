@@ -41,7 +41,7 @@ export class BudgetDialogComponent implements OnInit {
 
     private buildBudgetForm() {
         const form = new Object();
-        form[BudgetFormNames.BudgetName] = [null, [Validators.required, StringValidation.NotEmptyStringValidator]];
+        form[BudgetFormNames.BudgetName] = [this.data.budgetName, [Validators.required, StringValidation.NotEmptyStringValidator]];
         this.budgetForm = this.formBuilder.group(form);
     }
 
@@ -53,14 +53,25 @@ export class BudgetDialogComponent implements OnInit {
         const budgetData: Budget = {
             userId: this.data.userId,
             budgetName: this.budgetForm.value.budgetName.trim(),
-            currencyCode: 'USD',
-            timeCreated: currentTime,
-            lastVisited: currentTime
+            currencyCode: this.data.currencyCode || 'USD',
+            timeCreated: this.data.timeCreated || currentTime,
+            lastModified: this.data.lastModified || currentTime
         };
 
-        const budgets = this.getBudgetCollection();
-        const budget = await budgets.add(budgetData);
-        this.onBudgetAdded(budget.id);
+        if (DialogState.Create === this.data.state) {
+            const budgets = this.getBudgetCollection();
+            const budget = await budgets.add(budgetData);
+            this.onBudgetAdded(budget.id);
+        }
+        else if (DialogState.Update === this.data.state) {
+            const budgets = this.getBudgetCollection();
+            budgets.doc(this.data.budgetId).update(budgetData);
+        }
+        else {
+            throw new Error('Unable to determine dialog state');
+        }
+
+        this.dialogRef.close();
     }
 
     private getBudgetCollection() {

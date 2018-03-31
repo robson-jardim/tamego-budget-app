@@ -3,7 +3,7 @@ export interface Budget {
     budgetName: string;
     currencyCode: CurrencyCode;
     timeCreated: Date;
-    lastVisited: Date;
+    lastModified: Date;
 }
 
 type CurrencyCode = string;
