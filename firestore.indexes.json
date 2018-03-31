@@ -21,7 +21,7 @@
                     "mode": "ASCENDING" // Mode is required for where clause
                 },
                 {
-                    "fieldPath": "lastVisited",
+                    "fieldPath": "lastModified",
                     "mode": "DESCENDING"
                 }
             ]

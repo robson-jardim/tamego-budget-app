@@ -23,7 +23,7 @@ export class FirestoreReferenceService {
     public getBudgetCollectionRef(userId): AngularFirestoreCollection<Budget> {
         return this.afs.collection<Budget>('budgets', ref =>
             ref.where('userId', '==', userId)
-                .orderBy('lastVisited', 'desc'));
+                .orderBy('lastModified', 'desc'));
     }
 
     public getAccountsCollectionRef(budgetId: string): AngularFirestoreCollection<Account> {
