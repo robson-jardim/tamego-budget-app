@@ -27,10 +27,10 @@ const routes: Routes = [
                 path: 'signup',
                 component: SignupComponent
             },
-            {
-                path: 'password_reset',
-                component: PasswordResetComponent
-            },
+            // {
+            //     path: 'password_reset',
+            //     component: PasswordResetComponent
+            // },
             {
                 path: '**',
                 redirectTo: 'signin', // Redirects to sign in page

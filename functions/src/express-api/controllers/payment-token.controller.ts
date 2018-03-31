@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import { Validator } from 'express-json-validator-middleware';
-import { CardDetails, User } from '@models/user.model';
+import { User } from '@models/user.model';
 import { retrieveCustomerCardDetails, setCustomerPaymentSource } from '../../stripe/stripe-customer';
 import { PaymentToken } from '../../stripe';
 

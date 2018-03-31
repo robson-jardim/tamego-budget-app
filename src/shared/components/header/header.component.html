@@ -31,24 +31,26 @@
                     </button>
                 </ng-container>
 
+                <button mat-icon-button [matMenuTriggerFor]="userOptions" id="menuOptionsButton">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+
+                <mat-menu #userOptions="matMenu">
+
+                    <button mat-menu-item routerLink="/settings">
+                        <mat-icon>settings</mat-icon>
+                        <span>Settings</span>
+                    </button>
+
+                    <button *ngIf="user.email" mat-menu-item (click)="auth.signOut()">
+                        <mat-icon>exit_to_app</mat-icon>
+                        <span>Sign out</span>
+                    </button>
+                </mat-menu>
+
             </ng-container>
 
-            <button mat-icon-button [matMenuTriggerFor]="userOptions" id="menuOptionsButton">
-                <mat-icon>more_vert</mat-icon>
-            </button>
 
-            <mat-menu #userOptions="matMenu">
-
-                <button mat-menu-item routerLink="/settings">
-                    <mat-icon>settings</mat-icon>
-                    <span>Settings</span>
-                </button>
-
-                <button mat-menu-item (click)="auth.signOut()">
-                    <mat-icon>exit_to_app</mat-icon>
-                    <span>Sign out</span>
-                </button>
-            </mat-menu>
 
         </ng-container>
 

@@ -52,7 +52,7 @@ const routes: Routes = [
     },
     {
         path: '',
-        loadChildren: './authenticate/authenticate-user.module#AuthenticateUserModule'
+        loadChildren: './authenticate-user/authenticate-user.module#AuthenticateUserModule'
     },
     {
         path: '**',
