@@ -40,6 +40,9 @@
                     <span matPrefix>$ &nbsp;</span>
                     <input matInput placeholder="Amount" type="number"
                            formControlName="{{TransactionFormNames.Amount}}">
+
+                    <mat-error *ngIf="transactionForm.get('amount').hasError('currency')"></mat-error>
+
                 </mat-form-field>
 
                 <app-cleared-checkbox

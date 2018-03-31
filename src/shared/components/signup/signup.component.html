@@ -3,9 +3,9 @@
 </ng-container>
 
 <ng-container *ngIf="authNotification.messageBroadcast | async as notification">
-    <mat-card class="authenticate-card-container" *ngIf="showAuthError">
+    <ng-container *ngIf="showAuthError">
         <p [style.color]="notification.type == 'error' ? 'red' : null">{{notification.content}}</p>
-    </mat-card>
+    </ng-container>
 </ng-container>
 
 <form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && signupUser()"

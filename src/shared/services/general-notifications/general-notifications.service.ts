@@ -60,6 +60,14 @@ export class GeneralNotificationsService {
         this.send(notification);
     }
 
+    public sendProcessingNotification() {
+        const notification: Notification = {
+            message: 'Processing...'
+        };
+
+        this.send(notification);
+    }
+
     private send(notification: Notification) {
         this.notificationSource.next(notification);
 

@@ -2,6 +2,14 @@ mat-list-item * {
     color: rgba(255, 255, 255, .7);
 }
 
+mat-list-item:hover {
+    background-color: #19212b;
+}
+
+.add-account-item:hover {
+    background-color: inherit;
+}
+
 .container {
     min-height: 100vh;
     height: 100%;

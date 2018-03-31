@@ -1,10 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { instanceOfPayeeId, PayeeId } from '@models/payee.model';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { AccountId, instanceOfAccountId } from '@models/budget-account.model';
 import { TransactionFormNames } from '../../shared/transaction-form-names.enum';
+import { CategoryId } from '@models/category.model';
+import { MatAutocompleteTrigger } from '@angular/material';
 
 @Component({
     selector: 'app-payee-autocomplete',
@@ -21,6 +23,7 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     // TODO - make filteredAccounts$, filter separately from payees
     filteredPayees$: Observable<PayeeId[]>;
+    @ViewChild(MatAutocompleteTrigger) matAutocompleteTrigger: MatAutocompleteTrigger;
 
     constructor() {
     }
@@ -77,6 +80,16 @@ export class PayeeAutocompleteComponent implements OnInit, OnChanges {
 
     public isAccountSelectedAsOrigin(account: AccountId) {
         return this.transactionForm.controls[TransactionFormNames.AccountId].value === account.accountId;
+    }
+
+    public autoSelectActiveOption(userInput) {
+
+        const isOptionActive = this.matAutocompleteTrigger.activeOption;
+
+        if (isOptionActive && userInput.length > 0) {
+            const payee: PayeeId | string = this.matAutocompleteTrigger.activeOption.value;
+            this.transactionForm.controls[TransactionFormNames.Payee].patchValue(payee);
+        }
     }
 }
 

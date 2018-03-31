@@ -18,7 +18,7 @@ export class PaymentService {
         this.auth.user.first()
             .map(user => !!user.cardDetails)
             .flatMap(isUpdatingCreditCard => {
-                this.notificationsService.sendGeneralNotification('Processing...');
+                this.notificationsService.sendProcessingNotification();
 
                 return this.requestService.post(`api/paymentToken`, data).map(() => {
                     if (isUpdatingCreditCard) {

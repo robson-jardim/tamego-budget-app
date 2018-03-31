@@ -13,9 +13,9 @@
         </mat-list-item>
 
         <ng-container *ngIf="accounts$ | async as accounts; else loadingAccounts">
-            <mat-list-item>
+            <mat-list-item class="add-account-item">
                 <button mat-button (click)="createAccount(accounts); sidenavSelection()">
-                    <span>Add account</span>
+                    Add account
                 </button>
             </mat-list-item>
 

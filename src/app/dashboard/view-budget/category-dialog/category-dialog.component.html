@@ -14,6 +14,9 @@
         <mat-form-field>
             <span matPrefix>$ &nbsp;</span>
             <input matInput formControlName="{{CategoryFormNames.Budgeted}}" placeholder="Budget" type="number">
+
+            <mat-error *ngIf="categoryForm.get('budgeted').hasError('currency')"></mat-error>
+
         </mat-form-field>
 
         <!--<mat-form-field>-->

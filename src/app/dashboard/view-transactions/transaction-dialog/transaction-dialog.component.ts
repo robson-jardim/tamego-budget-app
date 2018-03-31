@@ -26,6 +26,7 @@ import { EntityNames } from '@shared/enums/entity-names.enum';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { CategoryId, instanceOfCategoryId } from '@models/category.model';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
+import { CurrencyValidation } from '@shared/validators/currency-validation';
 
 // noinspection UnterminatedStatementJS
 // noinspection UnterminatedStatementJS
@@ -91,7 +92,7 @@ export class TransactionDialogComponent implements OnInit {
         form[TransactionFormNames.Payee] = [null]; // Object set within autocomplete component
         form[TransactionFormNames.Category] = [null]; // Object set within autocomplete component
         form[TransactionFormNames.Memo] = [this.data.memo];
-        form[TransactionFormNames.Amount] = [this.data.amount];
+        form[TransactionFormNames.Amount] = [this.data.amount || 0, CurrencyValidation.MatchIsCurrencyValue];
         form[TransactionFormNames.Cleared] = [this.data.cleared || (this.data.clearedOrigin && this.data.clearedDestination) || false];
         form[TransactionFormNames.ReoccurringSchedule] = [this.data.reoccurringSchedule];
 
@@ -256,8 +257,11 @@ export class TransactionDialogComponent implements OnInit {
             return (<AccountId>payeeField).accountId;
         }
         else if (typeof payeeField === 'string') {
-            const newPayeeId = this.firestore.createId();
+            if (payeeField.trim().length === 0) {
+                return null;
+            }
 
+            const newPayeeId = this.firestore.createId();
             const newPayee: Payee = {
                 payeeName: <string>payeeField.trim(),
             };

@@ -1,6 +1,7 @@
 <ng-container [formGroup]="transactionForm">
     <mat-form-field>
-        <input matInput placeholder="Payee" [matAutocomplete]="payeeAutoComplete"
+        <input matInput #box placeholder="Payee" [matAutocomplete]="payeeAutoComplete"
+               (keydown.Tab)="autoSelectActiveOption(box.value)"
                formControlName="{{TransactionFormNames.Payee}}">
 
         <mat-autocomplete #payeeAutoComplete="matAutocomplete" [displayWith]="displayPayeeName" [autoActiveFirstOption]="true">

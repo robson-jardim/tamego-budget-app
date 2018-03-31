@@ -8,6 +8,7 @@ import { EntityNames } from '@shared/enums/entity-names.enum';
 import { DialogState } from '@shared/services/close-dialog/close-dialog.service';
 import { FirestoreReferenceService } from '@shared/services/firestore-reference/firestore-reference.service';
 import { StringValidation } from '@shared/validators/string-validation';
+import { CurrencyValidation } from '@shared/validators/currency-validation';
 
 enum CategoryFormNames {
     CategoryName = 'categoryName',
@@ -44,13 +45,13 @@ export class CategoryDialogComponent implements OnInit {
         const form = new Object();
 
         if (DialogState.Create === this.data.state) {
-            form[CategoryFormNames.CategoryName] = [null, Validators.required];
-            form[CategoryFormNames.Budgeted] = [0];
+            form[CategoryFormNames.CategoryName] = [null, [Validators.required, StringValidation.NotEmptyStringValidator]];
+            form[CategoryFormNames.Budgeted] = [0, CurrencyValidation.MatchIsCurrencyValue];
             form[CategoryFormNames.Offset] = [0];
         }
         else if (DialogState.Update === this.data.state) {
             form[CategoryFormNames.CategoryName] = [this.data.categoryName, [Validators.required, StringValidation.NotEmptyStringValidator]];
-            form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted];
+            form[CategoryFormNames.Budgeted] = [this.data.desiredValue.budgeted, CurrencyValidation.MatchIsCurrencyValue];
             form[CategoryFormNames.Offset] = [this.data.desiredValue.offset];
         }
         else {
