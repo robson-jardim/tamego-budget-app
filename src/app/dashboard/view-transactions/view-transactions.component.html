@@ -2,13 +2,6 @@
 
     <div class="view-transaction-container">
 
-        <div id="reconcile-button" *ngIf="entities.accountId">
-            <app-reconcile-transactions
-                [budgetId]="entities.budgetId"
-                [accountId]="entities.accountId">
-            </app-reconcile-transactions>
-        </div>
-
         <mat-card class="transaction-table">
 
             <mat-card-header class="material-table-header material-level-two">
@@ -18,6 +11,13 @@
                 </div>
 
                 <div class="transactions-table-header-options">
+                    <app-reconcile-transactions
+                        *ngIf="entities.accountId"
+                        style="padding-right: 8px"
+                        [budgetId]="entities.budgetId"
+                        [accountId]="entities.accountId">
+                    </app-reconcile-transactions>
+
                     <button mat-raised-button color="primary" (click)="createTransaction()">Add transaction</button>
                 </div>
             </mat-card-header>

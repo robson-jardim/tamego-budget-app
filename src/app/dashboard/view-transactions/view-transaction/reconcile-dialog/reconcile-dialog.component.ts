@@ -14,6 +14,7 @@ import {
     TransferId
 } from '@models/transfer.model';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 
 @Component({
     selector: 'app-reconcile-dialog',
@@ -26,7 +27,8 @@ export class ReconcileConfirmDialogComponent implements OnInit {
 
     constructor(@Inject(MAT_DIALOG_DATA) private data: any,
                 private dialogRef: MatDialogRef<ReconcileConfirmDialogComponent>,
-                private afs: AngularFirestore) {
+                private afs: AngularFirestore,
+                private notifications: GeneralNotificationsService) {
     }
 
     private isCleared = (x) => x.cleared || x.clearedDestination || x.clearedOrigin;
@@ -41,6 +43,8 @@ export class ReconcileConfirmDialogComponent implements OnInit {
     }
 
     public lockedClearedTransactions() {
+        this.notifications.sendProcessingNotification();
+
         const batch = this.afs.firestore.batch();
         const budgetPath = this.afs.doc(`budgets/${this.data.budgetId}`).ref.path;
 
@@ -87,6 +91,8 @@ export class ReconcileConfirmDialogComponent implements OnInit {
         });
 
         batch.commit();
+
+        this.notifications.sendGeneralNotification('Account reconciled');
         this.dialogRef.close();
     }
 }

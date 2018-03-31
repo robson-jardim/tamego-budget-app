@@ -26,7 +26,16 @@
         <mat-header-cell *matHeaderCellDef> Payee</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="truncate">
-                {{element.viewData.payeeName}}
+
+                <ng-container *ngIf="element.viewData.payeeName; else noPayee">
+                    {{element.viewData.payeeName}}
+                </ng-container>
+
+                <ng-template #noPayee>
+                    <mat-chip-list>
+                        <mat-chip [disabled]="true">No payee</mat-chip>
+                    </mat-chip-list>
+                </ng-template>
             </div>
         </mat-cell>
     </ng-container>
