@@ -1,8 +1,8 @@
 .mat-column-actions {
     flex: 0 40px;
-}
-
-
-.black-thirty-eight {
     color: hsl(0, 0%, 46%);
 }
+.mat-column-actions:hover {
+    color: inherit;
+}
+

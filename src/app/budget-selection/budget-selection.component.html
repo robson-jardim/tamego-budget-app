@@ -20,9 +20,9 @@
                 <mat-card-content>
 
                     <ng-container *ngIf="budgets.length > 0; else noBudgets">
-                        <div *ngFor="let b of budgets">
-                            <p> {{b.budgetName}}</p>
-                        </div>
+                        <app-budget-selection-table
+                            [budgets]="budgets">
+                        </app-budget-selection-table>
                     </ng-container>
 
                     <ng-template #noBudgets>

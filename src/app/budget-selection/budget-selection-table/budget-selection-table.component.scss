@@ -1,0 +1,29 @@
+.mat-row:focus {
+    outline: 0;
+}
+
+.mat-column-actions {
+    flex: 0 40px;
+    color: hsl(0, 0%, 62%);
+}
+
+.mat-column-actions:hover {
+    color: inherit;
+}
+
+
+.mat-column-name {
+    flex: 3
+}
+
+.mat-column-lastModified {
+    flex: 1;
+    min-width: 83px;
+}
+
+.truncate {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
