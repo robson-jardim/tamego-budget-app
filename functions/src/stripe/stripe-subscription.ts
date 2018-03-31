@@ -6,7 +6,8 @@ const db = admin.firestore();
 
 export interface Subscription {
     subscriptionId: string;
-    trial: {
+    premium: {
+        active: true;
         isTrial: boolean;
         trialEnd: Date;
     };
@@ -28,7 +29,8 @@ export const createStripeSubscription = async (customerId: string): Promise<Subs
 
     return {
         subscriptionId: subscription.id,
-        trial: {
+        premium: {
+            active: true,
             isTrial: true,
             trialEnd: new Date(subscription.trial_end * 1000)
         }

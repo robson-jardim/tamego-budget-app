@@ -16,6 +16,7 @@ import { StandardMaterialModule } from '@shared/components/standard-material.mod
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-account-dialog/link-anonymous-account.module';
+import { SettingsModule } from './settings/settings.module';
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import { LinkAnonymousAccountModule } from '@shared/components/link-anonymous-ac
 
         BudgetSelectionModule,
         DashboardModule,
+        SettingsModule,
         AppRoutingModule
     ],
     declarations: [

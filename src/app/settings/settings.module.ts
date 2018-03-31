@@ -10,14 +10,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@shared/guards/auth/auth.guard';
 import { MatTooltipModule } from '@angular/material';
 
-const routes: Routes = [
-    {
-        path: '',
-        component: SettingsComponent,
-        canActivate: [AuthGuard]
-    },
-];
-
 @NgModule({
     imports: [
         CommonModule,
@@ -26,8 +18,7 @@ const routes: Routes = [
         BillingModule,
         CustomMaterialFormsModule,
         AppPipesModule,
-        MatTooltipModule,
-        RouterModule.forChild(routes)
+        MatTooltipModule
     ],
     declarations: [
         SettingsComponent

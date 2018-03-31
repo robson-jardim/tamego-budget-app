@@ -5,6 +5,7 @@ import { PaymentService } from './payment/payment.service';
 import { FormsModule } from '@angular/forms';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { HandlePaymentButtonComponent } from './handle-payment-button/handle-payment-button.component';
+import { ConfirmCancellationDialogComponent } from './confirm-cancellation-dialog/confirm-cancellation-dialog.component';
 
 @NgModule({
     imports: [
@@ -14,10 +15,14 @@ import { HandlePaymentButtonComponent } from './handle-payment-button/handle-pay
     ],
     declarations: [
         BillingComponent,
-        HandlePaymentButtonComponent
+        HandlePaymentButtonComponent,
+        ConfirmCancellationDialogComponent
     ],
     providers: [
         PaymentService
+    ],
+    entryComponents: [
+        ConfirmCancellationDialogComponent
     ],
     exports: [
         BillingComponent,

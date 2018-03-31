@@ -11,9 +11,12 @@
         <app-handle-payment-button
             [color]="'primary'"
             [text]="user.cardDetails ? 'Update credit card' : 'Go premium'"
-            [disabled]="!user.email">
+            [disabled]="!user.email"
+            style="padding-right: 8px;">
         </app-handle-payment-button>
 
-        <button mat-button (click)="cancelSubscription()" [disabled]="processingUnsubscription" *ngIf="user.cardDetails">Cancel subscription</button>
+        <button mat-button (click)="confirmCancellation()" [disabled]="processingUnsubscription"
+                *ngIf="user.cardDetails">Cancel subscription
+        </button>
     </div>
 </div>

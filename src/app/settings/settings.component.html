@@ -31,7 +31,7 @@
 
                     </ng-container>
 
-                    <p *ngIf="!user.creditCardId">Trial: {{user.trial.trialEnd | daysUntil}} days left</p>
+                    <p *ngIf="!user.cardDetails">Trial: {{user.premium.trialEnd | daysUntil}} days left</p>
 
 
                     <ng-template #isAnonymous>

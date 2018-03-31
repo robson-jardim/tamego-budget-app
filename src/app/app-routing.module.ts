@@ -10,6 +10,7 @@ import { AuthGuard } from '@shared/guards/auth/auth.guard';
 import { PremiumGuard } from '@shared/guards/premium/premium.guard';
 import { BudgetGuard } from '@shared/guards/budget/budget.guard';
 import { BudgetAccountGuard } from '@shared/guards/budget-account/budget-account.guard';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
     {
@@ -18,7 +19,8 @@ const routes: Routes = [
     },
     {
         path: 'settings',
-        loadChildren: './settings/settings.module#SettingsModule'
+        component: SettingsComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'budgets',

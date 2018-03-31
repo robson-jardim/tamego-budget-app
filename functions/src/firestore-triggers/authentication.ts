@@ -11,23 +11,25 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
 
     const serverTimestamp: Date = <any>admin.firestore.FieldValue.serverTimestamp();
 
-    const userData: User = {
+    const user: User = {
         userId: event.data.uid,
         email: event.data.email || null,
-        timeCreated: serverTimestamp,
         emailVerified: false,
+        timeCreated: serverTimestamp,
+
         customerId: null,
         subscriptionId: null,
+
         cardDetails: null,
-        isPremium: false,
-        trial: {
+        premium: {
+            active: false,
             isTrial: false,
             trialEnd: null
         }
     };
 
     try {
-        userData.customerId = await createStripeCustomer(userData.email);
+        user.customerId = await createStripeCustomer(user.email);
     }
     catch (error) {
         console.error('[Stripe] Unable to add customer');
@@ -36,10 +38,9 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
     }
 
     try {
-        const subscription: Subscription = await createStripeSubscription(userData.customerId);
-        userData.subscriptionId = subscription.subscriptionId;
-        userData.trial = subscription.trial;
-        userData.isPremium = true;
+        const subscription: Subscription = await createStripeSubscription(user.customerId);
+        user.subscriptionId = subscription.subscriptionId;
+        user.premium = subscription.premium;
     } catch (error) {
         console.error('[Stripe] Unable to add subscription');
         console.error(error);
@@ -49,18 +50,18 @@ export const onUserCreate = functions.auth.user().onCreate(async event => {
     try {
         const batch = admin.firestore().batch();
 
-        const userDocRef = db.doc(`users/${userData.userId}`);
-        batch.set(userDocRef, userData);
+        const userDocRef = db.doc(`users/${user.userId}`);
+        batch.set(userDocRef, user);
 
-        const customerUserRef = db.doc('customers/' + userData.customerId);
+        const customerUserRef = db.doc('customers/' + user.customerId);
         const customer: Customer = {
-            userId: userData.userId,
-            customerId: userData.customerId
+            userId: user.userId,
+            customerId: user.customerId
         };
         batch.set(customerUserRef, customer);
 
         await batch.commit();
-        console.log('User added: ' + userData.userId);
+        console.log('User added: ' + user.userId);
     } catch (error) {
         console.error('Failed to add user document');
         console.error(error);

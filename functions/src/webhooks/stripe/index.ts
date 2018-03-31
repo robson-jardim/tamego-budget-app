@@ -1,44 +1,77 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import * as express from 'express';
+import { Customer } from '@models/customer.model';
+import { User } from '@models/user.model';
 
 const router = express.Router();
 const stripe = require('stripe')(functions.config().stripe.secret_key);
 const webhooksSecret = functions.config().stripe.webhooks_secret;
+
+const db = admin.firestore();
 
 // POST: webhooks/stripe
 router.post('/', async (request: any, response) => {
 
     let event;
     let hook;
+    let data;
 
     try {
         const signature = request.headers['stripe-signature'];
         // Note rawBody property is used instead of body due to the middleware present on Firebase Cloud Functions
         event = stripe.webhooks.constructEvent(request.rawBody, signature, webhooksSecret);
         hook = event.type;
+        data = event.data.object;
+        console.log(`Stripe web hook: ${hook}`);
     } catch (error) {
         console.error('Error', error.message);
         return response.status(400).send(`Webhook Error: ${error.message}`);
     }
 
-    console.log(`Stripe web hook: ${hook}`);
+    let userDocRef;
+    let user: User;
+
+    try {
+        const customerDoc = await db.doc('customers/' + data.customer).get();
+        const customer: Customer = customerDoc.data() as any;
+
+        userDocRef = db.doc('users/' + customer.userId);
+        const userDoc = await userDocRef.get();
+        user = userDoc.data();
+    } catch (error) {
+        console.error(error);
+        return response.status(400).send('Unable to retrieve customer');
+    }
 
     if ('invoice.payment_succeeded' === hook) {
-        // Occurs whenever an invoice billing attempt succeeds.
-        // TODO - finish webhook
-        return response.json(`Received: ${hook}`);
+        try {
+            user.premium.active = true;
+            await userDocRef.update(user);
+            response.status(200).send(`Set premium status to active for user: ${user.userId}`);
+        } catch (error) {
+            console.error(error);
+            console.error('Unable to set premium to active');
+            response.status(400).send('Unable to set premium to active');
+        }
     }
     else if ('invoice.payment_failed' === hook) {
-        // Occurs whenever an invoice billing attempt fails, either due to a declined billing or the lack of a stored billing method.
-        // TODO - finish webhook
-        return response.json(`Received: ${hook}`);
+        try {
+            user.premium.active = false;
+            await userDocRef.update(user);
+            response.status(200).send(`Set premium status to inactive for user: ${user.userId}`);
+        } catch (error) {
+            console.error(error);
+            console.error('Unable to set premium to inactive');
+            response.status(400).send('Unable to set premium to inactive');
+        }
     }
     else if ('customer.subscription.updated' === hook) {
         // Occurs whenever a subscription changes (e.g., switching from one plan to another or changing the status from trial to active).
         return response.json(`Received: ${hook}`);
     }
 
-    response.status(500).send('Not a matching webhook');
+    response.status(400).send('Not a matching webhook');
     throw new Error(`${hook}:  not a matching webhook`);
 });
 

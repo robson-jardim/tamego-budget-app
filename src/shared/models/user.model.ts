@@ -1,16 +1,20 @@
 export interface User {
     userId: string | null;
     email: string;
-    timeCreated: Date;
     emailVerified: boolean;
-    isPremium: boolean;
+    timeCreated: Date;
+
     customerId: string;
-    cardDetails: null | CardDetails;
     subscriptionId: string;
-    trial: {
-        isTrial: boolean;
-        trialEnd: Date | null;
-    };
+
+    premium: PremiumStatus;
+    cardDetails: null | CardDetails;
+}
+
+export interface PremiumStatus {
+    active: boolean;
+    isTrial: boolean;
+    trialEnd: Date | null;
 }
 
 export interface CardDetails {
