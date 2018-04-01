@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
 import { AuthService } from 'shared/services/auth/auth.service';
 import { PasswordValidation } from '@shared/validators/password-validation';
+import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 
 @Component({
     selector: 'app-signup',
@@ -23,7 +24,8 @@ export class SignupComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 public authNotification: AuthNotificationService,
-                private auth: AuthService) {
+                private auth: AuthService,
+                private notifications: GeneralNotificationsService) {
     }
 
     ngOnInit() {
@@ -58,6 +60,7 @@ export class SignupComponent implements OnInit {
             }
 
             this.onSignupEvent.emit();
+            this.notifications.sendGeneralNotification('Created account');
         }
         catch (error) {
             // Auth notification service broadcasts the error to template
