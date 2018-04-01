@@ -93,3 +93,11 @@
 .mat-row, .mat-header-row {
     padding-right: 14px !important;
 }
+
+.greyed-icon {
+    color: rgba(0,0,0,0.54);
+}
+
+.blacked-hover-state:hover {
+    color: inherit;
+}

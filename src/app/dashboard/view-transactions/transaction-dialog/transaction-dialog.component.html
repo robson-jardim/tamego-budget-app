@@ -69,6 +69,7 @@
                  *ngIf="DialogState.Update === data.state">
                 <button mat-icon-button type="button" (click)="deleteTransaction()">
                     <mat-icon matTooltip="Delete transaction"
+                              class="greyed-icon blacked-hover-state"
                               [matTooltipPosition]="'above'">
                         delete
                     </mat-icon>

@@ -5,7 +5,7 @@ import { CategoryGroupDialogComponent } from './category-group-dialog/category-g
 import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 import { CustomMaterialFormsModule } from '@shared/components/custom-material-forms.module';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
-import { MatMenuModule, MatTableModule } from '@angular/material';
+import { MatMenuModule, MatTableModule, MatTooltipModule } from '@angular/material';
 import { BudgetCategoriesTableComponent } from './budget-categories-table/budget-categories-table.component';
 import { AppPipesModule } from '@shared/pipes/pipes.module';
 import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-value-chip.module';
@@ -20,6 +20,7 @@ import { MoneyValueChipModule } from '@shared/components/money-value-chip/money-
         AppPipesModule,
         MatTableModule,
         MatMenuModule,
+        MatTooltipModule
     ],
     declarations: [
         ViewBudgetComponent,

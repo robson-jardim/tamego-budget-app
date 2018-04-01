@@ -5,11 +5,19 @@
         <div class="view-budget-header">
             <div class="view-budget-month">
 
-                <button mat-icon-button (click)="previousMonth()" class="month-navigation">
-                    <mat-icon>keyboard_arrow_left</mat-icon>
+                <button mat-icon-button
+                        (click)="previousMonth()"
+                        class="month-navigation"
+                        matTooltip="Previous month"
+                        matTooltipShowDelay="500">
+                    <mat-icon class="greyed-icon blacked-hover-state">keyboard_arrow_left</mat-icon>
                 </button>
-                <button mat-icon-button (click)="nextMonth()" class="month-navigation">
-                    <mat-icon>keyboard_arrow_right</mat-icon>
+                <button mat-icon-button
+                        (click)="nextMonth()"
+                        class="month-navigation"
+                        matTooltip="Next month"
+                        matTooltipShowDelay="500">
+                    <mat-icon class="greyed-icon blacked-hover-state">keyboard_arrow_right</mat-icon>
                 </button>
 
                 <h1 class="mat-title">{{viewMonth | utcDate | date:'LLLL yyyy'}}</h1>
@@ -45,7 +53,7 @@
                         </button>
 
                         <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="options">
-                            <mat-icon>more_vert</mat-icon>
+                            <mat-icon class="greyed-icon blacked-hover-state">more_vert</mat-icon>
                         </button>
                         <mat-menu #options>
                             <button mat-menu-item (click)="updateCategoryGroup(group)">Edit</button>
@@ -68,7 +76,9 @@
                         <div class="no-data-card" style="padding: 0">
                             <div class="no-data-card-content">
                                 <p>You don't have any categories</p>
-                                <button mat-button (click)="createCategory(group); $event.stopPropagation()">Create your first category</button>
+                                <button mat-button (click)="createCategory(group); $event.stopPropagation()">Create your
+                                    first category
+                                </button>
                             </div>
                         </div>
                     </mat-card-content>
