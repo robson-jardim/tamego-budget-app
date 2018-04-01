@@ -1,4 +1,8 @@
 .mat-column-actions {
     flex: 0 40px;
+    visibility: hidden;
 }
 
+.mat-row:hover .mat-column-actions {
+    visibility: inherit;
+}
