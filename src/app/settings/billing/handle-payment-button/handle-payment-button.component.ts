@@ -35,7 +35,7 @@ export class HandlePaymentButtonComponent implements OnInit {
             let buttonMessage;
             let amount;
 
-            if(user.cardDetails) {
+            if (user.cardDetails) {
                 buttonMessage = 'Update card';
                 amount = null;
             }
