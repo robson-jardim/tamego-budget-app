@@ -33,7 +33,6 @@
                             </ng-container>
                         </div>
 
-
                         <ng-container *ngIf="!user.emailVerified">
                             <button mat-button (click)="auth.sendEmailVerification(forceRefreshToken)">
                                 Resend verification email

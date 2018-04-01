@@ -21,7 +21,7 @@
         <input matInput formControlName="password" placeholder="Password"
                [type]="hideCreatePassword ? 'password' : 'text'">
 
-        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword" class="greyed-icon blacked-hover-state">
             {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
         </mat-icon>
 
@@ -36,7 +36,7 @@
         <input matInput formControlName="confirmPassword" placeholder="Confirm password"
                [type]="hideCreatePassword ? 'password' : 'text'">
 
-        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword">
+        <mat-icon matSuffix (click)="hideCreatePassword = !hideCreatePassword" class="greyed-icon blacked-hover-state">
             {{hideCreatePassword ? 'visibility_off' : 'visibility'}}
         </mat-icon>
 

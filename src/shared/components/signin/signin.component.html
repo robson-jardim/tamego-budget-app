@@ -18,7 +18,8 @@
         <input matInput formControlName="password" placeholder="Password" type="password"
                [type]="hideSigninPassword ? 'password' : 'text'">
 
-        <mat-icon matSuffix (click)="hideSigninPassword  = !hideSigninPassword">
+        <mat-icon matSuffix (click)="hideSigninPassword  = !hideSigninPassword"
+                  class="greyed-icon blacked-hover-state">
             {{hideSigninPassword ? 'visibility_off' : 'visibility'}}
         </mat-icon>
 

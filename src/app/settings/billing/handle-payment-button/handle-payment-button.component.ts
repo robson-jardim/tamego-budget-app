@@ -31,13 +31,26 @@ export class HandlePaymentButtonComponent implements OnInit {
 
     public handlePayment() {
         this.auth.user.first().subscribe(user => {
+
+            let buttonMessage;
+            let amount;
+
+            if(user.cardDetails) {
+                buttonMessage = 'Update card';
+                amount = null;
+            }
+            else {
+                buttonMessage = 'Subscribe';
+                amount = 500;
+            }
+
             this.handler.open({
                 name: 'Tamego',
                 description: 'Premium',
-                amount: 500,
+                amount: amount,
                 email: user.email,
                 image: environment.appLogo,
-                panelLabel: 'Subscribe',
+                panelLabel: buttonMessage,
                 allowRememberMe: false
             });
         });

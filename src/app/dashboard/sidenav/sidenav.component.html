@@ -33,7 +33,7 @@
 
                 <div class="account-options">
                     <button mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="accountOptions">
-                        <mat-icon>more_vert</mat-icon>
+                        <mat-icon class="whited-hover-state">more_vert</mat-icon>
                     </button>
                     <mat-menu #accountOptions>
                         <button mat-menu-item (click)="updateAccount(account); sidenavSelection()">Edit</button>
