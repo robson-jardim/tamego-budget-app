@@ -65,6 +65,17 @@
 
         <mat-dialog-actions>
 
+            <div id="delete-transaction-button-container"
+                 *ngIf="DialogState.Update === data.state">
+                <button mat-icon-button type="button" (click)="deleteTransaction()">
+                    <mat-icon matTooltip="Delete transaction"
+                              [matTooltipPosition]="'above'">
+                        delete
+                    </mat-icon>
+                </button>
+            </div>
+
+
             <button mat-button type="button" [mat-dialog-close]>Cancel</button>
 
             <button [disabled]="!transactionForm.valid || saving"

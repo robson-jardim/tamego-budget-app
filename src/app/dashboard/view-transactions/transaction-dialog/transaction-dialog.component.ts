@@ -406,4 +406,18 @@ export class TransactionDialogComponent implements OnInit {
     private getReoccurringTransferCollection() {
         return this.references.getReoccurringTransferCollectionRef(this.data.budgetId);
     }
+
+    public deleteTransaction() {
+        if (TransactionState.Transaction === this.transactionState) {
+            const transactions = this.getTransactionCollection();
+            transactions.doc(this.data.transactionId).delete();
+        }
+        else if (TransactionState.ReoccurringTransaction === this.transactionState) {
+            const reoccurringTransactions = this.getReoccurringTransactionCollection();
+            reoccurringTransactions.doc(this.data.reoccurringTransactionId).delete();
+        }
+
+        this.notifications.sendDeleteNotification(EntityNames.Transaction);
+        this.dialogRef.close();
+    }
 }
