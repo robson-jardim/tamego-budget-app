@@ -40,6 +40,7 @@ router.post('/', async (request: any, response) => {
         const userDoc = await userDocRef.get();
         user = userDoc.data();
     } catch (error) {
+        console.error('Unable to retrieve customer document');
         console.error(error);
         return response.status(400).send('Unable to retrieve customer');
     }
@@ -48,10 +49,11 @@ router.post('/', async (request: any, response) => {
         try {
             user.premium.active = true;
             await userDocRef.update(user);
+            console.log(`Set premium status to active for user: ${user.userId}`);
             return response.status(200).send(`Set premium status to active for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
-            console.error('Unable to set premium to active');
+            console.error('Unable to set premium to active for user');
             return response.status(400).send('Unable to set premium to active');
         }
     }
@@ -59,6 +61,7 @@ router.post('/', async (request: any, response) => {
         try {
             user.premium.active = false;
             await userDocRef.update(user);
+            console.log(`Set premium status to inactive for user: ${user.userId}`);
             return response.status(200).send(`Set premium status to inactive for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
@@ -70,6 +73,7 @@ router.post('/', async (request: any, response) => {
         // Occurs whenever a subscription changes (e.g., switching from one plan to another or changing the status from trial to active).
 
         if (!data.trial_end) {
+            console.log('No changes made');
             return response.status(200).send('No changes made');
         }
 
@@ -82,6 +86,7 @@ router.post('/', async (request: any, response) => {
 
             try {
                 await userDocRef.update(user);
+                console.log('Successfully ended user premium trial');
                 return response.status(200).send('Successfully ended user premium trial');
             } catch (error) {
                 console.error(error);
@@ -90,6 +95,7 @@ router.post('/', async (request: any, response) => {
             }
         }
         else {
+            console.log('No changes made');
             return response.status(200).send('No changes made');
         }
     }
