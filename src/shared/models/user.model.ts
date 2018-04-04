@@ -3,10 +3,8 @@ export interface User {
     email: string;
     emailVerified: boolean;
     timeCreated: Date;
-
     customerId: string;
     subscriptionId: string;
-
     premium: PremiumStatus;
     cardDetails: null | CardDetails;
 }

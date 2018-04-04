@@ -24,8 +24,8 @@ export const setCustomerPaymentSource = async (customerId: CustomerId, token: Pa
         source: token
     });
 
-    // Only one credit ard it attached to an account at a single time.
-    // Therefore, just pick the first index
+    // The current implementation will only ever attach one card to an account at a single time.
+    // If in the future this changes, the zeroth index will have to be changed to account for this.
     const customerCardId = customerCard.sources.data[0].id;
 
     return customerCardId;

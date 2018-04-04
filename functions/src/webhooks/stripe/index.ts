@@ -13,20 +13,19 @@ const db = admin.firestore();
 // POST: webhooks/stripe
 router.post('/', async (request: any, response) => {
 
-    let event;
-    let hook;
+    let webhookName;
     let data;
 
     try {
         const signature = request.headers['stripe-signature'];
         // Note rawBody property is used instead of body due to the middleware present on Firebase Cloud Functions
-        event = stripe.webhooks.constructEvent(request.rawBody, signature, webhooksSecret);
-        hook = event.type;
+        const event = stripe.webhooks.constructEvent(request.rawBody, signature, webhooksSecret);
+        webhookName = event.type;
         data = event.data.object;
-        console.log(`Stripe web hook: ${hook}`);
+        console.log(`Stripe web hook: ${webhookName}`);
     } catch (error) {
-        console.error('Error', error.message);
-        return response.status(400).send(`Webhook Error: ${error.message}`);
+        console.error(error);
+        return response.status(400).send(`Webhook Error: ${error}`);
     }
 
     let userDocRef;
@@ -40,41 +39,43 @@ router.post('/', async (request: any, response) => {
         const userDoc = await userDocRef.get();
         user = userDoc.data();
     } catch (error) {
-        console.error('Unable to retrieve customer document');
+        console.error(`Unable to retrieve customer document: ${data.customer}`);
         console.error(error);
-        return response.status(400).send('Unable to retrieve customer');
+        return response.status(400).send(`Unable to retrieve customer document: ${data.customer}`);
     }
 
-    if ('invoice.payment_succeeded' === hook) {
+    if ('invoice.payment_succeeded' === webhookName) {
         try {
             user.premium.active = true;
             await userDocRef.update(user);
             console.log(`Set premium status to active for user: ${user.userId}`);
-            return response.status(200).send(`Set premium status to active for user: ${user.userId}`);
+            return response.status(200).send(`Set premium status to ACTIVE for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
-            console.error('Unable to set premium to active for user');
-            return response.status(400).send('Unable to set premium to active');
+            console.error(`Unable to set premium status to ACTIVE for user: ${user.userId}`);
+            return response.status(400).send(`Unable to set premium status to ACTIVE for user: ${user.userId}`);
         }
     }
-    else if ('invoice.payment_failed' === hook) {
+    else if ('invoice.payment_failed' === webhookName) {
         try {
             user.premium.active = false;
             await userDocRef.update(user);
-            console.log(`Set premium status to inactive for user: ${user.userId}`);
-            return response.status(200).send(`Set premium status to inactive for user: ${user.userId}`);
+            console.log(`Set premium status to INACTIVE for user: ${user.userId}`);
+            return response.status(200).send(`Set premium status to INACTIVE for user: ${user.userId}`);
         } catch (error) {
             console.error(error);
-            console.error('Unable to set premium to inactive');
-            return response.status(400).send('Unable to set premium to inactive');
+            console.error(`Unable to set premium status to INACTIVE for user: ${user.userId}`);
+            return response.status(400).send(`Unable to set premium status to INACTIVE for user: ${user.userId}`);
         }
     }
-    else if ('customer.subscription.updated' === hook) {
+    else if ('customer.subscription.updated' === webhookName) {
         // Occurs whenever a subscription changes (e.g., switching from one plan to another or changing the status from trial to active).
+        const subscriptionId = data.id;
 
         if (!data.trial_end) {
-            console.log('No changes made');
-            return response.status(200).send('No changes made');
+            const message = `No trial present on subscription: ${subscriptionId}`;
+            console.log(message);
+            return response.status(200).send(message);
         }
 
         const now = new Date();
@@ -86,22 +87,44 @@ router.post('/', async (request: any, response) => {
 
             try {
                 await userDocRef.update(user);
-                console.log('Successfully ended user premium trial');
-                return response.status(200).send('Successfully ended user premium trial');
+                const message = `Ended premium trial for user: ${user.userId}`;
+                console.log(message);
+                return response.status(200).send(message);
             } catch (error) {
+                const message = `Unable premium trial for user: ${user.userId}`;
                 console.error(error);
-                console.error('Unable to end premium trial');
-                return response.status(400).send('Unable to end premium trial');
+                console.error(message);
+                return response.status(400).send(message);
             }
         }
         else {
-            console.log('No changes made');
-            return response.status(200).send('No changes made');
+
+            if (user.premium.trialEnd.getTime() !== trialEnd.getTime()) {
+                user.premium.isTrial = true;
+                user.premium.trialEnd = trialEnd;
+
+                try {
+                    await userDocRef.update(user);
+                    const message = `Updated trial end date for user: ${user.userId}`;
+                    console.log(message);
+                    return response.status(200).send(message);
+                } catch (error) {
+                    const message = `Unable to update trial end date for user: : ${user.userId}`;
+                    console.error(error);
+                    console.error(message);
+                    return response.status(400).send(message);
+                }
+            }
+            else {
+                const message = `No changes made to customer: ${data.customer}`;
+                console.log(message);
+                return response.status(200).send(message);
+            }
         }
     }
     else {
         response.status(400).send('Not a matching webhook');
-        throw new Error(`${hook}:  not a matching webhook`);
+        throw new Error(`${webhookName}:  not a matching webhook`);
     }
 });
 

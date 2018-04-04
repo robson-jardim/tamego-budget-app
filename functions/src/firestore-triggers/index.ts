@@ -1,9 +1,2 @@
-import * as authentication from './authentication';
-import * as categoryValues from './category-values';
-
-export const onUserCreate = authentication.onUserCreate;
-export const onValueCreate = categoryValues.onValueCreate;
-export const onValueUpdate = categoryValues.onValueUpdate;
-
-
-// TODO - add TSlint to functions project
+export { onUserCreate } from './authentication';
+export { onValueCreate, onValueUpdate } from './category-values';

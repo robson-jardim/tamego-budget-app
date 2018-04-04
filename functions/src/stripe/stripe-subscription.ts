@@ -1,16 +1,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { PremiumStatus } from '@models/user.model';
 
 const stripe = require('stripe')(functions.config().stripe.secret_key);
 const db = admin.firestore();
 
 export interface Subscription {
     subscriptionId: string;
-    premium: {
-        active: true;
-        isTrial: boolean;
-        trialEnd: Date;
-    };
+    premium: PremiumStatus
 }
 
 export const createStripeSubscription = async (customerId: string): Promise<Subscription> => {
@@ -32,7 +29,7 @@ export const createStripeSubscription = async (customerId: string): Promise<Subs
         premium: {
             active: true,
             isTrial: true,
-            trialEnd: new Date(subscription.trial_end * 1000)
+            trialEnd: new Date(subscription.trial_end * 1000) // Time is returned as UNIX time
         }
     };
 };

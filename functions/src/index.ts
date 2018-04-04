@@ -1,6 +1,5 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 export { api } from './express-api';
 export { webhooks } from './webhooks';
