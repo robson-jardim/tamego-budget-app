@@ -39,33 +39,38 @@ router.post('/', async (request: any, response) => {
         const userDoc = await userDocRef.get();
         user = userDoc.data();
     } catch (error) {
-        console.error(`Unable to retrieve customer document: ${data.customer}`);
+        const message = `Unable to retrieve customer document: ${data.customer}`;
         console.error(error);
-        return response.status(400).send(`Unable to retrieve customer document: ${data.customer}`);
+        console.error(message);
+        return response.status(400).send(message);
     }
 
     if ('invoice.payment_succeeded' === webhookName) {
         try {
             user.premium.active = true;
             await userDocRef.update(user);
+            const message = `Set premium status to active for user: ${user.userId}`;
             console.log(`Set premium status to active for user: ${user.userId}`);
-            return response.status(200).send(`Set premium status to ACTIVE for user: ${user.userId}`);
+            return response.status(200).send(message);
         } catch (error) {
             console.error(error);
-            console.error(`Unable to set premium status to ACTIVE for user: ${user.userId}`);
-            return response.status(400).send(`Unable to set premium status to ACTIVE for user: ${user.userId}`);
+            const message = `Unable to set premium status to ACTIVE for user: ${user.userId}`;
+            console.error(message);
+            return response.status(400).send(message);
         }
     }
     else if ('invoice.payment_failed' === webhookName) {
         try {
             user.premium.active = false;
             await userDocRef.update(user);
-            console.log(`Set premium status to INACTIVE for user: ${user.userId}`);
-            return response.status(200).send(`Set premium status to INACTIVE for user: ${user.userId}`);
+            const message = `Set premium status to INACTIVE for user: ${user.userId}`;
+            console.log(message);
+            return response.status(200).send(message);
         } catch (error) {
             console.error(error);
-            console.error(`Unable to set premium status to INACTIVE for user: ${user.userId}`);
-            return response.status(400).send(`Unable to set premium status to INACTIVE for user: ${user.userId}`);
+            const message = `Unable to set premium status to INACTIVE for user: ${user.userId}`;
+            console.error(message);
+            return response.status(400).send(message);
         }
     }
     else if ('customer.subscription.updated' === webhookName) {
@@ -116,7 +121,7 @@ router.post('/', async (request: any, response) => {
                 }
             }
             else {
-                const message = `No changes made to customer: ${data.customer}`;
+                const message = `No changes made to user: ${user.userId}`;
                 console.log(message);
                 return response.status(200).send(message);
             }
