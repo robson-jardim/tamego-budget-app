@@ -6,7 +6,7 @@
              (click)="updateTransaction(row.rawData)"
              [ngClass]="{'futureTransaction': isFutureDate(row.rawData.transactionDate)}"></mat-row>
 
-    <ng-container matColumnDef="accountId">
+    <ng-container matColumnDef="account">
         <mat-header-cell *matHeaderCellDef> Account</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="truncate">
@@ -22,7 +22,7 @@
         </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="payeeId">
+    <ng-container matColumnDef="payee">
         <mat-header-cell *matHeaderCellDef> Payee</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="truncate">
@@ -40,7 +40,7 @@
         </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="categoryId">
+    <ng-container matColumnDef="category">
         <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="truncate">

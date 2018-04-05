@@ -6,3 +6,29 @@
 .mat-row:hover .mat-column-actions {
     visibility: inherit;
 }
+
+.truncate {
+    margin: 0;
+    width: calc(100% - 8px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 490px) {
+    .mat-column-activity {
+        display: none;
+    }
+}
+
+@media (max-width: 410px) {
+    .mat-column-budgeted {
+        display: none;
+    }
+}
+
+@media (max-width: 340px) {
+    .mat-column-actions {
+        display: none;
+    }
+}

@@ -11,6 +11,13 @@
             <input matInput formControlName="{{AccountFormNames.AccountName}}" placeholder="Account name" type="text">
         </mat-form-field>
 
+        <mat-form-field *ngIf="DialogState.Create === data.state">
+            <span matPrefix>$ &nbsp;</span>
+            <input matInput formControlName="{{AccountFormNames.StartingBalance}}" placeholder="Starting Balance" type="number">
+            <mat-error *ngIf="accountForm.get('startingBalance').hasError('currency')"></mat-error>
+
+        </mat-form-field>
+
     </mat-dialog-content>
 
     <mat-dialog-actions>

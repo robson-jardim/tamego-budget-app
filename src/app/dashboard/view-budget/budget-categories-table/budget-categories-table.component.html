@@ -12,7 +12,9 @@
     <ng-container matColumnDef="categoryName">
         <mat-header-cell *matHeaderCellDef> Category</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            {{element.categoryName}}
+            <div class="truncate">
+                {{element.categoryName}}
+            </div>
         </mat-cell>
     </ng-container>
 

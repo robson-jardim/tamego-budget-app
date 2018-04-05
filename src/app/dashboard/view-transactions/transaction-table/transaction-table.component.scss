@@ -17,3 +17,33 @@
 .futureTransaction:hover {
     background-color: #F5F5F5;
 }
+
+@media (max-width: 1250px) {
+    .mat-column-memo {
+        display: none;
+    }
+}
+
+@media (max-width: 1050px) {
+    .mat-column-category {
+        display: none;
+    }
+}
+
+@media (max-width: 690px) {
+    .mat-column-balance {
+        display: none;
+    }
+}
+
+@media (max-width: 515px) {
+    .mat-column-payee {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .mat-column-transactionDate {
+        display: none;
+    }
+}

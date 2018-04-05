@@ -8,9 +8,14 @@ import { FirestoreReferenceService } from '@shared/services/firestore-reference/
 import { EntityNames } from '@shared/enums/entity-names.enum';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { StringValidation } from '@shared/validators/string-validation';
+import { CurrencyValidation } from '@shared/validators/currency-validation';
+import { SplitTransaction, Transaction } from '@models/transaction.model';
+import { Payee } from '@models/payee.model';
+import { UtilityService } from '@shared/services/utility/utility.service';
 
 enum AccountFormNames {
-    AccountName = 'accountName'
+    AccountName = 'accountName',
+    StartingBalance = 'startingBalance'
 }
 
 @Component({
@@ -30,7 +35,8 @@ export class AccountDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private references: FirestoreReferenceService,
                 private firestore: FirestoreService,
-                private notifications: GeneralNotificationsService) {
+                private notifications: GeneralNotificationsService,
+                private utility: UtilityService) {
     }
 
     ngOnInit() {
@@ -39,7 +45,13 @@ export class AccountDialogComponent implements OnInit {
 
     private buildAccountForm() {
         const form = new Object();
+
         form[AccountFormNames.AccountName] = [this.data.accountName, [Validators.required, StringValidation.NotEmptyStringValidator]];
+
+        if (DialogState.Create === this.data.state) {
+            form[AccountFormNames.StartingBalance] = [0, CurrencyValidation.MatchIsCurrencyValue];
+        }
+
         this.accountForm = this.formBuilder.group(form);
     }
 
@@ -47,11 +59,47 @@ export class AccountDialogComponent implements OnInit {
         this.saving = true;
 
         if (DialogState.Create === this.data.state) {
-            const newAccountId = await this.createAccount();
-            this.dialogRef.close(newAccountId);
+
+            const batch = this.firestore.batch();
+
+            const accountId = this.firestore.createId();
+            const accountDocRef = this.getAccounts().doc(accountId).ref;
+            batch.set(accountDocRef, this.getAccountData());
+
+            const payee: Payee = {
+                payeeName: 'Transfer: ' + this.accountForm.value[AccountFormNames.AccountName].trim()
+            };
+
+            const payeeId = this.firestore.createId();
+            const payeeDocRef = this.getPayees().doc(payeeId).ref;
+            batch.set(payeeDocRef, payee);
+
+
+            if (this.accountForm.value[AccountFormNames.StartingBalance] !== 0) {
+
+                const transaction: Transaction = {
+                    transactionDate: this.utility.convertToUtc(new Date()),
+                    accountId: accountId,
+                    payeeId: null,
+                    categoryId: null,
+                    splits: [],
+                    memo: 'Initial balance',
+                    amount: this.accountForm.value[AccountFormNames.StartingBalance],
+                    cleared: false,
+                    locked: false
+                };
+
+                const transactionId = this.firestore.createId();
+                const transactionDocRef = this.getTransactions().doc(transactionId).ref;
+                batch.set(transactionDocRef, transaction);
+
+            }
+
+            await batch.commit();
+            this.dialogRef.close(accountId);
         }
         else if (DialogState.Update === this.data.state) {
-            this.updateAccount();
+            this.getAccounts().doc(this.data.accountId).update(this.getAccountData());
             this.dialogRef.close();
         }
         else {
@@ -59,16 +107,6 @@ export class AccountDialogComponent implements OnInit {
         }
 
         this.sendAccountNotification();
-    }
-
-    private async createAccount() {
-        const account = await this.getAccounts().add(this.getAccountData());
-        return account.id;
-    }
-
-    private updateAccount() {
-        this.getAccounts().doc(this.data.accountId).update(this.getAccountData());
-
     }
 
     private getAccountData(): Account {
@@ -92,15 +130,20 @@ export class AccountDialogComponent implements OnInit {
         return this.references.getAccountsCollectionRef(this.data.budgetId);
     }
 
+    private getTransactions() {
+        return this.references.getTransactionCollectionRef(this.data.budgetId);
+    }
+
+    private getPayees() {
+        return this.references.getPayeeCollectionRef(this.data.budgetId);
+    }
+
     private sendAccountNotification() {
         if (DialogState.Create === this.data.state) {
             this.notifications.sendCreateNotification(EntityNames.Account);
         }
         else if (DialogState.Update === this.data.state) {
             this.notifications.sendUpdateNotification(EntityNames.Account);
-        }
-        else if (DialogState.Delete === this.data.state) {
-            this.notifications.sendDeleteNotification(EntityNames.Account);
         }
     }
 

@@ -27,3 +27,8 @@
     text-overflow: ellipsis;
 }
 
+@media (max-width: 370px) {
+    .mat-column-lastModified {
+        display: none;
+    }
+}
