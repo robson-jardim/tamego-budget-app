@@ -56,7 +56,6 @@ export class SignupComponent implements OnInit {
         try {
             if (!this.isAnonymousSignup) {
                 await this.auth.createUserWithEmailAndPassword(email, password);
-                this.router.navigate(['/budgets']);
             }
             else {
                 await this.auth.linkAnonymousAccountToEmail(email, password);

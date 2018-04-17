@@ -93,7 +93,7 @@ export class DemoService {
         const groupCollection = this.references.getGroupsCollectionRef(budgetId);
         const categoriesCollection = this.references.getCategoriesCollectionRef(budgetId);
 
-        const promises = [];
+        const groupPromises = [];
 
         for (let ix = 0; ix < demoConfig.budget.length; ix++) {
             const group: CategoryGroup = {
@@ -101,10 +101,10 @@ export class DemoService {
                 position: ix
             };
 
-            promises.push(
+            groupPromises.push(
                 groupCollection.add(group).then(({id: groupId}) => {
 
-                    const promises = [];
+                    const categoryPromises = [];
 
                     for (let i = 0; i < demoConfig.budget[group.position].categories.length; i++) {
                         const category: Category = {
@@ -113,14 +113,14 @@ export class DemoService {
                             position: i
                         };
 
-                        promises.push(categoriesCollection.add(category));
+                        categoryPromises.push(categoriesCollection.add(category));
                     }
 
-                    return Promise.all(promises);
+                    return Promise.all(categoryPromises);
                 })
             );
         }
 
-        return Promise.all(promises);
+        return Promise.all(groupPromises);
     }
 }

@@ -42,8 +42,7 @@
                         <span>Settings</span>
                     </button>
 
-                    <!--<button *ngIf="user.email" mat-menu-item (click)="auth.signOut()">-->
-                    <button mat-menu-item (click)="auth.signOut()">
+                    <button *ngIf="user.email" mat-menu-item (click)="auth.signOut()">
                         <mat-icon>exit_to_app</mat-icon>
                         <span>Sign out</span>
                     </button>

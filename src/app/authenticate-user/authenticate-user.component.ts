@@ -10,10 +10,10 @@ import { Subscription } from 'rxjs/Subscription';
     templateUrl: './authenticate-user.component.html',
     styleUrls: ['./authenticate-user.component.scss']
 })
-export class AuthenticateComponent implements OnInit {
+export class AuthenticateComponent implements OnInit, OnDestroy {
 
     public isPasswordResetPage$: Observable<boolean>;
-    private userSubscription: Subscription;
+    private userSigninSubscription: Subscription;
 
     constructor(private auth: AuthService,
                 private router: Router) {
@@ -21,6 +21,14 @@ export class AuthenticateComponent implements OnInit {
 
     ngOnInit() {
         this.isPasswordResetPage$ = this.isPasswordResetPage();
+
+        this.userSigninSubscription = this.onUserSignin().subscribe(() => {
+            this.router.navigate(['/budgets']);
+        });
+    }
+
+    ngOnDestroy() {
+        this.userSigninSubscription.unsubscribe();
     }
 
     private isPasswordResetPage() {
@@ -31,5 +39,9 @@ export class AuthenticateComponent implements OnInit {
         return loadinRoute.merge(navigationRoute).map(url => {
             return url === '/password_reset';
         });
+    }
+
+    private onUserSignin() {
+        return this.auth.user.first(x => x != null);
     }
 }

@@ -46,7 +46,6 @@ export class SigninComponent implements OnInit {
             const email = this.signInForm.value.email;
             const password = this.signInForm.value.password;
             const user = await this.auth.signInWithEmailAndPassword(email, password);
-            this.router.navigate(['/budgets']);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;
