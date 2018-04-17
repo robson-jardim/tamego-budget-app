@@ -34,17 +34,17 @@ export class AuthService {
             }
         });
 
-        // Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
-        //         if (user && !user.email && authState && !authState.isAnonymous) {
-        //             return true;
-        //         }
-        //         else {
-        //             return false;
-        //         }
-        //     }).filter(Boolean)
-        //     .flatMap(() => {
-        //         return this.requestService.post('api/linkAnonymousAccount');
-        //     }).subscribe();
+        Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
+            if (user && !user.email && authState && !authState.isAnonymous) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }).filter(Boolean)
+            .flatMap(() => {
+                return this.requestService.post('api/linkAnonymousAccount');
+            }).subscribe();
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
