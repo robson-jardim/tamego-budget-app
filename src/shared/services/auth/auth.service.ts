@@ -4,12 +4,13 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AuthNotificationService } from '../auth-notification/auth-notification.service';
-import { User } from '@models/user.model';
+import { TemporaryStartupUser, User } from '@models/user.model';
 import { HttpRequestService } from '../http-request/http-request.service';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/pairwise';
 import * as firebase from 'firebase';
+import { DemoService } from '../../../app/demo/demo/demo.service';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,8 @@ export class AuthService {
                 private afs: AngularFirestore,
                 private authNotification: AuthNotificationService,
                 private router: Router,
-                private requestService: HttpRequestService) {
+                private requestService: HttpRequestService,
+                private demo: DemoService) {
 
         this.user = this.afAuth.authState.switchMap(user => {
             if (user) {
@@ -32,20 +34,21 @@ export class AuthService {
             }
         });
 
-        Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
-                if (user && !user.email && authState && !authState.isAnonymous) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }).filter(Boolean)
-            .flatMap(() => {
-                return this.requestService.post('api/linkAnonymousAccount');
-            }).subscribe();
+        // Observable.combineLatest(this.user, this.afAuth.authState, (user, authState) => {
+        //         if (user && !user.email && authState && !authState.isAnonymous) {
+        //             return true;
+        //         }
+        //         else {
+        //             return false;
+        //         }
+        //     }).filter(Boolean)
+        //     .flatMap(() => {
+        //         return this.requestService.post('api/linkAnonymousAccount');
+        //     }).subscribe();
 
         // If open in multiple tabs, and one tab logs out, log out in all tabs
         this.userLoggedOutEvent().subscribe(res => {
+            // TODO - move to signed out dialog
             this.router.navigate(['/signin']);
         });
 
@@ -149,10 +152,17 @@ export class AuthService {
         }
     }
 
-    public async createUserWithEmailAndPassword(email: string, password: string) {
+    public async createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
         try {
             const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-            this.sendEmailVerification(); // Success of this operation is not important. No need to catch the returned promise
+            await this.createUserDocument(user);
+
+            // Do not await to allow for faster startup time for demo
+            this.demo.createDemo(user.uid);
+
+            // Success of this operation is not important. No need to catch the returned promise
+            this.sendEmailVerification();
+
             return user;
         }
         catch (error) {
@@ -235,5 +245,29 @@ export class AuthService {
 
         this.authNotification.update(errorMessage, 'error');
 
+    }
+
+    public async createAnonymousAccount(): Promise<any> {
+        const anonymousUser = await this.afAuth.auth.signInAnonymously();
+
+        await this.createUserDocument(anonymousUser);
+
+        // Do not await to allow for faster startup time for demo
+        this.demo.createDemo(anonymousUser.uid);
+
+        return anonymousUser;
+    }
+
+    private async createUserDocument(user: any): Promise<TemporaryStartupUser> {
+        const tempUser: TemporaryStartupUser = {
+            userId: user.uid,
+            email: user.email,
+            premium: {
+                active: true
+            }
+        };
+
+        await this.afs.doc(`users/${tempUser.userId}`).set(tempUser);
+        return tempUser;
     }
 }

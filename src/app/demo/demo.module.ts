@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DemoComponent } from './demo.component';
 import { StandardMaterialModule } from '@shared/components/standard-material.module';
 import { AppHeaderModule } from '@shared/components/header/header.module';
 import { RouterModule, Routes } from '@angular/router';
+import { SignedOutGuard } from '@shared/guards/signed-in/signed-in.guard';
+import { StartDemoComponent } from './start-demo.component';
+import { DemoService } from './demo/demo.service';
 
 const routes: Routes = [
     {
         path: '',
-        component: DemoComponent
+        component: StartDemoComponent,
+        canActivate: [SignedOutGuard]
     }
 ];
 
@@ -21,7 +24,7 @@ const routes: Routes = [
         RouterModule.forChild(routes)
     ],
     declarations: [
-        DemoComponent
+        StartDemoComponent
     ]
 })
 export class DemoModule {

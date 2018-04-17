@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '@shared/services/auth/auth.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/merge';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-authenticate',
@@ -12,13 +13,13 @@ import 'rxjs/add/operator/merge';
 export class AuthenticateComponent implements OnInit {
 
     public isPasswordResetPage$: Observable<boolean>;
+    private userSubscription: Subscription;
 
     constructor(private auth: AuthService,
                 private router: Router) {
     }
 
     ngOnInit() {
-        this.onLoginRouteToBudgets();
         this.isPasswordResetPage$ = this.isPasswordResetPage();
     }
 
@@ -31,11 +32,4 @@ export class AuthenticateComponent implements OnInit {
             return url === '/password_reset';
         });
     }
-
-    private onLoginRouteToBudgets() {
-        this.auth.user.first(x => x != null).subscribe(user => {
-            this.router.navigate(['/budgets']);
-        });
-    }
-
 }

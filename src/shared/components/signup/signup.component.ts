@@ -4,6 +4,7 @@ import { AuthNotificationService } from 'shared/services/auth-notification/auth-
 import { AuthService } from 'shared/services/auth/auth.service';
 import { PasswordValidation } from '@shared/validators/password-validation';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-signup',
@@ -25,7 +26,8 @@ export class SignupComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
                 public authNotification: AuthNotificationService,
                 private auth: AuthService,
-                private notifications: GeneralNotificationsService) {
+                private notifications: GeneralNotificationsService,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -54,13 +56,14 @@ export class SignupComponent implements OnInit {
         try {
             if (!this.isAnonymousSignup) {
                 await this.auth.createUserWithEmailAndPassword(email, password);
+                this.router.navigate(['/budgets']);
             }
             else {
                 await this.auth.linkAnonymousAccountToEmail(email, password);
+                this.notifications.sendGeneralNotification('Created account');
             }
 
             this.onSignupEvent.emit();
-            this.notifications.sendGeneralNotification('Created account');
         }
         catch (error) {
             // Auth notification service broadcasts the error to template

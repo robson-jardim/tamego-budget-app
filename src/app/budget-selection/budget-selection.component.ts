@@ -5,9 +5,10 @@ import 'rxjs/add/operator/first';
 import { BudgetId } from '@models/budget.model';
 import { FirestoreService } from '@shared/services/firestore/firestore.service';
 import { AuthService } from '@shared/services/auth/auth.service';
-import { User } from '@models/user.model';
+import { TemporaryStartupUser, User } from '@models/user.model';
 import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.service';
 import { Observable } from 'rxjs/Observable';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-dashboard',

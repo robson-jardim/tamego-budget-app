@@ -1,2 +1,2 @@
-export { onUserCreate } from './authentication';
+export { onUserCreate } from './user';
 export { onValueCreate, onValueUpdate } from './category-values';

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'shared/services/auth/auth.service';
 import { AuthNotificationService } from 'shared/services/auth-notification/auth-notification.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-signin',
@@ -19,7 +20,8 @@ export class SigninComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 private auth: AuthService,
-                public authNotification: AuthNotificationService) {
+                public authNotification: AuthNotificationService,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -44,6 +46,7 @@ export class SigninComponent implements OnInit {
             const email = this.signInForm.value.email;
             const password = this.signInForm.value.password;
             const user = await this.auth.signInWithEmailAndPassword(email, password);
+            this.router.navigate(['/budgets']);
         } catch (error) {
             // Auth notification service broadcasts the error to template
             this.loading = false;

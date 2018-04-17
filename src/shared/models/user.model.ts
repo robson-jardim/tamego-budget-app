@@ -1,5 +1,5 @@
 export interface User {
-    userId: string | null;
+    userId: string;
     email: string;
     emailVerified: boolean;
     timeCreated: Date;
@@ -7,6 +7,14 @@ export interface User {
     subscriptionId: string;
     premium: PremiumStatus;
     cardDetails: null | CardDetails;
+}
+
+export interface TemporaryStartupUser {
+    userId: string;
+    email: string;
+    premium: {
+        active: boolean
+    };
 }
 
 export interface PremiumStatus {

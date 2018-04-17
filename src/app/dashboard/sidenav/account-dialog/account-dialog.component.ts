@@ -83,7 +83,7 @@ export class AccountDialogComponent implements OnInit {
                     payeeId: null,
                     categoryId: null,
                     splits: [],
-                    memo: 'Initial balance',
+                    memo: 'Starting Balance',
                     amount: this.accountForm.value[AccountFormNames.StartingBalance],
                     cleared: false,
                     locked: false

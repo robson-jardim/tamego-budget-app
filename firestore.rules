@@ -3,6 +3,25 @@ service cloud.firestore {
 
         match /users/{userId} {
             allow get: if request.auth.uid == userId;
+
+            allow create: if
+                            isSignedIn() &&
+                            request.auth.uid == userId &&
+                            request.auth.uid == incomingData().userId &&
+                            (request.auth.token.firebase.sign_in_provider == 'anonymous' || request.auth.token.email == incomingData().email) &&
+                            validateTemporaryStartupUser();
+
+            function validateTemporaryStartupUser() {
+                return incomingData().keys().hasAll(['userId', 'email', 'premium']) &&
+                       incomingData().size() == 3 &&
+                       incomingData().userId is string &&
+                       (incomingData().email == null || incomingData().email is string) &&
+                       incomingData().premium is map &&
+                       incomingData().premium.keys().hasAll(['active']) &&
+                       incomingData().premium.size() == 1 &&
+                       incomingData().premium.active is bool &&
+                       incomingData().premium.active == true;
+            }
         }
 
         match /budgets/{budgetId} {
@@ -292,10 +311,6 @@ service cloud.firestore {
 //                 }
             }
 
-            function isSignedIn() {
-                return request.auth != null;
-            }
-
             function isPremium() {
                 return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.premium.active == true;
             }
@@ -331,15 +346,18 @@ service cloud.firestore {
             function notEmptyString(str) {
                 return str.size() > 0;
             }
+        }
 
-            function existingData() {
-                return resource.data;
-            }
+        function isSignedIn() {
+            return request.auth != null;
+        }
 
-            function incomingData() {
-                return request.resource.data;
-            }
+        function existingData() {
+            return resource.data;
+        }
 
+        function incomingData() {
+            return request.resource.data;
         }
     }
 }

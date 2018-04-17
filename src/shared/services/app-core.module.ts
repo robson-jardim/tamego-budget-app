@@ -12,6 +12,7 @@ import { CloseDialogService } from '@shared/services/close-dialog/close-dialog.s
 import { UtilityService } from '@shared/services/utility/utility.service';
 import { GeneralNotificationsService } from '@shared/services/general-notifications/general-notifications.service';
 import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.service';
+import { DemoService } from '../../app/demo/demo/demo.service';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { ReoccurringService } from '@shared/services/reoccurring/reoccurring.ser
 
         GeneralNotificationsService,
         CloseDialogService,
-        UtilityService
+        UtilityService,
+        DemoService
     ]
 })
 export class AppCoreModule {
