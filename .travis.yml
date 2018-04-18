@@ -43,7 +43,7 @@ after_success:
         firebase use staging;
         firebase functions:config:set stripe.secret_key=$STAGING_STRIPE_API_SECRET;
         firebase functions:config:set stripe.webhooks_secret=$STAGING_STRIPE_WEBHOOKS_SECRET;
-        firebase deploy --project staging --token $FIREBASE_TOKEN --mesage $PACKAGE_VERSION;
+        firebase deploy --project staging --token $FIREBASE_TOKEN --message $PACKAGE_VERSION;
       fi
     - npm run loc;
 
