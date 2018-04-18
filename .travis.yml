@@ -16,35 +16,36 @@ install:
     - npm install -g @angular/cli
 
 script:
-    - PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-    - echo $PACKAGE_VERSION
-
     - npm run lint;
     - npm --prefix functions run lint;
 
-    - if [ "$TRAVIS_BRANCH" = "dev" ]; then
+    - PACKAGE_VERSION="v$(node -p "require('./package.json').version")"
+    - echo $PACKAGE_VERSION
+
+    - npm run loc;
+
+    - if [ $TRAVIS_BRANCH == "dev" ]; then
         npm run build:dev;
       fi
-    - if [ "$TRAVIS_BRANCH" = "staging" ]; then
+    - if [ $TRAVIS_BRANCH == "staging" ]; then
         npm run build:staging;
       fi
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then
+    - if [ $TRAVIS_BRANCH == "master" ]; then
         npm run build:prod;
       fi
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then
+    - if [ $TRAVIS_BRANCH == "master" ]; then
         firebase use prod;
         firebase functions:config:set stripe.secret_key=$PROD_STRIPE_API_SECRET;
         firebase functions:config:set stripe.webhooks_secret=$PROD_STRIPE_WEBHOOKS_SECRET;
         firebase deploy --project prod --token $FIREBASE_TOKEN --message $PACKAGE_VERSION;
       fi
-    - if [ "$TRAVIS_BRANCH" = "staging" ]; then
+
+    - if [ $TRAVIS_BRANCH = "staging" ]; then
         firebase use staging;
         firebase functions:config:set stripe.secret_key=$STAGING_STRIPE_API_SECRET;
         firebase functions:config:set stripe.webhooks_secret=$STAGING_STRIPE_WEBHOOKS_SECRET;
         firebase deploy --project staging --token $FIREBASE_TOKEN --message $PACKAGE_VERSION;
       fi
-    - npm run loc;
-
 
