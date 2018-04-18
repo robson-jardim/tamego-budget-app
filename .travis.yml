@@ -14,6 +14,7 @@ install:
     - cd functions && npm install && cd ..;
     - npm install -g firebase-tools
     - npm install -g @angular/cli
+    - PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
 
 script:
     - npm run lint;
@@ -34,13 +35,13 @@ after_success:
         firebase use prod;
         firebase functions:config:set stripe.secret_key=$PROD_STRIPE_API_SECRET;
         firebase functions:config:set stripe.webhooks_secret=$PROD_STRIPE_WEBHOOKS_SECRET;
-        firebase deploy --project prod --token $FIREBASE_TOKEN;
+        firebase deploy --project prod --token $FIREBASE_TOKEN --message $PACKAGE_VERSION;
       fi
     - if [ "$TRAVIS_BRANCH" = "staging" ]; then
         firebase use staging;
         firebase functions:config:set stripe.secret_key=$STAGING_STRIPE_API_SECRET;
         firebase functions:config:set stripe.webhooks_secret=$STAGING_STRIPE_WEBHOOKS_SECRET;
-        firebase deploy --project staging --token $FIREBASE_TOKEN;
+        firebase deploy --project staging --token $FIREBASE_TOKEN --mesage $PACKAGE_VERSION;
       fi
     - npm run loc;
 
