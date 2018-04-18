@@ -14,7 +14,7 @@ import { Customer } from '@models/customer.model';
 import { EventContext } from 'firebase-functions/lib/cloud-functions';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
-export const onUserCreate = functions.firestore.document('users/{userId}')
+export const onTemporaryUserCreate = functions.firestore.document('users/{userId}')
     .onCreate(async (snapshot: DocumentSnapshot, context: EventContext) => {
 
         const nowTimestamp = new Date();
