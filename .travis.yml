@@ -16,8 +16,9 @@ install:
     - npm install -g @angular/cli
 
 script:
-    - $PACKAGE_VERSION=(node -p -e "require('./package.json').version")
+    - PACKAGE_VERSION="$(node -p "require('./package.json').version")"
     - echo $PACKAGE_VERSION
+
     - npm run lint;
     - npm --prefix functions run lint;
 
