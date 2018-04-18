@@ -14,9 +14,10 @@ install:
     - cd functions && npm install && cd ..;
     - npm install -g firebase-tools
     - npm install -g @angular/cli
-    - PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
 
 script:
+    - $PACKAGE_VERSION=(node -p -e "require('./package.json').version")
+    - echo $PACKAGE_VERSION
     - npm run lint;
     - npm --prefix functions run lint;
 
