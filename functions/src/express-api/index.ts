@@ -11,6 +11,7 @@ const whitelist = [
     'https://budget-app-dev.firebaseapp.com',
     'https://budget-app-staging-1.firebaseapp.com',
     'https://budget-app-prod.firebaseapp.com',
+    'https://app.tamego.ericlarson.io',
     'https://app.tamego.com'
 ];
 
